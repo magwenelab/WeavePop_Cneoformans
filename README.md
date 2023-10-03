@@ -60,3 +60,21 @@ Scripts to be run in this order:
 
 
 5. `Snakefile.liftoff` -- should be run from w/in the `Samples/` directory (e.g. create soft link).  Runs annotation liftover via liftoff, generates predicted CDS and protein sequences for each gene via AGAT, for each gene creates files with all predicted CDS and AA seqs for that gene (across the 384 samples)
+
+
+
+
+
+## Notes
+
+Here's a list of potentially suitable reference strains for each of the C. neoformans lineages
+
+* VNI -- H99, GCA_011801205.1
+* VNII -- VNII strain collected from cockatoo excrement , GCA_022832995.1
+* VNBI -- Ftc146-1, GCA_010065285.1
+* VNBII -- Bt81, GCA_023650555.1
+
+Downside of using the above Genbank assemblies, as opposed to using FungiDB sources, is that not all of the Genbank assemblies have included annotation or where they do have annotation, not using the same scheme.  This would complicate the step of pulling all the sequences of a given ORF into one file.
+
+Alternative might be to use liftoff to "lift over" annotation from reference H99 genome to each of the lineage specific references prior to analysis.
+
