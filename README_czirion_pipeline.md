@@ -10,9 +10,6 @@ dependencies:
   - pandas
   - xonsh
   - snakemake
-  - sra-tools
-  - entrez-direct
-  - r
   - snippy
   - liftoff
 ~~~
