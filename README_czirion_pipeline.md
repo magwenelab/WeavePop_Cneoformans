@@ -1,5 +1,7 @@
 # Installations
-+ Install `crypto_div` environment  
+<details>
+<summary>Install crypto_div environment </summary>
+ 
 With this `crypto_div.yml` file:
 ~~~
 name: crypto_div
@@ -26,8 +28,12 @@ conda activate crypto_div
 conda install -c r r-essentials
 conda deactivate
 ~~~
+</details>
 
-+ Install `agat` environment  
+<details>
+<summary>Install agat environment </summary>
+
+Run this lines one by one:
 ~~~
  conda create -n agat
  conda activate agat
@@ -42,6 +48,7 @@ conda deactivate
  make install
  conda deactivate
  ~~~
+</details>
 
  # Pipeline for snippy-builder
  Bring data to my user:
@@ -53,3 +60,4 @@ conda deactivate
  cp /data/sequence-data/CryptoDiversity/largest_read_pair_table.
  cp /data/sequence-data/CryptoDiversity/snippy-builder.xsh .
 ~~~
+
