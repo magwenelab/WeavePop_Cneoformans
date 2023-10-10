@@ -24,6 +24,7 @@ When the environment is ready install R:
 ~~~
 conda activate crypto_div
 conda install -c r r-essentials
+conda deactivate
 ~~~
 
 + Install `agat` environment  
@@ -39,6 +40,7 @@ conda install -c r r-essentials
  make
  make test
  make install
+ conda deactivate
  ~~~
 
  # Pipeline for snippy-builder
