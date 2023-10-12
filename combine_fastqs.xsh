@@ -12,3 +12,5 @@ do
 done
 
 # Count lines in combined fastqs and compare them to the sum of the combined files line count
+
+tmux
