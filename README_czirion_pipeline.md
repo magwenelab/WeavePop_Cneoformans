@@ -61,3 +61,8 @@ Run this lines one by one:
  cp /data/sequence-data/CryptoDiversity/snippy-builder.xsh .
 ~~~
 
+Testing combined fastqs:
+Change this code in snippy_builder.xsh
+~~~
+READPAIRTABLE = "test_readpair.csv"
+FASTQDIR = "fastqs_combined/"
