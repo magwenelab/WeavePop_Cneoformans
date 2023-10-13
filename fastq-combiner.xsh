@@ -12,6 +12,16 @@ import click
 @click.argument("outputdir")
 
 def combine(sample, csvfile, inputdir, outputdir):
+    """This script combines all fastq _1 and _2 files of one sample into only one _1.fq.gz and one _2.fq.gz.
+    
+    SAMPLE is the sample name.
+    
+    CSVFILE is a csv table with the fields "sample", "file1" and "file2" with the sample name, _1.fastq and _2.fastq filenames, respectively.
+    
+    INPUTDIR is the name of the directory where the _1.fastq and _2.fastq files are saved. Not compressed!
+    
+    OUTPUTDIR is the name of the new directory for the combined .fq.gz files. It will be created if necessary.
+    """
     workpath = Path(outputdir)
     if not workpath.exists():
         workpath.mkdir()
