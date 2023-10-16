@@ -60,3 +60,6 @@ Run this lines one by one:
  cp /data/sequence-data/CryptoDiversity/largest_read_pair_table.
  cp /data/sequence-data/CryptoDiversity/snippy-builder.xsh .
 ~~~
+
+Use 'fastq-combiner.xsh' to combine all fastq from one sample into one file.
+Use 'get_lineage_of_samples.xsh' to add the SRS codes to the Desjardines supplemental table and put it in the file 'sample_metadata.csv'
