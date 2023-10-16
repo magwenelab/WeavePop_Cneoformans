@@ -40,3 +40,7 @@ SRS_names.drop_duplicates(inplace = True)
 
 sample_metadata = SRS_names.set_index('Strain').join(original_metadata.set_index('Strain'))
 sample_metadata = sample_metadata.reset_index()
+
+from pathlib import Path  
+filepath = Path('sample_metadata.csv')  
+sample_metadata.to_csv(filepath, index=False)  
