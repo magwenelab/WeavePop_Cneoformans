@@ -11,7 +11,7 @@ sample_names['Name'] = sample_names['Name'].str.replace("Cryptococcus neoformans
 sample_names['Name'] = sample_names['Name'].str.replace("Cryptococcus sp.", "")
 
 original_metadata = pd.read_csv("Desjardins_Supplemental_Table_S1.csv")
-original_metadata.drop(original_metadata.columns.difference(['Strain','Group']), axis = 1, inplace=True)
+original_metadata.drop(original_metadata.columns.difference(['Strain','Group', 'SRA Accession']), axis = 1, inplace=True)
 
 sample_names.sort_values('Name', inplace=True)
 original_metadata.sort_values('Strain', inplace=True)
@@ -31,5 +31,9 @@ for srs in missing_samples.SRS:
         stringList = srr.split('\n')
         dfsrs = pd.DataFrame([item.split('\t') for item in stringList], columns = ['Sample', 'Experiment', 'Run', 'Name'])
         dfMissingSRS = pd.concat([dfMissingSRS, dfsrs])
+dfMissingSRS.dropna(inplace=True)
 
+original_metadata[['SA1','SA2','SA3','SA4']] = original_metadata['SRA Accession'].str.split(', ',expand=True)
+original_metadata.drop('SRA Accession', axis = 1, inplace = True)
+df1 = pd.lreshape(original_metadata, {'SRA Accession': ['SA1', 'SA2', 'SA3', 'SA4']})
 
