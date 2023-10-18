@@ -1,20 +1,23 @@
 configfile: "config.yaml"
 
 import pandas as pd
-sample_file = config["sample_file"]
-SAMPLES = pd.read_table(sample_file, header = None)
+samplefile=(pd.read_csv(config["sample_file"], sep=","))
+samples=list(set(samplefile["sample"]))
+
+#def get_sample_codes(wildcards):
+#    return samples[wildcards.sample]
 
 rule all:
     input:
-        expand("fastq_combined/{sample}_1.fq.gz",sample=SAMPLES),
-        expand("fastq_combined/{sample}_2.fq.gz",sample=SAMPLES)
+        expand("fastq_combined/{sample}_1.fq.gz",sample=samples),
+        expand("fastq_combined/{sample}_2.fq.gz",sample=samples)
 
 rule combine_fastq:
     input:
-        expand("{sample}",sample=SAMPLES),
-        csvfile = config["read_pair_table"] # Do something to put here the csv file needed for fastq-combiner.xsh
+        "test_read_pair_table.csv"
     output:
-        "fastq_combined/{sample}_1.fq.gz"
+        "fastq_combined/{sample}_1.fq.gz",
         "fastq_combined/{sample}_2.fq.gz"
-    run:
-        "xonsh fastq-combiner.xsh {sample} {csvfile} fastqs/ fastq_combined/"
+    shell:
+        "xonsh fastq-combiner.xsh {{wildcard.sample}} {input} fastqs/ fastq_combined/" #Still does not work how to call the sample wildcard
+
