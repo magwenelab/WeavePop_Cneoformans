@@ -28,6 +28,11 @@ conda activate crypto_div
 conda install -c r r-essentials
 conda deactivate
 ~~~
+And install Graphviz to see Sankemake DAG of jobs in svg
+~~~
+conda install -c conda-forge graphviz
+~~~
+
 </details>
 
 <details>
