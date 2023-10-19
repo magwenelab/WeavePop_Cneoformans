@@ -60,5 +60,5 @@ The working directory is `/analysis/czirion/CryptoDiversity`
 
 * `fastq-combiner.xsh` concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
 * `fastq2snippy.smk` is the Snakefile to run the pipeline, for the moment it runs the previous script for each sample in `read_pair_table.csv`. Using the `config.yaml` file.  
-* 'get-lineage-of-samples.xsh' adds the SRS codes to the Desjardines supplemental table and puts it in the file 'sample_metadata.csv'.
+* `get-lineage-of-samples.xsh` adds the SRS codes to the Desjardines supplemental table and puts it in the file 'sample_metadata.csv'.
 * `snippy-builder.xsh` uses the `sample_metadata.csv` and `lineage_references.csv` to run **snippy** in each sample using the appropriate reference genome.  
