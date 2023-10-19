@@ -2,28 +2,45 @@
 
 THREADS = 12
 OUTDIR = "snippy-analysis"
-READPAIRTABLE = "largest_read_pair_table.csv"
-REFGENOME = "Reference_Genomes/FungiDB-53_CneoformansH99_Genome.fasta"
-FASTQDIR = "fastqs"
+SAMPLESTABLE = "sample_metadata.csv"
+REFGENOMETABLE = "lineage_references.csv"
+FASTQDIR = "fastq_combined"
+REFDIR = "Reference_Genomes"
 
 from collections import defaultdict
 from pathlib import Path
 import sys
-
 import pandas as pd
 
-# Read sample -> read pairs table from CSV file
-df = pd.read_csv(READPAIRTABLE)
+# Create dataframe from SAMPLESTABLE and REFGENOMETABLE with the sample, read filenames, lineage and reference assembly file information
+
+lineage = pd.read_csv(SAMPLESTABLE)
+lineage = lineage[["Sample","Group"]]
+lineage = lineage.rename(columns={'Sample': 'sample', 'Group': 'lineage'})
+
+d={'sample': lineage["sample"], 'file1': lineage["sample"]+"_1.fq.gz", 'file2': lineage["sample"]+"_2.fq.gz"}
+df = pd.DataFrame(data=d)
+df = df.set_index('sample').join(lineage.set_index('sample'))
+df.reset_index(inplace=True)
+
+reference = pd.read_csv(REFGENOMETABLE)
+reference = reference[["Group","File"]]
+reference = reference.rename(columns={'Group': 'lineage', 'File': 'refgenome'})
+
+df = df.set_index('lineage').join(reference.set_index('lineage'))
+df.reset_index(inplace=True)
+
 
 # Create a working directory where snippy results will be stored
-# - dir name: snippy-analysis
 
 workpath = Path(OUTDIR)
 if not workpath.exists():
     workpath.mkdir()
 
+# Run snippy for each sample taking the apropriate fq.gz files and reference genome according to lineage
+
 for row in df.itertuples():
-    sample, f1, f2 = row.sample, row.file1, row.file2
+    sample, f1, f2 ,ref = row.sample, row.file1, row.file2, row.refgenome
     spath = workpath / sample
     if not workpath.exists():
         workpath.mkdir()
@@ -32,13 +49,14 @@ for row in df.itertuples():
     print(f"Analyzing {sample}")
     f1 = Path(FASTQDIR) / f1
     f2 = Path(FASTQDIR) / f2
+    ref = Path(REFDIR) / ref
     if (not f1.exists()) or (not f2.exists()):
         print("One or more missing fastq files:  {f1}, {f2}")
         sys.exit(1)
     cmd = ["snippy",  
            f"--outdir={str(spath)}", 
            f"--cpus={THREADS}",  
-           f"--ref={REFGENOME}", 
+           f"--ref={ref}", 
            f"--R1={f1}",
            f"--R2={f2}",
     ]
