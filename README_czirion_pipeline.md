@@ -55,16 +55,10 @@ Run this lines one by one:
  ~~~
 </details>
 
- # Pipeline for snippy-builder
- Bring data to my user:
- ~~~
- cd /analysis/czirion/CryptoDiversity
- ln -s /data/sequence-data/CryptoDiversity/fastqs/ .
- cp /data/sequence-data/CryptoDiversity/unpaired_fastqs.csv .
- cp /data/sequence-data/CryptoDiversity/read_pair_table.csv .
- cp /data/sequence-data/CryptoDiversity/largest_read_pair_table.
- cp /data/sequence-data/CryptoDiversity/snippy-builder.xsh .
-~~~
+ # Pipeline modifications
+The working directory is `/analysis/czirion/CryptoDiversity`
 
-Use 'fastq-combiner.xsh' to combine all fastq from one sample into one file.
-Use 'get_lineage_of_samples.xsh' to add the SRS codes to the Desjardines supplemental table and put it in the file 'sample_metadata.csv'
+* 'fastq-combiner.xsh' concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
+* `fastq2snippy.smk` is the Snakefile to run the pipeline, for the moment it runs the previous script for each sample in `read_pair_table.csv`. Using the `config.yaml` file.  
+* 'get-lineage-of-samples.xsh' adds the SRS codes to the Desjardines supplemental table and puts it in the file 'sample_metadata.csv'.
+* `snippy-builder.xsh` uses the `sample_metadata.csv` and `lineage_references.csv` to run **snippy** in each sample using the appropriate reference genome.  
