@@ -13,7 +13,8 @@ rule all:
 
 rule combine_fastq:
     input:
-        config["sample_file"]
+        config["sample_file"],
+        #fqdir = str(config["fastq_dir"])
     output:
         "fastq_combined/{sample}_1.fq.gz",
         "fastq_combined/{sample}_2.fq.gz"
@@ -24,17 +25,17 @@ rule snippy:
     input:
         "fastq_combined/{sample}_1.fq.gz",
         "fastq_combined/{sample}_2.fq.gz",
-        #refdir = config["reference_directory"]
+        refdir = str(config["reference_directory"])
     params:
         ref = lambda wildcards: ref_table.loc[wildcards.sample, 'refgenome'],
         file1 = lambda wildcards: ref_table.loc[wildcards.sample, 'file1'],
         file2 = lambda wildcards: ref_table.loc[wildcards.sample, 'file2'] 
     output:
         directory("snippy-analysis/{sample}")
-    threads: 12   
+    threads: config["threads_snippy"]
     log:
         "logs/snippy/{sample}.log" 
     shell:
         "snippy --outdir {output} --cpus {threads} "
-        "--ref Reference_Genomes/{params.ref} "
+        "--ref {input.refdir}/{params.ref} "
         "--R1 fastq_combined/{params.file1} --R2 fastq_combined/{params.file2} &> {log}"
