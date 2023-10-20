@@ -59,5 +59,6 @@ Run this lines one by one:
 The working directory is `/analysis/czirion/CryptoDiversity`
 * `get-lineage-of-samples.xsh`: Adds the SRS codes to the `Desjardins_Supplemental_Table_S1.csv` and puts it in the file 'sample_metadata.csv'.  
 * `get-references.xsh`: Uses `lineage_references.csv` and `sample_metadata.csv` to create `sample_reference.csv`, that has each sample name, fastq filenames, lineage, and corresponding reference assembly filename.  
-* `fastq2snippy.smk` is the Snakefile to run the pipeline, for the moment it runs the script `fastq-combiner.xsh` for each sample in `read_pair_table.csv`, and runs **snippy** for each sample. It uses the `config.yaml` file.  
-       * `fastq-combiner.xsh` concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
+* `fastq2snippy.smk`: Is the Snakefile to run the pipeline, it uses the `config.yaml` file.   For the moment it does the following:  
+  * Runs the script `fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
+  * Runs **snippy** for each sample.  
