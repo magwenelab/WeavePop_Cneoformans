@@ -1,2 +1,6 @@
-sample_file: samples.txt
-read_pair_table: read_pair_table.csv
+sample_file: read_pair_table.csv
+sample_reference_file: sample_reference.csv
+reference_directory: "Reference_Genomes"
+fastq_dir: "fastqs"
+threads_snippy: 12
+
