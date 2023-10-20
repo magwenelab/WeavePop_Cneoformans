@@ -8,18 +8,19 @@ ref_table.set_index('sample', inplace=True)
 
 rule all:
     input:
-        expand("fastq_combined/{sample}_1.fq.gz",sample=samples),
-        expand("fastq_combined/{sample}_2.fq.gz",sample=samples)
+        expand("snippy-analysis/{sample}",sample=samples)
 
 rule combine_fastq:
     input:
-        config["sample_file"],
-        #fqdir = str(config["fastq_dir"])
+        readtab = config["sample_file"],
+        fqdir = str(config["fastq_dir"])
     output:
         "fastq_combined/{sample}_1.fq.gz",
         "fastq_combined/{sample}_2.fq.gz"
+    log:
+           "logs/combine_fastq/{sample}.log"  
     shell:
-        "xonsh fastq-combiner.xsh {wildcards.sample} {input} fastqs/ fastq_combined/"
+        "xonsh fastq-combiner.xsh {wildcards.sample} {input.readtab} {input.fqdir} fastq_combined/  &> {log}"
 
 rule snippy:
     input:
