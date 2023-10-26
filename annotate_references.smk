@@ -29,6 +29,8 @@ rule ref2ref_liftoff:
         "-g {input.gff} "
         "-polish "
         "-o Reference_Genomes/{wildcards.lineage}_liftoff.gff "
+        "-dir Reference_Genomes/{wildcards.lineage}_intermediate_files "
+        "-u Reference_Genomes/{wildcards.lineage}_unmapped_features.txt "
         "{input.target_refs} {input.fasta} "
         "&> {log}"
 
@@ -37,9 +39,9 @@ rule ref2ref_agat_cds:
         fasta = REF_FASTA,
         ref_liftoff = "Reference_Genomes/{lineage}_liftoff.gff_polished"
     output:
-        cds = "Reference_Genomes/{lineage}_predicted_cds.fa"      
+        cds = "Reference_Genomes/{lineage}_predicted_cds.fa"    
     conda:
-        "/home/czirion/miniconda3/envs/agat"  
+        "agat.yaml"  
     log:
         "logs/{lineage}_ref_agat_cds.log"   
     shell:
@@ -55,7 +57,7 @@ rule ref2ref_agat_prot:
     output:
         aa = "Reference_Genomes/{lineage}_predicted_proteins.fa"        
     conda:
-        "/home/czirion/miniconda3/envs/agat" 
+        "agat.yaml" 
     log:
         "logs/{lineage}_ref_agat_prots.log"      
     shell:
