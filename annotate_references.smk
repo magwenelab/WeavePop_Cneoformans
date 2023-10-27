@@ -74,3 +74,7 @@ rule protein_list:
         list = REFDIR + "{lineage}_protein_list.txt"
     shell:
         "seqkit seq -n -i {input.fasta} > {output.list}"
+
+# Missing rule to create protein list of proteins in all lineages
+# Right now I created it with:
+# cat *_protein_list.txt | sort | uniq > ../protein_list.txt    
