@@ -9,8 +9,11 @@ ref_table.set_index('sample', inplace=True)
 
 rule all:
     input:
-        expand("snippy-analysis/{sample}",sample=samples),
-        expand("snippy-analysis/{sample}/liftoff/lifted.gff_polished", sample=samples)
+        expand("snippy-analysis/{sample}/snps.consensus.fa",sample=samples),
+        expand("snippy-analysis/{sample}/liftoff/lifted.gff_polished", sample=samples),
+        expand("snippy-analysis/{sample}/predicted_cds.fa",sample=samples),
+        expand("snippy-analysis/{sample}/predicted_proteins.fa",sample=samples)
+
 rule combine_fastq:
     input:
         readtab = config["sample_file"],
@@ -62,3 +65,28 @@ rule liftoff:
         "-o snippy-analysis/{wildcards.sample}/liftoff/lifted.gff "
         "{input} "
         "{params.refgenome} &> {log}"
+
+rule agat:
+    input:
+        "snippy-analysis/{sample}/liftoff/lifted.gff_polished"
+    output:
+        cds = "snippy-analysis/{sample}/predicted_cds.fa",
+        prots = "snippy-analysis/{sample}/predicted_proteins.fa"
+    conda:
+        "agat.yaml"
+    log: 
+        cds = "logs/agat/{sample}_cds.log",
+        prots = "logs/agat/{sample}_prots.log"
+    shell:
+        "seqkit seq -w 70 snippy-analysis/{wildcards.sample}/snps.consensus.fa > "
+        "snippy-analysis/{wildcards.sample}/snps.consensus.wrapped.fa && "
+        "agat_sp_extract_sequences.pl "
+        "-g {input} " 
+        "-f snippy-analysis/{wildcards.sample}/snps.consensus.wrapped.fa "
+        "-o {output.cds} &> {log.cds} "
+        " && "
+        "agat_sp_extract_sequences.pl "
+        "-g {input} " 
+        "-f snippy-analysis/{wildcards.sample}/snps.consensus.wrapped.fa "
+        "-o {output.prots} "
+        "-p  &> {log.prots}" 
