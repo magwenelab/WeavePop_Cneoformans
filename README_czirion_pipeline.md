@@ -66,10 +66,10 @@ The working directory is `/analysis/czirion/CryptoDiversity`
       ⚠️ `--cores 1` is because there is a problem if liftoff runs in parallel because the different jobs try to create `FungiDB-53_CneoformansH99_PMM.gff_db` at the same time and that is not cool.    
       ⚠️ `--conda-frontend conda` because it cannot use mamba, which is the default.  
       ❔  It makes `{lineage}_liftoff.agat.log` files out of nowhere, they are not specified in the snakefile.  
-      ⏰ Pending: Make the name of the `Reference_Genomes` directory configurable in the `config.yaml`  
       ⏰ Pending: Merge into main workflow.
 
 * `fq2liftoff.smk`: Is the Snakefile to run the pipeline, it uses the `config.yaml` file.   For the moment it does the following:  
   * Runs the script `fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
   * Runs **snippy** for each sample.  
-  * Runs **liftoff** for each sample.  
+  * Runs **liftoff** for each sample.
+  * Runs **agat** for each sample.   
