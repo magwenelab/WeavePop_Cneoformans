@@ -15,8 +15,8 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples),
-        "cds/cds.done",
-        "proteins/proteins.done"
+        "cds/done.txt",
+        "proteins/done.txt"
 
 rule combine_fastq:
     input:
@@ -109,16 +109,20 @@ rule index_proteins:
     shell:
         "seqkit faidx {input}"
 
+rule sample_list:
+    output:
+        "samples.txt"
+    shell:
+        "ls -d genomes-annotations/SRS* > {output}"     
+
 rule by_cds:
     input:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
-        list = REFDIR + "{lineage}_protein_list.txt"
+        list = "protein_list.txt"
     output:
-        "proteins/proteins.done"
-    params:
-        lineage = lambda wildcards: ref_table.loc[wildcards.sample, 'lineage']    
+        "proteins/done.txt"
     shell:
-        "cat reference_genomes/{params.lineage}_protein_list.txt | "
+        "cat protein_list.txt | "
         "while read line; do "
         "seqkit faidx genomes-annotations/{wildcards.sample}/predicted_cds.fa $line | "
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> cds/$line.fa; done "
@@ -127,14 +131,40 @@ rule by_cds:
 rule by_protein:
     input:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
-        list = REFDIR + "{lineage}_protein_list.txt"
+        list = "protein_list.txt"
     output:
-        "cds/done.txt"
-    params:
-        lineage = lambda wildcards: ref_table.loc[wildcards.sample, 'lineage']    
+        "cds/done.txt"  
     shell:
-        "cat reference_genomes/{params.lineage}_protein_list.txt | "
+        "cat protein_list.txt | "
         "while read line; do "
         "seqkit faidx genomes-annotations/{wildcards.sample}/predicted_proteins.fa $line | "
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> proteins/$line.fa; done "
         "&& touch proteins/proteins.done"
+
+rule by_cds:
+    input:
+        "genomes-annotations/{sample}/predicted_proteins.fa",
+        prots = "protein_list.txt",
+        samples = "samples.txt"
+        
+    output:
+        "cds/done.txt"
+    run:
+        with open(input.prots, 'r') as f:
+            for line in f:
+                prot = line.strip()
+                shell(f"./getcds.sh {prot}")
+        shell(f'touch {output}')    
+
+rule by_protein:
+    input:
+        prots = "protein_list.txt",
+        samples = "samples.txt"
+    output:
+        "proteins/done.txt"
+    run:
+        with open(input.prots, 'r') as f:
+            for line in f:
+                prot = line.strip()
+                shell(f"./getprots.sh {prot}")
+        shell(f'touch {output}')   
