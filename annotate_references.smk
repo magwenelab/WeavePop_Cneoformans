@@ -14,7 +14,8 @@ rule all:
     input:
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
-        expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS)
+        expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
+        expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS)
 
 rule ref2ref_liftoff:
     input:
@@ -22,7 +23,8 @@ rule ref2ref_liftoff:
         fasta = REF_FASTA,
         gff = REF_GFF
     output:
-        REFDIR + "{lineage}_liftoff.gff_polished"
+        lin_gff = REFDIR + "{lineage}_liftoff.gff_polished",
+        lin_fasta = REFDIR + "{lineage}.fasta"
     threads: config["threads_liftoff"] 
     log:
         "logs/references/{lineage}_ref_liftoff.log"
@@ -37,12 +39,13 @@ rule ref2ref_liftoff:
         "-u {params.refdir}/{wildcards.lineage}_unmapped_features.txt "
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
-        "&> {log}"
+        "&> {log} "
+        "&& cp {input.target_refs} {output.lin_fasta}"
 
 rule ref2ref_agat:
     input: 
-        fasta = REF_FASTA,
-        ref_liftoff = REFDIR + "{lineage}_liftoff.gff_polished"
+        lin_liftoff = REFDIR + "{lineage}_liftoff.gff_polished",
+        lin_fasta = REFDIR + "{lineage}.fasta"
     output:
         cds = REFDIR + "{lineage}_predicted_cds.fa",
         prots = REFDIR + "{lineage}_predicted_proteins.fa"
@@ -53,13 +56,21 @@ rule ref2ref_agat:
         prots = "logs/references/{lineage}_ref_agat_prots.log"
     shell:
         "agat_sp_extract_sequences.pl "
-        "-g {input.ref_liftoff} "
-        "-f {input.fasta} "
+        "-g {input.lin_liftoff} "
+        "-f {input.lin_fasta} "
         "-o {output.cds} "
         "&> {log.cds} "
         " && "
         "agat_sp_extract_sequences.pl "
-        "-g {input.ref_liftoff} "
-        "-f {input.fasta} "
+        "-g {input.lin_liftoff} "
+        "-f {input.lin_fasta} "
         "-o {output.prots} "
         "-p &> {log.prots}"  
+
+rule protein_list:
+    input:
+        fasta = REFDIR + "{lineage}_predicted_proteins.fa"
+    output:
+        list = REFDIR + "{lineage}_protein_list.txt"
+    shell:
+        "seqkit seq -n -i {input.fasta} > {output.list}"
