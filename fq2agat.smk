@@ -1,12 +1,19 @@
 configfile: "config.yaml"
 
 import pandas as pd
+from glob import glob
 
 samplefile=(pd.read_csv(config["sample_file"], sep=","))
 samples=list(set(samplefile["sample"]))
 ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
+
+protlist=(pd.read_csv("protein_list.txt", sep=",", header = None, names = ['protein']))
+proteins=list(protlist["protein"])
+
+#INPUT_FILE = 'proteins/{sample}_{protein}.fa'
+#INP = glob_wildcards(INPUT_FILE).sample
 
 rule all:
     input:
@@ -15,7 +22,9 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("cds/{sample}.done",sample=samples),
-        expand("proteins/{sample}.done",sample=samples)
+        expand("proteins/{sample}.done",sample=samples),
+        #expand("cds/{protein}.fa", protein=proteins),
+        #expand("proteins/{protein}.fa", protein=proteins)
 
 rule combine_fastq:
     input:
@@ -99,18 +108,35 @@ rule agat:
         "-o {output.prots} "
         "-p  &> {log.prots}" 
 
-
-
-rule sample_list:
+rule index_proteins:
+    input:
+        "genomes-annotations/{sample}/predicted_proteins.fa"
     output:
-        "samples.txt"
+        "genomes-annotations/{sample}/predicted_proteins.fa.fai"
+    conda:
+        "agat.yaml"        
+    log:
+        "logs/faidx/{sample}_proteins.log"    
     shell:
-        "ls -d genomes-annotations/SRS* > {output}"     
+        "seqkit faidx {input} &> {log}"
+
+rule index_cds:
+    input:
+        "genomes-annotations/{sample}/predicted_cds.fa"
+    output:
+        "genomes-annotations/{sample}/predicted_cds.fa.fai"
+    conda:
+        "agat.yaml"        
+    log:
+        "logs/faidx/{sample}_cds.log"      
+    shell:
+        "seqkit faidx {input} &> {log}"
 
 rule by_cds:
     input:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
-        list = "protein_list.txt"
+        list = "protein_list.txt",
+        idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
         temp("cds/{sample}.done")
     conda:
@@ -120,14 +146,15 @@ rule by_cds:
     shell:
         "cat {input.list} | "
         "while read line;  do "
-        "seqkit faidx {input.fasta} $line -U | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> cds/$line.fa; done &> {log}"
+        "seqkit faidx {input.fasta} $line | "
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > cds/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output}" 
 
 rule by_protein:
     input:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
-        list = "protein_list.txt"
+        list = "protein_list.txt",
+        idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
         temp("proteins/{sample}.done")
     conda:
@@ -137,6 +164,21 @@ rule by_protein:
     shell:
         "cat {input.list} | "
         "while read line; do "
-        "seqkit faidx {input.fasta} $line -U | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> proteins/$line.fa; done &> {log}"
+        "seqkit faidx {input.fasta} $line | "
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > proteins/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output}"
+
+#rule concatenate_prots:
+#    input:
+#        expand(INPUT_FILE, sample=INP, protein="{protein}"),
+#    output:
+#        'proteins/{protein}.fa'
+#    shell:
+#        "cat {input} > {output} "
+#rule concatenate_cds:
+#    input:
+#        expand(INPUT_FILE, sample=INP, protein="{protein}"),
+#    output:
+#        'cds/{protein}.fa'
+#    shell:
+#        "cat {input} > {output} "
