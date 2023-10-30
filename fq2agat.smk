@@ -14,7 +14,6 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples),
         expand("cds/{sample}.done",sample=samples),
         expand("proteins/{sample}.done",sample=samples)
 
@@ -101,13 +100,7 @@ rule agat:
         "-o {output.prots} "
         "-p  &> {log.prots}" 
 
-rule index_proteins:
-    input:
-        "genomes-annotations/{sample}/predicted_proteins.fa"
-    output:
-        "genomes-annotations/{sample}/predicted_proteins.fa.fai"
-    shell:
-        "seqkit faidx {input}"
+
 
 rule sample_list:
     output:
@@ -120,12 +113,16 @@ rule by_cds:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
         list = "protein_list.txt"
     output:
-        "cds/{sample}.done"
+        temp("cds/{sample}.done")
+    conda:
+        "agat.yaml"
+    log:
+        "logs/cds/{sample}.log"    
     shell:
-        "cat protein_list.txt | "
-        "while read line; do "
-        "seqkit faidx genomes-annotations/{wildcards.sample}/predicted_cds.fa $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> cds/$line.fa; done "
+        "cat {input.list} | "
+        "while read line;  do "
+        "seqkit faidx {input.fasta} $line -U | "
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> cds/$line.fa; done &> {log}"
         "&& touch {output}" 
 
 rule by_protein:
@@ -133,10 +130,14 @@ rule by_protein:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
         list = "protein_list.txt"
     output:
-        "proteins/{sample}.done"  
+        temp("proteins/{sample}.done")
+    conda:
+        "agat.yaml"
+    log:
+        "logs/proteins/{sample}.log"   
     shell:
-        "cat protein_list.txt | "
+        "cat {input.list} | "
         "while read line; do "
-        "seqkit faidx genomes-annotations/{wildcards.sample}/predicted_proteins.fa $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> proteins/$line.fa; done "
+        "seqkit faidx {input.fasta} $line -U | "
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' >> proteins/$line.fa; done &> {log}"
         "&& touch {output}"
