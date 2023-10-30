@@ -32,10 +32,9 @@ rule combine_fastq:
 rule snippy:
     input:
         "fastq_combined/{sample}_1.fq.gz",
-        "fastq_combined/{sample}_2.fq.gz",
-        refdir = REFDIR
+        "fastq_combined/{sample}_2.fq.gz"
     params:
-        ref = lambda wildcards: ref_table.loc[wildcards.sample, 'refgenome'],
+        ref = lambda wildcards: (REFDIR + ref_table.loc[wildcards.sample, 'refgenome']),
         file1 = lambda wildcards: ref_table.loc[wildcards.sample, 'file1'],
         file2 = lambda wildcards: ref_table.loc[wildcards.sample, 'file2'] 
     output:
@@ -46,7 +45,7 @@ rule snippy:
     shell:
         "snippy --outdir genomes-annotations/{wildcards.sample} "
         "--cpus {threads} "
-        "--ref {input.refdir}/{params.ref} "
+        "--ref {params.ref} "
         "--R1 fastq_combined/{params.file1} "
         "--R2 fastq_combined/{params.file2} "
         "--force &> {log}"
