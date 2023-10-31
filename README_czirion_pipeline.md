@@ -74,5 +74,5 @@ The working directory is `/analysis/czirion/CryptoDiversity`
   * Runs **liftoff** for each sample.
   * Runs **agat** for each sample.
   * Makes **fasta indexes** for the protein and cds fastas.
-  * Extracts sequences (cds and protein) of each sample and puts it in a file.
-  ⏰  Pending: Concatenate all sequences for each protein (cds and protein) in only one file.
+  * **Extracts sequences** (cds and protein) of each sample and puts it in a file.  
+  ⏰  Pending: **Concatenate** all sequences for each protein (cds and protein) in only one file.
