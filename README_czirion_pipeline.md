@@ -68,8 +68,11 @@ The working directory is `/analysis/czirion/CryptoDiversity`
       ❔  It makes `{lineage}_liftoff.agat.log` files out of nowhere, they are not specified in the snakefile.  
       ⏰ Pending: Merge into main workflow.
 
-* `fq2liftoff.smk`: Is the Snakefile to run the pipeline, it uses the `config.yaml` file.   For the moment it does the following:  
+* `fq2agat.smk`: Is the Snakefile to run the pipeline, it uses the `config.yaml` file.   For the moment it does the following:  
   * Runs the script `fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
   * Runs **snippy** for each sample.  
   * Runs **liftoff** for each sample.
-  * Runs **agat** for each sample.   
+  * Runs **agat** for each sample.
+  * Makes **fasta indexes** for the protein and cds fastas.
+  * Extracts sequences (cds and protein) of each sample and puts it in a file.
+  ⏰  Pending: Concatenate all sequences for each protein (cds and protein) in only one file.
