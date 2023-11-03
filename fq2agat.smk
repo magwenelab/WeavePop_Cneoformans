@@ -25,6 +25,9 @@ rule all:
         expand("proteins/{sample}.done",sample=samples),
         #expand("cds/{protein}.fa", protein=proteins),
         #expand("proteins/{protein}.fa", protein=proteins)
+         expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),        
+        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
+        expand("genomes-annotations/{sample}/coverage.txt",sample=samples)
 
 rule combine_fastq:
     input:
@@ -47,7 +50,8 @@ rule snippy:
         file1 = lambda wildcards: ref_table.loc[wildcards.sample, 'file1'],
         file2 = lambda wildcards: ref_table.loc[wildcards.sample, 'file2'] 
     output:
-        "genomes-annotations/{sample}/snps.consensus.fa"
+        "genomes-annotations/{sample}/snps.consensus.fa",
+        "genomes-annotations/{sample}/snps.bam"
     threads: config["threads_snippy"]
     log:
         "logs/snippy/{sample}.log" 
@@ -182,3 +186,40 @@ rule by_protein:
 #        'cds/{protein}.fa'
 #    shell:
 #        "cat {input} > {output} "
+
+#mkdir by_protein by_cds
+#cat protein_list.txt | while read line;
+#do
+#echo $line
+#cat proteins/*_$line.fa > by_protein/$line.fa
+#cat cds/*_$line.fa > by_cds/$line.fa
+#done
+
+rule mosdepth:
+    input:
+        "genomes-annotations/{sample}/snps.bam"
+    output:
+        "genomes-annotations/{sample}/coverage.regions.bed.gz"
+    params:
+        window = config["mosdepth_window"]
+    conda: 
+        "depth.yaml"
+    threads:
+       config["mosdepth_threads"]     
+    log:
+        "logs/mosdepth/{sample}.log"
+    shell:
+        "mosdepth -n --by {params.window} -t {threads} "
+        "genomes-annotations/{wildcards.sample}/coverage {input} "
+        "&> {log}"
+
+rule coverage_plot:
+    input:
+        "genomes-annotations/{sample}/coverage.regions.bed.gz"
+    output:
+        "genomes-annotations/{sample}/coverage.txt",
+        "genomes-annotations/{sample}/coverage.svg"
+    log:
+        "logs/coverage/{sample}.log"
+    script:
+        "coverage.R"
