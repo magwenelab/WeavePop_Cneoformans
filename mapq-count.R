@@ -1,16 +1,22 @@
-library(tidyverse)
-library(RColorBrewer)
-library(scales)
-library(svglite)
-mapq<- read.delim("Downloads/mapq.tsv", header = FALSE, col.names = c("MAPQ", "Count"))
+log <- file(snakemake@log[[1]], open="wt")
+sink(log, type = "output")
+sink(log, type = "message")
 
-qual_colors <- colorRampPalette(brewer.pal(11, "RdYlBu"))(max(mapq$MAPQ)+1)
+suppressPackageStartupMessages(library(tidyverse))
+library(RColorBrewer)
+suppressPackageStartupMessages(library(scales))
+library(svglite)
+
+print("Reading TSV file")
+mapq<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("MAPQ", "Count"))
+
+print("Plotting MAPQ count")
 
 plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
   geom_col(fill = "hotpink4")+
-  #scale_color_continuous(qual_colors)+
-  #scale_fill_manual(qual_colors)+
   scale_y_continuous(name = "Count", labels = comma)+
   theme_light()
-plot
-ggsave("Downloads/mapq-count.svg", plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
+
+print("Saving plot")
+ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
+print("Done!")
