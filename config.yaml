@@ -1,6 +1,11 @@
+fastq_dir: "fastqs" # This directory has all files together (no subdirectories) all uncompressed and with .fasta extension
 sample_file: read_pair_table.csv
 sample_reference_file: sample_reference.csv
-reference_directory: "Reference_Genomes"
-fastq_dir: "fastqs"
-threads_snippy: 12
-
+lineage_reference_file: lineage_references.csv
+reference_directory: "reference_genomes/" #This directory name must end with the "/"
+reference_fasta: "FungiDB-53_CneoformansH99_Genome.fasta"
+reference_gff: "FungiDB-53_CneoformansH99_PMM.gff"
+threads_snippy: 4
+threads_liftoff: 4
+mosdepth_threads: 4
+mosdepth_window: 500
