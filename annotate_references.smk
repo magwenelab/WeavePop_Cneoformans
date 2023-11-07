@@ -15,7 +15,8 @@ rule all:
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
-        expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS)
+        expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS),
+        "protein_list.txt"
 
 rule ref2ref_liftoff:
     input:
@@ -75,6 +76,10 @@ rule protein_list:
     shell:
         "seqkit seq -n -i {input.fasta} > {output.list}"
 
-# Missing rule to create protein list of proteins in all lineages
-# Right now I created it with:
-# cat *_protein_list.txt | sort | uniq > ../protein_list.txt    
+rule cat_lists:
+    input: 
+        expand(REFDIR + "{lineage}_protein_list.txt", lineage=LINS)
+    output:
+        "protein_list.txt"
+    shell:
+        "cat {input} | sort | uniq > {output}"
