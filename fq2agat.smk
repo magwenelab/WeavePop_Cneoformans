@@ -1,7 +1,6 @@
 configfile: "config.yaml"
 
 import pandas as pd
-from glob import glob
 
 samplefile=(pd.read_csv(config["sample_file"], sep=","))
 samples=list(set(samplefile["sample"]))
@@ -12,9 +11,6 @@ REFDIR = str(config["reference_directory"])
 protlist=(pd.read_csv("protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
 
-#INPUT_FILE = 'proteins/{sample}_{protein}.fa'
-#INP = glob_wildcards(INPUT_FILE).sample
-
 rule all:
     input:
         expand("genomes-annotations/{sample}/snps.consensus.fa",sample=samples),
@@ -23,11 +19,13 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("cds/{sample}.done",sample=samples),
         expand("proteins/{sample}.done",sample=samples),
-        #expand("cds/{protein}.fa", protein=proteins),
-        #expand("proteins/{protein}.fa", protein=proteins)
-         expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),        
+        expand("cat_cds/{protein}.fa", protein=proteins),
+        expand("cat_proteins/{protein}.fa", protein=proteins),
+        expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),        
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage.txt",sample=samples)
+        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
+        expand("genomes-annotations/{sample}/mapq-count.svg",sample=samples)
 
 rule combine_fastq:
     input:
@@ -68,7 +66,7 @@ rule liftoff:
         "genomes-annotations/{sample}/snps.consensus.fa"
     params:
         refgff = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'lineage'] + "_liftoff.gff_polished"),
-        refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome']),
+        refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome'])
     output:
         "genomes-annotations/{sample}/lifted.gff",        
         "genomes-annotations/{sample}/lifted.gff_polished"
@@ -172,28 +170,21 @@ rule by_protein:
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > proteins/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output}"
 
-#rule concatenate_prots:
-#    input:
-#        expand(INPUT_FILE, sample=INP, protein="{protein}"),
-#    output:
-#        'proteins/{protein}.fa'
-#    shell:
-#        "cat {input} > {output} "
-#rule concatenate_cds:
-#    input:
-#        expand(INPUT_FILE, sample=INP, protein="{protein}"),
-#    output:
-#        'cds/{protein}.fa'
-#    shell:
-#        "cat {input} > {output} "
+rule concatenate_prots:
+    input:
+        expand("proteins/{sample}_{{protein}}.fa", sample=samples)
+    output:
+        "cat_proteins/{protein}.fa"
+    shell:
+        "cat {input} > {output} "
 
-#mkdir by_protein by_cds
-#cat protein_list.txt | while read line;
-#do
-#echo $line
-#cat proteins/*_$line.fa > by_protein/$line.fa
-#cat cds/*_$line.fa > by_cds/$line.fa
-#done
+rule concatenate_cds:
+    input:
+        expand("cds/{sample}_{{protein}}.fa", sample=samples)
+    output:
+        "cat_cds/{protein}.fa"
+    shell:
+        "cat {input} > {output} "
 
 rule mosdepth:
     input:
@@ -223,3 +214,26 @@ rule coverage_plot:
         "logs/coverage/{sample}.log"
     script:
         "coverage.R"
+
+rule mapq:
+    input:
+        "genomes-annotations/{sample}/snps.bam"
+    output:
+        "genomes-annotations/{sample}/mapq.tsv"
+    conda: 
+        "depth.yaml"   
+    log:
+        "logs/mapq/{sample}.log"
+    shell:
+        "samtools stats {input} | grep ^MAPQ | cut -f 2- > {output} "
+        "&> {log}"
+
+rule mapq_plot:
+    input:
+        "genomes-annotations/{sample}/mapq.tsv"
+    output:
+        "genomes-annotations/{sample}/mapq-count.svg"
+    log:
+        "logs/mapq-count/{sample}.log"
+    script:
+        "mapq-count.R"        
