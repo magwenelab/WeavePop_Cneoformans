@@ -17,11 +17,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("cds/{sample}.done",sample=samples),
-        expand("proteins/{sample}.done",sample=samples),
-        expand("cat_cds/{protein}.fa", protein=proteins),
-        expand("cat_proteins/{protein}.fa", protein=proteins),
-        expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),        
+        expand("by_cds/{protein}.fa", protein=proteins),
+        expand("by_protein/{protein}.fa", protein=proteins),   
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
         expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
@@ -134,7 +131,7 @@ rule index_cds:
     shell:
         "seqkit faidx {input} &> {log}"
 
-rule by_cds:
+rule get_cds:
     input:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
         list = "protein_list.txt",
@@ -152,7 +149,7 @@ rule by_cds:
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > cds/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output}" 
 
-rule by_protein:
+rule get_protein:
     input:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
         list = "protein_list.txt",
@@ -170,21 +167,24 @@ rule by_protein:
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > proteins/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output}"
 
-rule concatenate_prots:
+rule cat_proteins:
     input:
-        expand("proteins/{sample}_{{protein}}.fa", sample=samples)
+        fastas = expand("proteins/{sample}_{{protein}}.fa", sample=samples),
+        done = expand("proteins/{sample}.done", sample=samples)
     output:
-        "cat_proteins/{protein}.fa"
+        "by_protein/{protein}.fa"
     shell:
-        "cat {input} > {output} "
+        "cat {input.fastas} > {output}"
 
-rule concatenate_cds:
+rule cat_cds:
     input:
-        expand("cds/{sample}_{{protein}}.fa", sample=samples)
+        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples),
+        done = expand("cds/{sample}.done", sample=samples)
     output:
-        "cat_cds/{protein}.fa"
+        "by_cds/{protein}.fa"
     shell:
-        "cat {input} > {output} "
+        "cat {input.fastas} > {output}"
+
 
 rule mosdepth:
     input:
