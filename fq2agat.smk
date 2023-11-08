@@ -21,8 +21,8 @@ rule all:
         expand("by_protein/{protein}.fa", protein=proteins),   
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
-        expand("genomes-annotations/{sample}/mapq-count.svg",sample=samples)
+        #expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
+        #expand("genomes-annotations/{sample}/mapq-count.svg",sample=samples)
 
 rule combine_fastq:
     input:
@@ -34,7 +34,7 @@ rule combine_fastq:
     log:
         "logs/fastq-combiner/{sample}.log"  
     shell:
-        "xonsh fastq-combiner.xsh {wildcards.sample} {input.readtab} {input.fqdir} fastq_combined/  &> {log}"
+        "xonsh scripts/fastq-combiner.xsh {wildcards.sample} {input.readtab} {input.fqdir} fastq_combined/  &> {log}"
 
 rule snippy:
     input:
@@ -88,7 +88,7 @@ rule agat:
         cds = "genomes-annotations/{sample}/predicted_cds.fa",
         prots = "genomes-annotations/{sample}/predicted_proteins.fa"
     conda:
-        "agat.yaml"
+        "envs/agat.yaml"
     log: 
         cds = "logs/agat/{sample}_cds.log",
         prots = "logs/agat/{sample}_prots.log"
@@ -113,7 +113,7 @@ rule index_proteins:
     output:
         "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     conda:
-        "agat.yaml"        
+        "envs/agat.yaml"        
     log:
         "logs/faidx/{sample}_proteins.log"    
     shell:
@@ -125,7 +125,7 @@ rule index_cds:
     output:
         "genomes-annotations/{sample}/predicted_cds.fa.fai"
     conda:
-        "agat.yaml"        
+        "envs/agat.yaml"        
     log:
         "logs/faidx/{sample}_cds.log"      
     shell:
@@ -140,7 +140,7 @@ rule get_cds:
         done = temp("cds/{sample}.done"),
         fas = expand("cds/{{sample}}_{protein}.fa", protein=proteins)
     conda:
-        "agat.yaml"
+        "envs/agat.yaml"
     log:
         "logs/cds/{sample}.log"    
     shell:
@@ -159,7 +159,7 @@ rule get_protein:
         done = temp("proteins/{sample}.done"),
         fas = expand("proteins/{{sample}}_{protein}.fa", protein=proteins)
     conda:
-        "agat.yaml"
+        "envs/agat.yaml"
     log:
         "logs/proteins/{sample}.log"   
     shell:
@@ -196,9 +196,9 @@ rule mosdepth:
     params:
         window = config["mosdepth_window"]
     conda: 
-        "depth.yaml"
+        "envs/depth.yaml"
     threads:
-       config["mosdepth_threads"]     
+       config["threads_mosdepth"]     
     log:
         "logs/mosdepth/{sample}.log"
     shell:
@@ -215,27 +215,27 @@ rule coverage_plot:
     log:
         "logs/coverage/{sample}.log"
     script:
-        "coverage.R"
+        "scripts/coverage.R"
 
-rule mapq:
-    input:
-        "genomes-annotations/{sample}/snps.bam"
-    output:
-        "genomes-annotations/{sample}/mapq.tsv"
-    conda: 
-        "depth.yaml"   
-    log:
-        "logs/mapq/{sample}.log"
-    shell:
-        "samtools stats {input} | grep ^MAPQ | cut -f 2- > {output} "
-        "&> {log}"
+#rule mapq:
+#    input:
+#        "genomes-annotations/{sample}/snps.bam"
+#    output:
+#        "genomes-annotations/{sample}/mapq.tsv"
+#    conda: 
+#        "envs/depth.yaml"   
+#    log:
+#        "logs/mapq/{sample}.log"
+#    shell:
+#        "samtools stats {input} | grep ^MAPQ | cut -f 2- > {output} "
+#        "&> {log}"
 
-rule mapq_plot:
-    input:
-        "genomes-annotations/{sample}/mapq.tsv"
-    output:
-        "genomes-annotations/{sample}/mapq-count.svg"
-    log:
-        "logs/mapq-count/{sample}.log"
-    script:
-        "mapq-distribution.R"        
+#rule mapq_plot:
+#    input:
+#        "genomes-annotations/{sample}/mapq.tsv"
+#    output:
+#        "genomes-annotations/{sample}/mapq-count.svg"
+#    log:
+#        "logs/mapq-count/{sample}.log"
+#    script:
+#        "scripts/mapq-distribution.R"        
