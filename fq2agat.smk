@@ -137,8 +137,8 @@ rule get_cds:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
-        temp("cds/{sample}.done"),
-        expand("cds/{{sample}}_{protein}.fa", protein=proteins)
+        done = temp("cds/{sample}.done"),
+        fas = expand("cds/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "agat.yaml"
     log:
@@ -148,7 +148,7 @@ rule get_cds:
         "while read line;  do "
         "seqkit faidx {input.fasta} $line | "
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > cds/{wildcards.sample}_$line.fa; done &> {log}"
-        "&& touch {output}" 
+        "&& touch {output.done}" 
 
 rule get_protein:
     input:
@@ -156,8 +156,8 @@ rule get_protein:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
-        temp("proteins/{sample}.done"),
-        expand("proteins/{{sample}}_{protein}.fa", protein=proteins)
+        done = temp("proteins/{sample}.done"),
+        fas = expand("proteins/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "agat.yaml"
     log:
@@ -167,7 +167,7 @@ rule get_protein:
         "while read line; do "
         "seqkit faidx {input.fasta} $line | "
         "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > proteins/{wildcards.sample}_$line.fa; done &> {log}"
-        "&& touch {output}"
+        "&& touch {output.done}"
 
 rule cat_proteins:
     input:
@@ -180,8 +180,8 @@ rule cat_proteins:
 
 rule cat_cds:
     input:
-        done = expand("cds/{sample}.done", sample=samples),
-        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples)
+        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples),
+        done = expand("cds/{sample}.done", sample=samples)
     output:
         "by_cds/{protein}.fa"
     shell:
@@ -238,4 +238,4 @@ rule mapq_plot:
     log:
         "logs/mapq-count/{sample}.log"
     script:
-        "mapq-distribution.R"        
+        "mapq-count.R"        
