@@ -75,4 +75,5 @@ The working directory is `/analysis/czirion/CryptoDiversity`
   * Runs **agat** for each sample.
   * Makes **fasta indexes** for the protein and cds fastas.
   * **Extracts sequences** (cds and protein) of each sample and puts it in a file.  
-  ⏰  Pending: **Concatenate** all sequences for each protein (cds and protein) in only one file.
+  * **Concatenate** all sequences for each protein (cds and protein) in only one file.
+  * Generates **quality and coverage** plot (working file:`depth_quality.smk`, ⏰ Pending: join in main Snakefile)
