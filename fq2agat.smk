@@ -1,5 +1,13 @@
 configfile: "config.yaml"
 
+subworkflow otherworkflow:
+    workdir:
+        "."
+    snakefile:
+        "./annotate_references.smk"
+    configfile:
+        "./config.yaml"
+
 import pandas as pd
 
 samplefile=(pd.read_csv(config["sample_file"], sep=","))
@@ -8,8 +16,9 @@ ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
 
-protlist=(pd.read_csv("protein_list.txt", sep=",", header = None, names = ['protein']))
+protlist=(pd.read_csv(otherworkflow("protein_list.txt"), sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
+
 
 rule all:
     input:
@@ -17,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("by_cds/{protein}.fa", protein=proteins),
-        expand("by_protein/{protein}.fa", protein=proteins),   
+        #expand("by_cds/{protein}.fa", protein=proteins),
+        #expand("by_protein/{protein}.fa", protein=proteins),   
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
         #expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
