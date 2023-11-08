@@ -137,7 +137,8 @@ rule get_cds:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
-        temp("cds/{sample}.done")
+        temp("cds/{sample}.done"),
+        expand("cds/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "agat.yaml"
     log:
@@ -155,7 +156,8 @@ rule get_protein:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
-        temp("proteins/{sample}.done")
+        temp("proteins/{sample}.done"),
+        expand("proteins/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "agat.yaml"
     log:
@@ -178,8 +180,8 @@ rule cat_proteins:
 
 rule cat_cds:
     input:
-        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples),
-        done = expand("cds/{sample}.done", sample=samples)
+        done = expand("cds/{sample}.done", sample=samples),
+        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples)
     output:
         "by_cds/{protein}.fa"
     shell:
@@ -236,4 +238,4 @@ rule mapq_plot:
     log:
         "logs/mapq-count/{sample}.log"
     script:
-        "mapq-count.R"        
+        "mapq-distribution.R"        
