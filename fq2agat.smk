@@ -238,4 +238,4 @@ rule mapq_plot:
     log:
         "logs/mapq-count/{sample}.log"
     script:
-        "mapq-count.R"        
+        "mapq-distribution.R"        
