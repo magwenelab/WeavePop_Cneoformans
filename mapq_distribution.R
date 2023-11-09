@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading TSV file")
-mapq<- read.delim("Downloads/SRS404442/mapq.tsv", header = FALSE, col.names = c("Chromosome", "MAPQ", "Count"), stringsAsFactors = TRUE)
+mapq<- read.delim("Downloads/mapq.tsv", header = FALSE, col.names = c("Chromosome", "MAPQ", "Count"), stringsAsFactors = TRUE)
 
 print("Plotting MAPQ distribution")
 
@@ -24,6 +24,6 @@ plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
   theme(legend.position="none")
 
 print("Saving plot")
-ggsave("mapq.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
+ggsave("Downloads/mapq_distribution.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 ggsave(snakemake@output[[2]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 print("Done!")

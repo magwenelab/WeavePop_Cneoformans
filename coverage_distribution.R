@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading TSV file")
-cov<- read.delim("Downloads/SRS404442/cov.tsv", header = FALSE, col.names = c("Chromosome", "Range", "Coverage", "Count"), stringsAsFactors = TRUE)
+cov<- read.delim("Downloads/cov.tsv", header = FALSE, col.names = c("Chromosome", "Range", "Coverage", "Count"), stringsAsFactors = TRUE)
 
 print("Plotting Coverage distribution")
 
@@ -18,10 +18,11 @@ plot <- ggplot(cov, aes(x=Coverage, y=Count))+
   geom_line(aes(color = Chromosome))+
   scale_color_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
-  scale_y_continuous(name = "Number of Reads", labels = comma)+
+  scale_y_continuous(name = "Number of Sites", labels = comma)+
   theme_light()+
   theme(legend.position="none")
 
 print("Saving plot")
+ggsave("Downloads/cov_distribution.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 print("Done!")

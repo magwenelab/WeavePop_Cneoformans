@@ -8,6 +8,8 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading BED file")
+all_chroms<- read.delim("Downloads/SRS404442.regions.bed", header = FALSE, col.names = c("Chromosome", "Start", "End", "Depth"), stringsAsFactors = TRUE)
+
 all_chroms<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("Chromosome", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 
 all_chroms <- all_chroms %>%
@@ -27,7 +29,7 @@ plot <- ggplot(data = all_chroms)+
   facet_wrap(~Chromosome,ncol = 2, scales = "free_x")+
   scale_color_manual(values = chrom_colors)+
   scale_fill_manual(values = chrom_colors)+
-  scale_y_continuous(name = "Depth (X)", labels = comma)+
+  scale_y_log10(name = "Depth (X)")+
   scale_x_continuous(name = "Position (bp) ", labels = comma)+
   theme_light()+
   theme(legend.position="none")
