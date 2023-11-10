@@ -44,7 +44,8 @@ rule coverage_plot:
 
 rule samtools_stats:
     input:
-        "genomes-annotations/{sample}/snps.bam"
+        "genomes-annotations/{sample}/snps.bam",
+        "genomes-annotations/{sample}/ref.fa"
     output:
         mapq = "genomes-annotations/{sample}/mapq.tsv",
         cov = "genomes-annotations/{sample}/cov.tsv"
