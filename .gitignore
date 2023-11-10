@@ -162,3 +162,11 @@ cython_debug/
 
 #Data for the project
 References_local
+by_cds
+by_protein
+cds
+proteins
+fastq_combined
+genomes-annotations
+logs
+reference_genomes
