@@ -1,11 +1,18 @@
+#Inputs
+METADATATABLE = "Desjardins_Supplemental_Table_S1.csv"
+READSTABLE = "read_pair_table.csv"
+#Outputs
+OUTSAMPLESTABLE = "sample_metadata.csv"
+
 import pandas as pd
 import csv
 from pathlib import Path  
 
 # Get Run and Experiment accessions from SRS sample names from Entrez Direct
-sample_names = pd.read_table("PRJNA382844_samples.txt", header=None, names=["SAM", "Name", "SRS"])
+sample_names = pd.read_csv(READSTABLE)
+sample_names = set(sample_names["sample"])
 all_accessions = pd.DataFrame([])
-for srs in sample_names.SRS:
+for srs in sample_names:
         print(f"Processing {srs}")
         srr = $(esearch -db sra -query @(srs) | efetch -format runinfo -mode xml | xtract -pattern Row -element Sample Experiment Run SampleName)
         stringList = srr.split('\n')
@@ -14,7 +21,7 @@ for srs in sample_names.SRS:
 all_accessions.dropna(inplace=True)
 
 #Get origianl metadata from Desjardins table:
-original_metadata = pd.read_csv("Desjardins_Supplemental_Table_S1.csv")
+original_metadata = pd.read_csv(METADATATABLE)
 original_codes = original_metadata.drop(original_metadata.columns.difference(['Strain','Group', 'SRA Accession']), axis = 1)
 #Split SRA accession column because the same cell has many accessions and take to long format:
 original_codes[['SA1','SA2','SA3','SA4']] = original_codes['SRA Accession'].str.split(', ',expand=True)
@@ -45,5 +52,5 @@ SRS_names.drop_duplicates(inplace = True)
 sample_metadata = SRS_names.set_index('Strain').join(original_metadata.set_index('Strain'))
 sample_metadata = sample_metadata.reset_index()
 #Save all metadata with SRS names and names gotten from Entrez into csv file
-filepath = Path('sample_metadata.csv')  
+filepath = Path(OUTSAMPLESTABLE)  
 sample_metadata.to_csv(filepath, index=False)  
