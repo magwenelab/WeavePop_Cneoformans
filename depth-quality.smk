@@ -7,9 +7,11 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),        
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage.txt",sample=samples)
+        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/bamstats", sample=samples)
 
 rule mosdepth:
     input:
@@ -19,9 +21,9 @@ rule mosdepth:
     params:
         window = config["mosdepth_window"]
     conda: 
-        "depth.yaml"
+        "envs/depth.yaml"
     threads:
-       config["mosdepth_threads"]     
+       config["threads_mosdepth"]     
     log:
         "logs/mosdepth/{sample}.log"
     shell:
@@ -38,43 +40,70 @@ rule coverage_plot:
     log:
         "logs/coverage/{sample}.log"
     script:
-        "coverage.R"
+        "scripts/coverage.R"
 
-rule mapq:
+rule samtools_stats:
     input:
         "genomes-annotations/{sample}/snps.bam"
     output:
-        "genomes-annotations/{sample}/mapq.tsv"
+        mapq = "genomes-annotations/{sample}/mapq.tsv",
+        cov = "genomes-annotations/{sample}/cov.tsv"
     conda: 
-        "depth.yaml"   
+        "envs/depth.yaml"
     log:
-        "logs/mapq/{sample}.log"
-    shell:
-        "samtools stats {input} | grep ^MAPQ | cut -f 2- > {output} "
-        "&> {log}"
-
-rule mapq_plot:
-    input:
-        "genomes-annotations/{sample}/mapq.tsv"
-    output:
-        "genomes-annotations/{sample}/mapq-count.svg"
-    log:
-        "logs/mapq-count/{sample}.log"
+        "logs/stats/{sample}.log"
     script:
-        "mapq-count.R"
+        "scripts/samtools-stats.xsh"
 
-rule mpileup:
+rule mapq_distribution:
+    input:
+        "genomes-annotations/{sample}/mapq.tsv"
+    output:
+        "genomes-annotations/{sample}/mapq_distribution.svg"
+    log:
+        "logs/mapq-dist/{sample}.log"
+    script:
+        "scripts/mapq-distribution.R"
+
+rule cov_distribution:
+    input:
+        "genomes-annotations/{sample}/cov.tsv"
+    output:
+        "genomes-annotations/{sample}/cov_distribution.svg"
+    log:
+        "logs/cov-dist/{sample}.log"
+    script:
+        "scripts/coverage-distribution.R"        
+
+#rule mpileup:
+#    input:
+#        "genomes-annotations/{sample}/snps.bam"
+#    output:
+#        "genomes-annotations/{sample}/snps.pileup"
+#    conda: 
+#        "depth.yaml"   
+#    log:
+#        "logs/mapq/{sample}.log"
+#    shell:
+#        "samtools mpileup --output-extra MAPQ {input} > {output}"
+#        "&> {log}"
+
+rule bamstats:
     input:
         "genomes-annotations/{sample}/snps.bam"
     output:
-        "genomes-annotations/{sample}/snps.pileup"
-    conda: 
-        "depth.yaml"   
-    log:
-        "logs/mapq/{sample}.log"
+        "genomes-annotations/{sample}/snps.bam.stats"
+    conda:
+        "envs/depth.yaml"
     shell:
-        "samtools mpileup --output-extra MAPQ {input} > {output}"
-        "&> {log}"
+        "samtools stats {input} > {output} "
 
-#samtools stats genomes-annotations/SRS404442/snps.bam > snps.stats
-#plot-bamstats -p SRS404442/ snps.stats
+rule plot_bamstats:
+    input:
+        "genomes-annotations/{sample}/snps.bam.stats"
+    output:
+        directory("genomes-annotations/{sample}/bamstats")
+    conda:
+        "envs/depth.yaml"
+    shell:
+        "plot-bamstats -p bamstats {input}"
