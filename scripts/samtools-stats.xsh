@@ -18,12 +18,11 @@ def stats(sample, bamfile, reference, mapqfile, covfile ): # Start definition of
     mapq.tsv and cov.tsv, respectively.
     
     SAMPLE is the sample name.
+    BAMFILE is the path to the .bam
+    REFERENCE is the path to the ref.fa
+    MAPQFILE is the path to the output table with the MAPQ results
+    COVFILE is the path to the output tabe with the MAPQ results
     """
-    #sample = "SRS404449"
-    #bamfile = snakemake.input[0]
-    #bamfile = Path("genomes-annotations/" + sample + "/snps.bam")
-    #reference = snakemake.input[1]
-    #reference = Path("genomes-annotations/" + sample + "/ref.fa")
     chroms = $(grep chromosome @(reference))
     chroms_list = chroms.split("\n")
     chroms_list = list(filter(None, chroms_list))
@@ -48,12 +47,8 @@ def stats(sample, bamfile, reference, mapqfile, covfile ): # Start definition of
     coverage = pd.concat(out_cov)
     coverage = coverage.dropna()
     coverage.columns = ["Chromosome", "Range", "Coverage", "Count"]
-    #mapqfile = Path("genomes-annotations/" + sample + "/mapq.tsv")
     quality.to_csv(mapqfile, index=False)
-    #quality.to_csv(snakemake.output[0], index=False)
-    #covfile = Path("genomes-annotations/" + sample + "/cov.tsv")
     coverage.to_csv(covfile, index=False)
-    #coverage.to_csv(snakemake.output[1], index=False)
 
 if __name__ == "__main__":
     stats() # Runs the function stats
