@@ -171,3 +171,5 @@ genomes-annotations
 logs
 reference_genomes
 fastqs
+test_sample_reference.csv
+test_read_pair_table.csv
