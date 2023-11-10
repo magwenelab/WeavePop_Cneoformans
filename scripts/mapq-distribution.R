@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading TSV file")
-mapq<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("Chromosome", "MAPQ", "Count"), stringsAsFactors = TRUE)
+mapq<- read.delim(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 
 print("Plotting MAPQ distribution")
 

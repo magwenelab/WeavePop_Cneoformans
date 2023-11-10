@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading TSV file")
-cov<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("Chromosome", "Range", "Coverage", "Count"), stringsAsFactors = TRUE)
+cov<- read.delim(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 
 print("Plotting Coverage distribution")
 
