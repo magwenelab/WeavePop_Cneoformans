@@ -7,11 +7,11 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        #expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
+        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
         expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/bamstats", sample=samples)
+        expand("genomes-annotations/{sample}/bamstats", sample=samples)
 
 rule mosdepth:
     input:
@@ -47,8 +47,8 @@ rule samtools_stats:
         bam = "genomes-annotations/{sample}/snps.bam",
         ref = "genomes-annotations/{sample}/ref.fa"
     output:
-        mapq = "genomes-annotations/{sample}/mapq.tsv",
-        cov = "genomes-annotations/{sample}/cov.tsv"
+        mapq = "genomes-annotations/{sample}/mapq.csv",
+        cov = "genomes-annotations/{sample}/cov.csv"
     log:
         "logs/stats/{sample}.log"
     shell:
@@ -56,7 +56,7 @@ rule samtools_stats:
 
 rule mapq_distribution:
     input:
-        "genomes-annotations/{sample}/mapq.tsv"
+        "genomes-annotations/{sample}/mapq.csv"
     output:
         "genomes-annotations/{sample}/mapq_distribution.svg"
     log:
@@ -66,7 +66,7 @@ rule mapq_distribution:
 
 rule cov_distribution:
     input:
-        "genomes-annotations/{sample}/cov.tsv"
+        "genomes-annotations/{sample}/cov.csv"
     output:
         "genomes-annotations/{sample}/cov_distribution.svg"
     log:
