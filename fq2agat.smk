@@ -1,12 +1,12 @@
 configfile: "config.yaml"
 
-subworkflow otherworkflow:
-    workdir:
-        "."
-    snakefile:
-        "./annotate_references.smk"
-    configfile:
-        "./config.yaml"
+#subworkflow otherworkflow:
+#    workdir:
+#        "."
+#    snakefile:
+#        "./annotate_references.smk"
+#    configfile:
+#        "./config.yaml"
 
 import pandas as pd
 
@@ -16,7 +16,7 @@ ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
 
-protlist=(pd.read_csv(otherworkflow("protein_list.txt"), sep=",", header = None, names = ['protein']))
+protlist=(pd.read_csv("protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
 
 
@@ -26,12 +26,13 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        #expand("by_cds/{protein}.fa", protein=proteins),
-        #expand("by_protein/{protein}.fa", protein=proteins),   
+        expand("by_cds/{protein}.fa", protein=proteins),
+        expand("by_protein/{protein}.fa", protein=proteins),   
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        #expand("genomes-annotations/{sample}/mapq.tsv",sample=samples),
-        #expand("genomes-annotations/{sample}/mapq-count.svg",sample=samples)
+        expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/bamstats", sample=samples)
 
 rule combine_fastq:
     input:
@@ -196,7 +197,6 @@ rule cat_cds:
     shell:
         "cat {input.fastas} > {output}"
 
-
 rule mosdepth:
     input:
         "genomes-annotations/{sample}/snps.bam"
@@ -226,25 +226,69 @@ rule coverage_plot:
     script:
         "scripts/coverage.R"
 
-#rule mapq:
+rule samtools_stats:
+    input:
+        "genomes-annotations/{sample}/snps.bam"
+    output:
+        mapq = "genomes-annotations/{sample}/mapq.tsv",
+        cov = "genomes-annotations/{sample}/cov.tsv"
+    conda: 
+        "envs/depth.yaml"
+    log:
+        "logs/stats/{sample}.log"
+    script:
+        "scripts/samtools-stats.xsh"
+
+rule mapq_distribution:
+    input:
+        "genomes-annotations/{sample}/mapq.tsv"
+    output:
+        "genomes-annotations/{sample}/mapq_distribution.svg"
+    log:
+        "logs/mapq-dist/{sample}.log"
+    script:
+        "scripts/mapq-distribution.R"
+
+rule cov_distribution:
+    input:
+        "genomes-annotations/{sample}/cov.tsv"
+    output:
+        "genomes-annotations/{sample}/cov_distribution.svg"
+    log:
+        "logs/cov-dist/{sample}.log"
+    script:
+        "scripts/coverage-distribution.R"        
+
+#rule mpileup:
 #    input:
 #        "genomes-annotations/{sample}/snps.bam"
 #    output:
-#        "genomes-annotations/{sample}/mapq.tsv"
+#        "genomes-annotations/{sample}/snps.pileup"
 #    conda: 
-#        "envs/depth.yaml"   
+#        "depth.yaml"   
 #    log:
 #        "logs/mapq/{sample}.log"
 #    shell:
-#        "samtools stats {input} | grep ^MAPQ | cut -f 2- > {output} "
+#        "samtools mpileup --output-extra MAPQ {input} > {output}"
 #        "&> {log}"
 
-#rule mapq_plot:
-#    input:
-#        "genomes-annotations/{sample}/mapq.tsv"
-#    output:
-#        "genomes-annotations/{sample}/mapq-count.svg"
-#    log:
-#        "logs/mapq-count/{sample}.log"
-#    script:
-#        "scripts/mapq-distribution.R"        
+rule bamstats:
+    input:
+        "genomes-annotations/{sample}/snps.bam"
+    output:
+        "genomes-annotations/{sample}/snps.bam.stats"
+    conda:
+        "envs/depth.yaml"
+    shell:
+        "samtools stats {input} > {output} "
+
+rule plot_bamstats:
+    input:
+        "genomes-annotations/{sample}/snps.bam.stats"
+    output:
+        directory("genomes-annotations/{sample}/bamstats")
+    conda:
+        "envs/depth.yaml"
+    shell:
+        "plot-bamstats -p bamstats {input}"
+
