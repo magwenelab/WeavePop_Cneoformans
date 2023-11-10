@@ -53,7 +53,7 @@ rule samtools_stats:
     log:
         "logs/stats/{sample}.log"
     script:
-        "scripts/samtools-stats.xsh"
+        "scripts/samtools-stats.xsh {wildcards.sample} &> {log}"
 
 rule mapq_distribution:
     input:
