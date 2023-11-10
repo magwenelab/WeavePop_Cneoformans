@@ -26,15 +26,25 @@ def stats(sample): # Start definition of function with the sample as argument
     chroms_list = [i.split(' ',1)[0] for i in chroms_list]
     chroms_list = [i.replace('>', '') for i in chroms_list]
 
+out_mapq = []
+out_cov = []
     for chromosome in chroms_list:
         mapq = $(samtools stats @(bamfile) @(chromosome) | grep ^MAPQ | cut -f 2-)
         mapq = pd.Series(list(mapq.split("\n")))
         mapq = chromosome + "\t" + mapq
         mapq = mapq.str.split("\t", expand = True)
+        out_mapq.append(mapq)
         cov = $(samtools stats @(bamfile) @(chromosome) | grep ^COV | cut -f 2-)
         cov = pd.Series(list(cov.split("\n")))
         cov = chromosome + "\t" + cov
         cov= cov.str.split("\t", expand = True)
+        out_cov.append(cov)
+
+quality = pd.concat(out_mapq)
+quality = quality.dropna()
+coverage = pd.concat(out_cov)
+coverage = coverage.dropna()
+
 
 # Trying to translate the code bellow into Xonsh
 
