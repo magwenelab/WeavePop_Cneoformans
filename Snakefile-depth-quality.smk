@@ -7,11 +7,11 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        #expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
+        #expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
         expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-        expand("genomes-annotations/{sample}/bamstats", sample=samples)
+        #expand("genomes-annotations/{sample}/bamstats", sample=samples)
 
 rule mosdepth:
     input:
@@ -49,12 +49,10 @@ rule samtools_stats:
     output:
         mapq = "genomes-annotations/{sample}/mapq.tsv",
         cov = "genomes-annotations/{sample}/cov.tsv"
-    conda: 
-        "envs/depth.yaml"
     log:
         "logs/stats/{sample}.log"
-    script:
-        "scripts/samtools-stats.xsh {wildcards.sample} &> {log}"
+    shell:
+        "xonsh scripts/samtools-stats.xsh {wildcards.sample} &> {log}"
 
 rule mapq_distribution:
     input:
@@ -96,8 +94,10 @@ rule bamstats:
         "genomes-annotations/{sample}/snps.bam.stats"
     conda:
         "envs/depth.yaml"
+    log:
+        "logs/bamstats/{sample}.log"
     shell:
-        "samtools stats {input} > {output} "
+        "samtools stats {input} 1> {output} 2> {log}"
 
 rule plot_bamstats:
     input:
@@ -106,5 +106,7 @@ rule plot_bamstats:
         directory("genomes-annotations/{sample}/bamstats")
     conda:
         "envs/depth.yaml"
+    log:
+        "logs/plot-bamstats/{sample}.log"
     shell:
-        "plot-bamstats -p bamstats {input}"
+        "plot-bamstats -p {output}/ {input} &> {log}"
