@@ -44,15 +44,15 @@ rule coverage_plot:
 
 rule samtools_stats:
     input:
-        "genomes-annotations/{sample}/snps.bam",
-        "genomes-annotations/{sample}/ref.fa"
+        bam = "genomes-annotations/{sample}/snps.bam",
+        ref = "genomes-annotations/{sample}/ref.fa"
     output:
         mapq = "genomes-annotations/{sample}/mapq.tsv",
         cov = "genomes-annotations/{sample}/cov.tsv"
     log:
         "logs/stats/{sample}.log"
     shell:
-        "xonsh scripts/samtools-stats.xsh {wildcards.sample} &> {log}"
+        "xonsh scripts/samtools-stats.xsh {wildcards.sample} {input.bam} {input.ref} {output.mapq} {output.cov} &> {log}"
 
 rule mapq_distribution:
     input:
