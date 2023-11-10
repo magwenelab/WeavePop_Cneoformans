@@ -51,7 +51,7 @@ rule ref2ref_agat:
         cds = REFDIR + "{lineage}_predicted_cds.fa",
         prots = REFDIR + "{lineage}_predicted_proteins.fa"
     conda:
-        "agat.yaml"
+        "envs/agat.yaml"
     log:
         cds = "logs/references/{lineage}_ref_agat_cds.log",   
         prots = "logs/references/{lineage}_ref_agat_prots.log"
@@ -83,3 +83,4 @@ rule cat_lists:
         "protein_list.txt"
     shell:
         "cat {input} | sort | uniq > {output}"
+         
