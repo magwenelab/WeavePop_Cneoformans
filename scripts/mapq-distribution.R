@@ -9,6 +9,8 @@ library(svglite)
 
 print("Reading TSV file")
 mapq<- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
+#setwd("./genomes-annotations/SRS404449/")
+#mapq<- read.csv("mapq.csv", header = TRUE, stringsAsFactors = TRUE)
 
 print("Plotting MAPQ distribution")
 
@@ -18,11 +20,14 @@ plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
   geom_col(aes( fill = Chromosome))+
   scale_fill_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
-  scale_y_continuous(name = "Number of Reads", labels = comma)+
+  scale_y_log10(name = "Number of Reads", labels = comma)+
   scale_x_continuous(name = "Mapping Quality")+
   theme_light()+
   theme(legend.position="none")
 
+#ggsave("mapq-distribution.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
+
 print("Saving plot")
 ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 print("Done!")
+
