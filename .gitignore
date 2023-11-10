@@ -174,3 +174,4 @@ fastqs
 test_sample_reference.csv
 test_read_pair_table.csv
 .snakemake/
+.vscode
