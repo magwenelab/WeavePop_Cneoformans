@@ -45,6 +45,8 @@ quality = quality.dropna()
 coverage = pd.concat(out_cov)
 coverage = coverage.dropna()
 
+mapqfile = Path("genomes-annotations/" + sample + "/snps.mapq")
+quality.to_csv(mapqfile)
 
 # Trying to translate the code bellow into Xonsh
 
