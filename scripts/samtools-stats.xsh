@@ -17,7 +17,7 @@ def stats(sample): # Start definition of function with the sample as argument
     """
     sample = "SRS404449"
     reference = Path("genomes-annotations/" + sample + "/ref.fa")
-    bamfile = snakemake.input[0]
+    #bamfile = snakemake.input[0]
     bamfile = Path("genomes-annotations/" + sample + "/snps.bam")
 
     chroms = $(grep chromosome @(reference))
@@ -42,12 +42,19 @@ out_cov = []
 
 quality = pd.concat(out_mapq)
 quality = quality.dropna()
+quality.columns = ["Chromosome", "MAPQ", "Count"]
 coverage = pd.concat(out_cov)
 coverage = coverage.dropna()
+coverage.columns = ["Chromosome", "Range", "Coverage", "Count"]
 
-mapqfile = Path("genomes-annotations/" + sample + "/snps.mapq")
-quality.to_csv(mapqfile)
 
+mapqfile = Path("genomes-annotations/" + sample + "/mapq.tsv")
+quality.to_csv(mapqfile, index=False)
+quality.to_csv(snakemake.output[0], index=False)
+
+covfile = Path("genomes-annotations/" + sample + "/cov.tsv")
+coverage.to_csv(covfile, index=False)
+coverage.to_csv(snakemake.output[1], index=False)
 # Trying to translate the code bellow into Xonsh
 
 #!/usr/bin/env bash
