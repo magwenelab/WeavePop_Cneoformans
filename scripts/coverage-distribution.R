@@ -14,11 +14,11 @@ cov<- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 
 print("Plotting Coverage distribution")
 
-chrom_colors <- c(brewer.pal(nlevels(cov$Chromosome)/2, "Dark2"),brewer.pal(nlevels(cov$Chromosome)/2, "Set2"))
+#chrom_colors <- c(brewer.pal(nlevels(cov$Chromosome)/2, "Dark2"),brewer.pal(nlevels(cov$Chromosome)/2, "Set2"))
 
 plot <- ggplot(cov, aes(x=Coverage, y=Count))+
-  geom_col(aes(color = Chromosome))+
-  scale_color_manual(values = chrom_colors)+
+  geom_col()+ #aes(color = Chromosome)
+  #scale_color_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
   scale_y_log10(name = "Number of Sites", labels = comma)+
   scale_x_continuous(name = "Coverage (X) ", labels = comma, n.breaks = 10)+

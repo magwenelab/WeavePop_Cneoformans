@@ -14,11 +14,11 @@ mapq<- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 
 print("Plotting MAPQ distribution")
 
-chrom_colors <- c(brewer.pal(nlevels(mapq$Chromosome)/2, "Dark2"),brewer.pal(nlevels(mapq$Chromosome)/2, "Set2"))
+#chrom_colors <- c(brewer.pal(nlevels(mapq$Chromosome)/2, "Dark2"),brewer.pal(nlevels(mapq$Chromosome)/2, "Set2"))
 
 plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
   geom_col(aes( fill = Chromosome))+
-  scale_fill_manual(values = chrom_colors)+
+  #scale_fill_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
   scale_y_log10(name = "Number of Reads", labels = comma, breaks = 100 * 10^seq(0,4, by = 2))+
   scale_x_continuous(name = "Mapping Quality", n.breaks = 8)+
