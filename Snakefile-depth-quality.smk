@@ -9,6 +9,8 @@ rule all:
     input:
         expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
+        expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
         expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/bamstats", sample=samples)
@@ -31,14 +33,46 @@ rule mosdepth:
         "genomes-annotations/{wildcards.sample}/coverage {input} "
         "&> {log}"
 
+rule mosdepth_good:
+    input:
+        "genomes-annotations/{sample}/snps.bam"
+    output:
+        "genomes-annotations/{sample}/coverage_good.regions.bed.gz"
+    params:
+        window = config["mosdepth_window"],
+        min_mapq = config["mosdepth_min_mapq"]
+    conda: 
+        "envs/depth.yaml"
+    threads:
+       config["threads_mosdepth"]     
+    log:
+        "logs/mosdepth_good/{sample}.log"
+    shell:
+        "mosdepth -n --by {params.window} --mapq {params.min_mapq} -t {threads} "
+        "genomes-annotations/{wildcards.sample}/coverage_good {input} "
+        "&> {log}"
+
 rule coverage_plot:
     input:
         "genomes-annotations/{sample}/coverage.regions.bed.gz"
     output:
         "genomes-annotations/{sample}/coverage.txt",
-        "genomes-annotations/{sample}/coverage.svg"
+        "genomes-annotations/{sample}/coverage.svg",
+        "genomes-annotations/{sample}/coverage_stats.svg"
     log:
         "logs/coverage/{sample}.log"
+    script:
+        "scripts/coverage.R"
+
+rule coverage_good_plot:
+    input:
+        "genomes-annotations/{sample}/coverage_good.regions.bed.gz"
+    output:
+        "genomes-annotations/{sample}/coverage_good.txt",
+        "genomes-annotations/{sample}/coverage_good.svg",
+        "genomes-annotations/{sample}/coverage_good_stats.svg"
+    log:
+        "logs/coverage_good/{sample}.log"
     script:
         "scripts/coverage.R"
 

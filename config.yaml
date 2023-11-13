@@ -9,3 +9,4 @@ threads_snippy: 4
 threads_liftoff: 4
 threads_mosdepth: 4
 mosdepth_window: 500
+mosdepth_min_mapq: 1

@@ -20,14 +20,16 @@ plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
   geom_col(aes( fill = Chromosome))+
   scale_fill_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
-  scale_y_log10(name = "Number of Reads", labels = comma)+
-  scale_x_continuous(name = "Mapping Quality")+
+  scale_y_log10(name = "Number of Reads", labels = comma, breaks = 100 * 10^seq(0,4, by = 2))+
+  scale_x_continuous(name = "Mapping Quality", n.breaks = 8)+
   theme_light()+
   theme(legend.position="none")
 
-#ggsave("mapq-distribution.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
+#ggsave("mapq_distribution.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 
 print("Saving plot")
 ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 print("Done!")
+
+# Binned version
 
