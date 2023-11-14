@@ -12,12 +12,20 @@ mapq<- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 #setwd("./genomes-annotations/SRS404449/")
 #mapq<- read.csv("mapq.csv", header = TRUE, stringsAsFactors = TRUE)
 
+mapq <-mapq %>%
+  rename(Accession = Chromosome)
+#chrom_names <- read.csv("../../chromosome_names.csv", header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
+
+chrom_names <- read.csv("chromosome_names.csv", header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
+
+mapq <- left_join(mapq, chrom_names, by = "Accession")
+
 print("Plotting MAPQ distribution")
 
 #chrom_colors <- c(brewer.pal(nlevels(mapq$Chromosome)/2, "Dark2"),brewer.pal(nlevels(mapq$Chromosome)/2, "Set2"))
 
 plot <- ggplot(mapq, aes(x=MAPQ, y=Count))+
-  geom_col(aes( fill = Chromosome))+
+  geom_col(aes(fill = Chromosome))+
   #scale_fill_manual(values = chrom_colors)+
   facet_wrap(~Chromosome,ncol = 2)+
   scale_y_log10(name = "Number of Reads", labels = comma, breaks = 100 * 10^seq(0,4, by = 2))+
