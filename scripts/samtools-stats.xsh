@@ -21,7 +21,7 @@ def stats(sample, bamfile, reference, mapqfile, covfile ): # Start definition of
     BAMFILE is the path to the .bam
     REFERENCE is the path to the ref.fa
     MAPQFILE is the path to the output table with the MAPQ results
-    COVFILE is the path to the output tabe with the MAPQ results
+    COVFILE is the path to the output table with the MAPQ results
     """
     chroms = $(grep chromosome @(reference))
     chroms_list = chroms.split("\n")
