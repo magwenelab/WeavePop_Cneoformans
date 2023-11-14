@@ -9,7 +9,7 @@ library(svglite)
 
 print("Reading BED file")
 all_chroms<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("CAccession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
-#setwd("./genomes-annotations/SRS404449/")
+#setwd("./genomes-annotations/SRS881221/")
 #all_chroms<- read.delim("coverage.regions.bed.gz", header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 #chrom_names <- read.csv("../../chromosome_names.csv", header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
 
