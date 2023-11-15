@@ -27,12 +27,7 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("by_cds/{protein}.fa", protein=proteins),
-        expand("by_protein/{protein}.fa", protein=proteins),   
-        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
-        expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-        expand("genomes-annotations/{sample}/bamstats", sample=samples)
+        expand("by_protein/{protein}.fa", protein=proteins)
 
 rule combine_fastq:
     input:
