@@ -26,18 +26,62 @@ Based on the polished lift-over annotation, the AGAT GTF/GFF Toolkit software (h
 * Python and Conda (miniconda is my preference)
 * Xonsh -- https://xon.sh/
 * Snakemake -- https://snakemake.github.io/
+  * Graphviz -- https://graphviz.org/ (optional, to see Snakemake DAG in a graph)  
 * NCBI Entrez Utilities (E-utilities) command line tools -- https://www.ncbi.nlm.nih.gov/books/NBK25501/
 * NCBI SRA Tools -- https://github.com/ncbi/sra-tools
-
-
-The following are most easily installed via Conda. AGAT in particular seems to clash with other tools so I install it in its own environment.
-
 * Python modules -- Pandas
 * R with tidyverse meta-package
 * Snippy -- https://github.com/tseemann/snippy
 * Liftoff -- https://github.com/agshumate/Liftoff
 * AGAT -- https://github.com/NBISweden/AGAT
+* Mosdepth -- https://github.com/brentp/mosdepth
+* Samtools -- https://www.htslib.org/
   
+### Installations  
+
+Environment installation files are in `envs/`
+<details>
+<summary>Install crypto_div environment -- everything runs in this environment </summary>
+ 
+With the `envs/crypto_div.yml` file:
+
+~~~
+nohup conda env create -y -f envs/crypto_div.yaml &
+~~~
+
+When the environment is ready install R:
+~~~
+conda activate crypto_div
+conda install -c r r-essentials
+conda deactivate
+~~~
+And install Graphviz to see Sankemake DAG of jobs in svg
+~~~
+conda install -c conda-forge graphviz
+~~~
+
+</details>
+
+<details>
+<summary> Install AGAT in its own environment -- when used in Snakemake the workflow uses a separate installation of the environment, but to use it independently install it with this instructions: </summary>
+
+Run this lines one by one:
+~~~
+ conda create -n agat
+ conda activate agat
+ conda install perl-bioperl perl-clone perl-graph perl-lwp-simple perl-carp perl-sort-naturally perl-file-share perl-file-sharedir-install perl-moose perl-yaml perl-lwp-protocol-https -c bioconda
+ conda install r-base
+ conda install perl-statistics-r -c bioconda
+ cpan install bioperl List::MoreUtils Term::ProgressBar
+ git clone https://github.com/NBISweden/AGAT.git
+ perl Makefile.PL 
+ make
+ make test
+ make install
+ conda deactivate
+ ~~~
+
+</details>
 
 
 ## Overview

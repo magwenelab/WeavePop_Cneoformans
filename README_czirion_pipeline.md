@@ -2,24 +2,10 @@
 <details>
 <summary>Install crypto_div environment </summary>
  
-With this `crypto_div.yml` file:
-~~~
-name: crypto_div
-channels:
-  - conda-forge
-  - defaults
-  - bioconda
-dependencies:
-  - pandas
-  - xonsh
-  - snakemake
-  - snippy
-  - liftoff
-~~~
+With the `envs/crypto_div.yml` file:
 
-Run:
 ~~~
-nohup conda env create -y -f crypto_div.yml &
+nohup conda env create -y -f envs/crypto_div.yaml &
 ~~~
 
 When the environment is ready install R:

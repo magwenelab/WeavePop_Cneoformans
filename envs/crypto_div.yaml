@@ -1,0 +1,11 @@
+name: crypto_div
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+dependencies:
+  - pandas
+  - xonsh
+  - snakemake
+  - snippy
+  - liftoff
