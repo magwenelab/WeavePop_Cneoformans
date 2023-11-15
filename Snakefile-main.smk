@@ -86,6 +86,13 @@ rule liftoff:
         "{input} "
         "{params.refgenome} &> {log}"
 
+#rule unmapped_features:
+#    shell:
+#        ls genomes-annotations/ | grep "SRS" | while read sample
+#           do 
+#               sed "s/$/,\\${sample}/" genomes-annotations/${sample}/unmapped_features.txt
+#           done > genomes-annotations/unmapped_features.csv
+
 rule agat:
     input:
         "genomes-annotations/{sample}/lifted.gff_polished"

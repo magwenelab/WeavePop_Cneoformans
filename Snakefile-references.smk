@@ -83,4 +83,20 @@ rule cat_lists:
         "protein_list.txt"
     shell:
         "cat {input} | sort | uniq > {output}"
+
+rule unmapped_features:
+    input:
+        expand(REFDIR + "{lineage}_unmapped_features.txt", lineage=LINS)   
+    output: 
+        "unmapped_features.csv"
+    shell:
+        # cat ../lineage_references.csv | tail -n4 | cut -d',' -f1 | while read lineage
+        #   do 
+        #    sed "s/$/,\\${lineage}/" ${lineage}_unmapped_features.txt
+        #   done > unmapped_features.csv
          
+rule unmapped_count:
+    R:
+    #unmapped<-read.csv("reference_genomes/unmapped_features.csv", header = FALSE, col.names = c("gene", "lineage"))
+    #unmapped_count <- unmapped %>% group_by(lineage) %>% count()
+    #write.csv(unmapped_count, "reference_genomes/unmapped_count.csv", row.names = FALSE)
