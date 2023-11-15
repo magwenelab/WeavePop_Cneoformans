@@ -86,7 +86,11 @@ Run this lines one by one:
 
 ## Overview
 
-The working directory is `/analysis/czirion/Crypto_Diversity_Pipeline/`
+Working directory: `/analysis/czirion/Crypto_Diversity_Pipeline/`
+
+Starting files: 
+  * `Desjardins_Supplemental_Table_S1.csv`
+  * `lineage_references.csv`
 
 Scripts to be run in this order:
 
