@@ -63,7 +63,7 @@ conda install -c conda-forge graphviz
 </details>
 
 <details>
-<summary> Install AGAT in its own environment -- when used in Snakemake the workflow uses a separate installation of the environment, but to use it independently install it with this instructions: </summary>
+<summary> Install AGAT in its own environment -- when used in Snakemake the workflow uses a separate installation of the environment, but to use it independently install it with this instructions </summary>
 
 Run this lines one by one:
 ~~~
