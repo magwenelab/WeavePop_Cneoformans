@@ -10,6 +10,8 @@ library(svglite)
 print("Reading TSV file")
 mapq<- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 #setwd("./genomes-annotations/SRS881221/")
+#setwd("./genomes-annotations/SRS404449/")
+
 #mapq<- read.csv("mapq.csv", header = TRUE, stringsAsFactors = TRUE)
 
 mapq <-mapq %>%

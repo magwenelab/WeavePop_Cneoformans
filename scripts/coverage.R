@@ -8,9 +8,10 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 
 print("Reading BED file")
-all_chroms<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("CAccession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
+all_chroms<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 #setwd("./genomes-annotations/SRS881221/")
-#all_chroms<- read.delim("coverage.regions.bed.gz", header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
+#setwd("./genomes-annotations/SRS404449/")
+#all_chroms<- read.delim("coverage_good.regions.bed.gz", header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 #chrom_names <- read.csv("../../chromosome_names.csv", header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
 
 chrom_names <- read.csv("chromosome_names.csv", header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
@@ -35,7 +36,7 @@ plot <- ggplot(data = filtered)+
   theme_light()+
   theme(legend.position="none")
 
-#ggsave("coverage.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
+#ggsave("coverage_good.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 
 print("Saving plot")
 ggsave(snakemake@output[[2]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
@@ -58,10 +59,15 @@ plot <- ggplot(data = stats, aes(x = Chromosome, y = Value, shape = Measurement,
   scale_color_discrete(guide = "none")+
   scale_fill_discrete(guide = "none")
   #scale_color_manual(values = chrom_colors)
-ggsave("coverage_stats.svg", plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
+#ggsave("coverage_stats_good.svg", plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
 
 ggsave(snakemake@output[[3]], plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
 
+#write_csv(stats, "coverage_good.txt")
 write_csv(stats, snakemake@output[[1]])
+
+global_stats<- all_chroms %>%
+  summarise(Mean = mean(Depth),
+            Median = median(Depth))
 
 print("Done!")
