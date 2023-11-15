@@ -123,7 +123,11 @@ Scripts to be run in this order:
   
      * `sample_reference.csv` -- Columns are lineage, sample, file1, file2, refgenome (filename of fasta)
 
+<<<<<<< HEAD
 6. `get-chromosome-names.sh` -- uses `lineage_references.csv` and the FASTA files of the reference genomes, to generate a table with the correspondance between the sequence ID of each chromosome and the common chromosome number of each lineage.  
+=======
+6. `get-chromosome-names.sh` -- uses `lineage_references.csv` and the FASTA files of the reference genomes, to generate a table with the correspondance between the sequence ID of each chromosome and the common chromosome number of lineage.  
+>>>>>>> 31443cffe0fa2384d9f50d214e4eb7d67e37ff66
    * Files produced:
   
      * `chromosome_names.csv` -- Columns are lineage, chromosome ID, chromosome number.
