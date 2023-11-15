@@ -15,7 +15,7 @@ We used the following reference genome assemblies to align the reads of a sample
 
 To create reference based genome assemblies we aligned reads to the corresponding reference genome using BWA (vXXX; Li and Durbin 2009), called variants using FreeBayes (vXXX; Garrison and Marth 2012), and generated strain-specific consensus assembly by instantiating the called variants onto the corresponding reference genome.  The read alignment, variant calling, and consensus assembly were carried out using the Snippy (https://github.com/tseemann/snippy) pipeline tool.
 
-To have a consistent naming scheme in the annotations we "lifted over" the annotation of the strain H99 (FungiDB R53) to each of the four reference genomes using the software tool Liftoff (vXXX; Shumate and Salzberg 2020). Following construction of consensus assemblies, genome feature annotation was "lifted over" from the corresponding reference genome to each strain-specific genome.  The `-polish` option of Liftoff was employed to re-align exons in cases where the lift-over procedure resulted in start/stop codon loss or introduced an in-frame stop codon.  
+To have a consistent naming scheme in the annotations we "lifted over" the annotation of the strain H99 (FungiDB R65) to each of the four reference genomes using the software tool Liftoff (vXXX; Shumate and Salzberg 2020). Following construction of consensus assemblies, genome feature annotation was "lifted over" from the corresponding reference genome to each strain-specific genome.  The `-polish` option of Liftoff was employed to re-align exons in cases where the lift-over procedure resulted in start/stop codon loss or introduced an in-frame stop codon.  
 
 Based on the polished lift-over annotation, the AGAT GTF/GFF Toolkit software (https://github.com/NBISweden/AGAT) was used to predict protein sequences for all annotated genes in each strain-specific assembly using the `agat_sp_extract_sequences.pl` script. Where multiple protein isoforms are annotated in the reference genome, we generated predictions for each isoform.
 
@@ -89,8 +89,10 @@ Run this lines one by one:
 Working directory: `/analysis/czirion/Crypto_Diversity_Pipeline/`
 
 Starting files: 
-  * `Desjardins_Supplemental_Table_S1.csv`
+  * `Desjardins_Supplemental_Table_S1.csv` name and 1st line modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx)
   * `lineage_references.csv`
+  * `reference_genomes/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
+  * `reference_genomes/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
 
 Scripts to be run in this order:
 
