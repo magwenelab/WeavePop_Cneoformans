@@ -91,67 +91,76 @@ The working directory is `/analysis/czirion/Crypto_Diversity_Pipeline/`
 Scripts to be run in this order:
 
 1. `CryptoDiversity-Retrieve.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `Samples/${SRSID}` where `SRSID` are SRA SRS numbers
-  
+    
     * Files produced:
-      
-      * "{project_id}_samples.txt" -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence read identifier
-      
-      * "{project_id}_SRStoSRR.txt" -- tab-delimited text file giving mapping between SRS (Samples) IDs and SRR (Runs) IDs. A given SRS can have multiple associated SRRs. 
-      
+        
+      * `{project_id}_samples.txt` -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence read identifier
+        
+      * `{project_id}_SRStoSRR.txt` -- tab-delimited text file giving mapping between SRS (Samples) IDs and SRR (Runs) IDs. A given SRS can have multiple associated SRRs. 
+        
       * Each `Samples/${SRSID}` directory will contain a number of SRR subdirectories of the form `Samples/${SRSID}/{SRRID}` where SRA runs are "prefetched" using the SRA Tools `prefetch` command.
 
 
-2. `fastq-unpacker.xsh` -- turn each of the "prefetched" run files (produced in the prior step) into FASTQ files, written to `./fastqs` directory
+2. `fastq-unpacker.xsh` -- turn each of the "prefetched" run files (produced in the prior step) into FASTQ files, written to `fastqs/` directory
 
 3. ⚠️ FIXME `build-read-pair-tables.xsh` -- create CSV files for paired and unpaired fastqs
+    * Files produced:
+    
+      * `read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
+
+      * `largest_read_pair_table.csv` -- A filtered version of `read_pair_table.csv`, giving the single largest pair per sample
+    
+      * `unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
+
+4. `get-lineage-of-samples.xsh` -- add the SRS codes to the `Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv`.  
+    * Files produced:
+    
+      * `sample_metadata.csv`  -- Columns are Strain, Sample, Name, Group, VNI subdivision, Mating type,Country of origin, Isolation source, Broad Project, SRA Accession, Strain description, In GWAS, Phenotyped
+
+
+5. `get-references.xsh` -- uses `lineage_references.csv` and `sample_metadata.csv` to associate each sample with its reference
    * Files produced:
   
-     * `read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
+     * `sample_reference.csv` -- Columns are lineage, sample, file1, file2, refgenome (filename of fasta)
 
-     * `largest_read_pair_table.csv` -- A filtered version of `read_pair_table.csv`, giving the single largest pair per sample
-  
-     * `unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
-
-4. `get-lineage-of-samples.xsh` -- add the SRS codes to the `Desjardins_Supplemental_Table_S1.csv`
+6. `get-chromosome-names.sh` -- uses `lineage_references.csv` and the FASTA files of the reference genomes, to generate a table with the correspondance between the sequence ID of each chromosome and the common chromosome number of each lineage.  
    * Files produced:
   
-     * `sample_reference.csv`  
-     * `sample_metadata.csv`  
+     * `chromosome_names.csv` -- Columns are lineage, chromosome ID, chromosome number.
 
-5. `get-references.xsh` -- uses `lineage_references.csv` and `sample_metadata.csv` to create a table with each sample name, fastq filenames, lineage, and corresponding reference assembly filename
-   * Files produced:
-  
-     * `sample_reference.csv`  
-
-6. `get-chromosome-names.sh` -- uses `lineage_references.csv` and the FASTA files of the reference genomes, to generate a table with the correspondance between the sequence accession of each chromosome and the common chromosome number of lineage.  
-   * Files produced:
-  
-     * `chromosome_names.csv` 
-
-7. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineages genomes. It currently works with:  
+7. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
+    * It currently works with:  
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
       ⚠️ `--cores 1` is because there is a problem if Liftoff runs in parallel because the different jobs try to create `FungiDB-53_CneoformansH99_PMM.gff_db` at the same time and that is not cool.    
       ⚠️ `--conda-frontend conda` because it cannot use mamba, which is the default.  
       ❔  It makes `{lineage}_liftoff.agat.log` files out of nowhere, they are not specified in the snakefile.  
       ⏰ Pending: Merge into main workflow.
-   * Files produced:
+    * Files produced: all inside `reference_genomes/`
   
-     * 
+      * `{lineage}_liftoff.gff_polished`
+      * `{lineage}_predicted_proteins.fa`
+      * `{lineage}_predicted_cds.fa`
+      * `protein_list.txt`
+      * And more intermediate and extra files
 
-8. `Snakefile-main.smk`: Is the Snakefile to run the pipeline, it uses the `config.yaml` file.   For the moment it does the following:  
-  * Runs the script `scripts/fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `<SRS-accession>_1.fq.gz` and compresses it and does the same for `_2.fastq`.  This files are in `fastq_combined/`.
-  * Runs **snippy** for each sample.  
-  * Runs **liftoff** for each sample.
-  * Runs **agat** for each sample.
-  * Makes **fasta indexes** for the protein and cds fastas.
-  * **Extracts sequences** (cds and protein) of each sample and puts it in a file.  
-  * **Concatenate** all sequences for each protein (cds and protein) in only one file.  
+8. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
+It runs the script `scripts/fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  This files are in `fastq_combined/`.
+It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequences** (cds and protein) of each sample and **concatenates** them by cds and by protein.
 
     * Files produced:  
     
-      * 
+      * `fastq_combined/{SRS-accession}_1.fq.gz` and `fastq_combined/{SRS-accession}_2.fq.gz`.
+      * `genomes-annotations/{sample}/snps.consensus.fa` and extra assembly files    
+      * `genomes-annotations/{sample}/snps.bam` and extra alignment files  
+      * `genomes-annotations/{sample}/snps.vcf` and extra variant calling files  
+      * `genomes-annotations/{sample}/lifted.gff_polished` and extra annotation files  
+      * `genomes-annotations/{sample}/predicted_cds.fa`  and extra index files
+      * `genomes-annotations/{sample}/predicted_proteins.fa`  and extra index files
+      * `genomes-annotations/{sample}/predicted_proteins.fa`  
+      * `by_cds/{protein}.fa` (and the non-concatenated sequences are in `cds/{sample}_{protein}.fa`)
+      * `by_protein/{protein}.fa` (and the non-concatenated sequences are in `proteins/{sample}_{protein}.fa`)
 
 9. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
-     * 
+     * In progress...
