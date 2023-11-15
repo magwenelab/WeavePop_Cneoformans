@@ -135,11 +135,11 @@ Scripts to be run in this order:
       ⚠️ `--conda-frontend conda` because it cannot use mamba, which is the default.  
       ❔  It makes `{lineage}_liftoff.agat.log` files out of nowhere, they are not specified in the snakefile.  
       ⏰ Pending: Merge into main workflow.
-    * Files produced: all inside `reference_genomes/`
+    * Files produced:  
   
-      * `{lineage}_liftoff.gff_polished`
-      * `{lineage}_predicted_proteins.fa`
-      * `{lineage}_predicted_cds.fa`
+      * `reference_genomes/{lineage}_liftoff.gff_polished`
+      * `reference_genomes/{lineage}_predicted_proteins.fa`
+      * `reference_genomes/{lineage}_predicted_cds.fa`
       * `protein_list.txt`
       * And more intermediate and extra files
 
