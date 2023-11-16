@@ -16,16 +16,26 @@ rule all:
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS),
-        "protein_list.txt"
+        "protein_list.txt",
+        REFDIR + "references_unmapped_features.csv",
+        REFDIR + "references_unmapped_count.csv"
+
+rule features:
+    input:
+        REF_GFF
+    output:
+        REFDIR + "features.txt"
+    shell:
+        "grep -v '#' {input} | cut -f 3 | sort | uniq > {output}"
 
 rule ref2ref_liftoff:
     input:
-        target_refs = lambda wildcards: (REFDIR +  lin_ref_table.loc[wildcards.lineage, 'File']),
+        target_refs = REFDIR + "{lineage}.fasta",
         fasta = REF_FASTA,
-        gff = REF_GFF
+        gff = REF_GFF,
+        features = REFDIR + "features.txt"
     output:
         lin_gff = REFDIR + "{lineage}_liftoff.gff_polished",
-        lin_fasta = REFDIR + "{lineage}.fasta"
     threads: config["threads_liftoff"] 
     log:
         "logs/references/{lineage}_ref_liftoff.log"
@@ -35,13 +45,13 @@ rule ref2ref_liftoff:
         "liftoff "
         "-g {input.gff} "
         "-polish "
+        "-f {input.features} "
         "-o {params.refdir}/{wildcards.lineage}_liftoff.gff "
         "-dir {params.refdir}/{wildcards.lineage}_intermediate_files "
         "-u {params.refdir}/{wildcards.lineage}_unmapped_features.txt "
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
         "&> {log} "
-        "&& cp {input.target_refs} {output.lin_fasta}"
 
 rule ref2ref_agat:
     input: 
@@ -84,19 +94,26 @@ rule cat_lists:
     shell:
         "cat {input} | sort | uniq > {output}"
 
+rule unmapped_features_edit:
+    input:
+        REFDIR + "{lineage}_unmapped_features.txt"   
+    output: 
+        temp(REFDIR + "{lineage}_unmapped_features.csv")
+    shell:
+       'sed "s/$/,\\{wildcards.lineage}/" {input} > {output}'
+
 rule unmapped_features:
     input:
-        expand(REFDIR + "{lineage}_unmapped_features.txt", lineage=LINS)   
+        expand(REFDIR + "{lineage}_unmapped_features.csv", lineage=LINS)   
     output: 
-        "unmapped_features.csv"
+        REFDIR + "references_unmapped_features.csv"
     shell:
-        # cat ../lineage_references.csv | tail -n4 | cut -d',' -f1 | while read lineage
-        #   do 
-        #    sed "s/$/,\\${lineage}/" ${lineage}_unmapped_features.txt
-        #   done > unmapped_features.csv
-         
+       'cat {input} > {output}'         
+
 rule unmapped_count:
-    R:
-    #unmapped<-read.csv("reference_genomes/unmapped_features.csv", header = FALSE, col.names = c("gene", "lineage"))
-    #unmapped_count <- unmapped %>% group_by(lineage) %>% count()
-    #write.csv(unmapped_count, "reference_genomes/unmapped_count.csv", row.names = FALSE)
+    input:
+        REFDIR + "references_unmapped_features.csv"
+    output:
+        REFDIR + "references_unmapped_count.csv"
+    script:
+        "scripts/count_reference_unmapped.R"
