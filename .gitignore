@@ -169,7 +169,7 @@ proteins
 fastq_combined
 genomes-annotations
 logs
-reference_genomes
+reference_genomes*
 fastqs
 test_sample_reference.csv
 test_read_pair_table.csv
