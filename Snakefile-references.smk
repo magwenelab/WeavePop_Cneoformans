@@ -114,6 +114,7 @@ rule unmapped_count:
     input:
         REFDIR + "references_unmapped_features.csv"
     output:
-        REFDIR + "references_unmapped_count.csv"
+        REFDIR + "references_unmapped_count.csv",
+        REFDIR + "references_unmapped.svg"
     script:
         "scripts/count_reference_unmapped.R"
