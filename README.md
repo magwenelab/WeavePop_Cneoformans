@@ -53,6 +53,8 @@ When the environment is ready install R:
 ~~~
 conda activate crypto_div
 conda install -c r r-essentials
+R
+install.packages("pheatmap")
 conda deactivate
 ~~~
 And install Graphviz to see Sankemake DAG of jobs in svg
