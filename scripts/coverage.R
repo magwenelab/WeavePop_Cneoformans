@@ -36,7 +36,7 @@ plot <- ggplot(data = filtered)+
   theme_light()+
   theme(legend.position="none")
 
-#ggsave("coverage_good.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
+#ggsave("../../coverage_good.svg", plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
 
 print("Saving plot")
 ggsave(snakemake@output[[2]], plot = plot, dpi = 200, units = "cm", height = 22, width = 22)
@@ -49,25 +49,28 @@ stats <- all_chroms %>%
 
 stats <- stats %>%
 pivot_longer(c(Mean, Median), names_to = "Measurement", values_to = "Value")
+global_stats<- all_chroms %>%
+  summarise(Mean = mean(Depth),
+            Median = median(Depth))
 
 plot <- ggplot(data = stats, aes(x = Chromosome, y = Value, shape = Measurement, color = Chromosome, fill = Chromosome))+
   geom_point()+ #color = Chromosome,
+  geom_hline(aes(yintercept = global_stats$Median,linetype = "Median"))+
+  geom_hline(aes(yintercept = global_stats$Mean, linetype = "Mean"))+
   labs(y = "Coverage")+
   theme_light()+
   theme(axis.ticks.x = element_blank(),
   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   scale_color_discrete(guide = "none")+
-  scale_fill_discrete(guide = "none")
+  scale_fill_discrete(guide = "none")+
+  scale_linetype_manual(values = c("solid","dotted"))
+
   #scale_color_manual(values = chrom_colors)
-#ggsave("coverage_stats_good.svg", plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
+#ggsave("../../coverage_stats_good.svg", plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
 
 ggsave(snakemake@output[[3]], plot = plot, dpi = 200, units = "cm", height = 10, width = 10)
 
 #write_csv(stats, "coverage_good.txt")
 write_csv(stats, snakemake@output[[1]])
-
-global_stats<- all_chroms %>%
-  summarise(Mean = mean(Depth),
-            Median = median(Depth))
 
 print("Done!")
