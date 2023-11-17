@@ -26,8 +26,9 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("by_cds/{protein}.fa", protein=proteins),
-        expand("by_protein/{protein}.fa", protein=proteins)
+        #expand("by_cds/{protein}.fa", protein=proteins),
+        #expand("by_protein/{protein}.fa", protein=proteins)
+        "samples_unmapped.svg"
 
 rule combine_fastq:
     input:
@@ -71,7 +72,8 @@ rule liftoff:
         refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome'])
     output:
         "genomes-annotations/{sample}/lifted.gff",        
-        "genomes-annotations/{sample}/lifted.gff_polished"
+        "genomes-annotations/{sample}/lifted.gff_polished",
+        "genomes-annotations/{sample}/unmapped_features.txt"
     threads: config["threads_liftoff"]
     log:
         "logs/liftoff/{sample}.log" 
@@ -86,12 +88,7 @@ rule liftoff:
         "{input} "
         "{params.refgenome} &> {log}"
 
-#rule unmapped_features:
-#    shell:
-#        ls genomes-annotations/ | grep "SRS" | while read sample
-#           do 
-#               sed "s/$/,\\${sample}/" genomes-annotations/${sample}/unmapped_features.txt
-#           done > genomes-annotations/unmapped_features.csv
+
 
 rule agat:
     input:
@@ -198,3 +195,28 @@ rule cat_cds:
         "by_cds/{protein}.fa"
     shell:
         "cat {input.fastas} > {output}"
+
+rule unmapped_features_edit:
+    input:
+        "genomes-annotations/{sample}/unmapped_features.txt"   
+    output: 
+        temp("genomes-annotations/{sample}/unmapped_features.csv")
+    shell:
+       'sed "s/$/,\\{wildcards.sample}/" {input} > {output}'
+
+rule unmapped_features:
+    input:
+        expand("genomes-annotations/{sample}/unmapped_features.csv", sample=samples)   
+    output: 
+        "samples_unmapped_features.csv"
+    shell:
+       'cat {input} > {output}'         
+
+rule unmapped_count:
+    input:
+        "samples_unmapped_features.csv"
+    output:
+        "samples_unmapped_count.csv",
+        "samples_unmapped.svg"
+    script:
+        "scripts/count_sample_unmapped.R"
