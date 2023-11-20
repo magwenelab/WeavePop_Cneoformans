@@ -7,13 +7,14 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
-        expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
-        expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
-        expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-        expand("genomes-annotations/{sample}/bamstats", sample=samples)
+        #expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
+        #expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        #expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
+        #expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
+        #expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
+        #expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
+        #expand("genomes-annotations/{sample}/bamstats", sample=samples),
+        "unmapped.svg"
 
 rule mosdepth:
     input:
@@ -144,3 +145,37 @@ rule plot_bamstats:
         "logs/plot-bamstats/{sample}.log"
     shell:
         "plot-bamstats -p {output}/ {input} &> {log}"
+
+
+rule unmapped_edit:
+    input:
+        "genomes-annotations/{sample}/snps.bam.stats" 
+    output: 
+        temp("genomes-annotations/{sample}/mapping_stats.txt")
+    shell:
+        "grep reads {input} | cut -d'#' -f1 | cut -f 2- > {output} "
+        " && "
+        'sed -i "s/$/:\\{wildcards.sample}/" {output}'
+
+rule unmapped:
+    input:
+        expand("genomes-annotations/{sample}/mapping_stats.txt", sample=samples)   
+    output: 
+        "mapping_stats.txt"
+    shell:
+       'cat {input} > {output}'  
+
+rule unmapped_plot:
+    input:
+        "mapping_stats.txt",
+        "sample_metadata.csv"
+    output:
+        "mapped_reads.svg"
+    log:
+        "logs/stats/mapped.log"
+    script:
+        "scripts/mapped_reads.R"
+
+#ls genomes-annotations/*/snps.bam.stats | cut -d"/" -f2 | while read line; do grep reads genomes-annotations/$line/snps.bam.stats | cut -d'#' -f1 | cut -f 2- > genomes-annotations/$line/mapping_stats.txt; done
+#ls genomes-annotations/*/snps.bam.stats | cut -d"/" -f2 | while read line; do sed -i "s/$/:\\$line/" genomes-annotations/$line/mapping_stats.txt; done
+#cat genomes-annotations/*/mapping_stats.txt > mapping_stats.txt
