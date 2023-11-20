@@ -66,7 +66,8 @@ rule snippy:
 
 rule liftoff:
     input:
-        "genomes-annotations/{sample}/snps.consensus.fa"
+        target = "genomes-annotations/{sample}/snps.consensus.fa",
+        features = REFDIR + "features.txt"
     params:
         refgff = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'lineage'] + "_liftoff.gff_polished"),
         refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome'])
@@ -81,14 +82,13 @@ rule liftoff:
         "liftoff "
         "-g {params.refgff} "
         "-polish "
+        "-f {input.features} "
         "-dir genomes-annotations/{wildcards.sample}/intermediate_files "
         "-u genomes-annotations/{wildcards.sample}/unmapped_features.txt "
         "-o genomes-annotations/{wildcards.sample}/lifted.gff "
         "-p {threads} "
-        "{input} "
+        "{input.target} "
         "{params.refgenome} &> {log}"
-
-
 
 rule agat:
     input:
