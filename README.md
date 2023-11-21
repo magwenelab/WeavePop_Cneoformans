@@ -98,6 +98,8 @@ Starting files:
 
 Scripts to be run in this order:
 
+FIXME: add removalof mitochondrial cromosome from VNBI.fasta
+
 1. `CryptoDiversity-Retrieve.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `Samples/${SRSID}` where `SRSID` are SRA SRS numbers
     
     * Files produced:
