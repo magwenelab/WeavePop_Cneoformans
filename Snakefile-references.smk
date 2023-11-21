@@ -39,7 +39,7 @@ rule ref_gff2tsv:
         " && "
         "head -n1 {output.complete}| cut -f1,3,4,5,7,9,13,14 > {output.selected} 2> {log.head}"
         " && "
-        "grep 'protein_coding_gene\|ncRNA_gene' {output.complete} | cut -f 1,3,4,7,9,13,14 >> {output.selected} 2> {log.grep}"
+        "grep 'protein_coding_gene\|ncRNA_gene\|pseudogene' {output.complete} | cut -f 1,3,4,5,7,9,13,14 >> {output.selected} 2> {log.grep}"
         
 rule features:
     input:
@@ -145,9 +145,10 @@ rule unmapped_features:
     shell:
        'cat {input} > {output}'         
 
-rule unmapped_count:
+rule unmapped_count_plot:
     input:
-        REFDIR + "references_unmapped_features.csv"
+        REFDIR + "references_unmapped_features.csv",
+        REFDIR + "reference_genes.tsv"
     output:
         REFDIR + "references_unmapped_count.csv",
         REFDIR + "references_unmapped.svg"
