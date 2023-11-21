@@ -13,13 +13,34 @@ REF_GFF = REFDIR + str(config["reference_gff"])
 rule all:
     input:
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
+        expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS),
         "protein_list.txt",
         REFDIR + "references_unmapped_features.csv",
-        REFDIR + "references_unmapped_count.csv"
+        REFDIR + "references_unmapped_count.csv",
+        REFDIR + "reference_genes.tsv"
 
+rule ref_gff2tsv:
+    input:
+        REF_GFF
+    output:
+        complete = REF_GFF + ".tsv",
+        selected = REFDIR + "reference_genes.tsv"
+    conda:
+        "envs/agat.yaml"
+    log: 
+        agat = "logs/references/ref_gff2tsv_agat.log",
+        head = "logs/references/ref_gff2tsv_head.log",
+        grep = "logs/references/ref_gff2tsv_grep.log"
+    shell:
+        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output.complete} &> {log.agat} "
+        " && "
+        "head -n1 {output.complete}| cut -f1,3,4,5,7,9,13,14 > {output.selected} 2> {log.head}"
+        " && "
+        "grep 'protein_coding_gene\|ncRNA_gene' {output.complete} | cut -f 1,3,4,7,9,13,14 >> {output.selected} 2> {log.grep}"
+        
 rule features:
     input:
         REF_GFF
@@ -36,6 +57,7 @@ rule ref2ref_liftoff:
         features = REFDIR + "features.txt"
     output:
         lin_gff = REFDIR + "{lineage}_liftoff.gff_polished",
+        unmapped = REFDIR + "{lineage}_unmapped_features.txt"
     threads: config["threads_liftoff"] 
     log:
         "logs/references/{lineage}_ref_liftoff.log"
@@ -48,9 +70,22 @@ rule ref2ref_liftoff:
         "-f {input.features} "
         "-o {params.refdir}/{wildcards.lineage}_liftoff.gff "
         "-dir {params.refdir}/{wildcards.lineage}_intermediate_files "
-        "-u {params.refdir}/{wildcards.lineage}_unmapped_features.txt "
+        "-u {output.unmapped} "
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
+        "&> {log} "
+
+rule gff2tsv:
+    input:
+        REFDIR + "{lineage}_liftoff.gff_polished"
+    output:
+        REFDIR + "{lineage}_liftoff.gff_polished.tsv"
+    conda:
+        "envs/agat.yaml"
+    log:
+        "logs/references/{lineage}_gff2tsv.log"
+    shell:
+        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output} "
         "&> {log} "
 
 rule ref2ref_agat:
