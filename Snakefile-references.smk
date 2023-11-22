@@ -12,15 +12,28 @@ REF_GFF = REFDIR + str(config["reference_gff"])
 
 rule all:
     input:
+        "chromosome_names.csv",
+        REFDIR + "reference_genes.tsv",
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
-        expand(REFDIR + "{lineage}_protein_list.txt",lineage=LINS),
         "protein_list.txt",
         REFDIR + "references_unmapped_features.csv",
         REFDIR + "references_unmapped_count.csv",
-        REFDIR + "reference_genes.tsv"
+        REFDIR + "references_unmapped.svg"
+        
+rule chromosome_names:
+    input:
+        config["lineage_reference_file"]
+    output:
+        "chromosome_names.csv"
+    params:
+        refdir = REFDIR
+    log:
+        "logs/references/chromosome_names.log"
+    script:
+        "scripts/chromosome-names.sh"
 
 rule ref_gff2tsv:
     input:
@@ -46,8 +59,10 @@ rule features:
         REF_GFF
     output:
         REFDIR + "features.txt"
+    log:
+        "logs/references/features.log"
     shell:
-        "grep -v '#' {input} | cut -f 3 | sort | uniq > {output}"
+        "grep -v '#' {input} | cut -f 3 | sort | uniq > {output} 2> {log}"
 
 rule ref2ref_liftoff:
     input:
@@ -93,6 +108,7 @@ rule ref2ref_agat:
         lin_liftoff = REFDIR + "{lineage}_liftoff.gff_polished",
         lin_fasta = REFDIR + "{lineage}.fasta"
     output:
+        temp("{lineage}_liftoff.agat.log"),
         cds = REFDIR + "{lineage}_predicted_cds.fa",
         prots = REFDIR + "{lineage}_predicted_proteins.fa"
     conda:
@@ -118,32 +134,40 @@ rule protein_list:
         fasta = REFDIR + "{lineage}_predicted_proteins.fa"
     output:
         list = REFDIR + "{lineage}_protein_list.txt"
+    log:
+        "logs/references/{lineage}_protein_list.log"
     shell:
-        "seqkit seq -n -i {input.fasta} > {output.list}"
+        "seqkit seq -n -i {input.fasta} > {output.list} 2> {log}"
 
 rule cat_lists:
     input: 
         expand(REFDIR + "{lineage}_protein_list.txt", lineage=LINS)
     output:
         "protein_list.txt"
+    log:
+        "logs/references/cat_list.log"
     shell:
-        "cat {input} | sort | uniq > {output}"
+        "cat {input} | sort | uniq > {output} 2> {log}"
 
 rule unmapped_features_edit:
     input:
         REFDIR + "{lineage}_unmapped_features.txt"   
     output: 
         temp(REFDIR + "{lineage}_unmapped_features.csv")
+    log:
+        "logs/references/{lineage}_unmapped_features_edit.log"
     shell:
-       'sed "s/$/,\\{wildcards.lineage}/" {input} > {output}'
+       'sed "s/$/,\\{wildcards.lineage}/" {input} > {output} 2> {log}'
 
 rule unmapped_features:
     input:
         expand(REFDIR + "{lineage}_unmapped_features.csv", lineage=LINS)   
     output: 
         REFDIR + "references_unmapped_features.csv"
+    log:
+        "logs/references/unmapped_features.log"
     shell:
-       'cat {input} > {output}'         
+       'cat {input} > {output} 2> {log}'         
 
 rule unmapped_count_plot:
     input:
@@ -151,6 +175,8 @@ rule unmapped_count_plot:
         REFDIR + "reference_genes.tsv"
     output:
         REFDIR + "references_unmapped_count.csv",
-        REFDIR + "references_unmapped.svg"
+        REFDIR + "references_unmapped.png"
+    log:
+        "logs/references/unmapped_count_plot.log"
     script:
         "scripts/count_reference_unmapped.R"
