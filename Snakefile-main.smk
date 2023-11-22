@@ -144,17 +144,17 @@ rule get_cds:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
-        done = temp("cds/{sample}.done"),
-        fas = expand("cds/{{sample}}_{protein}.fa", protein=proteins)
+        done = temp("all_cds/{sample}.done"),
+        fas = expand("all_cds/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "envs/agat.yaml"
     log:
-        "logs/cds/{sample}.log"    
+        "logs/all_cds/{sample}.log"    
     shell:
         "cat {input.list} | "
         "while read line;  do "
         "seqkit faidx {input.fasta} $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > cds/{wildcards.sample}_$line.fa; done &> {log}"
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > all_cds/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output.done}" 
 
 rule get_protein:
@@ -163,23 +163,23 @@ rule get_protein:
         list = "protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
-        done = temp("proteins/{sample}.done"),
-        fas = expand("proteins/{{sample}}_{protein}.fa", protein=proteins)
+        done = temp("all_proteins/{sample}.done"),
+        fas = expand("all_proteins/{{sample}}_{protein}.fa", protein=proteins)
     conda:
         "envs/agat.yaml"
     log:
-        "logs/proteins/{sample}.log"   
+        "logs/all_proteins/{sample}.log"   
     shell:
         "cat {input.list} | "
         "while read line; do "
         "seqkit faidx {input.fasta} $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > proteins/{wildcards.sample}_$line.fa; done &> {log}"
+        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > all_proteins/{wildcards.sample}_$line.fa; done &> {log}"
         "&& touch {output.done}"
 
 rule cat_proteins:
     input:
-        fastas = expand("proteins/{sample}_{{protein}}.fa", sample=samples),
-        done = expand("proteins/{sample}.done", sample=samples)
+        fastas = expand("all_proteins/{sample}_{{protein}}.fa", sample=samples),
+        done = expand("all_proteins/{sample}.done", sample=samples)
     output:
         "by_protein/{protein}.fa"
     log:
@@ -189,8 +189,8 @@ rule cat_proteins:
 
 rule cat_cds:
     input:
-        fastas = expand("cds/{sample}_{{protein}}.fa", sample=samples),
-        done = expand("cds/{sample}.done", sample=samples)
+        fastas = expand("all_cds/{sample}_{{protein}}.fa", sample=samples),
+        done = expand("all_cds/{sample}.done", sample=samples)
     output:
         "by_cds/{protein}.fa"
     log:
