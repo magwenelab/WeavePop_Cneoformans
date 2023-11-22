@@ -176,3 +176,4 @@ test_read_pair_table.csv
 .snakemake/
 .vscode
 test/
+results/
