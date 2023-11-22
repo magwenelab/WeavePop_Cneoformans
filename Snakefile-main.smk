@@ -26,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        #expand("by_cds/{protein}.fa", protein=proteins),
-        #expand("by_protein/{protein}.fa", protein=proteins)
+        expand("by_cds/{protein}.fa", protein=proteins),
+        expand("by_protein/{protein}.fa", protein=proteins),
         "samples_unmapped.svg"
 
 rule combine_fastq:
@@ -94,6 +94,7 @@ rule agat:
     input:
         "genomes-annotations/{sample}/lifted.gff_polished"
     output:
+        temp("{sample}_liftoff.agat.log"),
         cds = "genomes-annotations/{sample}/predicted_cds.fa",
         prots = "genomes-annotations/{sample}/predicted_proteins.fa"
     conda:
@@ -184,8 +185,10 @@ rule cat_proteins:
         done = expand("proteins/{sample}.done", sample=samples)
     output:
         "by_protein/{protein}.fa"
+    log:
+        "logs/bash/{protein}_cat_proteins.log"
     shell:
-        "cat {input.fastas} > {output}"
+        "cat {input.fastas} > {output} 2> {log}"
 
 rule cat_cds:
     input:
@@ -193,24 +196,30 @@ rule cat_cds:
         done = expand("cds/{sample}.done", sample=samples)
     output:
         "by_cds/{protein}.fa"
+    log:
+        "logs/bash/{protein}_cat_cds.log"
     shell:
-        "cat {input.fastas} > {output}"
+        "cat {input.fastas} > {output} 2> {log}"
 
 rule unmapped_features_edit:
     input:
         "genomes-annotations/{sample}/unmapped_features.txt"   
     output: 
         temp("genomes-annotations/{sample}/unmapped_features.csv")
+    log:
+        "logs/bash/{sample}_unmapped_features_edit.log"
     shell:
-       'sed "s/$/,\\{wildcards.sample}/" {input} > {output}'
+       'sed "s/$/,\\{wildcards.sample}/" {input} > {output} 2> {log}'
 
 rule unmapped_features:
     input:
         expand("genomes-annotations/{sample}/unmapped_features.csv", sample=samples)   
     output: 
         "samples_unmapped_features.csv"
+    log:
+        "logs/bash/unmapped_features.log"
     shell:
-       'cat {input} > {output}'         
+       'cat {input} > {output} 2> {log}'         
 
 rule unmapped_count:
     input:
@@ -218,5 +227,7 @@ rule unmapped_count:
     output:
         "samples_unmapped_count.csv",
         "samples_unmapped.svg"
+    log:
+        "logs/bash/unmapped_count.log"
     script:
         "scripts/count_sample_unmapped.R"
