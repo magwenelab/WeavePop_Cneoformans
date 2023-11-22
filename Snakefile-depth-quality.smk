@@ -14,7 +14,7 @@ rule all:
         #expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
         #expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
         #expand("genomes-annotations/{sample}/bamstats", sample=samples),
-        "unmapped.svg"
+        "results/mapped_reads.svg"
 
 rule mosdepth:
     input:
@@ -146,7 +146,6 @@ rule plot_bamstats:
     shell:
         "plot-bamstats -p {output}/ {input} &> {log}"
 
-
 rule unmapped_edit:
     input:
         "genomes-annotations/{sample}/snps.bam.stats" 
@@ -161,16 +160,16 @@ rule unmapped:
     input:
         expand("genomes-annotations/{sample}/mapping_stats.txt", sample=samples)   
     output: 
-        "mapping_stats.txt"
+        "results/mapping_stats.txt"
     shell:
        'cat {input} > {output}'  
 
 rule unmapped_plot:
     input:
-        "mapping_stats.txt",
+        "results/mapping_stats.txt",
         "sample_metadata.csv"
     output:
-        "mapped_reads.svg"
+        "results/mapped_reads.svg"
     log:
         "logs/stats/mapped.log"
     script:

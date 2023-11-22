@@ -18,7 +18,7 @@ rule all:
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
-        "protein_list.txt",
+        "results/protein_list.txt",
         REFDIR + "references_unmapped_features.csv",
         REFDIR + "references_unmapped_count.csv",
         REFDIR + "references_unmapped.png"
@@ -94,7 +94,8 @@ rule gff2tsv:
     input:
         REFDIR + "{lineage}_liftoff.gff_polished"
     output:
-        REFDIR + "{lineage}_liftoff.gff_polished.tsv"
+        REFDIR + "{lineage}_liftoff.gff_polished.tsv",
+        temp("{lineage}_liftoff.agat.log")
     conda:
         "envs/agat.yaml"
     log:
@@ -143,7 +144,7 @@ rule cat_lists:
     input: 
         expand(REFDIR + "{lineage}_protein_list.txt", lineage=LINS)
     output:
-        "protein_list.txt"
+        "results/protein_list.txt"
     log:
         "logs/references/cat_list.log"
     shell:

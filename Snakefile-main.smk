@@ -16,7 +16,7 @@ ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
 
-protlist=(pd.read_csv("protein_list.txt", sep=",", header = None, names = ['protein']))
+protlist=(pd.read_csv("results/protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
 
 
@@ -28,7 +28,7 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("by_cds/{protein}.fa", protein=proteins),
         expand("by_protein/{protein}.fa", protein=proteins),
-        "samples_unmapped.png"
+        "results/samples_unmapped.png"
 rule combine_fastq:
     input:
         readtab = config["sample_file"],
@@ -141,7 +141,7 @@ rule index_cds:
 rule get_cds:
     input:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
-        list = "protein_list.txt",
+        list = "results/protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
         done = temp("all_cds/{sample}.done"),
@@ -160,7 +160,7 @@ rule get_cds:
 rule get_protein:
     input:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
-        list = "protein_list.txt",
+        list = "results/protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
         done = temp("all_proteins/{sample}.done"),
@@ -212,7 +212,7 @@ rule unmapped_features:
     input:
         expand("genomes-annotations/{sample}/unmapped_features.csv", sample=samples)   
     output: 
-        "samples_unmapped_features.csv"
+        "results/samples_unmapped_features.csv"
     log:
         "logs/bash/unmapped_features.log"
     shell:
@@ -220,12 +220,12 @@ rule unmapped_features:
 
 rule unmapped_count:
     input:
-        "samples_unmapped_features.csv",
+        "results/samples_unmapped_features.csv",
         REFDIR + "reference_genes.tsv",
         config["sample_reference_file"]
     output:
-        "samples_unmapped_count.csv",
-        "samples_unmapped.png"
+        "results/samples_unmapped_count.csv",
+        "results/samples_unmapped.png"
     log:
         "logs/bash/unmapped_count.log"
     script:
