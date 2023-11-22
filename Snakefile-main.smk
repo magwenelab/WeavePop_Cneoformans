@@ -92,7 +92,8 @@ rule liftoff:
 
 rule agat:
     input:
-        "genomes-annotations/{sample}/lifted.gff_polished"
+        gff = "genomes-annotations/{sample}/lifted.gff_polished",
+        fa = "genomes-annotations/{sample}/snps.consensus.fa"
     output:
         temp("{sample}_liftoff.agat.log"),
         cds = "genomes-annotations/{sample}/predicted_cds.fa",
@@ -103,17 +104,15 @@ rule agat:
         cds = "logs/agat/{sample}_cds.log",
         prots = "logs/agat/{sample}_prots.log"
     shell:
-        "seqkit seq -w 70 genomes-annotations/{wildcards.sample}/snps.consensus.fa > "
-        "genomes-annotations/{wildcards.sample}/snps.consensus.wrapped.fa && "
         "agat_sp_extract_sequences.pl "
-        "-g {input} " 
-        "-f genomes-annotations/{wildcards.sample}/snps.consensus.wrapped.fa "
+        "-g {input.gff} " 
+        "-f {input.fa} "
         "-o {output.cds} "
         "&> {log.cds} "
         " && "
         "agat_sp_extract_sequences.pl "
-        "-g {input} " 
-        "-f genomes-annotations/{wildcards.sample}/snps.consensus.wrapped.fa "
+        "-g {input.gff} " 
+        "-f {input.fa} "
         "-o {output.prots} "
         "-p  &> {log.prots}" 
 
