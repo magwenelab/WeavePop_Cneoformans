@@ -98,10 +98,7 @@ Starting files:
 
 Scripts to be run in this order:
 
-FIXME: add removalof mitochondrial cromosome from VNBI.fasta
-
-1. `CryptoDiversity-Retrieve.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `Samples/${SRSID}` where `SRSID` are SRA SRS numbers
-    
+1. `get-sra.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `Samples/${SRSID}` where `SRSID` are SRA SRS numbers
     * Files produced:
         
       * `{project_id}_samples.txt` -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence read identifier
@@ -111,33 +108,28 @@ FIXME: add removalof mitochondrial cromosome from VNBI.fasta
       * Each `Samples/${SRSID}` directory will contain a number of SRR subdirectories of the form `Samples/${SRSID}/{SRRID}` where SRA runs are "prefetched" using the SRA Tools `prefetch` command.
 
 
-2. `fastq-unpacker.xsh` -- turn each of the "prefetched" run files (produced in the prior step) into FASTQ files, written to `fastqs/` directory
+2. `get-fastqs.xsh` -- turn each of the "prefetched" run files (produced in the prior step) into FASTQ files, written to `fastqs/` directory
 
-3. `build-read-pair-tables.xsh` -- create CSV files to know which read files are paired and unpaired runs of each sample.
+3. `get-read-pair-tables.xsh` -- create CSV files to know which read files are paired and unpaired runs of each sample.
     * Files produced:
     
       * `read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
 
       * `unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
 
-      * `largest_read_pair_table.csv` -- A filtered version of `read_pair_table.csv`, giving the single largest pair per sample. It uses `largest_readpair.R`.
+      * `largest_read_pair_table.csv` -- A filtered version of `read_pair_table.csv`, giving the single largest pair per sample. It uses `scripts/largest_readpair.R`.
     
-
 4. `get-lineage-of-samples.xsh` -- add the SRS codes to the `Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv`.  
     * Files produced:
     
       * `sample_metadata.csv`  -- Columns are Strain, Sample, Name, Group, VNI subdivision, Mating type,Country of origin, Isolation source, Broad Project, SRA Accession, Strain description, In GWAS, Phenotyped
-
 
 5. `get-references.xsh` -- uses `lineage_references.csv` and `sample_metadata.csv` to associate each sample with its reference
    * Files produced:
   
      * `sample_reference.csv` -- Columns are lineage, sample, file1, file2, refgenome (filename of fasta)
 
-6. `get-chromosome-names.sh` -- uses `lineage_references.csv` and the FASTA files of the reference genomes, to generate a table with the correspondance between the sequence ID of each chromosome and the common chromosome number of lineage.  
-   * Files produced:
-  
-     * `chromosome_names.csv` -- Columns are lineage, chromosome ID, chromosome number.
+6. `get-reference-no-mito.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
 
 7. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
     * It currently works with:  
