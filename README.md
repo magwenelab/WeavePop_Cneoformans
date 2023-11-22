@@ -91,9 +91,9 @@ Working directory: `/analysis/czirion/Crypto_Diversity_Pipeline/`
 Starting files: 
   * `Desjardins_Supplemental_Table_S1.csv` name and 1st line modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx)
   * `lineage_references.csv`
-  * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `reference_genomes/` (accessions mentioned above)
-  * `reference_genomes/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
-  * `reference_genomes/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
+  * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `references/` (accessions mentioned above)
+  * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
+  * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
 
 
 Scripts to be run in this order:
@@ -136,14 +136,19 @@ Scripts to be run in this order:
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
       ⚠️ `--cores 1` is because there is a problem if Liftoff runs in parallel because the different jobs try to create `FungiDB-65_CneoformansH99.gff_db` at the same time and that is not cool.    
       ⚠️ `--conda-frontend conda` because it cannot use mamba, which is the default.  
-      AGAT makes `{lineage}_liftoff.agat.log` files by default, we would need to edit the 'agat_config.yaml' to change that.  
       ⏰ Pending: Merge into main workflow.
     * Files produced:  
   
-      * `reference_genomes/{lineage}_liftoff.gff_polished`
-      * `reference_genomes/{lineage}_predicted_proteins.fa`
-      * `reference_genomes/{lineage}_predicted_cds.fa`
-      * `protein_list.txt`
+      *  `chromosome_names.csv`
+      *  `references/reference_genes.tsv`
+      *  `references/{lineage}_liftoff.gff_polished`
+      *  `references/{lineage}_liftoff.gff_polished.tsv`
+      *  `references/{lineage}_predicted_proteins.fa`
+      *  `references/{lineage}_predicted_cds.fa`
+      *  `protein_list.txt`
+      *  `references/references_unmapped_features.csv`
+      *  `references/references_unmapped_count.csv`
+      *  `references/references_unmapped.png`
       * And more intermediate and extra files
 
 8. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
