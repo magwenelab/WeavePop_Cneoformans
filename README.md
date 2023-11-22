@@ -145,7 +145,7 @@ Scripts to be run in this order:
       *  `references/{lineage}_liftoff.gff_polished.tsv`
       *  `references/{lineage}_predicted_proteins.fa`
       *  `references/{lineage}_predicted_cds.fa`
-      *  `protein_list.txt`
+      *  `results/protein_list.txt`
       *  `references/references_unmapped_features.csv`
       *  `references/references_unmapped_count.csv`
       *  `references/references_unmapped.png`
