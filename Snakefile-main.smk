@@ -28,8 +28,7 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("by_cds/{protein}.fa", protein=proteins),
         expand("by_protein/{protein}.fa", protein=proteins),
-        "samples_unmapped.svg"
-
+        "samples_unmapped.png"
 rule combine_fastq:
     input:
         readtab = config["sample_file"],
@@ -95,7 +94,6 @@ rule agat:
         gff = "genomes-annotations/{sample}/lifted.gff_polished",
         fa = "genomes-annotations/{sample}/snps.consensus.fa"
     output:
-        temp("{sample}_liftoff.agat.log"),
         cds = "genomes-annotations/{sample}/predicted_cds.fa",
         prots = "genomes-annotations/{sample}/predicted_proteins.fa"
     conda:
@@ -222,10 +220,12 @@ rule unmapped_features:
 
 rule unmapped_count:
     input:
-        "samples_unmapped_features.csv"
+        "samples_unmapped_features.csv",
+        REFDIR + "reference_genes.tsv",
+        config["sample_reference_file"]
     output:
         "samples_unmapped_count.csv",
-        "samples_unmapped.svg"
+        "samples_unmapped.png"
     log:
         "logs/bash/unmapped_count.log"
     script:
