@@ -26,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("by_cds/{protein}.fa", protein=proteins),
-        expand("by_protein/{protein}.fa", protein=proteins),
+        #expand("by_cds/{protein}.fa", protein=proteins),
+        #expand("by_protein/{protein}.fa", protein=proteins),
         "results/samples_unmapped.png"
 rule combine_fastq:
     input:
