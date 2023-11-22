@@ -1,3 +1,7 @@
+log <- file(snakemake@log[[1]], open="wt")
+sink(log, type = "output")
+sink(log, type = "message")
+
 suppressPackageStartupMessages(library(tidyverse))
 library(pheatmap)
 library(RColorBrewer)
@@ -14,7 +18,7 @@ write.csv(unmapped_count, snakemake@output[[1]], row.names = FALSE, quote = FALS
 #    count()
 #write.csv(unmapped_count, "reference_genomes_65/references_unmapped_count.csv", row.names = FALSE)
 
-genes<-read_delim("./reference_genomes_65/reference_genes.tsv", col_names = TRUE, na = "N/A", show_col_types = FALSE )
+genes<-read_delim(snakemake@input[[2]], col_names = TRUE, na = "N/A", show_col_types = FALSE )
 genes <- genes %>% as.data.frame() %>% select(gene = ID, Name, description, primary_tag, seq_id)
 
 rownames(genes)<- genes$gene
@@ -41,9 +45,10 @@ plot <- pheatmap(unmapped_matrix,
             cellheight = 2,
             fontsize_row= 2,
             treeheight_row = 0,
-            treeheight_col = 0)
+            treeheight_col = 0,
+            filename = snakemake@output[[2]])
 
 #ggsave("unmapped_references.svg", plot, dpi = 200, units = "cm", height = 23, width = 16)
-ggsave(snakemake@output[[2]], plot, dpi = 200, units = "cm", height = 23, width = 16)
+#ggsave(snakemake@output[[2]], plot, dpi = 200, units = "cm", height = 23, width = 16)
 
 # Missing to add gene name labels

@@ -21,7 +21,7 @@ rule all:
         "protein_list.txt",
         REFDIR + "references_unmapped_features.csv",
         REFDIR + "references_unmapped_count.csv",
-        REFDIR + "references_unmapped.svg"
+        REFDIR + "references_unmapped.png"
         
 rule chromosome_names:
     input:
