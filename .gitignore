@@ -177,3 +177,4 @@ test_read_pair_table.csv
 .vscode
 test/
 results/
+references/
