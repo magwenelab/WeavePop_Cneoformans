@@ -178,3 +178,4 @@ test_read_pair_table.csv
 test/
 results/
 references/
+backup*
