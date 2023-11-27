@@ -164,8 +164,8 @@ cython_debug/
 References_local
 by_cds
 by_protein
-cds
-proteins
+*cds
+*proteins
 fastq_combined
 genomes-annotations
 logs
