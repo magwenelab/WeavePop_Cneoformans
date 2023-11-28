@@ -26,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        #expand("by_cds/{protein}.fa", protein=proteins),
-        #expand("by_protein/{protein}.fa", protein=proteins),
+        expand("cds/{sample}.done",sample=samples),
+        expand("proteins/{sample}.done",sample=samples),
         "results/samples_unmapped.png"
 rule combine_fastq:
     input:
@@ -141,62 +141,34 @@ rule index_cds:
 rule get_cds:
     input:
         fasta = "genomes-annotations/{sample}/predicted_cds.fa",
-        list = "results/protein_list.txt",
+        prots = "results/protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
     output:
-        done = temp("all_cds/{sample}.done"),
-        fas = expand("all_cds/{{sample}}_{protein}.fa", protein=proteins)
-    conda:
-        "envs/agat.yaml"
+        temp("cds/{sample}.done")
     log:
-        "logs/all_cds/{sample}.log"    
-    shell:
-        "cat {input.list} | "
-        "while read line;  do "
-        "seqkit faidx {input.fasta} $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > all_cds/{wildcards.sample}_$line.fa; done &> {log}"
-        "&& touch {output.done}" 
+         "logs/cds/{sample}.log"    
+    run:
+        with open(input.prots, 'r') as f:
+            for line in f:
+                prot = line.strip()
+                shell(f"scripts/getcds.sh {prot}")
+        shell(f'touch {output}')         
 
 rule get_protein:
     input:
         fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
-        list = "results/protein_list.txt",
+        prots = "results/protein_list.txt",
         idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
     output:
-        done = temp("all_proteins/{sample}.done"),
-        fas = expand("all_proteins/{{sample}}_{protein}.fa", protein=proteins)
-    conda:
-        "envs/agat.yaml"
+        temp("proteins/{sample}.done")
     log:
-        "logs/all_proteins/{sample}.log"   
-    shell:
-        "cat {input.list} | "
-        "while read line; do "
-        "seqkit faidx {input.fasta} $line | "
-        "seqkit replace -p '($)' -r ' sample={wildcards.sample}' > all_proteins/{wildcards.sample}_$line.fa; done &> {log}"
-        "&& touch {output.done}"
-
-rule cat_proteins:
-    input:
-        fastas = expand("all_proteins/{sample}_{{protein}}.fa", sample=samples),
-        done = expand("all_proteins/{sample}.done", sample=samples)
-    output:
-        "by_protein/{protein}.fa"
-    log:
-        "logs/bash/{protein}_cat_proteins.log"
-    shell:
-        "cat {input.fastas} > {output} 2> {log}"
-
-rule cat_cds:
-    input:
-        fastas = expand("all_cds/{sample}_{{protein}}.fa", sample=samples),
-        done = expand("all_cds/{sample}.done", sample=samples)
-    output:
-        "by_cds/{protein}.fa"
-    log:
-        "logs/bash/{protein}_cat_cds.log"
-    shell:
-        "cat {input.fastas} > {output} 2> {log}"
+        "logs/proteins/{sample}.log"    
+    run:
+        with open(input.prots, 'r') as f:
+            for line in f:
+                prot = line.strip()
+                shell(f"scripts/getprots.sh {prot}")
+        shell(f'touch {output}')  
 
 rule unmapped_features_edit:
     input:
