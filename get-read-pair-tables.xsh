@@ -27,6 +27,3 @@ with open('unpaired_fastqs.csv', 'w', newline='') as csvfile:
     w = csv.writer(csvfile)
     w.writerow(("sample", "run", "files"))
     w.writerows(unpaired)
-
-   
-Rscript largest_readpair.R

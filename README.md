@@ -116,8 +116,6 @@ Scripts to be run in this order:
       * `read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
 
       * `unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
-
-      * `largest_read_pair_table.csv` -- A filtered version of `read_pair_table.csv`, giving the single largest pair per sample. It uses `scripts/largest_readpair.R`.
     
 4. `get-lineage-of-samples.xsh` -- add the SRS codes to the `Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv`.  
     * Files produced:
