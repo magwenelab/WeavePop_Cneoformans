@@ -27,3 +27,8 @@ with open('unpaired_fastqs.csv', 'w', newline='') as csvfile:
     w = csv.writer(csvfile)
     w.writerow(("sample", "run", "files"))
     w.writerows(unpaired)
+
+SRS = [i[0] for i in paired]
+
+with open("samples.txt", "w") as outfile:
+    outfile.write("\n".join(SRS))
