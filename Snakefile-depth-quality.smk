@@ -7,14 +7,14 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        #expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        #expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
-        #expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-        #expand("genomes-annotations/{sample}/bamstats", sample=samples),
-        "results/mapped_reads.svg"
+        # expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
+        # expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
+        # expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
+        # expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
+        # expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
+        # expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
+         expand("genomes-annotations/{sample}/bamstats", sample=samples),
+         "results/mapped_reads.svg"
 
 rule mosdepth:
     input:
@@ -152,7 +152,7 @@ rule unmapped_edit:
     output: 
         temp("genomes-annotations/{sample}/mapping_stats.txt")
     shell:
-        "grep reads {input} | cut -d'#' -f1 | cut -f 2- > {output} "
+        "grep reads {input} | cut -d'#' -f1 | cut -f 2- | grep . > {output} "
         " && "
         'sed -i "s/$/:\\{wildcards.sample}/" {output}'
 
@@ -174,7 +174,3 @@ rule unmapped_plot:
         "logs/stats/mapped.log"
     script:
         "scripts/mapped_reads.R"
-
-#ls genomes-annotations/*/snps.bam.stats | cut -d"/" -f2 | while read line; do grep reads genomes-annotations/$line/snps.bam.stats | cut -d'#' -f1 | cut -f 2- > genomes-annotations/$line/mapping_stats.txt; done
-#ls genomes-annotations/*/snps.bam.stats | cut -d"/" -f2 | while read line; do sed -i "s/$/:\\$line/" genomes-annotations/$line/mapping_stats.txt; done
-#cat genomes-annotations/*/mapping_stats.txt > mapping_stats.txt

@@ -9,12 +9,12 @@ library(svglite)
 metadata <- read.csv(snakemake@input[[2]], header = TRUE)%>%
     select(sample = Sample, strain = Strain, lineage = Group)
 
-#metadata <- read.csv("./sample_metadata.csv", header = TRUE)%>%
+# metadata <- read.csv("./sample_metadata.csv", header = TRUE)%>%
 #    select(sample = Sample, strain = Strain, lineage = Group)
 
 stats <- read.delim(snakemake@input[[1]], sep =":", header = FALSE, col.names = c("stat", "value", "sample"))
 
-stats <- read.delim("./read_stats.txt", sep =":", header = FALSE, col.names = c("stat", "value", "sample"))
+#stats <- read.delim("./results/mapping_stats.txt", sep =":", header = FALSE, col.names = c("stat", "value", "sample"))
 stats <- stats %>% pivot_wider(names_from = stat, values_from = value)
 colnames(stats) <- gsub(" ", "_", colnames(stats))
 stats <- stats %>%
@@ -26,19 +26,21 @@ stats <- left_join(stats, metadata, by="sample")
 
 stats_long <- stats %>%
     select(sample, lineage, strain, mapped = percent_mapped, properly_paired = "percentage_of_properly_paired_reads_(%)") %>%
-    pivot_longer(c(mapped, properly_paired), names_to = "measurement", values_to = "value")
+    pivot_longer(c(mapped, properly_paired), names_to = "measurement", values_to = "value")%>%
+    mutate(name = paste(strain, sample, sep=" " ))
 
-plot <- ggplot(stats_long, aes(color = lineage, x=strain, y= value, shape = measurement))+
+
+plot <- ggplot(stats_long, aes(color = measurement, x=name, y= value))+
     geom_point()+
     ylim(0,100)+
-    facet_wrap(~lineage,nrow = 1, scale = "free_x" )+
-    scale_shape_discrete(labels=c('Mapped', 'Properly paired'))+
+    facet_grid(~lineage, scale = "free_x" , space='free_x')+
+    scale_color_discrete(labels=c('Mapped', 'Properly paired'),guide = guide_legend(title = NULL))+
     labs(shape = NULL)+
-    guides(color = FALSE)+ 
+    #guides(color = FALSE)+ 
     theme_light()+
-    xlab("Strain") +
+    xlab("Sample") +
     ylab("Percentage of reads") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))
 
-#ggsave("./mapped_reads.svg", plot = plot, dpi = 200, units = "cm", height = 15, width = 15)
-ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 15, width = 15)
+#ggsave("./results/mapped_reads.svg", plot = plot, dpi = 200, units = "cm", height = 15, width = 60)
+ggsave(snakemake@output[[1]], plot = plot, dpi = 200, units = "cm", height = 15, width = 60)
