@@ -7,6 +7,7 @@ reference_fasta: "FungiDB-65_CneoformansH99_Genome.fasta"
 reference_gff: "FungiDB-65_CneoformansH99.gff"
 threads_snippy: 4
 threads_liftoff: 4
+threads_proteins: 4
 threads_mosdepth: 4
 mosdepth_window: 500
 mosdepth_min_mapq: 1

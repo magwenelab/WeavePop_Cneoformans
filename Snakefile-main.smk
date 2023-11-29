@@ -26,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("cds/{sample}.done",sample=samples),
-        expand("proteins/{sample}.done",sample=samples),
+        "cds/done.txt",
+        "proteins/done.txt",
         "results/samples_unmapped.png"
 rule combine_fastq:
     input:
@@ -138,37 +138,35 @@ rule index_cds:
     shell:
         "seqkit faidx {input} &> {log}"
 
-rule get_cds:
+rule by_proteins:
     input:
-        fasta = "genomes-annotations/{sample}/predicted_cds.fa",
         prots = "results/protein_list.txt",
-        idx = "genomes-annotations/{sample}/predicted_cds.fa.fai"
+        samps = "samples.txt",
+        fasta = expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
+        idx = expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
     output:
-        temp("cds/{sample}.done")
+        temp("proteins/done.txt")
     log:
-         "logs/cds/{sample}.log"    
-    run:
-        with open(input.prots, 'r') as f:
-            for line in f:
-                prot = line.strip()
-                shell(f"scripts/getcds.sh {prot}")
-        shell(f'touch {output}')         
+        "logs/proteins/proteins.log"  
+    threads:
+        config["threads_proteins"]
+    script:
+        "scripts/by_proteins.sh"
 
-rule get_protein:
+rule by_cds:
     input:
-        fasta = "genomes-annotations/{sample}/predicted_proteins.fa",
         prots = "results/protein_list.txt",
-        idx = "genomes-annotations/{sample}/predicted_proteins.fa.fai"
+        samps = "samples.txt",
+        fasta = expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
+        idx = expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
     output:
-        temp("proteins/{sample}.done")
+        temp("cds/done.txt")
     log:
-        "logs/proteins/{sample}.log"    
-    run:
-        with open(input.prots, 'r') as f:
-            for line in f:
-                prot = line.strip()
-                shell(f"scripts/getprots.sh {prot}")
-        shell(f'touch {output}')  
+        "logs/cds/cds.log"  
+    threads:
+        config["threads_proteins"]
+    script:
+        "scripts/by_cds.sh"
 
 rule unmapped_features_edit:
     input:
