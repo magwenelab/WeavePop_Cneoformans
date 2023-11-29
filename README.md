@@ -27,7 +27,7 @@ Based on the polished lift-over annotation, the AGAT GTF/GFF Toolkit software (h
   * Graphviz -- https://graphviz.org/ (optional, to see Snakemake DAG in a graph)  
 * NCBI Entrez Utilities (E-utilities) command line tools -- https://www.ncbi.nlm.nih.gov/books/NBK25501/
 * NCBI SRA Tools -- https://github.com/ncbi/sra-tools
-* Python modules -- Pandas
+* Python modules -- Pandas, Scipy
 * R with tidyverse meta-package
 * Snippy -- https://github.com/tseemann/snippy
 * Liftoff -- https://github.com/agshumate/Liftoff
@@ -86,17 +86,23 @@ Run this lines one by one:
 
 ## Overview
 
-Working directory: `/analysis/czirion/Crypto_Diversity_Pipeline/`
+### Working directory: 
+  * `/analysis/czirion/Crypto_Diversity_Pipeline/` (everything is relative to this path)  
 
-Starting files: 
+### Starting files: 
   * `Desjardins_Supplemental_Table_S1.csv` name and 1st line modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx)
   * `lineage_references.csv`
   * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `references/` (accessions mentioned above)
   * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
   * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
 
+### Structure of repository:
+  * The working directory has the scripts and Snakefiles to run and the resulting files of the `get-` scripts that are used by the Snakefiles.  
+  * `scripts/` has the scripts used by the Snakefiles, not by the user directly.  
+  * The `genomes-annotations/` has one directory per sample, all the resulting files of the analyses performed per sample are there with a generic name.  
+  * `results/` has the resulting files of the analyses that consider all the samples. Except for `proteins/` and `cds/`, which are in the working directory.  
 
-Scripts to be run in this order:
+### Scripts to be run in this order:
 
 1. `get-sra.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `Samples/${SRSID}` where `SRSID` are SRA SRS numbers
     * Files produced:
@@ -169,4 +175,7 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
 9. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
-     * In progress...
+     * `results/mapped_reads.svg` and `results/mapping_stats.txt`
+     * `genomes-annotations/{sample}/snps.bam.stats` and `genomes-annotations/{sample}/bamstats/` directory with `plot-bamstats` resulting plots.  
+     * 
+ 
