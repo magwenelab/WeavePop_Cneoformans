@@ -11,10 +11,12 @@ rule all:
         # expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
         # expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
         # expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
-        # expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
-        # expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
-         expand("genomes-annotations/{sample}/bamstats", sample=samples),
-         "results/mapped_reads.svg"
+        expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),
+        expand("genomes-annotations/{sample}/coverage_good.regions.bed.gz",sample=samples),
+        expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
+        expand("genomes-annotations/{sample}/bamstats", sample=samples),
+        "results/mapped_reads.svg"
 
 rule mosdepth:
     input:
@@ -108,20 +110,6 @@ rule cov_distribution:
         "logs/cov-dist/{sample}.log"
     script:
         "scripts/coverage-distribution.R"        
-
-#rule mpileup:
-#    input:
-#        "genomes-annotations/{sample}/snps.bam"
-#    output:
-#        "genomes-annotations/{sample}/snps.pileup"
-#    conda: 
-#        "depth.yaml"   
-#    log:
-#        "logs/mapq/{sample}.log"
-#    shell:
-#        "samtools mpileup --output-extra MAPQ {input} > {output}"
-#        "&> {log}"
-
 rule bamstats:
     input:
         "genomes-annotations/{sample}/snps.bam"
@@ -174,3 +162,16 @@ rule unmapped_plot:
         "logs/stats/mapped.log"
     script:
         "scripts/mapped_reads.R"
+
+#rule mpileup:
+#    input:
+#        "genomes-annotations/{sample}/snps.bam"
+#    output:
+#        "genomes-annotations/{sample}/snps.pileup"
+#    conda: 
+#        "depth.yaml"   
+#    log:
+#        "logs/mapq/{sample}.log"
+#    shell:
+#        "samtools mpileup --output-extra MAPQ {input} > {output}"
+#        "&> {log}"
