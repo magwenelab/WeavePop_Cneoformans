@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-mkdir proteins/
+mkdir proteins
 cat ${snakemake_input[0]} | while read protein
 do
-   parallel -j ${snakemake_threads[0]} "seqkit faidx genomes-annotations/{}/predicted_proteins.fa $protein | seqkit replace -p '($)' -r ' sample={}'"  :::: ${snakemake_input[1]} > proteins/$protein.fa
+   parallel "seqkit faidx genomes-annotations/{}/predicted_proteins.fa $protein | seqkit replace -p '($)' -r ' sample={}'"  :::: ${snakemake_input[1]} > proteins/$protein.fa
 done 2> ${snakemake_log[0]}
 touch ${snakemake_output[0]}
 

@@ -26,8 +26,8 @@ rule all:
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        "cds/done.txt",
-        "proteins/done.txt",
+        "results/proteins.done",
+        "results/cds.done",
         "results/samples_unmapped.png"
 rule combine_fastq:
     input:
@@ -140,31 +140,27 @@ rule index_cds:
 
 rule by_proteins:
     input:
-        prots = "results/protein_list.txt",
-        samps = "samples.txt",
-        fasta = expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        idx = expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
+        "results/protein_list.txt",
+        "samples.txt",
+        expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
+        expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
     output:
-        temp("proteins/done.txt")
+        "results/proteins.done"
     log:
         "logs/proteins/proteins.log"  
-    threads:
-        config["threads_proteins"]
     script:
         "scripts/by_proteins.sh"
 
 rule by_cds:
     input:
-        prots = "results/protein_list.txt",
-        samps = "samples.txt",
-        fasta = expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
-        idx = expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
+        "results/protein_list.txt",
+        "samples.txt",
+        expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
+        expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
     output:
-        temp("cds/done.txt")
+        "results/cds.done"
     log:
         "logs/cds/cds.log"  
-    threads:
-        config["threads_proteins"]
     script:
         "scripts/by_cds.sh"
 
