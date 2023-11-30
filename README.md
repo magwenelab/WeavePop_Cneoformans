@@ -168,9 +168,8 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
       * `genomes-annotations/{sample}/lifted.gff_polished` and extra annotation files  
       * `genomes-annotations/{sample}/predicted_cds.fa`  and extra index files
       * `genomes-annotations/{sample}/predicted_proteins.fa`  and extra index files
-      * `genomes-annotations/{sample}/predicted_proteins.fa`  
-      * `by_cds/{protein}.fa` (and the non-concatenated sequences are in `cds/{sample}_{protein}.fa`)
-      * `by_protein/{protein}.fa` (and the non-concatenated sequences are in `proteins/{sample}_{protein}.fa`)
+      * `cds/{protein}.fa`
+      * `proteins/{protein}.fa`
 
 9. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
