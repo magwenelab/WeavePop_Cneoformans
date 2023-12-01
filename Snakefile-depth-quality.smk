@@ -7,10 +7,7 @@ samples=list(set(samplefile["sample"]))
 
 rule all:
     input:
-        # expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
-        # expand("genomes-annotations/{sample}/coverage.txt",sample=samples),
-        # expand("genomes-annotations/{sample}/coverage_good.svg",sample=samples),
-        # expand("genomes-annotations/{sample}/coverage_good.txt",sample=samples),
+        expand("genomes-annotations/{sample}/coverage.svg",sample=samples),
         expand("genomes-annotations/{sample}/coverage.regions.bed.gz",sample=samples),
         expand("genomes-annotations/{sample}/coverage_good.regions.bed.gz",sample=samples),
         expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
