@@ -57,25 +57,17 @@ rule mosdepth_good:
 
 rule coverage_plot:
     input:
-        "genomes-annotations/{sample}/coverage.regions.bed.gz"
+        "genomes-annotations/{sample}/coverage.regions.bed.gz",
+        "genomes-annotations/{sample}/coverage_good.regions.bed.gz",
+        "chromosome_names.csv",
+        "results/loci_interest.tsv"
     output:
-        "genomes-annotations/{sample}/coverage.txt",
         "genomes-annotations/{sample}/coverage.svg",
-        "genomes-annotations/{sample}/coverage_stats.svg"
+        "genomes-annotations/{sample}/coverage_stats.svg",
+        "genomes-annotations/{sample}/coverage_raw.txt",
+        "genomes-annotations/{sample}/coverage_good.txt"
     log:
         "logs/coverage/{sample}.log"
-    script:
-        "scripts/coverage.R"
-
-rule coverage_good_plot:
-    input:
-        "genomes-annotations/{sample}/coverage_good.regions.bed.gz"
-    output:
-        "genomes-annotations/{sample}/coverage_good.txt",
-        "genomes-annotations/{sample}/coverage_good.svg",
-        "genomes-annotations/{sample}/coverage_good_stats.svg"
-    log:
-        "logs/coverage_good/{sample}.log"
     script:
         "scripts/coverage.R"
 
