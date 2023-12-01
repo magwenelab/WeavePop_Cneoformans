@@ -135,6 +135,10 @@ Run this lines one by one:
 
 6. `get-reference-no-mito.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
 
+7. `get-chromosome-names.sh` -- Get chromosome names from FASTA headers of each refrence.
+  * Files produced:
+    * chromosome_names.csv
+
 7. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
     * It currently works with:  
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
@@ -143,7 +147,6 @@ Run this lines one by one:
       ⏰ Pending: Merge into main workflow.
     * Files produced:  
   
-      *  `chromosome_names.csv`
       *  `references/reference_genes.tsv`
       *  `references/{lineage}_liftoff.gff_polished`
       *  `references/{lineage}_liftoff.gff_polished.tsv`
