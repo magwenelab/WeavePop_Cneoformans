@@ -12,7 +12,6 @@ REF_GFF = REFDIR + str(config["reference_gff"])
 
 rule all:
     input:
-        "chromosome_names.csv",
         REFDIR + "reference_genes.tsv",
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv",lineage=LINS),
@@ -22,18 +21,6 @@ rule all:
         REFDIR + "references_unmapped_features.csv",
         REFDIR + "references_unmapped_count.csv",
         REFDIR + "references_unmapped.png"
-        
-rule chromosome_names:
-    input:
-        config["lineage_reference_file"]
-    output:
-        "chromosome_names.csv"
-    params:
-        refdir = REFDIR
-    log:
-        "logs/references/chromosome_names.log"
-    script:
-        "scripts/chromosome-names.sh"
 
 rule ref_gff2tsv:
     input:
