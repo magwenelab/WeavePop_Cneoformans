@@ -10,6 +10,10 @@ library(ggnewscale)
 
 print("Reading BED file")
 
+sample <- snakemake@input[[1]]
+Split <- str_split(sample, "/")
+sample <- Split[[1]][length(Split[[1]])-1]
+
 raw<- read.delim(snakemake@input[[1]], header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 good<- read.delim(snakemake@input[[2]], header = FALSE, col.names = c("Accession", "Start", "End", "Depth"), stringsAsFactors = TRUE)
 chrom_names <- read.csv(snakemake@input[[3]], header = FALSE, col.names = c("Lineage", "Accession", "Chromosome"))
@@ -47,7 +51,8 @@ plot <- ggplot()+
   scale_y_log10(name = "Coverage (X)", labels = comma)+
   scale_x_continuous(name = "Position (bp) ", labels = comma)+
   theme_light()+
-  theme(legend.position="right")
+  theme(legend.position="right")+
+  labs(title = paste(lineage, sample,  sep = " "))
 
 ggsave(snakemake@output[[1]], plot = plot, dpi = 50, units = "cm", height = 22, width = 22)
 
@@ -82,7 +87,7 @@ plot <- ggplot()+
   geom_hline(aes(yintercept = global_stats_good$Mean, linetype = "Global mean", color = "Good quality alignments"))+
   geom_point(data = stats_raw, aes(x = factor(Chromosome, levels = as.character(sort(unique(Chromosome)))), y = Value, shape = Measurement, color= "All alignments"))+ 
   geom_point(data = stats_good, aes(x = factor(Chromosome, levels = as.character(sort(unique(Chromosome)))), y = Value, shape = Measurement, color = "Good quality alignments"))+ 
-  labs(y = "Coverage", x = "Chromosome")+
+  labs(y = "Coverage", x = "Chromosome", title = paste(lineage, sample,  sep = " "))+
   theme_light()+
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
