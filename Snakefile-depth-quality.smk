@@ -13,7 +13,8 @@ rule all:
         expand("genomes-annotations/{sample}/mapq_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/bamstats", sample=samples),
-        "results/mapped_reads.svg"
+        "results/mapped_reads.svg",
+        expand("genomes-annotations/{sample}/mapq_window.bed", sample=samples)
 
 rule mosdepth:
     input:
@@ -152,15 +153,14 @@ rule unmapped_plot:
     script:
         "scripts/mapped_reads.R"
 
-#rule mpileup:
-#    input:
-#        "genomes-annotations/{sample}/snps.bam"
-#    output:
-#        "genomes-annotations/{sample}/snps.pileup"
-#    conda: 
-#        "depth.yaml"   
-#    log:
-#        "logs/mapq/{sample}.log"
-#    shell:
-#        "samtools mpileup --output-extra MAPQ {input} > {output}"
-#        "&> {log}"
+rule mapq:
+   input:
+       "genomes-annotations/{sample}/snps.bam",
+       "genomes-annotations/{sample}/coverage.regions.bed.gz"
+   output:
+       "genomes-annotations/{sample}/mapq.bed",
+        "genomes-annotations/{sample}/mapq_window.bed" 
+   log:
+       "logs/mapq/{sample}.log"
+   script:
+        "scripts/pileup_mapq.sh"
