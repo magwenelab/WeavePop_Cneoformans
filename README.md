@@ -180,6 +180,7 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
      * `results/mapped_reads.svg` and `results/mapping_stats.txt` plot and table with fraction of mapping reads per sample.  
      * `genomes-annotations/{sample}/snps.bam.stats` and `genomes-annotations/{sample}/bamstats/` directory with `plot-bamstats` resulting plots.  
      * `genomes-annotations/{sample}/coverage.svg` depth of coverage along chromosome plot (qith all and only good quality mappings and location of interesting loci).  
+     * `genomes-annotations/{sample}/coverage_stats.svg` mean and median coverage pero chromosome and global.  
      * `genomes-annotations/{sample}/cov_distribution_.svg` ditribution of coverage values plot.  
      * `genomes-annotations/{sample}/mapq.svg` mapping quality along chromosome plot.  
      * `genomes-annotations/{sample}/mapq_distribution.svg` distribution of maping quality values plot.    
