@@ -14,7 +14,9 @@ rule all:
         expand("genomes-annotations/{sample}/cov_distribution.svg",sample=samples),
         expand("genomes-annotations/{sample}/bamstats", sample=samples),
         "results/mapped_reads.svg",
-        expand("genomes-annotations/{sample}/mapq_window.bed", sample=samples)
+        expand("genomes-annotations/{sample}/mapq_window.bed", sample=samples),
+        expand("genomes-annotations/{sample}/mapq.svg", sample=samples),
+        expand("genomes-annotations/{sample}/annotation.gff", sample=samples)
 
 rule mosdepth:
     input:
@@ -164,3 +166,27 @@ rule mapq:
        "logs/mapq/{sample}.log"
    script:
         "scripts/pileup_mapq.sh"
+
+rule mapq_plot:
+    input:
+        "genomes-annotations/{sample}/mapq_window.bed",
+        "chromosome_names.csv"
+    output:
+        "genomes-annotations/{sample}/mapq.svg"
+    log:
+        "logs/mapq_plot/{sample}.log"
+    script:
+        "scripts/mapq.R"
+
+rule mapqcov2gff:
+    input:
+        MAPQBED = "genomes-annotations/{sample}/mapq_window.bed",
+        COVBED = "genomes-annotations/{sample}/coverage.regions.bed.gz",
+        GFF = "genomes-annotations/{sample}/lifted.gff_polished"
+    output:
+        COVMAPQ = "genomes-annotations/{sample}/mapq_cov_window.bed",
+        NEWGFF = "genomes-annotations/{sample}/annotation.gff"
+    log: 
+        "logs/gff/{sample}.log"
+    shell:
+        "xonsh scripts/mapqcov2gff.xsh {input.MAPQBED} {input.COVBED} {input.GFF} {output.COVMAPQ} {output.NEWGFF} &> {log}"
