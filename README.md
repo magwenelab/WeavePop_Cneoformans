@@ -177,7 +177,11 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
 9. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
-     * `results/mapped_reads.svg` and `results/mapping_stats.txt`
+     * `results/mapped_reads.svg` and `results/mapping_stats.txt` plot and table with fraction of mapping reads per sample.  
      * `genomes-annotations/{sample}/snps.bam.stats` and `genomes-annotations/{sample}/bamstats/` directory with `plot-bamstats` resulting plots.  
-     * 
+     * `genomes-annotations/{sample}/coverage.svg` depth of coverage along chromosome plot (qith all and only good quality mappings and location of interesting loci).  
+     * `genomes-annotations/{sample}/cov_distribution_.svg` ditribution of coverage values plot.  
+     * `genomes-annotations/{sample}/mapq.svg` mapping quality along chromosome plot.  
+     * `genomes-annotations/{sample}/mapq_distribution.svg` distribution of maping quality values plot.    
+     * `genomes-annotations/{sample}/annotation.gff` GFF file with complete annotation plus average MAPQ and coverage of windows in which the features are located.    
  
