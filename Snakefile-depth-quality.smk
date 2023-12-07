@@ -85,7 +85,8 @@ rule samtools_stats:
 
 rule mapq_distribution:
     input:
-        "genomes-annotations/{sample}/mapq.csv"
+        "genomes-annotations/{sample}/mapq.csv",
+        "chromosome_names.csv"
     output:
         "genomes-annotations/{sample}/mapq_distribution.svg"
     log:
@@ -95,7 +96,8 @@ rule mapq_distribution:
 
 rule cov_distribution:
     input:
-        "genomes-annotations/{sample}/cov.csv"
+        "genomes-annotations/{sample}/cov.csv",
+        "chromosome_names.csv"
     output:
         "genomes-annotations/{sample}/cov_distribution.svg"
     log:
@@ -170,7 +172,8 @@ rule mapq:
 rule mapq_plot:
     input:
         "genomes-annotations/{sample}/mapq_window.bed",
-        "chromosome_names.csv"
+        "chromosome_names.csv",
+        "results/loci_interest.tsv"
     output:
         "genomes-annotations/{sample}/mapq.svg"
     log:
@@ -180,13 +183,13 @@ rule mapq_plot:
 
 rule mapqcov2gff:
     input:
-        MAPQBED = "genomes-annotations/{sample}/mapq_window.bed",
-        COVBED = "genomes-annotations/{sample}/coverage.regions.bed.gz",
-        GFF = "genomes-annotations/{sample}/lifted.gff_polished"
+        mapqbed = "genomes-annotations/{sample}/mapq_window.bed",
+        covbed = "genomes-annotations/{sample}/coverage.regions.bed.gz",
+        gff = "genomes-annotations/{sample}/lifted.gff_polished"
     output:
-        COVMAPQ = "genomes-annotations/{sample}/mapq_cov_window.bed",
-        NEWGFF = "genomes-annotations/{sample}/annotation.gff"
+        covmapq = "genomes-annotations/{sample}/mapq_cov_window.bed",
+        newgff = "genomes-annotations/{sample}/annotation.gff"
     log: 
         "logs/gff/{sample}.log"
     shell:
-        "xonsh scripts/mapqcov2gff.xsh {input.MAPQBED} {input.COVBED} {input.GFF} {output.COVMAPQ} {output.NEWGFF} &> {log}"
+        "xonsh scripts/mapqcov2gff.xsh {input.mapqbed} {input.covbed} {input.gff} {output.covmapq} {output.newgff} &> {log}"
