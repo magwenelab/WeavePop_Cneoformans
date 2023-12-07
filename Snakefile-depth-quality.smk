@@ -64,13 +64,49 @@ rule coverage_plot:
     output:
         "genomes-annotations/{sample}/coverage.svg",
         "genomes-annotations/{sample}/coverage_stats.svg",
-        "genomes-annotations/{sample}/coverage_raw.txt",
-        "genomes-annotations/{sample}/coverage_good.txt"
+        "genomes-annotations/{sample}/coverage_raw.csv",
+        "genomes-annotations/{sample}/coverage_good.csv",
+        "genomes-annotations/{sample}/coverage_global_raw.csv",
+        "genomes-annotations/{sample}/coverage_global_good.csv"
     log:
         "logs/coverage/{sample}.log"
     script:
         "scripts/coverage.R"
 
+rule cat_stats:
+    input:
+        r = expand("genomes-annotations/{sample}/coverage_raw.csv",sample=samples),
+        g = expand("genomes-annotations/{sample}/coverage_good.csv",sample=samples),
+        gr = expand("genomes-annotations/{sample}/coverage_global_raw.csv",sample=samples),
+        gg = expand("genomes-annotations/{sample}/coverage_global_good.csv",sample=samples)
+    output:
+        allr = "results/coverage_raw.csv",
+        allg = "results/coverage_good.csv",
+        allgr = "results/coverage_global_raw.csv",
+        allgg = "results/coverage_global_good.csv"
+    log:
+        "logs/coverage/cat_stats.log"
+    shell:
+        "cat {input.r} > {output.allr} "
+        "&& "
+        "cat {input.g} > {output.allg} "
+        "&& "
+        "cat {input.gr} > {output.allgr} "
+        "&& "
+        "cat {input.gg} > {output.allgg} 2> {log}"
+
+rule coverage_stats_plots:
+    input:
+        allr = "results/coverage_raw.csv",
+        allg = "results/coverage_good.csv",
+        allgr = "results/coverage_global_raw.csv",
+        allgg = "results/coverage_global_goos.csv"
+    output:
+        "results/cov_stats_plot.svg"
+    log:
+        "logs/coverage/stats_plot.log"    
+    script:
+        "scripts/cov_stats_all.R"
 rule samtools_stats:
     input:
         bam = "genomes-annotations/{sample}/snps.bam",
@@ -193,3 +229,4 @@ rule mapqcov2gff:
         "logs/gff/{sample}.log"
     shell:
         "xonsh scripts/mapqcov2gff.xsh {input.mapqbed} {input.covbed} {input.gff} {output.covmapq} {output.newgff} &> {log}"
+
