@@ -11,6 +11,18 @@ import click
 @click.argument("newgff", type=str)
 
 def mapqcov2gff(mapqbed, covbed, gff, covmapq, newgff):
+    """This script adds the average mapping quality of the windows a feature is in to the features attribute field in the GFF file.
+    
+    MAPQBED is a BED file with the mapping quality (MAPQ) of each window.
+
+    COVBED is a BED file with the coverage of each window.
+
+    GFF is the GFF annotation file for the genome.
+
+    COVMAPQ is the name of the intermediary file that will be created with the MAPQ and Coverage of each window.
+    
+    NEWGFF is the name of the enriched annotation GFF file that will be created.
+    """
     # Make merged version of BED file with MAPQ and Coverage columns
     mapq = pd.read_csv(mapqbed, names = ["Chromosome", "Start", "End", "MAPQ"], sep = "\t" )
     cov = pd.read_csv(covbed, names = ["Chromosome", "Start", "End", "Coverage"], sep = "\t" )
