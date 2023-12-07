@@ -59,23 +59,23 @@ ggsave(snakemake@output[[1]], plot = plot, dpi = 50, units = "cm", height = 22, 
 print("Getting mean and median")
 stats_raw <- raw %>%
   group_by(Chromosome)%>%
-  summarise(Mean = mean(Depth),
-            Median = median(Depth))%>%
+  summarise(Mean = round(mean(Depth),2),
+            Median = round(median(Depth),2))%>%
   pivot_longer(c(Mean, Median), names_to = "Measurement", values_to = "Value")
 
 global_stats_raw<- raw %>%
-  summarise(Mean = mean(Depth),
-            Median = median(Depth))
+  summarise(Mean = round(mean(Depth),2),
+            Median = round(median(Depth),2))
 
 stats_good <- good %>%
   group_by(Chromosome)%>%
-  summarise(Mean = mean(Depth),
-            Median = median(Depth))%>%
+  summarise(Mean = round(mean(Depth),2),
+            Median = round(median(Depth),2))%>%
   pivot_longer(c(Mean, Median), names_to = "Measurement", values_to = "Value")
 
 global_stats_good<- good %>%
-  summarise(Mean = mean(Depth),
-            Median = median(Depth))
+  summarise(Mean = round(mean(Depth),2),
+            Median = round(median(Depth),2))
 
 toplim <- max(stats_raw$Value) + max(stats_raw$Value)/10
 
@@ -97,7 +97,13 @@ plot <- ggplot()+
 
 ggsave(snakemake@output[[2]], plot = plot, dpi = 50, units = "cm", height = 15, width = 15)
 
-write_csv(stats_raw, snakemake@output[[3]])
-write_csv(stats_good, snakemake@output[[4]])
+stats_raw$Sample <- sample
+stats_good$Sample <- sample
+global_stats_raw$Sample <- sample
+global_stats_good$Sample <- sample
 
+write_csv(stats_raw, snakemake@output[[3]], col_names = FALSE)
+write_csv(stats_good, snakemake@output[[4]], col_names = FALSE)
+write_csv(global_stats_raw, snakemake@output[[5]], col_names = FALSE)
+write_csv(global_stats_good, snakemake@output[[6]], col_names = FALSE)
 print("Done!")
