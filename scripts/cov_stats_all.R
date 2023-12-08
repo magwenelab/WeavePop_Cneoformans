@@ -1,6 +1,6 @@
-#log <- file(snakemake@log[[1]], open="wt")
-#sink(log, type = "output")
-#sink(log, type = "message")
+log <- file(snakemake@log[[1]], open="wt")
+sink(log, type = "output")
+sink(log, type = "message")
 
 suppressPackageStartupMessages(library(tidyverse))
 library(RColorBrewer)
@@ -8,13 +8,13 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 library(ggnewscale)
 
-metadata <- read.csv("sample_metadata.csv", header = TRUE, stringsAsFactors = TRUE)
+metadata <- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
 metadata <- mutate(metadata, name = paste(Strain, Sample, sep=" " ))
 
 #### Good quality mappings ####
 
-global <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
-chromosome <-read.csv("results/coverage_good.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
+global <-read.csv(snakemake@input[[2]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
+chromosome <-read.csv(snakemake@input[[3]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
 global <- left_join(global, metadata, by = "Sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
@@ -26,7 +26,7 @@ chromosome <- chromosome%>%
     mutate(pmedian= round(Median/Global_Median, 2))%>%
     ungroup()
 
-write_csv(chromosome, "results/proprotional_coverage_good.csv", col_names = TRUE)
+write_csv(chromosome,snakemake@output[[1]], col_names = TRUE)
 
 
 # Global
@@ -45,7 +45,7 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
             x= "Sample",
             y= "Coverage (X)")
 
-ggsave("./results/cov_good_all.svg", plot = g, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[2]], plot = g, dpi = 50, units = "cm", height = 30, width = 60)
 
 # Median by Chromosome
 
@@ -66,7 +66,7 @@ medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmed
          x = "Sample",
          y = ylabel)
 
-ggsave("./results/cov_prop_median_good.svg", plot = medianplot, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[3]], plot = medianplot, dpi = 50, units = "cm", height = 30, width = 60)
 
 # Mean by Chromosome
 
@@ -87,12 +87,12 @@ meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean)
          x = "Sample",
          y = ylabel)
 
-ggsave("./results/cov_prop_mean_good.svg", plot = meanplot, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[4]], plot = meanplot, dpi = 50, units = "cm", height = 30, width = 60)
 
 #### All mappings ####
 
-global <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
-chromosome <-read.csv("results/coverage_raw.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
+global <-read.csv(snakemake@input[[4]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
+chromosome <-read.csv(snakemake@input[[5]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
 global <- left_join(global, metadata, by = "Sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
@@ -104,7 +104,7 @@ chromosome <- chromosome%>%
     mutate(pmedian= round(Median/Global_Median, 2))%>%
     ungroup()
 
-write_csv(chromosome, "results/proprotional_coverage_raw.csv", col_names = TRUE)
+write_csv(chromosome,snakemake@output[[5]], col_names = TRUE)
 
 # Global
 topylim <- max(global$Global_Mean) + max(global$Global_Mean/10)
@@ -122,7 +122,7 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
             x= "Sample",
             y= "Coverage (X)")
 
-ggsave("./results/cov_raw_all.svg", plot = g, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[6]], plot = g, dpi = 50, units = "cm", height = 30, width = 60)
 
 # Median by Chromosome
 
@@ -143,7 +143,7 @@ medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmed
          x = "Sample",
          y = ylabel)
 
-ggsave("./results/cov_prop_median_raw.svg", plot = medianplot, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[7]], plot = medianplot, dpi = 50, units = "cm", height = 30, width = 60)
 
 # Mean by Chromosome
 
@@ -164,4 +164,4 @@ meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean)
          x = "Sample",
          y = ylabel)
 
-ggsave("./results/cov_prop_mean_raw.svg", plot = meanplot, dpi = 50, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[8]], plot = meanplot, dpi = 50, units = "cm", height = 30, width = 60)

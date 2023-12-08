@@ -16,7 +16,15 @@ rule all:
         "results/mapped_reads.svg",
         expand("genomes-annotations/{sample}/mapq_window.bed", sample=samples),
         expand("genomes-annotations/{sample}/mapq.svg", sample=samples),
-        expand("genomes-annotations/{sample}/annotation.gff", sample=samples)
+        expand("genomes-annotations/{sample}/annotation.gff", sample=samples),
+        "results/proprotional_coverage_good.csv",
+        "results/cov_good_all.svg",
+        "results/cov_prop_median_good.svg",
+        "results/cov_prop_mean_good.svg",
+        "results/proprotional_coverage_raw.csv",
+        "results/cov_raw_all.svg",
+        "results/cov_prop_median_raw.svg",
+        "results/cov_prop_mean_raw.svg"
 
 rule mosdepth:
     input:
@@ -97,12 +105,20 @@ rule cat_stats:
 
 rule coverage_stats_plots:
     input:
-        allr = "results/coverage_raw.csv",
-        allg = "results/coverage_good.csv",
-        allgr = "results/coverage_global_raw.csv",
-        allgg = "results/coverage_global_goos.csv"
+        "sample_metadata.csv",
+        "results/coverage_global_good.csv",
+        "results/coverage_good.csv",
+        "results/coverage_global_raw.csv",
+        "results/coverage_raw.csv"        
     output:
-        "results/cov_stats_plot.svg"
+        "results/proprotional_coverage_good.csv",
+        "results/cov_good_all.svg",
+        "results/cov_prop_median_good.svg",
+        "results/cov_prop_mean_good.svg",
+        "results/proprotional_coverage_raw.csv",
+        "results/cov_raw_all.svg",
+        "results/cov_prop_median_raw.svg",
+        "results/cov_prop_mean_raw.svg"
     log:
         "logs/coverage/stats_plot.log"    
     script:
