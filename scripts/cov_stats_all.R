@@ -13,30 +13,29 @@ metadata <- mutate(metadata, name = paste(Strain, Sample, sep=" " ))
 
 #### Good quality mappings ####
 
-global <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Mean", "Median", "Sample"), stringsAsFactors = TRUE)
+global <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
 chromosome <-read.csv("results/coverage_good.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
 global <- left_join(global, metadata, by = "Sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
-means <- filter(chromosome, Measurement == "Mean") %>% select(-Measurement)
-means <- left_join(means, global, by = "Sample") 
-means <- means%>%
+chromosome <- pivot_wider(chromosome, names_from = Measurement, values_from = Value)
+chromosome <- left_join(chromosome, global, by = "Sample") 
+chromosome <- chromosome%>%
     group_by(Chromosome, Sample)%>%
-    mutate(proportion = Value/Mean)
+    mutate(pmean= round(Mean/Global_Mean, 2))%>%
+    mutate(pmedian= round(Median/Global_Median, 2))%>%
+    ungroup()
 
-medians <- filter(chromosome, Measurement == "Median") %>% select(-Measurement)
-medians <- left_join(medians, global, by = "Sample") 
-medians <- medians%>%
-    group_by(Chromosome, Sample)%>%
-    mutate(proportion = Value/Median)
+write_csv(chromosome, "results/proprotional_coverage_good.csv", col_names = TRUE)
+
 
 # Global
-topylim <- max(global$Mean) + max(global$Mean/10)
+topylim <- max(global$Global_Mean) + max(global$Global_Mean/10)
 color_stat = c("Mean" = "#008837", "Median" = "#7b3294")
 
-g <- ggplot(global, aes(x=reorder(name, -Mean, sum)))+
-    geom_point(aes(y= Mean, color = "Mean"))+
-    geom_point(aes(y= Median, color = "Median"))+
+g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
+    geom_point(aes(y= Global_Mean, color = "Mean"))+
+    geom_point(aes(y= Global_Median, color = "Median"))+
     scale_color_manual(values= color_stat, name = "")+ 
     ylim(0,topylim)+
     facet_grid(~Group,scale = "free_x" , space='free_x')+
@@ -50,16 +49,16 @@ ggsave("./results/cov_good_all.svg", plot = g, dpi = 50, units = "cm", height = 
 
 # Median by Chromosome
 
-toplim <- ceiling(max(medians$proportion))
+toplim <- ceiling(max(chromosome$pmedian))
 values <- seq(0, toplim, by = 1)
 colors <- brewer.pal(n = toplim +1, name = "Dark2") 
 ylabel <- "Ploidy"
 
-medianplot <- ggplot(medians, aes(x=reorder(name, -Mean, sum), y= proportion))+
-    geom_point(aes(color= proportion))+
+medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmedian))+
+    geom_point(aes(color= pmedian))+
     ylim(0,toplim)+
     facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
-    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, ceiling(max(medians$proportion))), values = rescale(values), guide = "colorbar", name = ylabel) +
+    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
           panel.grid.minor = element_blank())+
@@ -71,16 +70,16 @@ ggsave("./results/cov_prop_median_good.svg", plot = medianplot, dpi = 50, units 
 
 # Mean by Chromosome
 
-toplim <- ceiling(max(means$proportion))
+toplim <- ceiling(max(chromosome$pmean))
 values <- seq(0, toplim, by = 1)
 colors <- brewer.pal(n = toplim +1, name = "Dark2") 
 ylabel <- "Ploidy"
 
-meanplot <- ggplot(means, aes(x=reorder(name, -Mean, sum), y= proportion))+
-    geom_point(aes(color= proportion))+
+meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean))+
+    geom_point(aes(color= pmean))+
     ylim(0,toplim)+
     facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
-    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, ceiling(max(means$proportion))), values = rescale(values), guide = "colorbar", name = ylabel) +
+    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
           panel.grid.minor = element_blank())+
@@ -92,30 +91,28 @@ ggsave("./results/cov_prop_mean_good.svg", plot = meanplot, dpi = 50, units = "c
 
 #### All mappings ####
 
-global <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Mean", "Median", "Sample"), stringsAsFactors = TRUE)
+global <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
 chromosome <-read.csv("results/coverage_raw.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
 global <- left_join(global, metadata, by = "Sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
-means <- filter(chromosome, Measurement == "Mean") %>% select(-Measurement)
-means <- left_join(means, global, by = "Sample") 
-means <- means%>%
+chromosome <- pivot_wider(chromosome, names_from = Measurement, values_from = Value)
+chromosome <- left_join(chromosome, global, by = "Sample") 
+chromosome <- chromosome%>%
     group_by(Chromosome, Sample)%>%
-    mutate(proportion = Value/Mean)
+    mutate(pmean= round(Mean/Global_Mean, 2))%>%
+    mutate(pmedian= round(Median/Global_Median, 2))%>%
+    ungroup()
 
-medians <- filter(chromosome, Measurement == "Median") %>% select(-Measurement)
-medians <- left_join(medians, global, by = "Sample") 
-medians <- medians%>%
-    group_by(Chromosome, Sample)%>%
-    mutate(proportion = Value/Median)
+write_csv(chromosome, "results/proprotional_coverage_raw.csv", col_names = TRUE)
 
 # Global
-topylim <- max(global$Mean) + max(global$Mean/10)
+topylim <- max(global$Global_Mean) + max(global$Global_Mean/10)
 color_stat = c("Mean" = "#008837", "Median" = "#7b3294")
 
-g <- ggplot(global, aes(x=reorder(name, -Mean, sum)))+
-    geom_point(aes(y= Mean, color = "Mean"))+
-    geom_point(aes(y= Median, color = "Median"))+
+g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
+    geom_point(aes(y= Global_Mean, color = "Mean"))+
+    geom_point(aes(y= Global_Median, color = "Median"))+
     scale_color_manual(values= color_stat, name = "")+ 
     ylim(0,topylim)+
     facet_grid(~Group,scale = "free_x" , space='free_x')+
@@ -129,16 +126,16 @@ ggsave("./results/cov_raw_all.svg", plot = g, dpi = 50, units = "cm", height = 3
 
 # Median by Chromosome
 
-toplim <- ceiling(max(medians$proportion))
+toplim <- ceiling(max(chromosome$pmedian))
 values <- seq(0, toplim, by = 1)
 colors <- brewer.pal(n = toplim +1, name = "Dark2") 
 ylabel <- "Ploidy"
 
-medianplot <- ggplot(medians, aes(x=reorder(name, -Mean, sum), y= proportion))+
-    geom_point(aes(color= proportion))+
+medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmedian))+
+    geom_point(aes(color= pmedian))+
     ylim(0,toplim)+
     facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
-    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, ceiling(max(medians$proportion))), values = rescale(values), guide = "colorbar", name = ylabel) +
+    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
           panel.grid.minor = element_blank())+
@@ -150,16 +147,16 @@ ggsave("./results/cov_prop_median_raw.svg", plot = medianplot, dpi = 50, units =
 
 # Mean by Chromosome
 
-toplim <- ceiling(max(means$proportion))
+toplim <- ceiling(max(chromosome$pmean))
 values <- seq(0, toplim, by = 1)
 colors <- brewer.pal(n = toplim +1, name = "Dark2") 
 ylabel <- "Ploidy"
 
-meanplot <- ggplot(means, aes(x=reorder(name, -Mean, sum), y= proportion))+
-    geom_point(aes(color= proportion))+
+meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean))+
+    geom_point(aes(color= pmean))+
     ylim(0,toplim)+
     facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
-    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, ceiling(max(means$proportion))), values = rescale(values), guide = "colorbar", name = ylabel) +
+    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
           panel.grid.minor = element_blank())+
