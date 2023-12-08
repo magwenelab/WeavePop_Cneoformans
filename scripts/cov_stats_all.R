@@ -8,63 +8,69 @@ suppressPackageStartupMessages(library(scales))
 library(svglite)
 library(ggnewscale)
 
-global_raw <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Mean", "Median", "Sample"), stringsAsFactors = TRUE)
 global_good <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Mean", "Median", "Sample"), stringsAsFactors = TRUE)
+global_raw <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Mean", "Median", "Sample"), stringsAsFactors = TRUE)
+good <-read.csv("results/coverage_good.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
 raw <-read.csv("results/coverage_raw.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
+
 metadata <- read.csv("sample_metadata.csv", header = TRUE, stringsAsFactors = TRUE)
+metadata <- mutate(metadata, name = paste(Strain, Sample, sep=" " ))
 
-# GLOBAL RAW
+global_good <- left_join(global_good, metadata, by = "Sample")
 global_raw <- left_join(global_raw, metadata, by = "Sample")
-toplim <- max(global_raw$Mean) + max(global_raw$Mean/10)
-plot <- ggplot(global_raw, aes(x=reorder(Sample, -Mean, sum)))+
-    geom_point(aes(y= Mean), color = "blue")+
-    ylim(0,toplim)+
-    facet_grid(~Group,scale = "free_x" , space='free_x')+
-    theme_light()+
-    xlab("Sample") +
-    ylab("Mean global coverage") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))
 
-ggsave("./results/cov_raw_all.svg", plot = plot, dpi = 50, units = "cm", height = 15, width = 60)
-
-# BY CHROMOSOME RAW
-
+good$Chromosome <- as.factor(good$Chromosome)
 raw$Chromosome <- as.factor(raw$Chromosome)
-means <- filter(raw, Measurement == "Mean") %>% select(-Measurement)
-medians <- filter(raw, Measurement == "Median") %>% select(-Measurement)
 
-means <- left_join(means, global_raw, by = "Sample") 
+
+means <- filter(good, Measurement == "Mean") %>% select(-Measurement)
+means <- filter(good, Measurement == "Median") %>% select(-Measurement)
+means <- left_join(means, global_good, by = "Sample") 
 means <- means%>%
     group_by(Chromosome, Sample)%>%
-    mutate(pmean = Value/Mean)
-colors <- c("blue", "green", "yellow", "red")
-toplim <- max(means$pmean) + max(means$pmean/10)
-plot <- ggplot(means, aes(x=Sample, y= pmean))+
-    geom_point(aes(color= pmean))+
-    ylim(0,toplim)+
-    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
-    scale_color_gradientn(colors = colors, values = rescale(c(0, 1, 2, 3)), guide = "none") +
-    guides(color = guide_colorbar(barwidth = 1, barheight = 4, nbin = 100, title.position = "top")) +
-    #scale_color_discrete(labels=c('Mean', 'Median'),guide = guide_legend(title = NULL))+
-    #labs(shape = NULL)+
-    theme_light()+
-    xlab("Sample") +
-    ylab("Ploidy (proportional mean coverage of chromosome)") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),panel.grid.minor = element_blank(),)
+    mutate(proportion = Value/Mean)
 
-ggsave("./results/cov_prop_mean.svg", plot = plot, dpi = 50, units = "cm", height = 30, width = 60)
+medians <- filter(good, Measurement == "Median") %>% select(-Measurement)
+medians <- left_join(medians, global_good, by = "Sample") 
+medians <- medians%>%
+    group_by(Chromosome, Sample)%>%
+    mutate(proportion = Value/Median)
+
 
 
 # GLOBAL GOOD
-global_good <- left_join(global_good, metadata, by = "Sample")
 toplim <- max(global_good$Mean) + max(global_good$Mean/10)
-g <- ggplot(global_good, aes(x=reorder(Sample, -Mean, sum)))+
-    geom_point(aes(y= Mean), color = "darkgreen")+
+
+g <- ggplot(global_good, aes(x=reorder(name, -Mean, sum)))+
+    geom_point(aes(y= Mean), color = "aquamarine4")+
     ylim(0,toplim)+
     facet_grid(~Group,scale = "free_x" , space='free_x')+
     theme_light()+
-    xlab("Sample") +
-    ylab("Mean global coverage") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))+
+    labs(title= "Mean global coverage of good mapping quality reads",
+            x= "Sample",
+            y= "Coverage (X)")
 
 ggsave("./results/cov_good_all.svg", plot = g, dpi = 50, units = "cm", height = 30, width = 60)
+
+# Good Median by Chromosome
+
+
+toplim <- ceiling(max(medians$proportion))
+values <- seq(0, toplim, by = 1)
+colors <- brewer.pal(n = toplim +1, name = "Dark2") 
+ylabel <- "Ploidy"
+
+plot <- ggplot(medians, aes(x=reorder(name, -Mean, sum), y= proportion))+
+    geom_point(aes(color= proportion))+
+    ylim(0,toplim)+
+    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
+    scale_color_gradientn(colors = colors, breaks = values,limits = c(0, ceiling(max(medians$proportion))), values = rescale(values), guide = "colorbar", name = ylabel) +
+    theme_light()+
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
+          panel.grid.minor = element_blank())+
+    labs(title = "Proportional median coverage of chromosome",
+         x = "Sample",
+         y = ylabel)
+
+ggsave("./results/cov_prop_median_good.svg", plot = plot, dpi = 50, units = "cm", height = 30, width = 60)
