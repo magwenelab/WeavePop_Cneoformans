@@ -139,7 +139,7 @@ Run this lines one by one:
   * Files produced:
     * chromosome_names.csv
 
-7. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
+8. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
     * It currently works with:  
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
       ⚠️ `--cores 1` is because there is a problem if Liftoff runs in parallel because the different jobs try to create `FungiDB-65_CneoformansH99.gff_db` at the same time and that is not cool.    
@@ -157,6 +157,20 @@ Run this lines one by one:
       *  `references/references_unmapped_count.csv`
       *  `references/references_unmapped.png`
       * And more intermediate and extra files
+
+9. `get-loci.xsh` -- Make annotation table with genes of loci of interest, to use in coverage an MAPQ plots. To run script we need lists of genes of interest, they were made with:
+  ```
+# Get MAT loci protein_coding_gene IDs: Everything between SXI1 and STE12
+awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > results/MAT.txt
+# Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes)
+awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > results/rRNA.txt
+# Get centromere delimiting-gene IDs from Janbon 2014 
+  ```
+Script run with:
+```
+xonsh get-loci.xsh -g results/MAT.txt -g results/centromeres.txt -g results/rRNA.txt -r references/VNI_liftoff.gff_polished.tsv -r references/VN
+II_liftoff.gff_polished.tsv -r references/VNBI_liftoff.gff_polished.tsv -r references/VNBII_liftoff.gff_polished.tsv -o results/loci_interest.tsv 
+```
 
 8. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
 It runs the script `scripts/fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
