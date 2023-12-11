@@ -1,6 +1,5 @@
 #/usr/bin/env xonsh
 
-
 # Get MAT loci protein_coding_gene IDs: Everything between SXI1 and STE12
 # awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > results/MAT.txt
 # Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes)
@@ -9,34 +8,35 @@
 
 import pandas as pd
 from pathlib import Path
+import click
 
-MAT = Path('results/MAT.txt')
-CENTROMERE = Path('results/centromeres.txt')
-RRNA = Path('results/rRNA.txt')
-lineages = ["VNI", "VNII", "VNBI", "VNBII"]
+@click.command()
+@click.option('--genefile', '-g', multiple=True, help = 'Path to text file with list of gene IDs (each in new line) of the locus of interest, file name will be used as locus name.')
+@click.option('--referencetsv', '-r', multiple=True, help = 'Path to TSV annotation file of reference genome.')
 
-mydfs = {}
-for lin in lineages:
-    mydfs[lin] = pd.read_csv(Path('references/' + lin + '_liftoff.gff_polished.tsv'), sep='\t', header=0)
+def getloci(genefile, referencetsv):
+    """This script creates an annotation table "loci_interest.tsv" with the columns: 
+    "seq_id", "primary_tag", "start", "description", "gene_id", "ID", "Name", "Loci" for each gene in <genefile>. 
+    It takes as many gene files as desired, each with the IDs of the genes in a locus of interest.
+    The output table has the annotation of the genes in all the reference genomes given as input in <referencetsv>."""
+    mydfs = []
+    for lin in referencetsv:
+        mydfs.append(pd.read_csv(Path(lin), sep='\t', header=0))
+    annotations = pd.concat(mydfs)
+    genes = annotations[["seq_id", "primary_tag", "start", "description", "gene_id", "ID", "Name"]]
+    level1_bool = genes.primary_tag.str.contains("protein_coding_gene") | genes.primary_tag.str.contains("ncRNA_gene")
+    level1 = genes[level1_bool]
 
-annotations = pd.concat(mydfs)
-genes = annotations[["seq_id", "primary_tag", "start", "description", "gene_id", "ID", "Name"]]
-level1_bool = genes.primary_tag.str.contains("protein_coding_gene") | genes.primary_tag.str.contains("ncRNA_gene")
-level1 = genes[level1_bool]
+    mylocus = []
+    for locus in genefile:
+        name = locus.split('/')[-1].split('.')[-2]
+        gene_list = list(pd.read_csv(Path(locus), header = None)[0])
+        gene = level1[level1['ID'].isin(gene_list)]
+        gene.loc[:,'Loci'] = name
+        mylocus.append(gene)
+    all_loci = pd.concat(mylocus)
 
-mat_list = list(pd.read_csv(MAT, header = None)[0])
-centromere_list = list(pd.read_csv(CENTROMERE, header = None)[0])
-rrna_list = list(pd.read_csv(rRNA, header = None)[0])
+    all_loci.to_csv('results/loci_interest.tsv',index= False, sep ='\t')
 
-mat = level1[level1['ID'].isin(mat_list)]
-rrna = level1[level1['ID'].isin(rrna_list)]
-centromere = level1[level1['ID'].isin(centromere_list)]
-
-mat['Loci'] = "MAT"
-rrna['Loci'] = "rRNA"
-centromere['Loci'] = "Centromere"
-
-loci = [mat, rrna, centromere]
-all_loci = pd.concat(loci)
-
-all_loci.to_csv('results/loci_interest.tsv',index= False, sep ='\t')
+if __name__ == "__main__":
+    getloci()
