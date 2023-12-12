@@ -96,11 +96,11 @@ Run this lines one by one:
   * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta)
   * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff)
   * Lists of genes of loci of interest obtained with:
-    * `results/centromere.txt`: Centromere delimiting-gene IDs from Janbon 2014.  
-    * `results/MAT.txt`: MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
-`awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > results/MAT.txt`  
-    * `results/rRNA.txt`: Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
-`awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > results/rRNA.txt`  
+    * `files/centromere.txt`: Centromere delimiting-gene IDs from Janbon 2014.  
+    * `files/MAT.txt`: MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
+`awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > files/MAT.txt`  
+    * `files/rRNA.txt`: Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
+`awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > files/rRNA.txt`  
 
 ### Structure of repository:
   * The working directory has the scripts and Snakefiles to run and the resulting files of the `get-` scripts that are used by the Snakefiles.  
