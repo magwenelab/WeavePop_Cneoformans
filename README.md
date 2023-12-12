@@ -93,8 +93,8 @@ Run this lines one by one:
   * `Desjardins_Supplemental_Table_S1.csv` name and 1st line modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx)
   * `lineage_references.csv`
   * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `references/` (accessions mentioned above)
-  * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
-  * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
+  * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta)
+  * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff)
   * Lists of genes of loci of interest obtained with:
     * `results/centromere.txt`: Centromere delimiting-gene IDs from Janbon 2014.  
     * `results/MAT.txt`: MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
