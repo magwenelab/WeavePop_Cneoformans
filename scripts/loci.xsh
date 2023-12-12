@@ -6,14 +6,14 @@ import click
 
 @click.command()
 @click.option('--genefile', '-g', multiple=True, required=True, type=click.Path(exists=True), help = 'Path to text file with list of gene IDs (each in new line) of the locus of interest, file name will be used as locus name.')
-@click.option('--referencetsv', '-r', multiple=True, required=True, type=click.Path(exists=True), help = 'Path to TSV annotation file of reference genome.')
 @click.option('--output', '-o', multiple=False, default = 'results/loci_interest.tsv', show_default=True, type=click.Path(exists=False), help = 'Path to output file.')
+@click.argument('referencetsv', nargs=-1, required=True, type=click.Path(exists=True)) # Path to TSV annotation file of reference genome
 
 def getloci(genefile, referencetsv, output):
     """This script creates an annotation table <output> with the columns: 
     "seq_id", "primary_tag", "start", "description", "gene_id", "ID", "Name", "Loci" for each gene in <genefile>. 
     It takes as many gene files as desired, each with the IDs of the genes in a locus of interest.
-    The output table has the annotation of the genes in all the reference genomes given as input in <referencetsv>."""
+    The output table has the annotation of the genes in all the reference genomes REFERENCETSV given as positional arguments."""
     mydfs = []
     for lin in referencetsv:
         mydfs.append(pd.read_csv(Path(lin), sep='\t', header=0, low_memory=False))

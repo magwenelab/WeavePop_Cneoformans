@@ -20,7 +20,9 @@ rule all:
         "results/protein_list.txt",
         REFDIR + "references_unmapped_features.csv",
         REFDIR + "references_unmapped_count.csv",
-        REFDIR + "references_unmapped.png"
+        REFDIR + "references_unmapped.png",
+        config["locitsv"]
+
 
 rule ref_gff2tsv:
     input:
@@ -90,6 +92,18 @@ rule gff2tsv:
     shell:
         "agat_convert_sp_gff2tsv.pl -gff {input} -o {output} "
         "&> {log} "
+
+rule loci_interest:
+    input:
+        expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv", lineage=LINS)
+    output:
+        config["locitsv"]
+    params:
+        loci=config["loci"]
+    log: 
+        "logs/loci/loci.log"
+    shell:
+        "xonsh scripts/loci.xsh {params.loci} -o {output} {input} &> {log}"
 
 rule ref2ref_agat:
     input: 

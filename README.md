@@ -95,6 +95,12 @@ Run this lines one by one:
   * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `references/` (accessions mentioned above)
   * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta) :exclamation: NOTE: Currently using verion of release 53
   * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff) :exclamation: NOTE: Currently using verion of release 53
+  * Lists of genes of loci of interest obtained with:
+    * `results/centromere.txt`: Centromere delimiting-gene IDs from Janbon 2014.  
+    * `results/MAT.txt`: MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
+`awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > results/MAT.txt`  
+    * `results/rRNA.txt`: Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
+`awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > results/rRNA.txt`  
 
 ### Structure of repository:
   * The working directory has the scripts and Snakefiles to run and the resulting files of the `get-` scripts that are used by the Snakefiles.  
@@ -158,21 +164,7 @@ Run this lines one by one:
       *  `references/references_unmapped.png`
       * And more intermediate and extra files
 
-9. `get-loci.xsh` -- Make annotation table with genes of loci of interest, to use in coverage an MAPQ plots. To run script we need lists of genes of interest, they were made with:
-  ```
-# Get MAT loci protein_coding_gene IDs: Everything between SXI1 and STE12
-awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > results/MAT.txt
-# Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes)
-awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > results/rRNA.txt
-# Get centromere delimiting-gene IDs from Janbon 2014 
-  ```
-Script run with:
-```
-xonsh get-loci.xsh -g results/MAT.txt -g results/centromeres.txt -g results/rRNA.txt -r references/VNI_liftoff.gff_polished.tsv -r references/VN
-II_liftoff.gff_polished.tsv -r references/VNBI_liftoff.gff_polished.tsv -r references/VNBII_liftoff.gff_polished.tsv -o results/loci_interest.tsv 
-```
-
-8. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
+9. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
 It runs the script `scripts/fastq-combiner.xsh` for each sample in `read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
 It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequences** (cds and protein) of each sample and **concatenates** them by cds and by protein.
 
@@ -188,7 +180,7 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
       * `cds/{protein}.fa`
       * `proteins/{protein}.fa`
 
-9. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
+10. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
      * `results/mapped_reads.svg` and `results/mapping_stats.txt` plot and table with fraction of mapping reads per sample.  
