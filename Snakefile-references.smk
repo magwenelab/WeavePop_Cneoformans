@@ -23,26 +23,6 @@ rule all:
         REFDIR + "references_unmapped.png",
         config["locitsv"]
 
-
-rule ref_gff2tsv:
-    input:
-        REF_GFF
-    output:
-        complete = REF_GFF + ".tsv",
-        selected = REFDIR + "reference_genes.tsv"
-    conda:
-        "envs/agat.yaml"
-    log: 
-        agat = "logs/references/ref_gff2tsv_agat.log",
-        head = "logs/references/ref_gff2tsv_head.log",
-        grep = "logs/references/ref_gff2tsv_grep.log"
-    shell:
-        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output.complete} &> {log.agat} "
-        " && "
-        "head -n1 {output.complete}| cut -f1,3,4,5,7,9,13,14 > {output.selected} 2> {log.head}"
-        " && "
-        "grep 'protein_coding_gene\|ncRNA_gene\|pseudogene' {output.complete} | cut -f 1,3,4,5,7,9,13,14 >> {output.selected} 2> {log.grep}"
-        
 rule features:
     input:
         REF_GFF
@@ -52,7 +32,6 @@ rule features:
         "logs/references/features.log"
     shell:
         "grep -v '#' {input} | cut -f 3 | sort | uniq > {output} 2> {log}"
-
 rule ref2ref_liftoff:
     input:
         target_refs = REFDIR + "{lineage}.fasta",
@@ -78,7 +57,6 @@ rule ref2ref_liftoff:
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
         "&> {log} "
-
 rule gff2tsv:
     input:
         REFDIR + "{lineage}_liftoff.gff_polished"
@@ -92,7 +70,6 @@ rule gff2tsv:
     shell:
         "agat_convert_sp_gff2tsv.pl -gff {input} -o {output} "
         "&> {log} "
-
 rule loci_interest:
     input:
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv", lineage=LINS)
@@ -104,7 +81,6 @@ rule loci_interest:
         "logs/loci/loci.log"
     shell:
         "xonsh scripts/loci.xsh {params.loci} -o {output} {input} &> {log}"
-
 rule ref2ref_agat:
     input: 
         lin_liftoff = REFDIR + "{lineage}_liftoff.gff_polished",
@@ -150,6 +126,24 @@ rule cat_lists:
         "logs/references/cat_list.log"
     shell:
         "cat {input} | sort | uniq > {output} 2> {log}"
+rule ref_gff2tsv:
+    input:
+        REF_GFF
+    output:
+        complete = REF_GFF + ".tsv",
+        selected = REFDIR + "reference_genes.tsv"
+    conda:
+        "envs/agat.yaml"
+    log: 
+        agat = "logs/references/ref_gff2tsv_agat.log",
+        head = "logs/references/ref_gff2tsv_head.log",
+        grep = "logs/references/ref_gff2tsv_grep.log"
+    shell:
+        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output.complete} &> {log.agat} "
+        " && "
+        "head -n1 {output.complete}| cut -f1,3,4,5,7,9,13,14 > {output.selected} 2> {log.head}"
+        " && "
+        "grep 'protein_coding_gene\|ncRNA_gene\|pseudogene' {output.complete} | cut -f 1,3,4,5,7,9,13,14 >> {output.selected} 2> {log.grep}"
 
 rule unmapped_features_edit:
     input:
