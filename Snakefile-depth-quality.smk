@@ -17,11 +17,11 @@ rule all:
         expand("genomes-annotations/{sample}/mapq_window.bed", sample=samples),
         expand("genomes-annotations/{sample}/mapq.svg", sample=samples),
         expand("genomes-annotations/{sample}/annotation.gff", sample=samples),
-        "results/proprotional_coverage_good.csv",
+        "results/proportional_coverage_good.csv",
         "results/cov_good_all.svg",
         "results/cov_prop_median_good.svg",
         "results/cov_prop_mean_good.svg",
-        "results/proprotional_coverage_raw.csv",
+        "results/proportional_coverage_raw.csv",
         "results/cov_raw_all.svg",
         "results/cov_prop_median_raw.svg",
         "results/cov_prop_mean_raw.svg"
@@ -111,11 +111,11 @@ rule coverage_stats_plots:
         "results/coverage_global_raw.csv",
         "results/coverage_raw.csv"        
     output:
-        "results/proprotional_coverage_good.csv",
+        "results/proportional_coverage_good.csv",
         "results/cov_good_all.svg",
         "results/cov_prop_median_good.svg",
         "results/cov_prop_mean_good.svg",
-        "results/proprotional_coverage_raw.csv",
+        "results/proportional_coverage_raw.csv",
         "results/cov_raw_all.svg",
         "results/cov_prop_median_raw.svg",
         "results/cov_prop_mean_raw.svg"
