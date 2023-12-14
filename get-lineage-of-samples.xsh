@@ -7,6 +7,7 @@ OUTSAMPLESTABLE = "sample_metadata.csv"
 import pandas as pd
 import csv
 from pathlib import Path  
+import numpy as np
 
 # Get Run and Experiment accessions from SRS sample names from Entrez Direct
 sample_names = pd.read_csv(READSTABLE)
@@ -51,6 +52,20 @@ SRS_names.drop_duplicates(inplace = True)
 #Join all original metadata with SRS accessions:
 sample_metadata = SRS_names.set_index('Strain').join(original_metadata.set_index('Strain'))
 sample_metadata = sample_metadata.reset_index()
+
+sample_metadata.rename(columns={"Isolation source": "Isolation_source",
+                                "VNI subdivision": "VNI_subdivision",
+                                "Mating type": "Mating_type", 
+                                "Country of origin": "Country_of_origin",
+                                "Broad Project": "Broad_Project",
+                                "SRA Accession": "SRA_Accession", 
+                                "Strain description": "Strain_description",
+                                "In GWAS":"In_GWAS"}, inplace=True)
+sample_metadata['Source'] = np.where(sample_metadata.Isolation_source.str.contains("tree",case=False), "Environment",
+                   np.where(sample_metadata.Isolation_source.str.contains("avian",case=False), "Environment",
+                   np.where(sample_metadata.Isolation_source.str.contains("soil",case=False), "Environment",
+                   np.where(sample_metadata.Isolation_source.str.contains("guano",case=False), "Environment", "Clinical"))))
+
 #Save all metadata with SRS names and names gotten from Entrez into csv file
 filepath = Path(OUTSAMPLESTABLE)  
 sample_metadata.to_csv(filepath, index=False)  
