@@ -5,7 +5,7 @@ import csv
 paired = []
 unpaired = []
 
-for srs in sorted(p"Samples".glob("SRS*")):
+for srs in sorted(p"srafiles".glob("SRS*")):
     for srr in sorted(srs.glob("SRR*")):
         r1 = p"fastqs" / f"{srr.name}_1.fastq"
         r2 = p"fastqs" / f"{srr.name}_2.fastq"
@@ -17,18 +17,19 @@ for srs in sorted(p"Samples".glob("SRS*")):
             ufiles = ",".join([str(i.name) for i in p"fastqs".glob(f"{srr.name}*.fastq")])
             unpaired.append((srs.name, srr.name, ufiles))
 
-with open('read_pair_table.csv', 'w', newline='') as csvfile:
+with open('files/read_pair_table.csv', 'w', newline='') as csvfile:
     w = csv.writer(csvfile)
     w.writerow(("sample", "run", "file1", "file2", "size"))
     w.writerows(paired)
 
 
-with open('unpaired_fastqs.csv', 'w', newline='') as csvfile:
+with open('files/unpaired_fastqs.csv', 'w', newline='') as csvfile:
     w = csv.writer(csvfile)
     w.writerow(("sample", "run", "files"))
     w.writerows(unpaired)
 
 SRS = [i[0] for i in paired]
+setSRS = set(SRS)
 
-with open("samples.txt", "w") as outfile:
-    outfile.write("\n".join(SRS))
+with open("files/samples.txt", "w") as outfile:
+    outfile.write("\n".join(setSRS))
