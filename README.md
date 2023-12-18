@@ -21,14 +21,16 @@ Based on the polished lift-over annotation, the AGAT GTF/GFF Toolkit software (h
 
 ## Requirements
 
-* Python and Conda (miniconda is my preference)
+* Miniconda3
+* Python
+* Python modules -- Pandas, Scipy
 * Xonsh -- https://xon.sh/
+* R with tidyverse meta-package
 * Snakemake -- https://snakemake.github.io/
-  * Graphviz -- https://graphviz.org/ (optional, to see Snakemake DAG in a graph)  
+  * Graphviz -- https://graphviz.org/ (optional, to see Snakemake DAG in a graph) 
 * NCBI Entrez Utilities (E-utilities) command line tools -- https://www.ncbi.nlm.nih.gov/books/NBK25501/
 * NCBI SRA Tools -- https://github.com/ncbi/sra-tools
-* Python modules -- Pandas, Scipy
-* R with tidyverse meta-package
+* Seqkit -- https://bioinf.shenwei.me/seqkit/
 * Snippy -- https://github.com/tseemann/snippy
 * Liftoff -- https://github.com/agshumate/Liftoff
 * AGAT -- https://github.com/NBISweden/AGAT
@@ -112,10 +114,10 @@ Run this lines one by one:
 ### Scripts to be run in this order:
 
 #### Module 1: Get FASTQ files of a BioProject
-1. `get-sra.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `srafiles/${SRSID}` where `SRSID` are SRA SRS numbers
+1. `get-sra.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `srafiles/${SRSID}` where `SRSID` are SRA (Sequence Read Archive) SRS numbers
     * Files produced:
         
-      * `files/{project_id}_biosamples.txt` -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence read identifier
+      * `files/{project_id}_biosamples.txt` -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence sample identifier
         
       * `files/{project_id}_SRStoSRR.txt` -- tab-delimited text file giving mapping between SRS (Samples) IDs and SRR (Runs) IDs. A given SRS can have multiple associated SRRs. 
         
@@ -132,6 +134,7 @@ Run this lines one by one:
 
       * `files/unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
     
+#### Module 2: Get proper format files for CryptoDiversity dataset
 5. `get-lineage-of-samples.xsh` -- add the SRS codes to the `files/Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv`.  
     * Files produced:
     
@@ -148,6 +151,7 @@ Run this lines one by one:
   * Files produced:
     * `files/chromosome_names.csv`
 
+#### Module 3: Annotate references according to main reference
 9. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
     * It currently works with:  
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
@@ -167,6 +171,7 @@ Run this lines one by one:
       *  `references/references_unmapped.png`
       * And more intermediate and extra files
 
+#### Module 4: Main analyses
 10. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
 It runs the script `scripts/fastq-combiner.xsh` for each sample in `files/read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
 It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequences** (cds and protein) of each sample and **concatenates** them by cds and by protein.
@@ -183,6 +188,7 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
       * `results/cds/{protein}.fa`
       * `results/proteins/{protein}.fa`
 
+#### Module 5: Quality and depth analyses
 11. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
