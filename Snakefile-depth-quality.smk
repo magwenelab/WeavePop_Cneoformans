@@ -67,7 +67,7 @@ rule coverage_plot:
     input:
         "genomes-annotations/{sample}/coverage.regions.bed.gz",
         "genomes-annotations/{sample}/coverage_good.regions.bed.gz",
-        "chromosome_names.csv",
+        "files/chromosome_names.csv",
         "results/loci_interest.tsv"
     output:
         "genomes-annotations/{sample}/coverage.svg",
@@ -105,7 +105,7 @@ rule cat_stats:
 
 rule coverage_stats_plots:
     input:
-        "sample_metadata.csv",
+        "files/sample_metadata.csv",
         "results/coverage_global_good.csv",
         "results/coverage_good.csv",
         "results/coverage_global_raw.csv",
@@ -138,7 +138,7 @@ rule samtools_stats:
 rule mapq_distribution:
     input:
         "genomes-annotations/{sample}/mapq.csv",
-        "chromosome_names.csv"
+        "files/chromosome_names.csv"
     output:
         "genomes-annotations/{sample}/mapq_distribution.svg"
     log:
@@ -149,7 +149,7 @@ rule mapq_distribution:
 rule cov_distribution:
     input:
         "genomes-annotations/{sample}/cov.csv",
-        "chromosome_names.csv"
+        "files/chromosome_names.csv"
     output:
         "genomes-annotations/{sample}/cov_distribution.svg"
     log:
@@ -201,7 +201,7 @@ rule unmapped:
 rule unmapped_plot:
     input:
         "results/mapping_stats.txt",
-        "sample_metadata.csv"
+        "files/sample_metadata.csv"
     output:
         "results/mapped_reads.svg"
     log:
@@ -214,7 +214,7 @@ rule mapq:
        "genomes-annotations/{sample}/snps.bam",
        "genomes-annotations/{sample}/coverage.regions.bed.gz"
    output:
-       "genomes-annotations/{sample}/mapq.bed",
+        "genomes-annotations/{sample}/mapq.bed",
         "genomes-annotations/{sample}/mapq_window.bed" 
    log:
        "logs/mapq/{sample}.log"
@@ -224,7 +224,7 @@ rule mapq:
 rule mapq_plot:
     input:
         "genomes-annotations/{sample}/mapq_window.bed",
-        "chromosome_names.csv",
+        "files/chromosome_names.csv",
         "results/loci_interest.tsv"
     output:
         "genomes-annotations/{sample}/mapq.svg"
