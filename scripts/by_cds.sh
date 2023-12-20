@@ -3,7 +3,7 @@
 mkdir cds
 cat ${snakemake_input[0]} | while read protein
 do
-   parallel "seqkit faidx genomes-annotations/{}/predicted_cds.fa $protein | seqkit replace -p '($)' -r ' sample={}'"  :::: ${snakemake_input[1]} > cds/$protein.fa
+   parallel "seqkit faidx genomes-annotations/{}/predicted_cds.fa $protein | seqkit replace -p '($)' -r ' sample={}'"  :::: ${snakemake_input[1]} > results/cds/$protein.fa
 done 2> ${snakemake_log[0]}
 touch ${snakemake_output[0]}
 
