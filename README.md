@@ -46,20 +46,17 @@ Environment installation files are in `envs/`
 With the `envs/crypto_div.yml` file:
 
 ~~~
-nohup conda env create -y -f envs/crypto_div.yaml &
+conda env create -y -f envs/crypto_div.yaml
 ~~~
 
-When the environment is ready install R:
+When the environment is ready install R packages:
 ~~~
 conda activate crypto_div
-conda install -c r r-essentials
 R
 install.packages("pheatmap")
+install.packages("svglite")
+install.packages("ggnewscale")
 conda deactivate
-~~~
-And install Graphviz to see Sankemake DAG of jobs in svg
-~~~
-conda install -c conda-forge graphviz
 ~~~
 
 </details>
