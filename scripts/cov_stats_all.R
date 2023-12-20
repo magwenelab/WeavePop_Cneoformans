@@ -10,20 +10,20 @@ library(ggnewscale)
 
 #metadata <- read.csv("sample_metadata.csv", header = TRUE, stringsAsFactors = TRUE)
 metadata <- read.csv(snakemake@input[[1]], header = TRUE, stringsAsFactors = TRUE)
-metadata <- mutate(metadata, name = paste(Strain, Sample, sep=" " ))
+metadata <- mutate(metadata, name = paste(strain, sample, sep=" " ))
 
 #### Good quality mappings ####
-# global <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
-# chromosome <-read.csv("results/coverage_good.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
-global <-read.csv(snakemake@input[[2]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
-chromosome <-read.csv(snakemake@input[[3]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
-global <- left_join(global, metadata, by = "Sample")
+# global <-read.csv("results/coverage_global_good.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "sample"), stringsAsFactors = TRUE)
+# chromosome <-read.csv("results/coverage_good.csv", header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "sample"), stringsAsFactors = TRUE)
+global <-read.csv(snakemake@input[[2]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "sample"), stringsAsFactors = TRUE)
+chromosome <-read.csv(snakemake@input[[3]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "sample"), stringsAsFactors = TRUE)
+global <- left_join(global, metadata, by = "sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
 chromosome <- pivot_wider(chromosome, names_from = Measurement, values_from = Value)
-chromosome <- left_join(chromosome, global, by = "Sample") 
+chromosome <- left_join(chromosome, global, by = "sample") 
 chromosome <- chromosome%>%
-    group_by(Chromosome, Sample)%>%
+    group_by(Chromosome, sample)%>%
     mutate(pmean= round(Mean/Global_Mean, 2))%>%
     mutate(pmedian= round(Median/Global_Median, 2))%>%
     ungroup()
@@ -41,7 +41,7 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
     geom_point(aes(y= Global_Median, color = "Median"))+
     scale_color_manual(values= color_stat, name = "")+ 
     ylim(0,topylim)+
-    facet_grid(~Group,scale = "free_x" , space='free_x')+
+    facet_grid(~group,scale = "free_x" , space='free_x')+
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))+
     labs(title= "Global coverage",
@@ -60,9 +60,9 @@ colors <-
 ylabel <- "Ploidy"
 
 medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmedian))+
-    geom_point(aes(color= Source))+
+    geom_point(aes(color= source))+
     ylim(0,toplim)+
-    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
+    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(group))+
     #scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     scale_color_brewer(palette = "Set2")+
     theme_bw()+
@@ -90,7 +90,7 @@ ylabel <- "Ploidy"
 meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean))+
     geom_point(aes(color= pmean))+
     ylim(0,toplim)+
-    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
+    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(group))+
     scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
@@ -103,15 +103,15 @@ ggsave(snakemake@output[[4]], plot = meanplot, dpi = 50, units = "cm", height = 
 
 #### All mappings ####
 
-global <-read.csv(snakemake@input[[4]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "Sample"), stringsAsFactors = TRUE)
-chromosome <-read.csv(snakemake@input[[5]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "Sample"), stringsAsFactors = TRUE)
-global <- left_join(global, metadata, by = "Sample")
+global <-read.csv(snakemake@input[[4]], header = FALSE, col.names = c("Global_Mean", "Global_Median", "sample"), stringsAsFactors = TRUE)
+chromosome <-read.csv(snakemake@input[[5]], header = FALSE, col.names = c("Chromosome", "Measurement", "Value", "sample"), stringsAsFactors = TRUE)
+global <- left_join(global, metadata, by = "sample")
 chromosome$Chromosome <- as.factor(chromosome$Chromosome)
 
 chromosome <- pivot_wider(chromosome, names_from = Measurement, values_from = Value)
-chromosome <- left_join(chromosome, global, by = "Sample") 
+chromosome <- left_join(chromosome, global, by = "sample") 
 chromosome <- chromosome%>%
-    group_by(Chromosome, Sample)%>%
+    group_by(Chromosome, sample)%>%
     mutate(pmean= round(Mean/Global_Mean, 2))%>%
     mutate(pmedian= round(Median/Global_Median, 2))%>%
     ungroup()
@@ -127,7 +127,7 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
     geom_point(aes(y= Global_Median, color = "Median"))+
     scale_color_manual(values= color_stat, name = "")+ 
     ylim(0,topylim)+
-    facet_grid(~Group,scale = "free_x" , space='free_x')+
+    facet_grid(~group,scale = "free_x" , space='free_x')+
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5))+
     labs(title= "Global coverage",
@@ -146,7 +146,7 @@ ylabel <- "Ploidy"
 medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmedian))+
     geom_point(aes(color= pmedian))+
     ylim(0,toplim)+
-    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
+    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(group))+
     scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),
@@ -167,7 +167,7 @@ ylabel <- "Ploidy"
 meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean))+
     geom_point(aes(color= pmean))+
     ylim(0,toplim)+
-    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(Group))+
+    facet_grid(scale = "free_x" , space='free_x', rows= vars(Chromosome), cols = vars(group))+
     scale_color_gradientn(colors = colors, breaks = values,limits = c(0, toplim), values = rescale(values), guide = "colorbar", name = ylabel) +
     theme_light()+
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5),

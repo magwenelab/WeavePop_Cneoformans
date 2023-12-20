@@ -24,7 +24,7 @@ rule all:
         "results/samples_unmapped.png"
 rule combine_fastq:
     input:
-        readtab = config["sample_file"],
+        readtab = config["read_table"],
         fqdir = str(config["fastq_dir"])
     output:
         "fastq_combined/{sample}_1.fq.gz",

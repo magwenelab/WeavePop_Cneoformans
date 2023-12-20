@@ -105,7 +105,7 @@ rule cat_stats:
 
 rule coverage_stats_plots:
     input:
-        "files/sample_metadata.csv",
+        config["sample_file"],
         "results/coverage_global_good.csv",
         "results/coverage_good.csv",
         "results/coverage_global_raw.csv",
@@ -201,7 +201,7 @@ rule unmapped:
 rule unmapped_plot:
     input:
         "results/mapping_stats.txt",
-        "files/sample_metadata.csv"
+        config["sample_file"]
     output:
         "results/mapped_reads.svg"
     log:

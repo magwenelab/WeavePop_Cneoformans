@@ -12,8 +12,8 @@ import pandas as pd
 # Create dataframe from SAMPLESTABLE and REFGENOMETABLE with the sample, read filenames, lineage and reference assembly file information
 
 lineage = pd.read_csv(SAMPLESTABLE)
-lineage = lineage[["Sample","Group"]]
-lineage = lineage.rename(columns={'Sample': 'sample', 'Group': 'lineage'})
+lineage = lineage[["sample","group"]]
+lineage = lineage.rename(columns={'group': 'lineage'})
 
 d={'sample': lineage["sample"], 'file1': lineage["sample"]+"_1.fq.gz", 'file2': lineage["sample"]+"_2.fq.gz"}
 df = pd.DataFrame(data=d)
@@ -21,11 +21,11 @@ df = df.set_index('sample').join(lineage.set_index('sample'))
 df.reset_index(inplace=True)
 
 reference = pd.read_csv(REFGENOMETABLE)
-reference = reference[["Group","File"]]
-reference = reference.rename(columns={'Group': 'lineage', 'File': 'refgenome'})
+reference = reference[["group","File"]]
+reference = reference.rename(columns={'group': 'lineage', 'File': 'refgenome'})
 
 df = df.set_index('lineage').join(reference.set_index('lineage'))
 df.reset_index(inplace=True)
 
-filepath = Path(OUTSAMPLEREFERENCE)  
+filepath = Path(OUTsampleREFERENCE)  
 df.to_csv(filepath, index=False)

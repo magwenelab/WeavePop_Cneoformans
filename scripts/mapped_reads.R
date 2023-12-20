@@ -7,10 +7,10 @@ library(RColorBrewer)
 suppressPackageStartupMessages(library(scales))
 library(svglite)
 metadata <- read.csv(snakemake@input[[2]], header = TRUE)%>%
-    select(sample = Sample, strain = Strain, lineage = Group)
+    select(sample, strain, lineage = group)
 
 # metadata <- read.csv("./sample_metadata.csv", header = TRUE)%>%
-#    select(sample = Sample, strain = Strain, lineage = Group)
+#    select(sample, strain, lineage = Group)
 
 stats <- read.delim(snakemake@input[[1]], sep =":", header = FALSE, col.names = c("stat", "value", "sample"))
 
