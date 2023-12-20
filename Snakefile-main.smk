@@ -1,13 +1,5 @@
 configfile: "config.yaml"
 
-#subworkflow otherworkflow:
-#    workdir:
-#        "."
-#    snakefile:
-#        "./annotate_references.smk"
-#    configfile:
-#        "./config.yaml"
-
 import pandas as pd
 
 samplefile=(pd.read_csv(config["sample_file"], sep=","))
@@ -23,6 +15,7 @@ proteins=list(protlist["protein"])
 rule all:
     input:
         expand("genomes-annotations/{sample}/snps.consensus.fa",sample=samples),
+        expand("genomes-annotations/{sample}/snps.bam",sample=samples),
         expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
@@ -141,7 +134,7 @@ rule index_cds:
 rule by_proteins:
     input:
         "results/protein_list.txt",
-        "samples.txt",
+        "files/samples.txt",
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
     output:
@@ -154,7 +147,7 @@ rule by_proteins:
 rule by_cds:
     input:
         "results/protein_list.txt",
-        "samples.txt",
+        "files/samples.txt",
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
     output:
