@@ -11,5 +11,5 @@ threads_liftoff: 4
 threads_mosdepth: 4
 mosdepth_window: 500
 mosdepth_min_mapq: 20
-loci: "-g files/MAT.txt -g files/centromeres.txt -g files/rRNA.txt -g files/TOR.txt"
+loci: "files/MAT.txt files/centromeres.txt files/rRNA.txt files/TOR.txt"
 locitsv: "files/loci_interest.tsv"
