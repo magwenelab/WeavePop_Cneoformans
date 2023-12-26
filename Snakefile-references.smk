@@ -11,15 +11,12 @@ REF_GFF = REFDIR + str(config["reference_gff"])
 
 rule all:
     input:
-        REFDIR + "reference_genes.tsv",
         expand(REFDIR + "{lineage}_liftoff.gff_polished",lineage=LINS),
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_proteins.fa",lineage=LINS),
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
-        "results/protein_list.txt",
-        REFDIR + "references_unmapped_features.csv",
-        REFDIR + "references_unmapped_count.csv",
-        REFDIR + "references_unmapped.png",
+        "files/protein_list.txt",
+        REFDIR + "references_unmapped.svg",
         config["locitsv"]
 
 rule features:
