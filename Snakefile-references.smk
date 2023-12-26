@@ -144,33 +144,14 @@ rule ref_gff2tsv:
         " && "
         "grep 'protein_coding_gene\|ncRNA_gene\|pseudogene' {output.complete} | cut -f 1,3,4,5,7,9,13,14 >> {output.selected} 2> {log.grep}"
 
-rule unmapped_features_edit:
-    input:
-        REFDIR + "{lineage}_unmapped_features.txt"   
-    output: 
-        temp(REFDIR + "{lineage}_unmapped_features.csv")
-    log:
-        "logs/references/{lineage}_unmapped_features_edit.log"
-    shell:
-       'sed "s/$/,\\{wildcards.lineage}/" {input} > {output} 2> {log}'
-
-rule unmapped_features:
-    input:
-        expand(REFDIR + "{lineage}_unmapped_features.csv", lineage=LINS)   
-    output: 
-        REFDIR + "references_unmapped_features.csv"
-    log:
-        "logs/references/unmapped_features.log"
-    shell:
-       'cat {input} > {output} 2> {log}'         
-
 rule unmapped_count_plot:
     input:
-        REFDIR + "references_unmapped_features.csv",
-        REFDIR + "reference_genes.tsv"
+        REF_GFF + ".tsv",
+        config["lineage_reference_file"],
+        expand(REFDIR + "{lineage}_unmapped_features.txt", lineage=LINS)        
     output:
-        REFDIR + "references_unmapped_count.csv",
-        REFDIR + "references_unmapped.png"
+        REFDIR + "references_unmapped_count.txt",
+        REFDIR + "references_unmapped.svg"
     log:
         "logs/references/unmapped_count_plot.log"
     script:
