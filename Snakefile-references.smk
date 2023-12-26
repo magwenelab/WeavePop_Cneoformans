@@ -77,16 +77,9 @@ rule loci_interest:
     params:
         loci=config["loci"]
     log: 
-        "logs/references/loci.log"
+        "logs/loci/loci.log"
     shell:
-        """
-        head -n 1 {input} | tail -n 1| sed 's/^/Loci\t/' > {output} 
-        for loci in {params.loci}
-        do 
-        name=$(echo $loci | rev | cut -d'/' -f1 | cut -d'.' -f2 | rev) 
-        cat {input} | grep -f ${{loci}} | awk '$3 ~ /gene/' | sed "s/^/${{name}}\t/" >> {output} 
-        done 2> {log}  || true
-        """
+        "xonsh scripts/loci.xsh {params.loci} -o {output} {input} &> {log}"
 rule ref2ref_agat:
     input: 
         lin_liftoff = REFDIR + "{lineage}_liftoff.gff_polished",
