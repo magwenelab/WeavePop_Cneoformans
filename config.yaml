@@ -1,5 +1,5 @@
 fastq_dir: "fastqs" # This directory has all files together (no subdirectories) all uncompressed and with .fasta extension (use double quotes and no slash)
-sample_file: "files/samples_metadata.csv" # CSV table with columns sample, group, strain, and extra metadata)
+sample_file: "files/sample_metadata.csv" # CSV table with columns sample, group, strain, and extra metadata)
 read_table: "files/read_pair_table.csv" # CSV table with columns sample,run,file1,file2,size (no quotes)
 sample_reference_file: "files/sample_reference.csv" # CSV table with columns lineage,sample,file1,file2,refgenome (no quotes)
 lineage_reference_file: "files/lineage_references.csv" # CSV table with columns group,strain,genbank,file (no quotes)
