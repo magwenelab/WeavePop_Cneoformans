@@ -8,7 +8,7 @@ ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
 
-protlist=(pd.read_csv("results/protein_list.txt", sep=",", header = None, names = ['protein']))
+protlist=(pd.read_csv("files/protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
 
 
@@ -133,7 +133,7 @@ rule index_cds:
 
 rule by_proteins:
     input:
-        "results/protein_list.txt",
+        "files/protein_list.txt",
         "files/samples.txt",
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
@@ -146,7 +146,7 @@ rule by_proteins:
 
 rule by_cds:
     input:
-        "results/protein_list.txt",
+        "files/protein_list.txt",
         "files/samples.txt",
         expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
         expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
