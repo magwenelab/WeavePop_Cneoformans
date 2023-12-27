@@ -128,7 +128,6 @@ Run this lines one by one:
     * Files produced:
     
       * `files/read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
-
       * `files/unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
     
 #### Module 2: Get proper format files for CryptoDiversity dataset
@@ -137,19 +136,14 @@ Run this lines one by one:
     
       * `files/sample_metadata.csv`  -- Columns are Strain, Sample, Name, Group, VNI subdivision, Mating type,Country of origin, Isolation source, Broad Project, SRA Accession, Strain description, In GWAS, Phenotyped
 
-6. `get-references.xsh` -- uses `files/lineage_references.csv` and `files/sample_metadata.csv` to associate each sample with its reference
-   * Files produced:
-  
-     * `files/sample_reference.csv` -- Columns are lineage, sample, file1, file2, refgenome (filename of fasta)
+6. `get-reference-no-mito.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
 
-7. `get-reference-no-mito.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
-
-8. `get-chromosome-names.sh` -- Get chromosome names from FASTA headers of each refrence.
+7. `get-chromosome-names.sh` -- Get chromosome names from FASTA headers of each refrence.
   * Files produced:
     * `files/chromosome_names.csv`
 
 #### Module 3: Annotate references according to main reference
-9. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
+8. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
     * It currently works with:  
   ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
       ⚠️ `--cores 1` is because there is a problem if Liftoff runs in parallel because the different jobs try to create `FungiDB-65_CneoformansH99.gff_db` at the same time and that is not cool.    
@@ -157,19 +151,19 @@ Run this lines one by one:
       ⏰ Pending: Merge into main workflow.
     * Files produced:  
   
-      *  `references/reference_genes.tsv`
       *  `references/{lineage}_liftoff.gff_polished`
       *  `references/{lineage}_liftoff.gff_polished.tsv`
       *  `references/{lineage}_predicted_proteins.fa`
       *  `references/{lineage}_predicted_cds.fa`
-      *  `results/protein_list.txt`
+      *  `files/protein_list.txt`
       *  `references/references_unmapped_features.csv`
       *  `references/references_unmapped_count.csv`
-      *  `references/references_unmapped.png`
+      *  `references/references_unmapped.png`,
+      *  `files/sample_reference.csv`
       * And more intermediate and extra files
 
 #### Module 4: Main analyses
-10. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
+9. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
 It runs the script `scripts/fastq-combiner.xsh` for each sample in `files/read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
 It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequences** (cds and protein) of each sample and **concatenates** them by cds and by protein.
 
@@ -186,7 +180,7 @@ It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequ
       * `results/proteins/{protein}.fa`
 
 #### Module 5: Quality and depth analyses
-11. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
+10. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
    * Files produced:  
   
      * `results/mapped_reads.svg` and `results/mapping_stats.txt` plot and table with fraction of mapping reads per sample.  
