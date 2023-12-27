@@ -7,6 +7,7 @@ samples=list(set(samplefile["sample"]))
 ref_table = (pd.read_csv(config["sample_reference_file"], sep=","))
 ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
+REF_GFF = REFDIR + str(config["reference_gff"])
 
 protlist=(pd.read_csv("files/protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
@@ -21,7 +22,7 @@ rule all:
         expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
         "results/proteins.done",
         "results/cds.done",
-        "results/samples_unmapped.png"
+        "results/unmapped.svg"
 rule combine_fastq:
     input:
         readtab = config["read_table"],
@@ -61,7 +62,7 @@ rule liftoff:
         target = "genomes-annotations/{sample}/snps.consensus.fa",
         features = REFDIR + "features.txt"
     params:
-        refgff = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'lineage'] + "_liftoff.gff_polished"),
+        refgff = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'group'] + "_liftoff.gff_polished"),
         refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome'])
     output:
         "genomes-annotations/{sample}/lifted.gff",        
@@ -157,35 +158,15 @@ rule by_cds:
     script:
         "scripts/by_cds.sh"
 
-rule unmapped_features_edit:
+rule unmapped_count_plot:
     input:
-        "genomes-annotations/{sample}/unmapped_features.txt"   
-    output: 
-        temp("genomes-annotations/{sample}/unmapped_features.csv")
-    log:
-        "logs/bash/{sample}_unmapped_features_edit.log"
-    shell:
-       'sed "s/$/,\\{wildcards.sample}/" {input} > {output} 2> {log}'
-
-rule unmapped_features:
-    input:
-        expand("genomes-annotations/{sample}/unmapped_features.csv", sample=samples)   
-    output: 
-        "results/samples_unmapped_features.csv"
-    log:
-        "logs/bash/unmapped_features.log"
-    shell:
-       'cat {input} > {output} 2> {log}'         
-
-rule unmapped_count:
-    input:
-        "results/samples_unmapped_features.csv",
-        REFDIR + "reference_genes.tsv",
-        config["sample_reference_file"]
+        REF_GFF + ".tsv",
+        config["sample_file"],
+        expand("genomes-annotations/{sample}/unmapped_features.txt", sample=samples)        
     output:
-        "results/samples_unmapped_count.csv",
-        "results/samples_unmapped.png"
+        "results/unmapped_count.txt",
+        "results/unmapped.svg"
     log:
-        "logs/bash/unmapped_count.log"
+        "logs/unmapped_count_plot.log"
     script:
         "scripts/count_sample_unmapped.R"
