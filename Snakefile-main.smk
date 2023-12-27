@@ -167,6 +167,6 @@ rule unmapped_count_plot:
         "results/unmapped_count.txt",
         "results/unmapped.svg"
     log:
-        "logs/unmapped_count_plot.log"
+        "logs/liftoff/unmapped_count_plot.log"
     script:
         "scripts/count_sample_unmapped.R"
