@@ -17,7 +17,8 @@ rule all:
         expand(REFDIR + "{lineage}_predicted_cds.fa",lineage=LINS),
         "files/protein_list.txt",
         REFDIR + "references_unmapped.svg",
-        config["locitsv"]
+        config["locitsv"],
+        config["sample_reference_file"]
 
 rule features:
     input:
@@ -28,7 +29,6 @@ rule features:
         "logs/references/features.log"
     shell:
         "grep -v '#' {input} | cut -f 3 | sort | uniq > {output} 2> {log}"
-        
 rule ref2ref_liftoff:
     input:
         target_refs = REFDIR + "{lineage}.fasta",
@@ -54,7 +54,6 @@ rule ref2ref_liftoff:
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
         "&> {log} "
-
 rule gff2tsv:
     input:
         REFDIR + "{lineage}_liftoff.gff_polished"
@@ -77,7 +76,7 @@ rule loci_interest:
     params:
         loci=config["loci"]
     log: 
-        "logs/loci/loci.log"
+        "logs/references/loci.log"
     shell:
         "xonsh scripts/loci.xsh {params.loci} -o {output} {input} &> {log}"
 
@@ -126,7 +125,6 @@ rule cat_lists:
         "logs/references/cat_list.log"
     shell:
         "cat {input} | sort | uniq > {output} 2> {log}"
-
 rule ref_gff2tsv:
     input:
         REF_GFF
@@ -151,3 +149,14 @@ rule unmapped_count_plot:
         "logs/references/unmapped_count_plot.log"
     script:
         "scripts/count_reference_unmapped.R"
+
+rule reference_table:
+    input:
+        s = config["sample_file"],
+        r = config["lineage_reference_file"]  
+    output:
+        config["sample_reference_file"]
+    log:
+        "logs/references/reftable.log"
+    shell:
+        "xonsh scripts/reference_table.xsh -s {input.s} -r {input.r} -o {output} &> {log}"
