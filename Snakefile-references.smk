@@ -66,6 +66,7 @@ rule gff2tsv:
     shell:
         "agat_convert_sp_gff2tsv.pl -gff {input} -o {output} "
         "&> {log} "
+
 rule loci_interest:
     input:
         expand(REFDIR + "{lineage}_liftoff.gff_polished.tsv", lineage=LINS)
@@ -77,6 +78,7 @@ rule loci_interest:
         "logs/loci/loci.log"
     shell:
         "xonsh scripts/loci.xsh {params.loci} -o {output} {input} &> {log}"
+
 rule ref2ref_agat:
     input: 
         lin_liftoff = REFDIR + "{lineage}_liftoff.gff_polished",
@@ -117,7 +119,7 @@ rule cat_lists:
     input: 
         expand(REFDIR + "{lineage}_protein_list.txt", lineage=LINS)
     output:
-        "results/protein_list.txt"
+        "files/protein_list.txt"
     log:
         "logs/references/cat_list.log"
     shell:
@@ -126,20 +128,13 @@ rule ref_gff2tsv:
     input:
         REF_GFF
     output:
-        complete = REF_GFF + ".tsv",
-        selected = REFDIR + "reference_genes.tsv"
+        complete = REF_GFF + ".tsv"
     conda:
         "envs/agat.yaml"
     log: 
-        agat = "logs/references/ref_gff2tsv_agat.log",
-        head = "logs/references/ref_gff2tsv_head.log",
-        grep = "logs/references/ref_gff2tsv_grep.log"
+        "logs/references/ref_gff2tsv_agat.log"
     shell:
-        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output.complete} &> {log.agat} "
-        " && "
-        "head -n1 {output.complete}| cut -f1,3,4,5,7,9,13,14 > {output.selected} 2> {log.head}"
-        " && "
-        "grep 'protein_coding_gene\|ncRNA_gene\|pseudogene' {output.complete} | cut -f 1,3,4,5,7,9,13,14 >> {output.selected} 2> {log.grep}"
+        "agat_convert_sp_gff2tsv.pl -gff {input} -o {output.complete} &> {log}"
 
 rule unmapped_count_plot:
     input:
