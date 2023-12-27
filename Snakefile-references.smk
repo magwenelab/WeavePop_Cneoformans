@@ -28,6 +28,7 @@ rule features:
         "logs/references/features.log"
     shell:
         "grep -v '#' {input} | cut -f 3 | sort | uniq > {output} 2> {log}"
+        
 rule ref2ref_liftoff:
     input:
         target_refs = REFDIR + "{lineage}.fasta",
@@ -53,6 +54,7 @@ rule ref2ref_liftoff:
         "-p {threads} "
         "{input.target_refs} {input.fasta} "
         "&> {log} "
+
 rule gff2tsv:
     input:
         REFDIR + "{lineage}_liftoff.gff_polished"
@@ -124,6 +126,7 @@ rule cat_lists:
         "logs/references/cat_list.log"
     shell:
         "cat {input} | sort | uniq > {output} 2> {log}"
+
 rule ref_gff2tsv:
     input:
         REF_GFF
