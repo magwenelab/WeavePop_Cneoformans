@@ -10,7 +10,8 @@ import click
 @click.argument('referencetsv', nargs=-1, required=True, type=click.Path(exists=True)) # Path to TSV annotation file of reference genome
 
 def getloci(genefile, referencetsv, output):
-    """This script creates an annotation table <output> for each gene in <genefile>. 
+    """This script creates an annotation table <output> with the columns: 
+    "seq_id", "primary_tag", "start", "description", "gene_id", "ID", "Name", "Loci" for each gene in <genefile>. 
     It takes as many gene files as desired, each with the IDs of the genes in a locus of interest.
     The output table has the annotation of the genes in all the reference genomes REFERENCETSV given as positional arguments."""
     mydfs = []

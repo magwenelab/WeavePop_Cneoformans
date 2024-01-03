@@ -12,45 +12,40 @@ REF_GFF = REFDIR + str(config["reference_gff"])
 protlist=(pd.read_csv("files/protein_list.txt", sep=",", header = None, names = ['protein']))
 proteins=list(protlist["protein"])
 
-
 rule all:
     input:
-        expand("genomes-annotations/{sample}/snps.consensus.fa",sample=samples),
-        expand("genomes-annotations/{sample}/snps.bam",sample=samples),
-        expand("genomes-annotations/{sample}/lifted.gff_polished", sample=samples),
-        expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
-        expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
+        expand("analysis/{sample}/snps.consensus.fa",sample=samples),
+        expand("analysis/{sample}/snps.bam",sample=samples),
+        expand("analysis/{sample}/lifted.gff_polished", sample=samples),
+        expand("analysis/{sample}/predicted_cds.fa",sample=samples),
+        expand("analysis/{sample}/predicted_proteins.fa",sample=samples),
         "results/proteins.done",
         "results/cds.done",
         "results/unmapped.svg"
-rule combine_fastq:
-    input:
-        readtab = config["read_table"],
-        fqdir = str(config["fastq_dir"])
-    output:
-        "fastq_combined/{sample}_1.fq.gz",
-        "fastq_combined/{sample}_2.fq.gz"
-    log:
-        "logs/fastq-combiner/{sample}.log"  
-    shell:
-        "xonsh scripts/fastq-combiner.xsh {wildcards.sample} {input.readtab} {input.fqdir} fastq_combined/  &> {log}"
+
+rule samples_list:
+    output: 
+        "files/samples.txt"
+    run:
+        sample = samplefile["sample"]
+        sample.to_csv("files/samples.txt", index = False, header = False)
 
 rule snippy:
     input:
-        "fastq_combined/{sample}_1.fq.gz",
-        "fastq_combined/{sample}_2.fq.gz"
+        "fastq_combined/{sample}" + config["fastq_suffix1"],
+        "fastq_combined/{sample}" + config["fastq_suffix2"]
     params:
         ref = lambda wildcards: (REFDIR + ref_table.loc[wildcards.sample, 'refgenome']),
         file1 = lambda wildcards: ref_table.loc[wildcards.sample, 'file1'],
         file2 = lambda wildcards: ref_table.loc[wildcards.sample, 'file2'] 
     output:
-        "genomes-annotations/{sample}/snps.consensus.fa",
-        "genomes-annotations/{sample}/snps.bam"
+        "analysis/{sample}/snps.consensus.fa",
+        "analysis/{sample}/snps.bam"
     threads: config["threads_snippy"]
     log:
         "logs/snippy/{sample}.log" 
     shell:
-        "snippy --outdir genomes-annotations/{wildcards.sample} "
+        "snippy --outdir analysis/{wildcards.sample} "
         "--cpus {threads} "
         "--ref {params.ref} "
         "--R1 fastq_combined/{params.file1} "
@@ -59,37 +54,37 @@ rule snippy:
 
 rule liftoff:
     input:
-        target = "genomes-annotations/{sample}/snps.consensus.fa",
-        features = REFDIR + "features.txt"
+        target = "analysis/{sample}/snps.consensus.fa",
+        features = "files/features.txt"
     params:
         refgff = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'group'] + "_liftoff.gff_polished"),
         refgenome = lambda wildcards:(REFDIR + ref_table.loc[wildcards.sample, 'refgenome'])
     output:
-        "genomes-annotations/{sample}/lifted.gff",        
-        "genomes-annotations/{sample}/lifted.gff_polished",
-        "genomes-annotations/{sample}/unmapped_features.txt"
+        "analysis/{sample}/lifted.gff",        
+        "analysis/{sample}/lifted.gff_polished",
+        "analysis/{sample}/unmapped_features.txt"
     threads: config["threads_liftoff"]
     log:
         "logs/liftoff/{sample}.log" 
     shell:
         "liftoff "
-        "-g {params.refgff} "
+        "-g {params.refgff} " 
         "-polish "
         "-f {input.features} "
-        "-dir genomes-annotations/{wildcards.sample}/intermediate_files "
-        "-u genomes-annotations/{wildcards.sample}/unmapped_features.txt "
-        "-o genomes-annotations/{wildcards.sample}/lifted.gff "
+        "-dir analysis/{wildcards.sample}/intermediate_files "
+        "-u analysis/{wildcards.sample}/unmapped_features.txt "
+        "-o analysis/{wildcards.sample}/lifted.gff "
         "-p {threads} "
         "{input.target} "
         "{params.refgenome} &> {log}"
 
 rule agat:
     input:
-        gff = "genomes-annotations/{sample}/lifted.gff_polished",
-        fa = "genomes-annotations/{sample}/snps.consensus.fa"
+        gff = "analysis/{sample}/lifted.gff_polished",
+        fa = "analysis/{sample}/snps.consensus.fa"
     output:
-        cds = "genomes-annotations/{sample}/predicted_cds.fa",
-        prots = "genomes-annotations/{sample}/predicted_proteins.fa"
+        cds = "analysis/{sample}/predicted_cds.fa",
+        prots = "analysis/{sample}/predicted_proteins.fa"
     conda:
         "envs/agat.yaml"
     log: 
@@ -106,13 +101,14 @@ rule agat:
         "-g {input.gff} " 
         "-f {input.fa} "
         "-o {output.prots} "
-        "-p  &> {log.prots}" 
-
+        "-p  &> {log.prots} " 
+        " && "
+        "rm lifted.agat.log"
 rule index_proteins:
     input:
-        "genomes-annotations/{sample}/predicted_proteins.fa"
+        "analysis/{sample}/predicted_proteins.fa"
     output:
-        "genomes-annotations/{sample}/predicted_proteins.fa.fai"
+        "analysis/{sample}/predicted_proteins.fa.fai"
     conda:
         "envs/agat.yaml"        
     log:
@@ -122,9 +118,9 @@ rule index_proteins:
 
 rule index_cds:
     input:
-        "genomes-annotations/{sample}/predicted_cds.fa"
+        "analysis/{sample}/predicted_cds.fa"
     output:
-        "genomes-annotations/{sample}/predicted_cds.fa.fai"
+        "analysis/{sample}/predicted_cds.fa.fai"
     conda:
         "envs/agat.yaml"        
     log:
@@ -136,8 +132,8 @@ rule by_proteins:
     input:
         "files/protein_list.txt",
         "files/samples.txt",
-        expand("genomes-annotations/{sample}/predicted_proteins.fa",sample=samples),
-        expand("genomes-annotations/{sample}/predicted_proteins.fa.fai",sample=samples)
+        expand("analysis/{sample}/predicted_proteins.fa",sample=samples),
+        expand("analysis/{sample}/predicted_proteins.fa.fai",sample=samples)
     output:
         "results/proteins.done"
     log:
@@ -149,8 +145,8 @@ rule by_cds:
     input:
         "files/protein_list.txt",
         "files/samples.txt",
-        expand("genomes-annotations/{sample}/predicted_cds.fa",sample=samples),
-        expand("genomes-annotations/{sample}/predicted_cds.fa.fai",sample=samples)
+        expand("analysis/{sample}/predicted_cds.fa",sample=samples),
+        expand("analysis/{sample}/predicted_cds.fa.fai",sample=samples)
     output:
         "results/cds.done"
     log:
@@ -162,9 +158,9 @@ rule unmapped_count_plot:
     input:
         REF_GFF + ".tsv",
         config["sample_file"],
-        expand("genomes-annotations/{sample}/unmapped_features.txt", sample=samples)        
+        expand("analysis/{sample}/unmapped_features.txt", sample=samples)        
     output:
-        "results/unmapped_count.txt",
+        "results/unmapped_count.tsv",
         "results/unmapped.svg"
     log:
         "logs/liftoff/unmapped_count_plot.log"

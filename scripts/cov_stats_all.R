@@ -54,8 +54,8 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
             x= "Sample",
             y= "Coverage (X)")
 
-#ggsave("results/cov_good_all.svg", plot = g, dpi = 20, units = "cm", height = 30, width = 60)
-ggsave(snakemake@output[[2]], plot = g, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_good_all.svg", plot = g,  units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[2]], plot = g,  units = "cm", height = 30, width = 60)
 
 # Median by Chromosome
 
@@ -82,8 +82,8 @@ medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmed
          x = "Sample",
          y = ylabel)
 
-#ggsave("results/cov_prop_median_good.svg", plot = medianplot, dpi = 20, units = "cm", height = 30, width = 60)
-ggsave(snakemake@output[[3]], plot = medianplot, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_prop_median_good.svg", plot = medianplot,  units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[3]], plot = medianplot,  units = "cm", height = 30, width = 60)
 
 # Mean by Chromosome
 
@@ -110,8 +110,8 @@ meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean)
          x = "Sample",
          y = ylabel)
 
-#ggsave("results/cov_prop_mean_good.svg", plot = meanplot, dpi = 20, units = "cm", height = 30, width = 60)
-ggsave(snakemake@output[[4]], plot = meanplot, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_prop_mean_good.svg", plot = meanplot,  units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[4]], plot = meanplot,  units = "cm", height = 30, width = 60)
 
 # lineage <- levels(chromosome$group)
 # for (lin in lineage){ 
@@ -135,10 +135,10 @@ ggsave(snakemake@output[[4]], plot = meanplot, dpi = 20, units = "cm", height = 
 #     assign(paste("p", lin, sep = ""), p)
 # }
 
-#     ggsave("results/cov_prop_median_good_VNI.svg", plot = pVNI, dpi = 20, units = "cm", height = 30, width = 45)
-#     ggsave("results/cov_prop_median_good_VNII.svg", plot = pVNII, dpi = 20, units = "cm", height = 30, width = 15)
-#     ggsave("results/cov_prop_median_good_VNBI.svg", plot = pVNBI, dpi = 20, units = "cm", height = 30, width = 30)
-#     ggsave("results/cov_prop_median_good_VNBII.svg", plot = pVNBII, dpi = 20, units = "cm", height = 30, width = 27)
+#     ggsave("results/cov_prop_median_good_VNI.svg", plot = pVNI,  units = "cm", height = 30, width = 45)
+#     ggsave("results/cov_prop_median_good_VNII.svg", plot = pVNII,  units = "cm", height = 30, width = 15)
+#     ggsave("results/cov_prop_median_good_VNBI.svg", plot = pVNBI,  units = "cm", height = 30, width = 30)
+#     ggsave("results/cov_prop_median_good_VNBII.svg", plot = pVNBII,  units = "cm", height = 30, width = 27)
 
 #### All mappings ####
 # global <-read.csv("results/coverage_global_raw.csv", header = FALSE, col.names = c("Global_Mean", "Global_Median", "sample"), stringsAsFactors = TRUE)
@@ -181,8 +181,8 @@ g <- ggplot(global, aes(x=reorder(name, -Global_Mean, sum)))+
             x= "Sample",
             y= "Coverage (X)")
 
-#ggsave("results/cov_raw_all.svg", plot = g, dpi = 20, units = "cm", height = 30, width = 60)
-ggsave(snakemake@output[[6]], plot = g, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_raw_all.svg", plot = g,  units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[6]], plot = g,  units = "cm", height = 30, width = 60)
 
 # Median by Chromosome
 
@@ -209,8 +209,8 @@ medianplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmed
          x = "Sample",
          y = ylabel)
 
-#ggsave("results/cov_prop_median_raw.svg", plot = medianplot, dpi = 20, units = "cm", height = 30, width = 60)
-ggsave(snakemake@output[[7]], plot = medianplot, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_prop_median_raw.svg", plot = medianplot,  units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[7]], plot = medianplot,  units = "cm", height = 30, width = 60)
 
 # Mean by Chromosome
 
@@ -236,6 +236,6 @@ meanplot <- ggplot(chromosome, aes(x=reorder(name, -Global_Mean, sum), y= pmean)
     labs(title = "Normalized mean coverage of chromosome",
          x = "Sample",
          y = ylabel)
-#ggsave("results/cov_prop_mean_raw.svg", plot = medianplot, dpi = 20, units = "cm", height = 30, width = 60)
+#ggsave("results/cov_prop_mean_raw.svg", plot = medianplot,  units = "cm", height = 30, width = 60)
 
-ggsave(snakemake@output[[8]], plot = meanplot, dpi = 20, units = "cm", height = 30, width = 60)
+ggsave(snakemake@output[[8]], plot = meanplot,  units = "cm", height = 30, width = 60)

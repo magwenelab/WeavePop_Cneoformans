@@ -20,21 +20,12 @@ rule all:
         config["locitsv"],
         config["sample_reference_file"]
 
-rule features:
-    input:
-        REF_GFF
-    output:
-        REFDIR + "features.txt"
-    log:
-        "logs/references/features.log"
-    shell:
-        "grep -v '#' {input} | cut -f 3 | sort | uniq > {output} 2> {log}"
 rule ref2ref_liftoff:
     input:
         target_refs = REFDIR + "{lineage}.fasta",
         fasta = REFDIR + str(config["reference_fasta"]),
         gff = REF_GFF,
-        features = REFDIR + "features.txt"
+        features = "files/features.txt"
     output:
         lin_gff = REFDIR + "{lineage}_liftoff.gff_polished",
         unmapped = REFDIR + "{lineage}_unmapped_features.txt"
@@ -125,10 +116,14 @@ rule cat_lists:
         "logs/references/cat_list.log"
     shell:
         "cat {input} | sort | uniq > {output} 2> {log}"
+
+AGATLOG = REF_GFF.replace(".gff", "").replace("references/", "")+ ".agat.log"
+
 rule ref_gff2tsv:
     input:
         REF_GFF
     output:
+        temp(AGATLOG),
         complete = REF_GFF + ".tsv"
     conda:
         "envs/agat.yaml"
@@ -143,7 +138,7 @@ rule unmapped_count_plot:
         config["lineage_reference_file"],
         expand(REFDIR + "{lineage}_unmapped_features.txt", lineage=LINS)        
     output:
-        REFDIR + "references_unmapped_count.txt",
+        REFDIR + "references_unmapped_count.tsv",
         REFDIR + "references_unmapped.svg"
     log:
         "logs/references/unmapped_count_plot.log"
