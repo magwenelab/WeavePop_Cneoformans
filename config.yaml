@@ -14,3 +14,4 @@ mosdepth_window: 500
 mosdepth_min_mapq: 20
 loci: "-g files/MAT.txt -g files/centromeres.txt -g files/rRNA.txt"
 locitsv: "files/loci_interest.tsv"
+metad_color: "source"
