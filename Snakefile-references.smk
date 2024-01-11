@@ -144,14 +144,3 @@ rule unmapped_count_plot:
         "logs/references/unmapped_count_plot.log"
     script:
         "scripts/count_reference_unmapped.R"
-
-rule reference_table:
-    input:
-        s = config["sample_file"],
-        r = config["lineage_reference_file"]  
-    output:
-        config["sample_reference_file"]
-    log:
-        "logs/references/reftable.log"
-    shell:
-        "xonsh scripts/reference_table.xsh -s {input.s} -r {input.r} -o {output} &> {log}"

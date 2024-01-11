@@ -9,8 +9,8 @@ ref_table.set_index('sample', inplace=True)
 REFDIR = str(config["reference_directory"])
 REF_GFF = REFDIR + str(config["reference_gff"])
 
-protlist=(pd.read_csv("files/protein_list.txt", sep=",", header = None, names = ['protein']))
-proteins=list(protlist["protein"])
+#protlist=(pd.read_csv("files/protein_list.txt", sep=",", header = None, names = ['protein']))
+#proteins=list(protlist["protein"])
 
 rule all:
     input:
@@ -30,10 +30,22 @@ rule samples_list:
         sample = samplefile["sample"]
         sample.to_csv("files/samples.txt", index = False, header = False)
 
+rule reference_table:
+    input:
+        s = config["sample_file"],
+        r = config["lineage_reference_file"]  
+    output:
+        config["sample_reference_file"]
+    log:
+        "logs/references/reftable.log"
+    shell:
+        "xonsh scripts/reference_table.xsh -s {input.s} -r {input.r} -o {output} &> {log}"
+
 rule snippy:
     input:
         "fastq_combined/{sample}" + config["fastq_suffix1"],
-        "fastq_combined/{sample}" + config["fastq_suffix2"]
+        "fastq_combined/{sample}" + config["fastq_suffix2"],
+        config["sample_reference_file"]
     params:
         ref = lambda wildcards: (REFDIR + ref_table.loc[wildcards.sample, 'refgenome']),
         file1 = lambda wildcards: ref_table.loc[wildcards.sample, 'file1'],

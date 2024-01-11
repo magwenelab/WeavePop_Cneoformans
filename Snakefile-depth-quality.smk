@@ -8,8 +8,7 @@ samples=list(set(samplefile["sample"]))
 rule all:
     input:
         expand("analysis/{sample}/coverage.svg",sample=samples),
-        expand("analysis/{sample}/coverage.regions.bed.gz",sample=samples),
-        expand("analysis/{sample}/coverage_good.regions.bed.gz",sample=samples),
+        "results/cov_median_good.svg",
         expand("analysis/{sample}/mapq_distribution.svg",sample=samples),
         expand("analysis/{sample}/cov_distribution.svg",sample=samples),
         expand("analysis/{sample}/bamstats", sample=samples),
@@ -17,14 +16,6 @@ rule all:
         expand("analysis/{sample}/mapq_window.bed", sample=samples),
         expand("analysis/{sample}/mapq.svg", sample=samples),
         expand("analysis/{sample}/annotation.gff", sample=samples),
-        "results/norm_coverage_good.csv",
-        "results/cov_global_good.svg",
-        "results/cov_median_good.svg",
-        "results/cov_mean_good.svg",
-        "results/norm_coverage_raw.csv",
-        "results/cov_global_raw.svg",
-        "results/cov_median_raw.svg",
-        "results/cov_mean_raw.svg"
 
 rule mosdepth:
     input:
@@ -68,14 +59,12 @@ rule coverage_plot:
         "analysis/{sample}/coverage.regions.bed.gz",
         "analysis/{sample}/coverage_good.regions.bed.gz",
         "files/chromosome_names.csv",
-        "files/loci_interest.tsv"
+        config["locitsv"]
     output:
         "analysis/{sample}/coverage.svg",
         "analysis/{sample}/coverage_stats.svg",
-        "analysis/{sample}/coverage_raw.csv",
-        "analysis/{sample}/coverage_good.csv",
-        "analysis/{sample}/coverage_global_raw.csv",
-        "analysis/{sample}/coverage_global_good.csv"
+        "analysis/{sample}/coverage_stats_good.csv",
+        "analysis/{sample}/coverage_stats_raw.csv",
     log:
         "logs/coverage/{sample}.log"
     script:
@@ -83,46 +72,40 @@ rule coverage_plot:
 
 rule cat_stats:
     input:
-        r = expand("analysis/{sample}/coverage_raw.csv",sample=samples),
-        g = expand("analysis/{sample}/coverage_good.csv",sample=samples),
-        gr = expand("analysis/{sample}/coverage_global_raw.csv",sample=samples),
-        gg = expand("analysis/{sample}/coverage_global_good.csv",sample=samples)
+        r = expand("analysis/{sample}/coverage_stats_raw.csv",sample=samples),
+        g = expand("analysis/{sample}/coverage_stats_good.csv",sample=samples),
     output:
         allr = "results/coverage_raw.csv",
         allg = "results/coverage_good.csv",
-        allgr = "results/coverage_global_raw.csv",
-        allgg = "results/coverage_global_good.csv"
     log:
         "logs/coverage/cat_stats.log"
     shell:
-        "cat {input.r} > {output.allr} "
+        "cat {input.r} | grep -v Sample > {output.allr} "
         "&& "
-        "cat {input.g} > {output.allg} "
-        "&& "
-        "cat {input.gr} > {output.allgr} "
-        "&& "
-        "cat {input.gg} > {output.allgg} 2> {log}"
+        "cat {input.g} | grep -v Sample > {output.allg} "
+        "2> {log}"
 
 rule coverage_stats_plots:
     input:
         config["sample_file"],
-        "results/coverage_global_good.csv",
         "results/coverage_good.csv",
-        "results/coverage_global_raw.csv",
-        "results/coverage_raw.csv"        
+        "results/coverage_raw.csv"
+    params:
+        config["metad_color"]        
     output:
-        "results/norm_coverage_good.csv",
+        "results/cov_norm_good.csv",
         "results/cov_global_good.svg",
         "results/cov_median_good.svg",
         "results/cov_mean_good.svg",
-        "results/norm_coverage_raw.csv",
+        "results/cov_norm_raw.csv",
         "results/cov_global_raw.svg",
         "results/cov_median_raw.svg",
-        "results/cov_mean_raw.svg"
+        "results/cov_mean_raw.svg",
     log:
         "logs/coverage/stats_plot.log"    
     script:
         "scripts/cov_stats_all.R"
+
 rule samtools_stats:
     input:
         bam = "analysis/{sample}/snps.bam",
@@ -155,7 +138,8 @@ rule cov_distribution:
     log:
         "logs/cov-dist/{sample}.log"
     script:
-        "scripts/coverage-distribution.R"        
+        "scripts/coverage-distribution.R"
+
 rule bamstats:
     input:
         "analysis/{sample}/snps.bam"
@@ -180,7 +164,7 @@ rule plot_bamstats:
     shell:
         "plot-bamstats -p {output}/ {input} &> {log}"
 
-rule unmapped_edit:
+rule mapped_edit:
     input:
         "analysis/{sample}/snps.bam.stats" 
     output: 
@@ -190,7 +174,7 @@ rule unmapped_edit:
         " && "
         'sed -i "s/$/:\\{wildcards.sample}/" {output}'
 
-rule unmapped:
+rule mapped_cat:
     input:
         expand("analysis/{sample}/mapping_stats.txt", sample=samples)   
     output: 
@@ -198,7 +182,7 @@ rule unmapped:
     shell:
        'cat {input} > {output}'  
 
-rule unmapped_plot:
+rule mapped_plot:
     input:
         "results/mapping_stats.txt",
         config["sample_file"]
@@ -225,7 +209,7 @@ rule mapq_plot:
     input:
         "analysis/{sample}/mapq_window.bed",
         "files/chromosome_names.csv",
-        "files/loci_interest.tsv"
+        config["locitsv"]
     output:
         "analysis/{sample}/mapq.svg"
     log:
