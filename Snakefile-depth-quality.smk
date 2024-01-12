@@ -229,4 +229,3 @@ rule mapqcov2gff:
         "logs/gff/{sample}.log"
     shell:
         "xonsh scripts/mapqcov2gff.xsh {input.mapqbed} {input.covbed} {input.gff} {output.covmapq} {output.newgff} &> {log}"
-
