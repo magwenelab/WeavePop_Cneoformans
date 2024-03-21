@@ -19,74 +19,7 @@ To have a consistent naming scheme in the annotations we "lifted over" the annot
 
 Based on the polished lift-over annotation, the AGAT GTF/GFF Toolkit software (https://github.com/NBISweden/AGAT) was used to predict protein sequences for all annotated genes in each strain-specific assembly using the `agat_sp_extract_sequences.pl` script. Where multiple protein isoforms are annotated in the reference genome, we generated predictions for each isoform.
 
-## Requirements
 
-* Miniconda3
-* Python
-* Python modules -- Pandas, Scipy
-* Xonsh -- https://xon.sh/
-* R with tidyverse meta-package
-* Snakemake -- https://snakemake.github.io/
-  * Graphviz -- https://graphviz.org/ (optional, to see Snakemake DAG in a graph) 
-* NCBI Entrez Utilities (E-utilities) command line tools -- https://www.ncbi.nlm.nih.gov/books/NBK25501/
-* NCBI SRA Tools -- https://github.com/ncbi/sra-tools
-* Seqkit -- https://bioinf.shenwei.me/seqkit/
-* Snippy -- https://github.com/tseemann/snippy
-* Liftoff -- https://github.com/agshumate/Liftoff
-* AGAT -- https://github.com/NBISweden/AGAT
-* Mosdepth -- https://github.com/brentp/mosdepth
-* Samtools -- https://www.htslib.org/
-  
-### Installations  
-
-Environment installation files are in `envs/`
-<details>
-<summary>Install crypto_div environment -- everything runs in this environment </summary>
- 
-With the `envs/crypto_div.yml` file:
-
-~~~
-conda env create -y -f envs/crypto_div.yaml
-~~~
-
-When the environment is ready install R packages:
-~~~
-conda activate crypto_div
-R
-install.packages("pheatmap")
-install.packages("svglite")
-install.packages("ggnewscale")
-conda deactivate
-~~~
-
-</details>
-
-<details>
-<summary> Install AGAT in its own environment -- when used in Snakemake the workflow uses a separate installation of the environment, but to use it independently install it with this instructions </summary>
-
-Run this lines one by one:
-~~~
- conda create -n agat
- conda activate agat
- conda install perl-bioperl perl-clone perl-graph perl-lwp-simple perl-carp perl-sort-naturally perl-file-share perl-file-sharedir-install perl-moose perl-yaml perl-lwp-protocol-https -c bioconda
- conda install r-base
- conda install perl-statistics-r -c bioconda
- cpan install bioperl List::MoreUtils Term::ProgressBar
- git clone https://github.com/NBISweden/AGAT.git
- perl Makefile.PL 
- make
- make test
- make install
- conda deactivate
- ~~~
-
-</details>
-
-
-## Overview
-
-### Working directory: 
-  * `/analysis/czirion/Crypto_Diversity_Pipeline/` (everything is relative to this path)  
 
 ### Starting files: 
   * `files/Desjardins_Supplemental_Table_S1.csv` name and 1st line modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx)
@@ -94,24 +27,17 @@ Run this lines one by one:
   * `VNI.fasta`, `VNII.fasta`, `VNBI.fasta` and `VNBII.fasta` in `references/` (accessions mentioned above)
   * `references/`[FungiDB-65_CneoformansH99_Genome.fasta](https://fungidb.org/common/downloads/release-65/CneoformansH99/fasta/data/FungiDB-65_CneoformansH99_Genome.fasta)
   * `references/`[FungiDB-65_CneoformansH99.gff](https://fungidb.org/common/downloads/release-65/CneoformansH99/gff/data/FungiDB-65_CneoformansH99.gff)
-  * Lists of genes of loci of interest obtained with:
-    * `files/centromere.txt`: Centromere delimiting-gene IDs from Janbon 2014.  
-    * `files/MAT.txt`: MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
-`awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > files/MAT.txt`  
-    * `files/rRNA.txt`: Get rRNA IDs from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
+  * Table with genes to add to the chromosome plots `files/loci.csv` with:
+    * Centromere delimiting-gene IDs from Janbon 2014. 
+    * MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
+`awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > files/MAT.txt`.  
+    * rRNA genes from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
 `awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > files/rRNA.txt`  
 
-### Structure of repository:
-  * The working directory has the scripts and Snakefiles to run.  
-  * `files/` has some of the starting files and files created by the pipeline.
-  * `scripts/` has the scripts used by the Snakefiles, not by the user directly.  
-  * The `genomes-annotations/` has one directory per sample, all the resulting files of the analyses performed per sample are there with a generic name.  
-  * `results/` has the resulting files of the analyses that consider all the samples.  
+### Scripts used in this order:
 
-### Scripts to be run in this order:
-
-#### Module 1: Get FASTQ files of a BioProject
-1. `get-sra.xsh` -- given an NCBI BioProject ID, identifies all the BioSamples associated with that project and downloads each into a folder called `srafiles/${SRSID}` where `SRSID` are SRA (Sequence Read Archive) SRS numbers
+#### Get FASTQ files of a BioProject
+1. `sra-bioproject.xsh` -- given the NCBI BioProject ID `PRJNA382844`, identifies all the BioSamples associated with the project and downloads each into a folder called `srafiles/${SRSID}` where `SRSID` are SRA (Sequence Read Archive) SRS numbers. It the prefetches the srs files into uncompressed fastq files into `fastqs/`. It also creates CSV files to know which read files are paired and unpaired runs of each sample.
     * Files produced:
         
       * `files/{project_id}_biosamples.txt` -- a tab-delimited text file listing all the samples associated with the BioProject.  Three columns: SAM, Name, SRS  where SAM = BioSample Sample ID , Name = common name, SRS = SRA sequence sample identifier
@@ -120,75 +46,20 @@ Run this lines one by one:
         
       * Each `srafiles/${SRSID}` directory will contain a number of SRR subdirectories of the form `srafiles/${SRSID}/{SRRID}` where SRA runs are "prefetched" using the SRA Tools `prefetch` command.
 
-2. `get-sra-checked.xsh` -- This script will download any `.sra` file whose download was interrupted.
-
-3. `get-fastqs.xsh` -- turn each of the "prefetched" run files (produced in the prior step) into FASTQ files, written to `fastqs/` directory
-
-4. `get-read-pair-tables.xsh` -- create CSV files to know which read files are paired and unpaired runs of each sample.
-    * Files produced:
+      * `fastqs/` directory.
     
       * `files/read_pair_table.csv` -- Columns are SRS ID, SRR ID, read pair 1, read pair 2, total size in bytes of read pair
       * `files/unpaired_fastqs.csv` -- Columns are SRS ID, SRR ID, fastq file(s)
     
-#### Module 2: Get proper format files for CryptoDiversity dataset
+#### Get proper format files for dataset
 5. `get-lineage-of-samples.xsh` -- add the SRS codes to the `files/Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv`.  
     * Files produced:
     
       * `files/sample_metadata.csv`  -- Columns are Strain, Sample, Name, Group, VNI subdivision, Mating type,Country of origin, Isolation source, Broad Project, SRA Accession, Strain description, In GWAS, Phenotyped
 
-6. `get-reference-no-mito.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
+6. `get-removed-chromosome.sh` -- Remove mitochondrial chromosome from reference genome (`VNBI.fasta`).
 
 7. `get-chromosome-names.sh` -- Get chromosome names from FASTA headers of each refrence.
   * Files produced:
     * `files/chromosome_names.csv`
 
-#### Module 3: Annotate references according to main reference
-8. `Snakefile-references.smk` -- is a Snakefile to lift over annotations from `FungiDB-53_CneoformansH99_PMM.gff` into the four lineage genomes (`{lineage}_{GenBank Accession}.fasta`).  
-    * It currently works with:  
-  ` snakemake --snakefile Snakefile-references.smk --cores 1 --use-conda --conda-frontend conda -p`:  
-      ⚠️ `--cores 1` is because there is a problem if Liftoff runs in parallel because the different jobs try to create `FungiDB-65_CneoformansH99.gff_db` at the same time and that is not cool.    
-      ⚠️ `--conda-frontend conda` because it cannot use mamba, which is the default.  
-      ⏰ Pending: Merge into main workflow.
-    * Files produced:  
-  
-      *  `references/{lineage}_liftoff.gff_polished`
-      *  `references/{lineage}_liftoff.gff_polished.tsv`
-      *  `references/{lineage}_predicted_proteins.fa`
-      *  `references/{lineage}_predicted_cds.fa`
-      *  `files/protein_list.txt`
-      *  `references/references_unmapped_features.csv`
-      *  `references/references_unmapped_count.csv`
-      *  `references/references_unmapped.png`,
-      *  `files/sample_reference.csv`
-      * And more intermediate and extra files
-
-#### Module 4: Main analyses
-9. `Snakefile-main.smk`-- is the Snakefile to run the pipeline, it uses the `config.yaml` file.  
-It runs the script `scripts/fastq-combiner.xsh` for each sample in `files/read_pair_table.csv`. This concatenates all `_1.fastq` of one sample into only one file named `{SRS-accession}_1.fq.gz` and compresses it and does the same for `_2.fastq`.  
-It runs **snippy**, **liftoff** and **agat** for each sample, it **extracts sequences** (cds and protein) of each sample and **concatenates** them by cds and by protein.
-
-    * Files produced:  
-    
-      * `fastq_combined/{SRS-accession}_1.fq.gz` and `fastq_combined/{SRS-accession}_2.fq.gz`.
-      * `genomes-annotations/{sample}/snps.consensus.fa` and extra assembly files    
-      * `genomes-annotations/{sample}/snps.bam` and extra alignment files  
-      * `genomes-annotations/{sample}/snps.vcf` and extra variant calling files  
-      * `genomes-annotations/{sample}/lifted.gff_polished` and extra annotation files  
-      * `genomes-annotations/{sample}/predicted_cds.fa`  and extra index files
-      * `genomes-annotations/{sample}/predicted_proteins.fa`  and extra index files
-      * `results/cds/{protein}.fa`
-      * `results/proteins/{protein}.fa`
-
-#### Module 5: Quality and depth analyses
-10. `Snakefile-depth-quality.smk`: Generates **quality and coverage** plots.  
-   * Files produced:  
-  
-     * `results/mapped_reads.svg` and `results/mapping_stats.txt` plot and table with fraction of mapping reads per sample.  
-     * `genomes-annotations/{sample}/snps.bam.stats` and `genomes-annotations/{sample}/bamstats/` directory with `plot-bamstats` resulting plots.  
-     * `genomes-annotations/{sample}/coverage.svg` depth of coverage along chromosome plot (qith all and only good quality mappings and location of interesting loci).  
-     * `genomes-annotations/{sample}/coverage_stats.svg` mean and median coverage pero chromosome and global.  
-     * `genomes-annotations/{sample}/cov_distribution_.svg` ditribution of coverage values plot.  
-     * `genomes-annotations/{sample}/mapq.svg` mapping quality along chromosome plot.  
-     * `genomes-annotations/{sample}/mapq_distribution.svg` distribution of maping quality values plot.    
-     * `genomes-annotations/{sample}/annotation.gff` GFF file with complete annotation plus average MAPQ and coverage of windows in which the features are located.    
- 
