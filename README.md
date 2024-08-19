@@ -23,3 +23,8 @@ The script `get-removed-chromosome.sh` was used to remove the mitochondrial chro
 `awk '/SXI1/,/STE12/' references/FungiDB-65_CneoformansH99.gff.tsv | grep protein_coding_gene | cut -f13 > files/MAT.txt`.  
  * rRNA genes from the level2 primary_tag = rRNA and converting the ID into gene_ID (because the level1 primary tag is ncRNA_gene and the pattern rRNA is also in descriptions that are nor rRNA genes):  
 `awk '$3 == "rRNA" {print $0}' references/FungiDB-65_CneoformansH99.gff.tsv  | cut -f13 | cut -d'-' -f1 > files/rRNA.txt`.
+
+## Published database versions
+
+| DiversityPipeline commit | config.yaml commit (this repo) | Shinyt App commit (ServerDatabase repo) | Date |
+|2656cb0|57d8395|e64549a|Aug 19th 2024|
