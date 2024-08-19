@@ -26,6 +26,6 @@ The script `get-removed-chromosome.sh` was used to remove the mitochondrial chro
 
 ## Published database versions
 
-| DiversityPipeline commit | config.yaml commit (this repo) | Shiny App commit (ServerDatabase repo) | Date |
-| :----------------------- | :----------------------------- |:-------------------------------------- |----: |
+| DiversityPipeline commit | Config files commit (this repo) | Shiny App commit (ServerDatabase repo) | Date |
+| :----------------------- | :------------------------------ |:-------------------------------------- |----: |
 |2656cb0|57d8395|e64549a|Aug 19th 2024|
