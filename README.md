@@ -12,11 +12,11 @@ The reference genome assemblies for each lineage are:
  * VNBI: Strain Bt22, genome assembled by Marco A. Coelho.  
  * VNBII: Strain Bt81 from [GCA_023650555.1/](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_023650555.1/).
 
-The script `get-removed-chromosome.sh` was used to remove the mitochondrial chromosome.
+The script `get-removed-chromosome.sh` was used to remove the mitochondrial chromosome of the VNI genome.
 
 ## Config files 
 * `config/metadata.csv`: Modified from from [original table](https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx) using the script `scripts/get-lineage-of-samples.xsh` to add the SRS codes to the `files/Desjardins_Supplemental_Table_S1.csv` using `read_pair_table.csv` (from the results of `downloading-tools`. And a new column `source` was added to simplify the information in `Isolation_source`.  
-* `config/chromosomes.csv`: Table with the accession of each chromosome sequence and te common name of the chromosomes of the reference genome for each lineage. Obtained with`scripts/get-chromosome-names.sh`.  
+* `config/chromosomes.csv`: Table with the accession of each chromosome sequence and the common name of the chromosomes of the reference genome for each lineage. Obtained with`scripts/get-chromosome-names.sh`.  
 * `config/loci.csv`: Table with genes to add to the chromosome plots:
  * Centromere delimiting-gene IDs from Janbon 2014. 
  * MAT loci protein_coding_gene IDs (everything between SXI1 and STE12):  
