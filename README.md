@@ -28,6 +28,6 @@ The script `get-removed-chromosome.sh` was used to remove the mitochondrial chro
 
 History of workflow, configuration, and app commits when the database was created and published.
 
-| Workflow (DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Date |
-| :-------------------------------- | :----------------------- |:------------------------------- |----: |
-|2656cb0|57d8395|b8ba5c2|Aug 19th 2024|
+| Date | Workflow (DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Notes |
+| :--- | :-------------------------------- | :----------------------- |:------------------------------- |-----: |
+|Aug 19th 2024| 2656cb0 | 57d8395 | b8ba5c2 | The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
