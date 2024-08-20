@@ -30,4 +30,4 @@ History of workflow, configuration, and app commits when the database was create
 
 | Date | Workflow (DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Notes |
 | :--- | :-------------------------------- | :----------------------- |:------------------------------- |-----: |
-|Aug 19th 2024| 2656cb0 | 57d8395 | b8ba5c2 | The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
+|Aug 20th 2024| 2656cb0 | 57d8395 | b8ba5c2 | The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
