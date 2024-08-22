@@ -34,15 +34,16 @@ cat RepBase29.01.fasta/appendix/*.ref >> RepBase.fasta
 rm -rf RepBase29.01.fasta/ RepBase29.01.fasta.tar.gz 
 ```
 
+## Running the workflow
+
+```
+conda activate diversity
+snakemake --cores 90 -p --sdm conda --keep-going
+``` 
 ## Published database versions
 
 History of workflow, configuration, and app commits when the database was created and published.
 
 | Date | Workflow (DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Notes |
 | :--- | :-------------------------------- | :----------------------- |:------------------------------- |-----: |
-|Aug 20th 2024| 2656cb0 | 57d8395 | b8ba5c2 |```
-conda activate diversity
-snakemake --cores 90 -p --sdm conda --keep-going
-# The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. 
-snakemake --cores 90 -p --sdm conda --keep-going`--rerun-incomplete
-``` |
+|Aug 20th 2024| 2656cb0 | 57d8395 | b8ba5c2 |# The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
