@@ -173,7 +173,6 @@ fastqs
 .vscode
 test*
 results/
-references/
 backup*
 srafiles/
 analysis/
