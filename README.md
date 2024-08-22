@@ -1,6 +1,6 @@
 # Crypto_Diversity_Pipeline
 
-Description of running the DiversityPipeline in the Desjardins et al. 2017 dataset.
+Description of running the [DiversityPipeline](https://github.com/magwenelab/DiversityPipeline) in the Desjardins et al. 2017 dataset.
 
 ## Download and preparation of data and config files
 
