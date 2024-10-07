@@ -2,8 +2,7 @@
 #   Choose which workflow to run
 # =================================================================================================
 
-sample_workflow: True
-join_datasets_workflow: False
+workflow: "analysis" # Options: "analysis", "join_datasets"
 
 # =================================================================================================
 # Sample workflow parameters
@@ -22,10 +21,9 @@ samples: "config/metadata.csv" # Relative path to metadata CSV table.
 chromosomes: "config/chromosomes.csv" # Relative path to chromosome names CSV table.
 species_name: "Cryptococcus_neoformans" 
 samples_to_exclude: # Optional: File with list of samples to exclude from all analyses.
-
 # ------------------Output-------------------------------------------------------------------------
 
-output_directory: "results_2024-08-19" # Name for the output directory
+output_directory: "results_2024-10-04" # Name for the output directory
 
 # ------------------Annotation of reference genomes------------------------------------------------
 
@@ -63,6 +61,7 @@ cnv:
   repeats:
     repeats_database: "config/RepBase.fasta"
     repeats_threads: 20
+    repeats_fraction: 0.5 # Fraction of repetitive bases allowed for calculating global depth
 
 # ------------------MAPQ and Depth of genetic features---------------------------------------------
 genes_mapq_depth:
@@ -78,11 +77,7 @@ plotting:
   activate: True
   loci: "config/loci.csv" # Relative path to table with loci to add to plots
   metadata2color : "source" # Column name in the samples table to color the samples in the plots
-  scale : 1.5 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
-
-# ------------------Join sample results into dataset-wide files------------------------------------
-dataset: 
-  activate: True
+  scale : 0.7 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
 
 # ------------------Database-----------------------------------------------------------------------
 database:
@@ -91,9 +86,11 @@ database:
 # =================================================================================================
 # Join datasets workflow parameters
 # =================================================================================================
-
-datasets_paths: "" # Comma-separated list of directories with datasets to join.
-joint_datasets_output: "" # Name for the output directory with joined datasets.
+# This workflow joins the results of running the sample_workflow in different datasets. It assumes that
+# if the same lineage is present in the different datasets, the same reference genome was used.
+datasets_paths: "/FastData/czirion/Crypto_Desjardins/results_2024-09-06,/FastData/czirion/ashton/results_2024-08-27" # Comma-separated list of directories with datasets to join.
+datasets_names: "Desjardins,Ashton" # Comma-separated list of names for the datasets.
+joint_output_directory: "results_joined" # Name for the output directory with joined datasets.
 
 # =================================================================================================
 #   Parameters for individual tools
@@ -109,4 +106,3 @@ liftoff:
 
 agat:
   extra: ""
-
