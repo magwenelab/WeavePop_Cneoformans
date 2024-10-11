@@ -15,11 +15,10 @@ billmyre<- read_csv("data/media-1.csv", col_names = TRUE)
 billmyre <- billmyre %>%
     select(gene_id = Gene, essentiality = `Essentiality Classification`) 
 billmyre <- billmyre %>%
-        mutate(essentiality = case_when(
-            essentiality == "ESS" ~ "Essential",
-            essentiality == "NESS" ~ "Non Essential",
-            essentiality == "UNK" ~ "Unknown",
-            TRUE ~ essentiality))
+        mutate(essentiality = as.factor(essentiality))%>%
+        mutate(essentiality = recode(essentiality, "ESS" = "Essential",
+                                                    "NESS" = "Non Essential",
+                                                    "UNK" = "Unknown"))
 
 #### Filter out variants that are present in all strains of a lineage ####
 metadata <- metadata %>%
@@ -55,19 +54,17 @@ genes_in_strains_impacts <- genes_in_strains %>%
     expand(nesting(lineage, gene_id, strain), impact = c("HIGH", "MODERATE", "LOW"))
 
 #### Get number of variants in all combinations of genes, impacts and strains ####
+#                   and number of strains with variants in gene
+
 all_genes_vars <- left_join(genes_in_strains_impacts, vars_per_gene,
-                                     by = c("lineage", "strain", "gene_id", "impact"))
-all_genes_vars$num_vars[is.na(all_genes_vars$num_vars)] <- 0
-
-#### Get number of strains with variants in gene ####
-
-all_genes_summary <- all_genes_vars %>%
+                    by = c("lineage", "strain", "gene_id", "impact"))%>%
+    mutate(num_vars = replace_na(num_vars, 0))%>%
     mutate(any_variant = ifelse(num_vars == 0, 0, 1))%>%
     group_by(gene_id, impact, lineage)%>%
-    mutate(num_strains_with_vars = sum(any_variant))%>%
+    mutate(strains_with_vars_in_gene = sum(any_variant))%>%
     ungroup()%>%
     left_join(strains_per_lineage, by = "lineage")%>%
-    mutate(percent_strains_with_vars = num_strains_with_vars / total_strains * 100 )%>%
+    mutate(percent_strains_with_vars = strains_with_vars_in_gene / total_strains * 100 )%>%
     left_join(billmyre, by = "gene_id")
 
 #### Get matrix of number of variants in each gene in each strain ####
@@ -78,7 +75,8 @@ get_matrix <- function(vars_df,
     df <- vars_df %>%
         filter(impact == impact_filter)%>%
         filter(lineage %in% lineage_filter)%>%
-        filter(percent_strains_with_vars >= percent_strains_filter)
+        filter(percent_strains_with_vars >= percent_strains_filter)%>%
+        droplevels()
 
     matrix <- df %>%
         select(gene_id, strain, num_vars)%>%
@@ -95,183 +93,71 @@ get_matrix <- function(vars_df,
     return(list)
 }
 
-HIGH_VNI <- get_matrix(all_genes_summary, "HIGH", c("VNI"), 0)
+get_heatmap_annotation <- function(list_data){
 
-get_heatmap_annotation <- function(list){
+    ann <- data.frame(list_data$metadata$lineage)
+    colnames(ann) <- 'Lineage'
+    num_lineages <- length(unique(list_data$metadata$lineage))
+    lineage_colors <- rev(brewer.pal(n = 8, name = "Set2"))[1:num_lineages]
+    names(lineage_colors) <- unique(list_data$metadata$lineage)
 
-    return(col_ha, row_ha, col_fun)
+    col_ha <- columnAnnotation(
+                df = ann,
+                col = list(Lineage = lineage_colors),
+                annotation_legend_param = list(
+                    Lineage = list(direction = "horizontal", nrow = 1)))
+
+    ess <- list_data$df %>%
+        select(gene_id, essentiality)%>%
+        distinct()%>%
+        mutate(gene_id = factor(gene_id, levels = rownames(list_data$matrix)))%>%
+        arrange(gene_id)
+    ess <- data.frame(ess$essentiality)
+    colnames(ess)<- 'Essentiality'
+    ess_colors <- brewer.pal(n = 3, name = "Dark2")
+    names(ess_colors) <- unique(list_data$df$essentiality)
+
+    row_ha <- rowAnnotation(df = ess,
+                col = list(Essentiality = ess_colors))
+
+    max_vars <- max(list_data$df$num_vars)
+    palette <- brewer.pal(n = 5, name = "RdYlBu")
+    col_fun <- colorRamp2(c(0,1,max_vars/4, max_vars/2, max_vars*3/4, max_vars ), c("gray95", palette))
+
+    list <- list(col_ha = col_ha, row_ha = row_ha, col_fun = col_fun)
+    return(list)
 }
 
-ann <- data.frame(metadata$lineage)
-colnames(ann) <- 'Lineage'
-lineage_colors <- rev(brewer.pal(n = 8, name = "Set2"))[1:4]
-names(lineage_colors) <- unique(metadata$lineage)
+plot_heatmap <- function(list_data, list_ann){
+    plot <- Heatmap(list_data$matrix,
+                top_annotation = list_ann$col_ha,
+                bottom_annotation = list_ann$col_ha,
+                left_annotation = list_ann$row_ha,
+                right_annotation = list_ann$row_ha,
+                na_col = "black",
+                col = list_ann$col_fun,
+                show_row_names = FALSE,
+                use_raster = TRUE,
+                column_names_gp = gpar(fontsize = 3),
+                heatmap_legend_param = list(title = "Number of Variants", na_col = "black"),
+                column_title = "Number of variants per gene in each strain",
+                row_title = "Genes")
 
-col_ha <- columnAnnotation(df = ann,
-            col = list(Lineage = lineage_colors),
-            annotation_legend_param = list(
-                Lineage = list(direction = "horizontal", nrow = 1)))
+    png(file = "heatmap.png", width = 16, height = 9, units = "in", res = 1200)
+    draw(plot,
+        annotation_legend_side = "bottom")
+    dev.off()
+}
 
-max_vars <- max(all_genes_vars$num_vars)
-palette <- brewer.pal(n = 5, name = "RdYlBu")
-col_fun <- colorRamp2(c(0,1,max_vars/4, max_vars/2, max_vars*3/4, max_vars ), c("gray95", palette))
-
-# Get essential genes identified by Billmyre
-billmyre<- read_csv("data/media-1.csv", col_names = TRUE)
-billmyre <- billmyre %>%
-    select(gene_id = Gene, essentiality = `Essentiality Classification`) %>%
-    filter(gene_id %in% rownames(HIGH_matrix))%>%
-    mutate(gene_id = factor(gene_id, levels = rownames(HIGH_matrix)))%>%
-    arrange(gene_id)
-
-ess <- data.frame(billmyre$essentiality)
-colnames(ess)<- 'Essentiality'
-ess_colors <- brewer.pal(n = 3, name = "Dark2")
-names(ess_colors) <- unique(billmyre$essentiality)
-
-row_ha <- rowAnnotation(df = ess,
-            col = list(Essentiality = ess_colors))
+HIGH_VNI <- get_matrix(all_genes_vars, "HIGH", c("VNII"), 10)
+HIGH_VNI_ann <- get_heatmap_annotation(HIGH_VNI)
+plot_heatmap(HIGH_VNI, HIGH_VNI_ann)
 
 
-plot <- Heatmap(matrix,
-            top_annotation = col_ha,
-            bottom_annotation = col_ha,
-            left_annotation = row_ha,
-            na_col = "black",
-            col = col_fun,
-            show_row_names = FALSE,
-            use_raster = TRUE,
-            column_names_gp = gpar(fontsize = 3),
-            heatmap_legend_param = list(title = "Number of Variants", na_col = "black"),
-            column_title = "Number of high impact variants per gene in each strain",
-            row_title = "Genes")
 
-png(file = "heatmap.png", width = 16, height = 9, units = "in", res = 1200)
-draw(plot,
-    annotation_legend_side = "bottom")
-dev.off()
-
-#### MODERATE ####
-MODERATE_matrix <- all_genes_vars %>%
-    filter(impact == "MODERATE")%>%
-    select(gene_id, strain, num_vars)%>%
-    pivot_wider(names_from = strain, values_from = num_vars)%>%
-    column_to_rownames("gene_id")%>%
-    as.matrix()
-
-metadata <- metadata %>%
-    mutate(strain = factor(strain, levels = colnames(MODERATE_matrix))) %>%
-    arrange(strain)
-
-ann <- data.frame(metadata$lineage)
-colnames(ann) <- 'Lineage'
-lineage_colors <- rev(brewer.pal(n = 8, name = "Set2"))[1:4]
-names(lineage_colors) <- unique(metadata$lineage)
-
-col_ha <- columnAnnotation(df = ann,
-            col = list(Lineage = lineage_colors),
-            annotation_legend_param = list(
-                Lineage = list(direction = "horizontal", nrow = 1)))
-
-max_vars <- max(all_genes_vars$num_vars)
-palette <- brewer.pal(n = 5, name = "RdYlBu")
-col_fun <- colorRamp2(c(0,1,max_vars/4, max_vars/2, max_vars*3/4, max_vars ), c("gray95", palette))
-
-# Get essential genes identified by Billmyre
-billmyre<- read_csv("data/media-1.csv", col_names = TRUE)
-billmyre <- billmyre %>%
-    select(gene_id = Gene, essentiality = `Essentiality Classification`) %>%
-    filter(gene_id %in% rownames(MODERATE_matrix))%>%
-    mutate(gene_id = factor(gene_id, levels = rownames(MODERATE_matrix)))%>%
-    arrange(gene_id)
-
-ess <- data.frame(billmyre$essentiality)
-colnames(ess)<- 'Essentiality'
-ess_colors <- brewer.pal(n = 3, name = "Dark2")
-names(ess_colors) <- unique(billmyre$essentiality)
-
-row_ha <- rowAnnotation(df = ess,
-            col = list(Essentiality = ess_colors))
+###################
 
 
-plot <- Heatmap(MODERATE_matrix,
-            top_annotation = col_ha,
-            bottom_annotation = col_ha,
-            left_annotation = row_ha,
-            na_col = "black",
-            col = col_fun,
-            show_row_names = FALSE,
-            use_raster = TRUE,
-            column_names_gp = gpar(fontsize = 3),
-            heatmap_legend_param = list(title = "Number of Variants", na_col = "black"),
-            column_title = "Number of moderate impact variants per gene in each strain",
-            row_title = "Genes")
-
-png(file = "MODERATE_heatmap.png", width = 16, height = 9, units = "in", res = 1200)
-draw(plot,
-    annotation_legend_side = "bottom")
-dev.off()
-
-#### LOW ####
-LOW_matrix <- all_genes_vars %>%
-    filter(impact == "LOW")%>%
-    select(gene_id, strain, num_vars)%>%
-    pivot_wider(names_from = strain, values_from = num_vars)%>%
-    column_to_rownames("gene_id")%>%
-    as.matrix()
-
-metadata <- metadata %>%
-    mutate(strain = factor(strain, levels = colnames(LOW_matrix))) %>%
-    arrange(strain)
-
-ann <- data.frame(metadata$lineage)
-colnames(ann) <- 'Lineage'
-lineage_colors <- rev(brewer.pal(n = 8, name = "Set2"))[1:4]
-names(lineage_colors) <- unique(metadata$lineage)
-
-col_ha <- columnAnnotation(df = ann,
-            col = list(Lineage = lineage_colors),
-            annotation_legend_param = list(
-                Lineage = list(direction = "horizontal", nrow = 1)))
-
-max_vars <- max(all_genes_vars$num_vars)
-palette <- brewer.pal(n = 5, name = "RdYlBu")
-col_fun <- colorRamp2(c(0,1,max_vars/4, max_vars/2, max_vars*3/4, max_vars ), c("gray95", palette))
-
-# Get essential genes identified by Billmyre
-billmyre<- read_csv("data/media-1.csv", col_names = TRUE)
-billmyre <- billmyre %>%
-    select(gene_id = Gene, essentiality = `Essentiality Classification`) %>%
-    filter(gene_id %in% rownames(LOW_matrix))%>%
-    mutate(gene_id = factor(gene_id, levels = rownames(LOW_matrix)))%>%
-    arrange(gene_id)
-
-ess <- data.frame(billmyre$essentiality)
-colnames(ess)<- 'Essentiality'
-ess_colors <- brewer.pal(n = 3, name = "Dark2")
-names(ess_colors) <- unique(billmyre$essentiality)
-
-row_ha <- rowAnnotation(df = ess,
-            col = list(Essentiality = ess_colors))
-
-
-plot <- Heatmap(LOW_matrix,
-            top_annotation = col_ha,
-            bottom_annotation = col_ha,
-            left_annotation = row_ha,
-            na_col = "black",
-            col = col_fun,
-            show_row_names = FALSE,
-            use_raster = TRUE,
-            column_names_gp = gpar(fontsize = 3),
-            heatmap_legend_param = list(title = "Number of Variants", na_col = "black"),
-            column_title = "Number of LOW impact variants per gene in each strain",
-            row_title = "Genes")
-
-png(file = "LOW_heatmap.png", width = 16, height = 9, units = "in", res = 1200)
-draw(plot,
-    annotation_legend_side = "bottom")
-dev.off()
 #### Simple heatmap for testing ####
 
 
@@ -336,3 +222,4 @@ draw(plot)
 
 draw(plot,
     annotation_legend_side = "bottom")
+
