@@ -47,4 +47,5 @@ History of workflow, configuration, and app commits when the database was create
 | Date | Workflow (DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Notes |
 | :--- | :-------------------------------- | :----------------------- |:------------------------------- |-----: |
 |Aug 20th 2024| 2656cb0 | 57d8395 | b8ba5c2 |The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
-|Oct 7th 2024 | 1076166 | 07c772a | dc20b7b | This was one complete run of the analysis workflow of the Desjardins dataset, another of the Ashton dataset, and a run of the join_datasets workflow with the results of both. |
+|Oct 7th 2024 | 1076166 | 07c772a | dc20b7b | This was one complete run of the analysis workflow of the Desjardins dataset, another of the Ashton dataset, and a run of the join_datasets workflow with the results of both. It is only used in the test_user. |
+|Oct 16th 2024| 61e5e73 | 07c772a | 0d2035a | This was a run that updated the results of the runs of Oct 7th with the changes in the pipeline. It is being used in FungalPop |
