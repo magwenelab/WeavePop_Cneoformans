@@ -1,10 +1,10 @@
-#Data for the project
+# #Data for the project
 .snakemake/
 .vscode
 *test*
 *results*
 *backup*
-*data*
+*/data/*
 *log*
 *workflow*
 
