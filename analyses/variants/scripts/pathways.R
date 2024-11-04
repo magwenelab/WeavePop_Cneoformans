@@ -1,9 +1,19 @@
-library("tidyverse")
-library("ggplot2")
-library("RColorBrewer")
-library("ComplexHeatmap")
-library("ggbeeswarm")
+# install.packages("BiocManager")
+# BiocManager::install("ggtree")
+# BiocManager::install("ggtreeExtra")
 
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(ggnewscale))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(patchwork))
+suppressPackageStartupMessages(library(ggtree))
+suppressPackageStartupMessages(library(ggtreeExtra))
+suppressPackageStartupMessages(library(ape))
+suppressPackageStartupMessages(library(ggbeeswarm))
+setwd("/FastData/czirion/Crypto_Desjardins/fungal_pop")
+
+#### Pathway variants ####
 create_barplot <- function(PWY) {
     PWY_name <- deparse(substitute(PWY))
     PWY$impact <- factor(PWY$impact, levels = c("HIGH","MODERATE", "LOW"))
@@ -104,42 +114,55 @@ calcineurin <- read_csv("results/fungal_pop/calcineurin.csv", col_names = TRUE)
 create_barplot(calcineurin)
 create_boxplot(calcineurin, metadata)
 
-
 #### ALL impact variants ####
-ALL <- read_csv("results/fungal_pop/ALL_filtered.csv", col_names = TRUE)
+# ALL <- read_csv("data/ALL_filtered.csv", col_names = TRUE)
+ALL <- read_csv("data/effects_filtered_quality.csv", col_names = TRUE)
+ALL_filtered <- ALL
+metadata <- metadata %>%
+    select(strain, lineage)
 
-strains_per_lineage <- metadata %>%
-    group_by(lineage) %>%
-    summarise(total_strains = n_distinct(strain))
+# # Filter out variants that are present in all strains of a lineage
+# strains_per_lineage <- metadata %>%
+#     group_by(lineage) %>%
+#     summarise(total_strains = n_distinct(strain))
 
-strain_per_var <- ALL %>%
-    group_by(lineage, var_id, impact) %>%
-    summarise(num_strains = n_distinct(strain))
+# strains_per_var <- ALL %>%
+#     group_by(lineage, var_id, impact) %>%
+#     summarise(num_strains = n_distinct(strain))
 
-ALL_joined <- ALL %>%
-    select(lineage, strain, var_id, impact)%>%
-    left_join(strain_per_var, by = c("var_id", "lineage", "impact"))%>%
-    left_join(strains_per_lineage, by = "lineage")%>%
-    filter(num_strains != total_strains)
+# ALL_joined <- ALL %>%
+#     select(lineage, strain, var_id, gene_id, impact)%>%
+#     left_join(strains_per_var, by = c("var_id", "lineage", "impact"))%>%
+#     left_join(strains_per_lineage, by = "lineage")
 
-ALL_joined$impact <- factor(ALL_joined$impact, levels = c("HIGH","MODERATE", "LOW"))
+# ALL_filtered <- ALL_joined %>%
+#     filter(num_strains != total_strains)
 
-number_vars <- ALL_joined %>%
+# # Number of filtered out variants
+# length(unique(ALL_joined$var_id)) - length(unique(ALL_filtered$var_id))
+
+# Number of genes with variants 
+ALL_filtered$impact <- factor(ALL_filtered$impact, levels = c("HIGH","MODERATE", "LOW"))
+
+number_genes_vars <- ALL_filtered %>%
+    group_by(strain, impact, gene_id) %>%
+    summarise(num_vars = n_distinct(var_id)) %>%
+    ungroup() %>%
     group_by(strain, impact) %>%
-    summarise(num_vars = n_distinct(var_id))
+    summarise(num_genes = n_distinct(gene_id), mean_vars = mean(num_vars))
 
 expanded <- expand.grid(
     strain = unique(metadata$strain),
-    impact = unique(ALL_joined$impact))
+    impact = unique(ALL_filtered$impact))
 
-var_per_strain <- left_join(expanded, number_vars, by = c("strain", "impact"))
-var_per_strain$num_vars[is.na(var_per_strain$num_vars)] <- 0
+genes_per_strain <- left_join(expanded, number_genes_vars, by = c("strain", "impact"))
+genes_per_strain$num_genes[is.na(genes_per_strain$num_genes)] <- 0
 
-var_per_strain <- left_join(var_per_strain, metadata, by = "strain")
+genes_per_strain <- left_join(genes_per_strain, metadata, by = "strain")
 
 i_colors <- brewer.pal(3, "Set1")
 
-plot <- ggplot(var_per_strain, aes(x = lineage, y = num_vars)) +
+plot <- ggplot(genes_per_strain, aes(x = lineage, y = num_genes)) +
     geom_quasirandom(aes(color = impact)) +
     geom_boxplot(alpha = 0) +
     facet_wrap(~impact, scales = "free", ncol = 1) +
@@ -151,15 +174,59 @@ plot <- ggplot(var_per_strain, aes(x = lineage, y = num_vars)) +
           panel.background = element_blank(),
           panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
           legend.position = "none") +
-    labs(title = paste("Number of variants per strain by impact", sep = ""),
+    labs(title = paste("Number genes with variants per strain by impact", sep = ""),
          x = "Lineage",
-         y = "Number of variants") +
+         y = "Number of genes") +
     scale_color_manual(values = i_colors) +
     scale_y_continuous(labels = scales::comma)
 plot
-ggsave("results/fungal_pop/ALL_boxplot.png", plot, width = 9, height = 9)
+ggsave("boxplot_genes_vars.png", plot, width = 9, height = 9)
 
+# =============================================================================
 
+#### finding essential genes ####
+genes <- read_csv("genes.csv", col_names = TRUE)
+genes$gene_id <- as.factor(genes$gene_id)
+billmyre<- read_csv("results/fungal_pop/media-1.csv", col_names = TRUE)
+billmyre <- billmyre %>%
+    select(gene_id = Gene, essentiality = `Essentiality Classification`)
+billmyre_essential <- billmyre %>%
+    filter(essentiality == "ESS")
+
+ALL <- read_csv("results/fungal_pop/ALL_filtered.csv", col_names = TRUE)
+
+HIGH <- ALL_joined %>%
+    filter(impact %in% c("MODERATE","HIGH"))
+    
+HIGH_num_strains <- HIGH %>%
+    group_by(lineage,gene_id,var_id)%>%
+    summarise(num_strains = n_distinct(strain))%>%
+    ungroup()
+
+HIGH_summary <- HIGH_num_strains%>%
+    group_by(gene_id, lineage)%>%
+    summarise(num_vars = n_distinct(var_id), num_strains = mean(num_strains))
+
+genes_not_in_HIGH <- genes %>%
+    anti_join(HIGH_summary, by = c("lineage","gene_id"))
+
+VNI_essential <- genes_not_in_HIGH %>%
+    filter(lineage == "VNI")
+length(unique(VNI_essential$gene_id))
+VNII_essential <- genes_not_in_HIGH %>%
+    filter(lineage == "VNII")
+length(unique(VNII_essential$gene_id))
+VNBI_essential <- genes_not_in_HIGH %>%
+    filter(lineage == "VNBI")
+length(unique(VNBI_essential$gene_id))
+VNBII_essential <- genes_not_in_HIGH %>%
+    filter(lineage == "VNBII")
+length(unique(VNBII_essential$gene_id))
+
+billmyre_and_VNI<- inner_join(VNI_essential, billmyre_essential, by = "gene_id")
+billmyre_and_VNII<- inner_join(VNII_essential, billmyre_essential, by = "gene_id")
+billmyre_and_VNBI<- inner_join(VNBI_essential, billmyre_essential, by = "gene_id")
+billmyre_and_VNBII<- inner_join(VNBII_essential, billmyre_essential, by = "gene_id")
 
 #### Attempt to do Heatmap ####
 samples <- read_csv("results/fungal_pop/samples.csv", col_names = TRUE)

@@ -4,7 +4,12 @@
 *test*
 *results*
 *backup*
-*/data/*
-*log*
 *workflow*
-
+*.log
+logs/
+data/*
+Crypto_Desjardins/data
+Crypto_Ashton/data/
+analyses/variants/data/
+analyses/cnv_plot/ashton/data/
+analyses/cnv_plot/desjardins/data/
