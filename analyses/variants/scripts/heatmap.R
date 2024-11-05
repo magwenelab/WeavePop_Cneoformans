@@ -111,14 +111,14 @@ plot_heatmap <- function(list_data, list_ann, filename){
 
 
 #### Input ####
-setwd("/FastData/czirion/Crypto_Desjardins/fungal_pop")
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/")
 
-metadata <- read_csv("../config/metadata.csv", col_names = TRUE) 
+metadata <- read_csv("Crypto_Desjardins/config/metadata.csv", col_names = TRUE) 
 metadata <- metadata %>%
     mutate(color = brewer.pal(n = 8, name = "Set2")[match(lineage, unique(lineage))])%>%
     as.data.frame()
 
-billmyre<- read_csv("data/media-1.csv", col_names = TRUE)
+billmyre<- read_csv("analyses/variants/data/media-1.csv", col_names = TRUE)
 billmyre <- billmyre %>%
     select(gene_id = Gene, essentiality = `Essentiality Classification`) 
 billmyre <- billmyre %>%
@@ -130,13 +130,13 @@ billmyre <- billmyre %>%
         as.data.frame()
                                     
                                             
-sets <- list.files(path = "data/variants_per_gene", pattern = "*.csv", full.names = TRUE)
+sets <- list.files(path = "analyses/variants/data/variants_per_gene", pattern = "*.csv", full.names = TRUE)
 
 for (set in sets){
     print(paste("Analizing set:", set))
-    set_name <- gsub("data/variants_per_gene/", "", set)
+    set_name <- gsub("analyses/variants/data/variants_per_gene", "", set)
     set_name <- gsub(".csv", "", set_name)
-    plot_filename <- paste("plots/", set_name, ".png", sep = "")
+    plot_filename <- paste("analyses/variants/results_plots/", set_name, ".png", sep = "")
     print(plot_filename)
     
     if (!file.exists(plot_filename)) {
@@ -151,27 +151,27 @@ for (set in sets){
     }
 }
 
-presence <- read_csv('/FastData/czirion/Crypto_Desjardins/fungal_pop/data/variants_per_gene/HIGH_VNI_VNII_VNBI_VNBII_no-poly_100_20_0.5_1.5_0.2.csv', col_names = TRUE, show_col_types = FALSE)
-presence <- left_join(presence, billmyre, by = "gene_id")
-plot_filename <- "test2.png"
-data <-  get_matrix_filter_genes(presence, metadata)
-ann <- get_heatmap_annotation(data)
-plot_heatmap(data, ann, plot_filename)
+# presence <- read_csv('/FastData/czirion/Crypto_Desjardins/fungal_pop/data/variants_per_gene/HIGH_VNI_VNII_VNBI_VNBII_no-poly_100_20_0.5_1.5_0.2.csv', col_names = TRUE, show_col_types = FALSE)
+# presence <- left_join(presence, billmyre, by = "gene_id")
+# plot_filename <- "test2.png"
+# data <-  get_matrix_filter_genes(presence, metadata)
+# ann <- get_heatmap_annotation(data)
+# plot_heatmap(data, ann, plot_filename)
 
-VNBI_strains <- data$metadata %>%
-    filter(lineage == "VNBI")%>%
-    select(strain)%>%
-    pull()%>%
-    droplevels()
+# VNBI_strains <- data$metadata %>%
+#     filter(lineage == "VNBI")%>%
+#     select(strain)%>%
+#     pull()%>%
+#     droplevels()
 
-genes_VNBI <- data$matrix %>%
-    as.data.frame()%>%
-    select(all_of(VNBI_strains))%>%
-    mutate(sum = rowSums(.))%>%
-    filter(sum > 100)%>%
-    select(sum)%>%
-    rownames_to_column("gene_id")
+# genes_VNBI <- data$matrix %>%
+#     as.data.frame()%>%
+#     select(all_of(VNBI_strains))%>%
+#     mutate(sum = rowSums(.))%>%
+#     filter(sum > 100)%>%
+#     select(sum)%>%
+#     rownames_to_column("gene_id")
 
-write_csv(genes_VNBI, "VNBI_genes.csv")
+# write_csv(genes_VNBI, "VNBI_genes.csv")
     
 
