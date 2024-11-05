@@ -109,6 +109,64 @@ plot_heatmap <- function(list_data, list_ann, filename){
     dev.off()
 }
 
+plot_boxplot <- function(data, filename){
+
+    genes_per_strain <- data %>%
+        group_by(lineage, strain) %>%
+        summarise(num_genes = sum(presence_vars))
+
+    boxplot <- ggplot(genes_per_strain, aes(x = lineage, y = num_genes)) +
+        geom_boxplot() +
+        geom_quasirandom(aes(color = lineage)) +
+        facet_wrap(~lineage, nrow  = 1, scales = "free_x")+
+        theme(panel.grid = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            panel.background = element_blank(),
+            panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+            legend.position = "none")+
+        labs(title = "Number of genes with variants per strain",
+                x = "Lineage",
+                y = "Number of genes")
+    ggsave(filename, boxplot, height = 10, width = 10, units = "in", dpi = 300)
+
+}
+
+plot_tree <- function(data, metadata, tree_file, filename){
+    metadata <- metadata %>%
+        select(strain, lineage)%>%
+        add_row(strain = "H99", lineage = "VNI")
+        
+    tree_des <- read.tree(tree_file)
+    outgroup_clade <- metadata %>%
+        filter(lineage == "VNII")%>%
+        select(strain)
+    outgroup_clade <- outgroup_clade$strain
+    tree_des <- root(tree_des, outgroup = outgroup_clade)
+
+    genes_per_strain <- data %>%
+        select(strain, presence_vars)%>%
+        group_by(strain) %>%
+        summarise(num_genes = sum(presence_vars)) 
+
+    plot_tree <- ggtree(tree_des) %<+% metadata + 
+                    geom_tiplab(aes(label = label), 
+                    size = 2, align = TRUE)
+
+    var_tree <- plot_tree + 
+                geom_facet(panel= "Number of genes with variants",
+                            data = genes_per_strain,
+                            geom = geom_col,
+                            mapping = aes(x = num_genes, color = lineage, fill = lineage),
+                            orientation = "y")+
+                theme_tree2(legend.position=c(.05, .85))+
+                theme(panel.border = element_blank())+
+                guides(fill = guide_legend(title = "Lineage"), color = guide_legend(title = "Lineage"))
+    ggsave(filename, var_tree, height = 20, width = 10, units = "in", dpi = 300)
+
+}
 
 #### Input ####
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/")
@@ -130,48 +188,42 @@ billmyre <- billmyre %>%
         as.data.frame()
                                     
                                             
-sets <- list.files(path = "analyses/variants/data/variants_per_gene", pattern = "*.csv", full.names = TRUE)
+sets <- list.files(path = "analyses/variants/data/variants_per_gene_per_strain", pattern = "*.csv", full.names = TRUE)
 
 for (set in sets){
     print(paste("Analizing set:", set))
-    set_name <- gsub("analyses/variants/data/variants_per_gene", "", set)
+    set_name <- gsub("analyses/variants/data/variants_per_gene_per_strain", "", set)
     set_name <- gsub(".csv", "", set_name)
-    plot_filename <- paste("analyses/variants/results_plots/", set_name, ".png", sep = "")
-    print(plot_filename)
-    
-    if (!file.exists(plot_filename)) {
+    heatmap_filename <- paste("analyses/variants/results_heatmaps/", set_name, ".png", sep = "")
+    boxplot_filename <- paste("analyses/variants/results_boxplots/", set_name, ".png", sep = "")
+    tree_barplot_filename <- paste("analyses/variants/results_tree_barplots/", set_name, ".png", sep = "")
+
+    if (!file.exists(heatmap_filename)) {
         print("Plotting heatmap")
         presence <- read_csv(set, col_names = TRUE, show_col_types = FALSE)
         presence <- left_join(presence, billmyre, by = "gene_id")
         data <-  get_matrix_filter_genes(presence, metadata)
         ann <- get_heatmap_annotation(data)
-        plot_heatmap(data, ann, plot_filename)
+        plot_heatmap(data, ann, heatmap_filename)
     } else {
         print("Heatmap already plotted")
     }
+
+    if (!file.exists(boxplot_filename)) {
+        print("Plotting boxplot")
+        presence <- read_csv(set, col_names = TRUE, show_col_types = FALSE)
+        plot_boxplot(presence, boxplot_filename)
+    } else {
+        print("Boxplot already plotted")
+    }
+
+    if (!file.exists(tree_barplot_filename)) {
+        print("Plotting tree barplot")
+        presence <- read_csv(set, col_names = TRUE, show_col_types = FALSE)
+        plot_tree(presence, metadata, "analyses/variants/data/CryptoDiversity_Desjardins_Tree.tre", tree_barplot_filename)
+    } else {
+        print("Tree barplot already plotted")
+    }
+
 }
-
-# presence <- read_csv('/FastData/czirion/Crypto_Desjardins/fungal_pop/data/variants_per_gene/HIGH_VNI_VNII_VNBI_VNBII_no-poly_100_20_0.5_1.5_0.2.csv', col_names = TRUE, show_col_types = FALSE)
-# presence <- left_join(presence, billmyre, by = "gene_id")
-# plot_filename <- "test2.png"
-# data <-  get_matrix_filter_genes(presence, metadata)
-# ann <- get_heatmap_annotation(data)
-# plot_heatmap(data, ann, plot_filename)
-
-# VNBI_strains <- data$metadata %>%
-#     filter(lineage == "VNBI")%>%
-#     select(strain)%>%
-#     pull()%>%
-#     droplevels()
-
-# genes_VNBI <- data$matrix %>%
-#     as.data.frame()%>%
-#     select(all_of(VNBI_strains))%>%
-#     mutate(sum = rowSums(.))%>%
-#     filter(sum > 100)%>%
-#     select(sum)%>%
-#     rownames_to_column("gene_id")
-
-# write_csv(genes_VNBI, "VNBI_genes.csv")
-    
 

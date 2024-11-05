@@ -10,10 +10,10 @@ suppressPackageStartupMessages(library(patchwork))
 suppressPackageStartupMessages(library(ggtree))
 suppressPackageStartupMessages(library(ggtreeExtra))
 suppressPackageStartupMessages(library(ape))
-setwd("/FastData/czirion/Crypto_Desjardins/fungal_pop")
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/variants")
 
 # =============================================================================
-METADATA_FILE <- "/FastData/czirion/Crypto_Desjardins/config/metadata.csv"
+METADATA_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/config/metadata.csv"
 metadata <- read.delim(METADATA_FILE, sep = ",", header = TRUE)
 metadata <- metadata %>%
     select(strain, lineage)
@@ -25,7 +25,7 @@ strains_per_lineage <- metadata %>%
 metadata <- metadata %>%
     add_row(strain = "H99", lineage = "VNI")
 
-TREE_FILE <- "CryptoDiversity_Desjardins_Tree.tre" 
+TREE_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/variants/data/CryptoDiversity_Desjardins_Tree.tre" 
 # Note: The tree has H99 but the variants results don't
 tree_des <- read.tree(TREE_FILE)
 
@@ -39,7 +39,7 @@ tree_des <- root(tree_des, outgroup = outgroup_clade)
 
 # =============================================================================
 #### ALL impact variants ####
-ALL <- read_csv("ALL_filtered.csv", col_names = TRUE)
+ALL <- read_csv("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/variants/data/ALL_filtered.csv", col_names = TRUE)
 ALL$impact <- factor(ALL$impact, levels = c("HIGH","MODERATE", "LOW"))
 
 # Filter out variants that are present in all strains of a lineage
@@ -110,3 +110,43 @@ var_tree <- plot_tree +
 var_tree
 ggsave("var_tree.png", var_tree, height = 20, width = 10, units = "in", dpi = 300)
 
+# =============================================================================
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/variants")
+
+METADATA_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/config/metadata.csv"
+TREE_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/variants/data/CryptoDiversity_Desjardins_Tree.tre" 
+VARS_FILE <- "data/variants_per_gene_per_strain/HIGH_VNI_VNII_VNBI_VNBII_no-poly_100_no-mut_20_0.5_1.5_0.2.csv"
+
+
+metadata <- read.delim(METADATA_FILE, sep = ",", header = TRUE)
+metadata <- metadata %>%
+    select(strain, lineage)%>%
+    add_row(strain = "H99", lineage = "VNI")
+    
+tree_des <- read.tree(TREE_FILE)
+outgroup_clade <- metadata %>%
+    filter(lineage == "VNII")%>%
+    select(strain)
+outgroup_clade <- outgroup_clade$strain
+tree_des <- root(tree_des, outgroup = outgroup_clade)
+
+vars_per_strain_per_gene <- read_csv(VARS_FILE, col_names = TRUE)
+genes_per_strain <- vars_per_strain_per_gene %>%
+    select(strain, presence_vars)%>%
+    group_by(strain) %>%
+    summarise(num_genes = sum(presence_vars)) 
+
+plot_tree <- ggtree(tree_des) %<+% metadata + 
+                geom_tiplab(aes(label = label), 
+                size = 2, align = TRUE)
+
+var_tree <- plot_tree + 
+            geom_facet(panel= "Number of genes with variants",
+                        data = genes_per_strain,
+                        geom = geom_col,
+                        mapping = aes(x = num_genes, color = lineage, fill = lineage),
+                        orientation = "y")+
+            theme_tree2(legend.position=c(.05, .85))+
+            theme(panel.border = element_blank())+
+            guides(fill = guide_legend(title = "Lineage"), color = guide_legend(title = "Lineage"))
+var_tree

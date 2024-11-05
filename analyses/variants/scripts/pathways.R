@@ -265,3 +265,4 @@ Heatmap(PWY_presence_matrix,
     bottom_annotation = col_ha,
     column_split = PWY_metadata$gene_name,
     row_split = PWY_row_metadata$lineage)
+
