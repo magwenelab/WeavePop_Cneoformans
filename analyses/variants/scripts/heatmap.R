@@ -2,8 +2,10 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(circlize))
 suppressPackageStartupMessages(library(ComplexHeatmap))
-
-#### Get matrix of number of variants in each gene in each strain ####
+suppressPackageStartupMessages(library(ggtree))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ape))
+suppressPackageStartupMessages(library(ggrepel))
 
 get_matrix <- function(vars_df, metadata){
 
@@ -45,7 +47,6 @@ get_matrix_filter_genes <- function(vars_df, metadata){
     return(list)
 }
 
-#### Get annotation for heatmap ####
 get_heatmap_annotation <- function(list_data){
     ann <- data.frame(list_data$metadata$lineage)
     colnames(ann) <- 'Lineage'
@@ -88,7 +89,6 @@ get_heatmap_annotation <- function(list_data){
     return(list)
 }
 
-#### Plot heatmap ####
 plot_heatmap <- function(list_data, list_ann, filename){
     plot <- Heatmap(list_data$matrix,
                 top_annotation = list_ann$col_ha,
@@ -131,7 +131,6 @@ plot_boxplot <- function(data, filename){
                 x = "Lineage",
                 y = "Number of genes")
     ggsave(filename, boxplot, height = 10, width = 10, units = "in", dpi = 300)
-
 }
 
 plot_tree <- function(data, metadata, tree_file, filename){
@@ -165,7 +164,37 @@ plot_tree <- function(data, metadata, tree_file, filename){
                 theme(panel.border = element_blank())+
                 guides(fill = guide_legend(title = "Lineage"), color = guide_legend(title = "Lineage"))
     ggsave(filename, var_tree, height = 20, width = 10, units = "in", dpi = 300)
+}
 
+plot_boxplot_genes <- function(data, metadata, filename){
+
+    strains_per_lineage <- metadata %>%
+        group_by(lineage) %>%
+        summarise(num_strains_in_lin = length(unique(strain)))
+
+    strains_per_gene <- data %>%
+        group_by(lineage, gene_id,gene_name, description) %>%
+        summarise(num_strains = sum(presence_vars))%>%
+        left_join(strains_per_lineage, by = "lineage")%>%
+        mutate(percent_strains = num_strains/num_strains_in_lin * 100)%>%
+        filter(percent_strains > 0)
+
+    boxplot_genes <- ggplot(strains_per_gene, aes(x = lineage, y = percent_strains))+
+        geom_boxplot()+
+        geom_quasirandom(aes(color = lineage))+
+        facet_wrap(~lineage, nrow = 1, scales = "free_x")+
+        theme(panel.grid = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            panel.background = element_blank(),
+            panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+            legend.position = "none")+
+        labs(title = "Percentage of strains in each lineage with variants per gene",
+                x = "Lineage",
+                y = "Percentage of strains")
+    ggsave(filename, boxplot_genes, height = 10, width = 10, units = "in", dpi = 300)
 }
 
 #### Input ####
@@ -197,7 +226,8 @@ for (set in sets){
     heatmap_filename <- paste("analyses/variants/results_heatmaps/", set_name, ".png", sep = "")
     boxplot_filename <- paste("analyses/variants/results_boxplots/", set_name, ".png", sep = "")
     tree_barplot_filename <- paste("analyses/variants/results_tree_barplots/", set_name, ".png", sep = "")
-
+    boxplot_genes_filename <- paste("analyses/variants/results_boxplots_genes/", set_name, ".png", sep = "")
+    
     if (!file.exists(heatmap_filename)) {
         print("Plotting heatmap")
         presence <- read_csv(set, col_names = TRUE, show_col_types = FALSE)
@@ -225,5 +255,14 @@ for (set in sets){
         print("Tree barplot already plotted")
     }
 
+    if (!file.exists(boxplot_genes_filename)) {
+        print("Plotting boxplot genes")
+        presence <- read_csv(set, col_names = TRUE, show_col_types = FALSE)
+        plot_boxplot_genes(presence, metadata, boxplot_genes_filename)
+    } else {
+        print("Boxplot genes already plotted")
+    }
+
 }
+
 
