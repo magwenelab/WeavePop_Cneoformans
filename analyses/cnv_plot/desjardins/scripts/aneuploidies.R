@@ -34,6 +34,10 @@ duplicated <- depth_by_chrom_good %>%
     left_join(chromosome_names, by=c("accession", "lineage"))%>%
     select(lineage,samples_per_lineage,sample,strain, source, accession, chromosome, norm_chrom_median)
 
+multiple_duplication <- duplicated %>%
+    group_by(lineage, sample, strain, source) %>%
+    summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", "))
+
 duplicated_summary <- duplicated %>%
     group_by(lineage, chromosome) %>%
     summarise(n_samples = n_distinct(sample), samples_per_lineage = first(samples_per_lineage))%>%
