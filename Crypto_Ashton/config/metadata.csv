@@ -684,9 +684,9 @@ ERS2541353,VNI,CNS_FS_4256,CNS_FS_4256,Cryptococcus neoformans var. grubii H99,V
 ERS2541352,VNI,CNS_ST_1930,CNS_ST_1930,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,positive,ERR2624257,Laos,Asia,2010.0,52.94329003,0.986121469
 ERS2541351,VNI,HC_ST_2296,HC_ST_2296,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,positive,ERR2624310,Laos,Asia,2011.0,45.30584103,0.985868441
 ERS2541350,VNI,HC_ST_352,HC_ST_352,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,positive,ERR2624409,Laos,Asia,2006.0,52.70071932,0.986142326
-ERS1142900,VNI,LD1,20949_2#59,Cryptococcus neoformans var. grubii H99,VNIa-4,Environmental,Ashton,,ERR1756591,Vietnam,Asia,,39.19945691,0.985450945
-ERS542598,VNI,LD2,15277_3#47,Cryptococcus neoformans var. grubii H99,VNIa-5,Environmental,Ashton,,ERR852965,Vietnam,Asia,,60.77538077,0.959721691
-ERS542599,VNI,NT7533,14893_3#64,Cryptococcus neoformans var. grubii H99,VNIa-5,Environmental,Ashton,,ERR775398,Vietnam,Asia,,36.4591797,0.958514942
+ERS1142900,VNI,LD1,20949_2#59,Cryptococcus neoformans var. grubii H99,VNIa-4,Environment,Ashton,,ERR1756591,Vietnam,Asia,,39.19945691,0.985450945
+ERS542598,VNI,LD2,15277_3#47,Cryptococcus neoformans var. grubii H99,VNIa-5,Environment,Ashton,,ERR852965,Vietnam,Asia,,60.77538077,0.959721691
+ERS542599,VNI,NT7533,14893_3#64,Cryptococcus neoformans var. grubii H99,VNIa-5,Environment,Ashton,,ERR775398,Vietnam,Asia,,36.4591797,0.958514942
 ERS2541349,VNI,UI_11199,UI_11199,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,positive,ERR2624224,Laos,Asia,2007.0,56.67518213,0.987336851
 ERS2541348,VNI,UI_12808,UI_12808,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,negative,ERR2624395,Laos,Asia,2008.0,48.18435072,0.985394729
 ERS2541347,VNI,UI_14167,UI_14167,Cryptococcus neoformans var. grubii H99,VNIa-4,Clinical,Ashton,positive,ERR2624362,Laos,Asia,2009.0,54.20043424,0.987249561
