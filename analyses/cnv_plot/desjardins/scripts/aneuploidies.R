@@ -8,17 +8,20 @@ library(ape)
 library(ggnewscale)
 
 
-depth_by_chrom_good <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241118/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
+depth_by_chrom_good_desjardins <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241118/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
+depth_by_chrom_good_ashton <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results_241119/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
+depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)
+
 depth_threshold <- 1.55
 
-metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results_joined_2024-10-16/02.Dataset/metadata.csv", header=TRUE, sep=",")
+metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/results_joined_241120/02.Dataset/metadata.csv", header=TRUE, sep=",")
 metadata <- metadata %>%
     select(sample, strain, source, lineage)%>%
     group_by(lineage)%>%
     mutate(samples_per_lineage = n_distinct(sample))%>%
     ungroup()
 
-chromosome_names = read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/config/chromosomes.csv", header=TRUE, sep=",")
+chromosome_names = read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/results_joined_241120/02.Dataset/chromosomes.csv", header=TRUE, sep=",")
 chromosome_names <- chromosome_names %>%
     mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
     mutate(chromosome = as.factor(chromosome))
@@ -85,6 +88,6 @@ p5 <- gheatmap(p4, dup_chroms,offset=0.12, width=.32,
     scale_fill_brewer(palette="Dark2", name="Duplicated\nchromosomes",
         na.value = "grey93")
     # theme_tree(legend.position = "bottom", legend.direction = "vertical")
-
+p5
 ggsave("cnv_tree.png", p5, height = 8, width = 8, units = "in", dpi = 500)
 
