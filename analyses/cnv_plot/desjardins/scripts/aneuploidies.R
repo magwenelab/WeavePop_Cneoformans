@@ -1,3 +1,4 @@
+# Use this script with the quarto environment
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/scripts")
 
 library(tidyverse)
@@ -5,6 +6,7 @@ library(ggbeeswarm)
 library(ggtree)
 library(ggtreeExtra)
 library(ape)
+library(phytools)
 library(ggnewscale)
 
 
@@ -70,8 +72,15 @@ tree <- read.tree(tree_path)
 
 # outgroup_clade <- outgroup_clade$strain
 # tree <- root(tree, outgroup = outgroup_clade)
-tree <- root(tree, node = 493)
+# tree <- root(tree, node = 493)
+# plot(tree, show.tip.label = FALSE) 
+# nodelabels()
 
+# Reroot the tree at the middle of the branch leading to VNII
+VNII_root <- getMRCA(tree, c("C2","C12"))
+
+edge_length <- subset(tree$edge.length, tree$edge[,2] == VNII_root)
+tree <- reroot(tree, VNII_root, edge_length/2)
 
 p <- ggtree(tree, layout = "circular") + 
     geom_tiplab(aes(label = label), size = 0.8, align =TRUE, 
@@ -92,6 +101,5 @@ p5 <- gheatmap(p4, dup_chroms,offset=0.12, width=.32,
     scale_fill_brewer(palette="Dark2", name="Duplicated\nchromosomes",
         na.value = "grey93")
     # theme_tree(legend.position = "bottom", legend.direction = "vertical")
-p5
 ggsave("cnv_tree.png", p5, height = 8, width = 8, units = "in", dpi = 500)
 
