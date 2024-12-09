@@ -35,12 +35,14 @@ VNII_root <- getMRCA(desj_tree, c("C2","C12"))
 
 edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
 desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
+write.tree(desj_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desj_tree.newick")
 
 
 # Plot of Desjardins tree
 
 d <- ggtree(desj_tree, layout = "circular") +  geom_tiplab(aes(label = label), size = 1.5, align =TRUE, 
-                    linetype = "dashed", linesize = .05)
+                    linetype = "dashed", linesize = .05)+
+    geom_treescale(x=0.1, y=0, width=0.1, offset = 0.5)
 d1 <- gheatmap(d, lineage, width=.06, colnames=FALSE, offset=0.1) +
     scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+
     new_scale_fill()
@@ -55,6 +57,7 @@ ggsave("analyses/cnv_plot/desjardins/results/desjardins_tree.png", d2, height = 
 
 ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
 
+# If label is in run, change for sample
 ashton_tree_unrooted <- read.tree(ashton_tree_path)
 ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
     if (x %in% runs$run) {
@@ -63,6 +66,7 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
         x
     }
 })
+# If label is in metadata samples, change for strain
 ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
     if (x %in% metadata$sample) {
         metadata$strain[metadata$sample == x]
@@ -70,6 +74,7 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
         x
     }
 })
+# If label is in metadata name, change for strain
 ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
     if (x %in% metadata$name) {
         metadata$strain[metadata$name == x]
@@ -78,6 +83,35 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
     }
 })
 
+# If label is not in metadata:
+# Search for the missing run accessions in NCBI
+missing_labels <- ashton_tree_unrooted$tip.label[!(ashton_tree_unrooted$tip.label %in% metadata$strain)]
+names(missing_labels) <- NULL
+# Not found in metadata "15277_3#45","15277_3#5","15277_3#6","04CN-63-018","CNS_1465"
+# Names from NCBI
+labels <- data.frame(run =c("SRR798282","SRR797784","SRR797768","SRR798708","SRR798752","SRR798587","SRR798870","SRR836666","SRR642859","SRR836892","SRR1063256","SRR1942909","GCF_000149245"),
+                    strain = c("Bt161","Gb159-1","Bt2","Bt209","Bt59","A3-38-20","MW-RSA606","AD5-53a","AD1-83a","In2632","LP-RSA2297","PMHc1032.ENR","H99"
+))
+
+ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
+    if (x %in% labels$run) {
+        labels$strain[labels$run == x]
+    } else {
+        x
+    }
+})
+missing_sublineage <- metadata %>%
+    filter(lineage == "VNI" & vni_subdivision == "")
+
+
+# Plot unrooted Ashton tree
+pu <- ggtree(ashton_tree_unrooted, layout = "circular") +  
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .05)
+pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
+    scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
+
+ggsave("analyses/cnv_plot/desjardins/results/ashton_tree_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
 
 # Root Ashton tree at the middle of the branch leading to VNIa
 VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
@@ -86,23 +120,25 @@ edge_length <- subset(ashton_tree_unrooted$edge.length, ashton_tree_unrooted$edg
 ashton_tree <- reroot(ashton_tree_unrooted, VNIa_root, edge_length/2)
 
 p <- ggtree(ashton_tree, layout = "circular") +  
-      geom_tiplab(aes(label = label), size = 1, align =TRUE, 
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
                     linetype = "dashed", linesize = .05)
-p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.03) +
+    
+p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/ashton_tree.png", p1, height = 10, width = 10, units = "in", dpi = 300)
+ggsave("analyses/cnv_plot/desjardins/results/ashton_tree.png", p1, height = 10, width = 10, units = "in", dpi = 600)
+write.tree(ashton_tree, file = "analyses/cnv_plot/desjardins/data/ashton_tree.newick")
 
 ## Specify clades in Desjardins tree
 
-VNI <- c("Tu241-1","C23", "Bt43", "AD3-95a" )
+VNI <- c("Bt92", "Bt79")
 VNI_node <- getMRCA(desj_tree, VNI)
 VNII <- c("C2","C12")
 VNII_node <- getMRCA(desj_tree, VNII)
 VNB <- c("Bt7", "Bt34")
 VNB_node <- getMRCA(desj_tree, VNB)
 
-# Get the ages of the nodes
+# Get the ages of the nodes from the original Desjardins tree
 edge_lengths <- node.depth.edgelength(desj_tree)
 node_labels <- c(desj_tree$tip.label, desj_tree$node.label)
 edge_length_mapping <- data.frame(node = node_labels, edge_length = edge_lengths, max_length = max(edge_lengths))
@@ -112,44 +148,39 @@ edge_length_mapping <- edge_length_mapping %>%
 
 clade_ages <- edge_length_mapping %>% 
   filter(node_id %in% c(VNI_node, VNII_node, VNB_node))
+nodeages <- c("Bt92-Bt79" = clade_ages$age[clade_ages$node_id == VNI_node],
+             "C2-C12" = clade_ages$age[clade_ages$node_id == VNII_node],
+             "Bt7-Bt34" = clade_ages$age[clade_ages$node_id == VNB_node])
 
 
 
 #Remove VNI clade from Desjardins tree
-VNI_root_des <- getMRCA(desj_tree, c("Tu241-1","C23", "Bt43", "AD3-95a" ) )
-
-# VNI_tips <- tips(desj_tree, VNI_root_des)
-# backtree <- drop.tip(desj_tree, c(VNI_tips[-which(tips(desj_tree,VNI_root_des)%in%
-#                                              c("Tu241-1","C23", "Bt43", "AD3-95a" ))]))
-
-
+VNI_tips <- tips(desj_tree, VNI_node)
+backtree <- drop.tip(desj_tree, VNI_tips)
+# backtree <- drop.tip(desj_tree, VNI_tips[-which(tips(desj_tree,VNI_root) %in% c("H99"))]) # Remove all VNI tips except H99
 
 # Define VNI clade from Ashton tree
 # c("Tu241-1","VNIb", "VNIc", "VNIa" )
-VNI_root <- getMRCA(ashton_tree, c("Tu241-1","C23", "Bt43", "AD3-95a" ))
-ashton_tree$node.label[(VNI_root-Ntip(ashton_tree))]<-"VNI" # assigning node labels
+# VNI_root <- getMRCA(ashton_tree, c("Tu241-1","C23", "Bt43", "AD3-95a" ))
+# ashton_tree$node.label[(VNI_root-Ntip(ashton_tree))]<-"VNI" # assigning node labels
 
-VNI_root <- getMRCA(desj_tree, c("Tu241-1","C23", "Bt43", "AD3-95a" ))
-# Remove all VNI tips except H99
-VNI_tips <- tips(desj_tree, VNI_root)
-backtree <- drop.tip(desj_tree, VNI_tips[-which(tips(desj_tree,VNI_root) %in% c("H99"))])
-# Backtree Ashton
-# Source Desjardins
+# Backtree Desjardins
+# Source Asthon
 # Create the reference table
 
-reference <- data.frame(bind=c("CNS_289-BK8"), # Tips of VNI in Ashton tree, VNI-VNB tips in merged tree
-                   reference=c("H99"), # Tips of VNBI and VNBII in Desjarins tree, VNII tips in Desjardins tree
+reference <- data.frame(bind=c("CNS_289-BK8"),
+                   reference=c("Bt7-Bt34"), # "H99"
                    poly=c(FALSE))
 
 # Merge
-merged <- tree.merger(backbone = desj_tree,data=reference,source.tree = ashton_tree,plot=FALSE)
-plot(merged)
-merged <- drop.tip(merged, tips(merged, "H99"))
+merged <- tree.merger(backbone = backtree,data=reference,source.tree = ashton_tree,plot=FALSE, node.ages = nodeages)
+write.tree(merged, file = "analyses/cnv_plot/desjardins/data/merged_tree.newick")
 
 
 p <- ggtree(merged, layout = "circular", size = 0.1) +  
-      geom_tiplab(aes(label = label), size = .5, align =TRUE, 
-                    linetype = "dashed", linesize = .05)
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .05)+
+    geom_treescale(x=0.38, y=0, width=0.01, offset = 5)
 
 m1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)+
@@ -158,9 +189,80 @@ m1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
 m2 <- gheatmap(m1, lineage, width=.06, colnames=FALSE, offset=.02) +
     scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/merged_tree.png", m2, height = 10, width = 10, units = "in", dpi = 300)
+ggsave("analyses/cnv_plot/desjardins/results/merged_tree.png", m2, height = 10, width = 10, units = "in", dpi = 600)
 
 
-VNI_a <- getMRCA(merged, c("BK43", "BK224"))
-merged_minimal <- drop.tip(merged, tips(merged, VNI_a))
-ggtree(merged_minimal, layout="circular")
+
+merged_VNI_node <- getMRCA(merged, VNI)
+merged_VNII_node <- getMRCA(merged, VNII)
+merged_VNB_node <- getMRCA(merged, VNB)
+
+# Get the ages of the nodes from the original Desjardins tree
+merged_edge_lengths <- node.depth.edgelength(merged)
+merged_node_labels <- c(merged$tip.label, merged$node.label)
+merged_edge_length_mapping <- data.frame(node = merged_node_labels, edge_length = merged_edge_lengths, max_length = max(merged_edge_lengths))
+merged_edge_length_mapping <- merged_edge_length_mapping %>% 
+    mutate(age = max_length - edge_length) %>%
+    rownames_to_column("node_id")
+
+merged_clade_ages <- merged_edge_length_mapping %>% 
+  filter(node_id %in% c(merged_VNI_node, merged_VNII_node, merged_VNB_node))
+merged_nodeages <- c("Bt92-Bt79" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNI_node],
+             "C2-C12" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNII_node],
+             "Bt7-Bt34" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNB_node])
+
+# Ashton ages
+
+## Specify clades in Ashton tree
+
+VNIa <- c("BK290", "CNS_289")
+VNIa_node <- getMRCA(ashton_tree, VNIa)
+VNIb <- c("C23", "AD3-41a")
+VNIb_node <- getMRCA(ashton_tree, VNIb)
+VNIc <- c("Bt11", "Bt20")
+VNIc_node <- getMRCA(ashton_tree, VNIc)
+VNI <- c("BK290", "Bt11")
+VNI_node <- getMRCA(ashton_tree, VNI)
+
+# Get the ages of the nodes from the original Ashton tree
+ashton_tree_edge_lengths <- node.depth.edgelength(ashton_tree)
+ashton_tree_node_labels <- c(ashton_tree$tip.label, ashton_tree$node.label)
+ashton_tree_edge_length_mapping <- data.frame(node = ashton_tree_node_labels, edge_length = ashton_tree_edge_lengths, max_length = max(ashton_tree_edge_lengths))
+ashton_tree_edge_length_mapping <- ashton_tree_edge_length_mapping %>% 
+    mutate(age = max_length - edge_length) %>%
+    rownames_to_column("node_id")
+
+ashton_tree_clade_ages <- ashton_tree_edge_length_mapping %>% 
+  filter(node_id %in% c(VNIa_node, VNIb_node, VNIc_node, VNI_node))
+ashton_tree_nodeages <- c("BK290-CNS_289" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIa_node],
+             "C23-AD3-41a" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIb_node],
+             "Bt11-Bt20" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIc_node],
+             "BK290-Bt11" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNI_node])
+
+# Ashton unrooted ages
+
+## Specify clades in Ashton tree
+
+VNIa <- c("BK290", "CNS_289")
+VNIa_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIa)
+VNIb <- c("C23", "AD3-41a")
+VNIb_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIb)
+VNIc <- c("Bt11", "Bt20")
+VNIc_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIc)
+VNI <- c("BK290", "Bt11")
+VNI_node_unrooted <- getMRCA(ashton_tree_unrooted, VNI)
+
+# Get the ages of the nodes from the original Ashton tree
+unrooted_ashton_tree_edge_lengths <- node.depth.edgelength(ashton_tree_unrooted)
+unrooted_ashton_tree_node_labels <- c(ashton_tree_unrooted$tip.label, ashton_tree_unrooted$node.label)
+unrooted_ashton_tree_edge_length_mapping <- data.frame(node = unrooted_ashton_tree_node_labels, edge_length = unrooted_ashton_tree_edge_lengths, max_length = max(unrooted_ashton_tree_edge_lengths))
+unrooted_ashton_tree_edge_length_mapping <- unrooted_ashton_tree_edge_length_mapping %>% 
+    mutate(age = max_length - edge_length) %>%
+    rownames_to_column("node_id")
+
+unrooted_ashton_tree_clade_ages <- unrooted_ashton_tree_edge_length_mapping %>% 
+  filter(node_id %in% c(VNIa_node_unrooted, VNIb_node_unrooted, VNIc_node_unrooted, VNI_node_unrooted))
+unrooted_ashton_tree_nodeages <- c("BK290-CNS_289" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIa_node_unrooted],
+             "C23-AD3-41a" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIb_node_unrooted],
+             "Bt11-Bt20" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIc_node_unrooted],
+             "BK290-Bt11" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNI_node_unrooted])
