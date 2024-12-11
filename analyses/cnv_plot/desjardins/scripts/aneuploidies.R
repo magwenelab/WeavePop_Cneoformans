@@ -95,7 +95,7 @@ tree <- read.tree(merged_tree_path)
 p <- ggtree(tree, layout = "circular", size = 0.1) + 
     geom_tiplab(aes(label = label), size = 0.25, align =TRUE, 
                     linetype = "dashed", linesize = .05)+
-    geom_treescale(x=0.6, y=0, width=0.01, offset = 4)s
+    geom_treescale(x=0.6, y=0, width=0.01, offset = 4)
 
 p1 <- gheatmap(p, dataset, width=.05, colnames=FALSE, offset=.025) +
     scale_fill_brewer(palette = "Set1", name="Dataset",  na.translate = FALSE)+ 
@@ -115,8 +115,13 @@ p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=.076,) +
 
 p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=0.095,) +
     scale_fill_brewer(palette="Paired", name="Duplicated\nchromosomes",
-        na.value = "grey93")
-
+        na.value = "grey93")+
+    theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title = element_text( size=7),
+        legend.text=element_text(size=5),
+        legend.key.size = unit(0.3, "cm"),
+        plot.margin = margin(0, 0, 0, 0, "cm"))
 
 ggsave("../results/duplications_merged_tree.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 ggsave("../results/duplications_merged_tree.svg", p5, height = 8, width = 8, units = "in")
