@@ -10,7 +10,7 @@ library(phytools)
 library(ggnewscale)
 
 #### Metadata ####
-metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/results_joined_241204/02.Dataset/metadata.csv", header=TRUE, sep=",")
+metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/metadata_fixed.csv", header=TRUE, sep=",")
 
 #### Duplicated samples from chromosome median depth ####
 depth_by_chrom_good_desjardins <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
@@ -75,6 +75,10 @@ sublineage <- metadata %>%
     select(strain, vni_subdivision)%>%
     column_to_rownames("strain")
 
+dataset <- metadata %>%
+    select(strain, dataset)%>%
+    column_to_rownames("strain")
+
 # Desjardins tree
 desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desjardins_tree.newick"
 desj_tree <- read.tree(desj_tree_path)
@@ -91,22 +95,31 @@ tree <- read.tree(merged_tree_path)
 p <- ggtree(tree, layout = "circular", size = 0.1) + 
     geom_tiplab(aes(label = label), size = 0.25, align =TRUE, 
                     linetype = "dashed", linesize = .05)+
-        geom_treescale(x=0.58, y=0, width=0.01, offset = 4)
+    geom_treescale(x=0.6, y=0, width=0.01, offset = 4)s
 
-p1 <- gheatmap(p, lineage, width=.05, colnames=FALSE, offset=.025) +
+p1 <- gheatmap(p, dataset, width=.05, colnames=FALSE, offset=.025) +
+    scale_fill_brewer(palette = "Set1", name="Dataset",  na.translate = FALSE)+ 
+    new_scale_fill()
+
+p2 <- gheatmap(p1, lineage, width=.05, colnames=FALSE, offset=.042) +
     scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+ 
+    new_scale_fill()
+
+p3 <- gheatmap(p2, sublineage, width=.05, colnames=FALSE, offset=.059,) +
+    scale_fill_brewer(palette="Set3", name="VNI Sublineage", na.translate = FALSE)+ 
     new_scale_fill() 
 
-p2 <- gheatmap(p1, source, width=.04, colnames=FALSE, offset=.04,) +
+p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=.076,) +
         scale_fill_brewer(palette="Set2", name="Source", na.translate = FALSE)+ 
-        new_scale_fill() 
+        new_scale_fill()
 
-p3 <- gheatmap(p2, dup_chroms, width=.32, colnames = FALSE, offset=0.05,) +
+p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=0.095,) +
     scale_fill_brewer(palette="Paired", name="Duplicated\nchromosomes",
         na.value = "grey93")
 
-ggsave("../results/duplications_merged_tree.png", p3, height = 8, width = 8, units = "in", dpi = 900)
-ggsave("../results/duplications_merged_tree.svg", p3, height = 8, width = 8, units = "in")
+
+ggsave("../results/duplications_merged_tree.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("../results/duplications_merged_tree.svg", p5, height = 8, width = 8, units = "in")
 
 
 #### Desjardins samples in Ashton ####

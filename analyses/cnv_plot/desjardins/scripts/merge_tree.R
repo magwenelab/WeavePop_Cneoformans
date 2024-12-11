@@ -8,14 +8,21 @@ library(RColorBrewer)
 library(ggnewscale)
 
 #### Metadata ####
-runs <- read.delim("/BigData/czirion/Crypto_Diversity_Pipeline/data/runs_table.tsv", header=TRUE, sep="\t")
-metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/results_joined_241204/02.Dataset/metadata.csv", header=TRUE, sep=",")
+metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/metadata_fixed.csv", header=TRUE, sep=",")
+
 sublineage <- metadata %>%
     select(strain, vni_subdivision)%>%
     column_to_rownames("strain")
 lineage <- metadata %>%
     select(strain, lineage)%>%
     column_to_rownames("strain")
+dataset <- metadata %>%
+    select(strain, dataset)%>%
+    column_to_rownames("strain")
+source <- metadata %>%
+    select(strain, source)%>%
+    column_to_rownames("strain")
+
 #### Desjardins tree ####
 
 desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/CryptoDiversity_Desjardins_Tree.tre"
@@ -56,25 +63,18 @@ ggsave("analyses/cnv_plot/desjardins/results/desjardins_tree.png", d2, height = 
 #### Ashton tree ####
 
 ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
-
-# If label is in run, change for sample
 ashton_tree_unrooted <- read.tree(ashton_tree_path)
+# ashton_tree_unrooted$tip.label <- ifelse(ashton_tree_unrooted$tip.label %in% metadata$run, metadata$strain, ashton_tree_unrooted$tip.label)
+# ashton_tree_unrooted$tip.label <- ifelse(ashton_tree_unrooted$tip.label %in% metadata$name, metadata$strain, ashton_tree_unrooted$tip.label)
+
+# # If label is in run, change for sample
 ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-    if (x %in% runs$run) {
-        runs$sample[runs$run == x]
+    if (x %in% metadata$run) {
+        metadata$strain[metadata$run == x]
     } else {
         x
     }
 })
-# If label is in metadata samples, change for strain
-ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-    if (x %in% metadata$sample) {
-        metadata$strain[metadata$sample == x]
-    } else {
-        x
-    }
-})
-# If label is in metadata name, change for strain
 ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
     if (x %in% metadata$name) {
         metadata$strain[metadata$name == x]
@@ -83,25 +83,6 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
     }
 })
 
-# If label is not in metadata:
-# Search for the missing run accessions in NCBI
-missing_labels <- ashton_tree_unrooted$tip.label[!(ashton_tree_unrooted$tip.label %in% metadata$strain)]
-names(missing_labels) <- NULL
-# Not found in metadata "15277_3#45","15277_3#5","15277_3#6","04CN-63-018","CNS_1465"
-# Names from NCBI
-labels <- data.frame(run =c("SRR798282","SRR797784","SRR797768","SRR798708","SRR798752","SRR798587","SRR798870","SRR836666","SRR642859","SRR836892","SRR1063256","SRR1942909","GCF_000149245"),
-                    strain = c("Bt161","Gb159-1","Bt2","Bt209","Bt59","A3-38-20","MW-RSA606","AD5-53a","AD1-83a","In2632","LP-RSA2297","PMHc1032.ENR","H99"
-))
-
-ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-    if (x %in% labels$run) {
-        labels$strain[labels$run == x]
-    } else {
-        x
-    }
-})
-missing_sublineage <- metadata %>%
-    filter(lineage == "VNI" & vni_subdivision == "")
 
 
 # Plot unrooted Ashton tree
