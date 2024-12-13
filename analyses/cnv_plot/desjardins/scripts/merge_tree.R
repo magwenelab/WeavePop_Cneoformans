@@ -123,18 +123,26 @@ clade_ages <- edge_length_mapping %>%
 nodeages <- c("Bt92-Bt79" = clade_ages$age[clade_ages$node_id == VNI_node],
              "C2-C12" = clade_ages$age[clade_ages$node_id == VNII_node],
              "Bt7-Bt34" = clade_ages$age[clade_ages$node_id == VNB_node])
+tip_ages <- edge_length_mapping %>% 
+                filter(node %in% metadata$strain)
+tipages <- tip_ages$age
+names(tipages) <- tip_ages$node
 
 #Remove VNI clade from Desjardins tree to use it as backtree
 VNI_tips <- tips(desj_tree, VNI_node)
 backtree <- drop.tip(desj_tree, VNI_tips)
-
 # Create the reference tables
 reference <- data.frame(bind=c("CNS_289-BK8"),
                    reference=c("Bt7-Bt34"), # "H99"
                    poly=c(FALSE))
 
 # Merge
-merged <- tree.merger(backbone = backtree,data=reference,source.tree = ashton_tree,plot=FALSE, node.ages = nodeages)
+merged <- tree.merger(backbone = backtree,
+                        data=reference,
+                        source.tree = ashton_tree,
+                        plot=FALSE,
+                        node.ages = nodeages,
+                        tip.ages = tipages)
 write.tree(merged, file = "analyses/cnv_plot/desjardins/data/merged_tree.newick")
 
 # Plot merged tree
@@ -154,28 +162,52 @@ ggsave("analyses/cnv_plot/desjardins/results/merged_tree.png", m2, height = 10, 
 
 
 #### Explore the branch lengths of all trees and compare ####
+
+## Merged tree
+
+# Specify clades in merged tree
 merged_VNI_node <- getMRCA(merged, VNI)
 merged_VNII_node <- getMRCA(merged, VNII)
 merged_VNB_node <- getMRCA(merged, VNB)
-
-# Get the ages of the nodes from the original Desjardins tree
+# Get the ages of the nodes from the original merged tree
 merged_edge_lengths <- node.depth.edgelength(merged)
 merged_node_labels <- c(merged$tip.label, merged$node.label)
 merged_edge_length_mapping <- data.frame(node = merged_node_labels, edge_length = merged_edge_lengths, max_length = max(merged_edge_lengths))
 merged_edge_length_mapping <- merged_edge_length_mapping %>% 
-    mutate(age = max_length - edge_length) %>%
-    rownames_to_column("node_id")
-
+                                mutate(age = max_length - edge_length) %>%
+                                rownames_to_column("node_id")
 merged_clade_ages <- merged_edge_length_mapping %>% 
-  filter(node_id %in% c(merged_VNI_node, merged_VNII_node, merged_VNB_node))
+                        filter(node_id %in% c(merged_VNI_node, merged_VNII_node, merged_VNB_node))
 merged_nodeages <- c("Bt92-Bt79" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNI_node],
-             "C2-C12" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNII_node],
-             "Bt7-Bt34" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNB_node])
+                    "C2-C12" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNII_node],
+                    "Bt7-Bt34" = merged_clade_ages$age[merged_clade_ages$node_id == merged_VNB_node])
+tip_ages <- merged_edge_length_mapping %>% 
+                filter(node %in% desj_tree$tip.label)
+merged_tipages <- tip_ages$age
+names(merged_tipages) <- tip_ages$node
 
-# Ashton ages
+merged_VNI_clade_length <- merged_edge_length_mapping %>% 
+                    filter(node_id %in% merged_VNI_node)
+merged_VNI_lengths <- merged_edge_length_mapping %>% 
+                filter(node %in% VNI_tips)%>%
+                mutate(VNI_length = VNI_clade_length$edge_length,
+                        edge_length_VNI = edge_length - VNI_length)%>%
+                select(node, edge_length_VNI)
 
-## Specify clades in Ashton tree
 
+## Desjardins tree
+
+VNI_clade_length <- edge_length_mapping %>% 
+                    filter(node_id %in% VNI_node)
+VNI_lengths <- edge_length_mapping %>%
+                filter(node %in% VNI_tips)%>%
+                mutate(VNI_length = VNI_clade_length$edge_length,
+                        edge_length_VNI = edge_length - VNI_length)%>%
+                select(node, edge_length_VNI)
+
+## Ashton ages
+
+# Specify clades in Ashton tree
 VNIa <- c("BK290", "CNS_289")
 VNIa_node <- getMRCA(ashton_tree, VNIa)
 VNIb <- c("C23", "AD3-41a")
@@ -184,46 +216,45 @@ VNIc <- c("Bt11", "Bt20")
 VNIc_node <- getMRCA(ashton_tree, VNIc)
 VNI <- c("BK290", "Bt11")
 VNI_node <- getMRCA(ashton_tree, VNI)
-
 # Get the ages of the nodes from the original Ashton tree
 ashton_tree_edge_lengths <- node.depth.edgelength(ashton_tree)
 ashton_tree_node_labels <- c(ashton_tree$tip.label, ashton_tree$node.label)
 ashton_tree_edge_length_mapping <- data.frame(node = ashton_tree_node_labels, edge_length = ashton_tree_edge_lengths, max_length = max(ashton_tree_edge_lengths))
 ashton_tree_edge_length_mapping <- ashton_tree_edge_length_mapping %>% 
-    mutate(age = max_length - edge_length) %>%
-    rownames_to_column("node_id")
+                                    mutate(age = max_length - edge_length) %>%
+                                    rownames_to_column("node_id")
+ashton_VNI_lengths <- ashton_tree_edge_length_mapping %>%
+                        filter(node %in% VNI_tips)%>%
+                        select(node, edge_length)
+
+VNI_lengths_fuse <- merge(ashton_VNI_lengths,merged_VNI_lengths, by = "node")%>%
+                    mutate(edge_length_diff = edge_length - edge_length_VNI)
+
 
 ashton_tree_clade_ages <- ashton_tree_edge_length_mapping %>% 
-  filter(node_id %in% c(VNIa_node, VNIb_node, VNIc_node, VNI_node))
+                            filter(node_id %in% c(VNIa_node, VNIb_node, VNIc_node, VNI_node))
 ashton_tree_nodeages <- c("BK290-CNS_289" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIa_node],
-             "C23-AD3-41a" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIb_node],
-             "Bt11-Bt20" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIc_node],
-             "BK290-Bt11" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNI_node])
+                        "C23-AD3-41a" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIb_node],
+                        "Bt11-Bt20" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNIc_node],
+                        "BK290-Bt11" = ashton_tree_clade_ages$age[ashton_tree_clade_ages$node_id == VNI_node])
 
-# Ashton unrooted ages
+## Ashton unrooted ages
 
-## Specify clades in Ashton tree
-
-VNIa <- c("BK290", "CNS_289")
+# Specify clades in Ashton tree
 VNIa_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIa)
-VNIb <- c("C23", "AD3-41a")
 VNIb_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIb)
-VNIc <- c("Bt11", "Bt20")
 VNIc_node_unrooted <- getMRCA(ashton_tree_unrooted, VNIc)
-VNI <- c("BK290", "Bt11")
 VNI_node_unrooted <- getMRCA(ashton_tree_unrooted, VNI)
-
 # Get the ages of the nodes from the original Ashton tree
 unrooted_ashton_tree_edge_lengths <- node.depth.edgelength(ashton_tree_unrooted)
 unrooted_ashton_tree_node_labels <- c(ashton_tree_unrooted$tip.label, ashton_tree_unrooted$node.label)
 unrooted_ashton_tree_edge_length_mapping <- data.frame(node = unrooted_ashton_tree_node_labels, edge_length = unrooted_ashton_tree_edge_lengths, max_length = max(unrooted_ashton_tree_edge_lengths))
 unrooted_ashton_tree_edge_length_mapping <- unrooted_ashton_tree_edge_length_mapping %>% 
-    mutate(age = max_length - edge_length) %>%
-    rownames_to_column("node_id")
-
+                                                mutate(age = max_length - edge_length) %>%
+                                                rownames_to_column("node_id")
 unrooted_ashton_tree_clade_ages <- unrooted_ashton_tree_edge_length_mapping %>% 
-  filter(node_id %in% c(VNIa_node_unrooted, VNIb_node_unrooted, VNIc_node_unrooted, VNI_node_unrooted))
+                                    filter(node_id %in% c(VNIa_node_unrooted, VNIb_node_unrooted, VNIc_node_unrooted, VNI_node_unrooted))
 unrooted_ashton_tree_nodeages <- c("BK290-CNS_289" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIa_node_unrooted],
-             "C23-AD3-41a" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIb_node_unrooted],
-             "Bt11-Bt20" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIc_node_unrooted],
-             "BK290-Bt11" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNI_node_unrooted])
+                                "C23-AD3-41a" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIb_node_unrooted],
+                                "Bt11-Bt20" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNIc_node_unrooted],
+                                "BK290-Bt11" = unrooted_ashton_tree_clade_ages$age[unrooted_ashton_tree_clade_ages$node_id == VNI_node_unrooted])
