@@ -8,11 +8,12 @@ library(ggtreeExtra)
 library(ape)
 library(phytools)
 library(ggnewscale)
+library(RColorBrewer)
 
 #### Metadata ####
 metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/metadata_fixed.csv", header=TRUE, sep=",")
 
-#### Duplicated samples from chromosome median depth ####
+#### Duplication from chromosome median depth above threshold ####
 depth_by_chrom_good_desjardins <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
 depth_by_chrom_good_ashton <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results_241203/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
 depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)
@@ -22,46 +23,98 @@ depth_threshold <- 1.55
 
 metadata <- metadata %>%
     select(sample, strain, source, lineage, dataset,name, vni_subdivision)%>%
+    mutate(source = ifelse(source == "Environmental", "Environment", source))%>%
     group_by(dataset, lineage)%>%
-    mutate(samples_per_lineage = n_distinct(sample))%>%
+    mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
     ungroup() %>%
-    mutate(source = ifelse(source == "Environmental", "Environment", source))
+    group_by(lineage)%>%
+    mutate(samples_in_lineage = n_distinct(sample))%>%
+    ungroup()%>%
+    mutate(total_samples = n_distinct(sample))
 
 chromosome_names <- chromosome_names %>%
     mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
     mutate(chromosome = as.factor(chromosome))
 levels(chromosome_names$chromosome) <- paste("chr", chromosome_names$chromosome, sep="")
 
-# Filter samples with median depth above threshold
+# Get table of duplications
 duplicated <- depth_by_chrom_good %>%
     filter(norm_chrom_median > depth_threshold)%>%
     left_join(metadata, by="sample")%>%
     left_join(chromosome_names, by=c("accession", "lineage"))%>%
-    select(dataset,lineage,samples_per_lineage,sample,strain, source, accession, chromosome, norm_chrom_median)
+    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,total_samples, sample,strain, source, accession, chromosome, norm_chrom_median)
 
-write_tsv(duplicated, "../results/duplicated_samples.tsv")
+duplications <- duplicated %>%
+    select(dataset,lineage, sample,strain, source, accession, chromosome, norm_chrom_median)
 
-multiple_duplication <- duplicated %>%
+write_tsv(duplications, "../results/duplications.tsv")
+
+# Get multiple summary tables
+dup_sample <- duplicated %>%
     group_by(dataset,lineage, sample, strain, source) %>%
-    summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", "))
+    summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms))
+write_tsv(dup_sample, "../results/dup_sample.tsv")
 
-duplicated_summary <- duplicated %>%
+dup_dataset_lineage_chromosome <- duplicated %>%
     group_by(dataset,lineage, chromosome) %>%
-    summarise(n_samples = n_distinct(sample), samples_per_lineage = first(samples_per_lineage))%>%
-    mutate(percent_samples = round((n_samples / samples_per_lineage) * 100, 1))%>%
-    select(dataset,lineage, chromosome, n_samples)%>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(dataset,lineage, chromosome, n_samples, samples_in_dataset_lineage, percent_samples)%>%
     arrange(chromosome, desc(lineage), desc(n_samples))
 
-write_tsv(duplicated_summary, "../results/duplicated_summary.tsv")
+write_tsv(dup_dataset_lineage_chromosome, "../results/dup_dataset_lineage_chromosome.tsv")
+
+dup_lineage_chromosome <- duplicated %>%
+    group_by(lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    select(lineage, chromosome, n_samples, samples_in_lineage,percent_samples)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+
+write_tsv(dup_lineage_chromosome, "../results/dup_lineage_chromosome.tsv")
+
+dup_lineage_dataset <- duplicated %>%
+    group_by(dataset,lineage) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(lineage, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    arrange(desc(lineage), desc(n_samples))
+
+write_tsv(dup_lineage_dataset, "../results/dup_lineage_dataset.tsv")
+
+dup_chromosome <- duplicated %>%
+    group_by(chromosome) %>%
+    summarise(n_samples = n_distinct(sample), total_samples = first(total_samples))%>%
+    mutate(percent_samples = round((n_samples / total_samples) * 100, 1))%>%
+    select(chromosome, n_samples,total_samples, percent_samples)%>%
+    arrange(chromosome, desc(n_samples))
+
+write_tsv(dup_chromosome, "../results/dup_chromosome.tsv")
 
 #### Plot the tree with duplicated chromosomes ####
+# Make matrix of duplicated chromosomes
 dup_chroms <- duplicated %>%
     select(strain, chromosome)%>%
     mutate(duplicated = 1)%>%
     arrange(chromosome)%>%
     pivot_wider(names_from = chromosome, values_from = duplicated, values_fill = 0)%>%
     column_to_rownames("strain")%>%
-    mutate(across(everything(), ~ ifelse(. == 1, cur_column(), NA)))
+    mutate(across(everything(), ~ ifelse(. == 1, cur_column(),"Euploid")))
+
+euploid_strain <- metadata %>%
+    filter(!strain %in% duplicated$strain)%>%
+    select(strain)
+
+for (chrom in colnames(dup_chroms)){
+    euploid_strain[chrom] <- "Euploid"
+}
+
+dup_chroms <- euploid_strain %>%
+    column_to_rownames("strain") %>%
+    bind_rows(dup_chroms)
+
+# Get metadata
 
 lineage <- metadata %>%
     select(strain, lineage)%>%
@@ -80,7 +133,7 @@ dataset <- metadata %>%
     column_to_rownames("strain")
 
 # Desjardins tree
-desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desjardins_tree.newick"
+desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desj_tree.newick"
 desj_tree <- read.tree(desj_tree_path)
 
 ### Ashton tree
@@ -91,9 +144,10 @@ ashton_tree <- read.tree(ashton_tree_path)
 merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/merged_tree.newick"
 tree <- read.tree(merged_tree_path)
 
+chrom_colors <- c(brewer.pal(length(unique(duplications$chromosome)), "Paired"), "grey93")
 
 p <- ggtree(tree, layout = "circular", size = 0.1) + 
-    geom_tiplab(aes(label = label), size = 0.25, align =TRUE, 
+    geom_tiplab(aes(label = label), size = 0.15, align =TRUE, 
                     linetype = "dashed", linesize = .05)+
     geom_treescale(x=0.6, y=0, width=0.01, offset = 4)
 
@@ -114,32 +168,18 @@ p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=.076,) +
         new_scale_fill()
 
 p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=0.095,) +
-    scale_fill_brewer(palette="Paired", name="Duplicated\nchromosomes",
-        na.value = "grey93")+
+    scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.value = "white")+
     theme(legend.position = "bottom",
         legend.direction = "vertical",
         legend.title = element_text( size=7),
         legend.text=element_text(size=5),
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
-
+p5
 ggsave("../results/duplications_merged_tree.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 ggsave("../results/duplications_merged_tree.svg", p5, height = 8, width = 8, units = "in")
 
 
-#### Desjardins samples in Ashton ####
-ashton_strains <- ashton_tree$tip.label
-desjardins_in_ashton <- metadata %>%
-    filter(strain %in% ashton_strains)%>%
-    filter(dataset == "Desjardins")
-nrow(desjardins_in_ashton)
-
-desjardins_not_in_ashton <- metadata %>%
-    filter(dataset == "Desjardins")%>%
-    filter(lineage == "VNI")%>%
-    filter(!strain %in% ashton_strains)
-
-nrow(desjardins_not_in_ashton)
 
 #### Get duplication from called CNVs ####
 
@@ -214,14 +254,13 @@ ggsave("../results/repeats_barplot.png", barplot, height = 8, width = 8, units =
 percent_size_threshold <- 80
 
 cnv_duplicated <- cnv_percent %>%
-    filter(percent_cnv_size > percent_size_threshold)%>%
-    select(dataset, lineage, samples_per_lineage, sample, strain, source, accession, chromosome, percent_cnv_size)
+    filter(percent_cnv_size > percent_size_threshold)  %>%
+    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,total_samples, sample,strain, source, accession, chromosome, cnv, percent_cnv_size)
 
 write_tsv(cnv_duplicated, "../results/cnv_duplicated_samples.tsv")
     
-cnv_summary <- cnv_duplicated%>%
-    group_by(dataset,lineage, chromosome) %>%
-    summarise(n_samples = n_distinct(sample))%>%
-    arrange(chromosome, desc(lineage), desc(n_samples))
+duplication_not_cnvs <- full_join(duplications, cnv_duplicated, by = c("lineage", "dataset", "sample", "strain", "chromosome", "source", "accession")) %>%
+    filter(is.na(cnv))%>%
+    select_if(~!all(is.na(.)))
 
-write_tsv(cnv_summary, "../results/cnv_duplicated_summary.tsv")
+write_tsv(duplication_not_cnvs, "../results/duplication_not_cnvs.tsv")
