@@ -1,0 +1,36 @@
+name : quarto
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.4.*
+  - r-essentials
+  - r-quarto
+  - r-svglite
+  - r-tidyverse
+  - r-rcolorbrewer
+  - r-scales
+  - bioconductor-complexheatmap
+  - r-ggnewscale
+  - r-patchwork
+  - r-ggbeeswarm
+  - r-cowplot
+
+# using install.packages("package"):
+# httpgd
+# RRphylo
+# phytools
+# ape
+# languageserver
+
+# Intall bioconductor packages
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+
+# BiocManager::install("ggtree")
+# BiocManager::install("ggtreeExtra")
+# BiocManager::install("ComplexHeatmap")
+
+
+
