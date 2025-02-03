@@ -25,7 +25,7 @@ samples_to_exclude: # Optional: Relative path to list of samples to exclude from
 
 # ------------------Output-------------------------------------------------------------------------
 
-output_directory: "results_241119" # Name for the output directory.
+output_directory: "results_241202" # Name for the output directory.
 
 # ------------------Annotation of reference genomes------------------------------------------------
 
@@ -52,9 +52,14 @@ depth_quality:
     exclude_samples: True # True to exclude samples that do not meet the quality thresholds.
     min_position_depth: 5 # Minimum depth for a position to be considered covered.
     min_percent_coverage: 50 # If percent of genome covered is below this value, the sample is excluded.
-    min_percent_MAPQ: 75 # If percent of high quality reads is below this value, the sample is excluded.
+    min_percent_MAPQ: 88 # If percent of high quality reads is below this value, the sample is excluded.
     min_percent_genome-wide_depth: 2 # If genome-wide depth (Global mode) is below this value, the sample is excluded.
     min_percent_properly_paired_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
+
+# ------------------Depth and quality of genetic features---------------------------------------------
+
+depth_quality_features:
+  activate: # True to activate the module. Empty or False to skip.
 
 # ------------------Copy-number variant calling----------------------------------------------------
 
@@ -66,12 +71,7 @@ cnv:
     repeats_database: "config/RepBase.fasta" # Relative path to the RepBase FASTA file.
     repeats_threads: 20 # Number of threads for RepeatModeler and RepeatMasker.
 
-# ------------------MAPQ and Depth of genetic features---------------------------------------------
-
-genes_mapq_depth:
-  activate: # True to activate the module. Empty or False to skip.
-
-# ------------------Variant annotation-------------------------------------------------------------
+# ------------------Annotation of SNP effects------------------------------------------------------
 
 snpeff:
   activate: # True to activate the module. Empty or False to skip.
@@ -82,8 +82,8 @@ snpeff:
 plotting: 
   activate: True # True to activate the module. Empty or False to skip.
   loci: "config/loci.csv" # Relative path to table with loci to add to plots.
-  metadata2color: "source" # Column name in the samples table to color the samples in the plots.
-  scale: 2 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
+  metadata2color : "source" # Column name in the samples table to color the samples in the plots.
+  scale : 1.3 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
 
 # ------------------Database-----------------------------------------------------------------------
 
@@ -97,9 +97,9 @@ database:
 # It assumes that if the same lineage is present in the different datasets, 
 # the same reference genome was used.
 
-datasets_paths: "Crypto_Ashton/results_241119,Crypto_Desjardins/results_241118" # Commas separated list of paths to the directories with the results of the analysis workflow.
-datasets_names: "Ashton,Desjardins" # Commas separated list of names for the datasets, in the same order as the paths.
-joint_output_directory: "results_joined_241120" # Relative path to the directory where the joined results will be saved.
+datasets_paths: "Crypto_Desjardins/results_241202,Crypto_Ashton/results_241203" # Commas separated list of paths to the directories with the results of the analysis workflow.
+datasets_names: "Desjardins,Ashton" # Commas separated list of names for the datasets, in the same order as the paths.
+joint_output_directory: "results_joined_241204" # Relative path to the directory where the joined results will be saved.
 
 # =================================================================================================
 #   Parameters for individual tools
