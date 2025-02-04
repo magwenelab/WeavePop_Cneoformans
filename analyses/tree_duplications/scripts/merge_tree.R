@@ -8,7 +8,7 @@ library(RColorBrewer)
 library(ggnewscale)
 
 #### Metadata ####
-metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/metadata_fixed.csv", header=TRUE, sep=",")
+metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/metadata_fixed.csv", header=TRUE, sep=",")
 
 sublineage <- metadata %>%
                 select(strain, vni_subdivision)%>%
@@ -25,7 +25,7 @@ source <- metadata %>%
 
 #### Desjardins tree ####
 
-desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/CryptoDiversity_Desjardins_Tree.tre"
+desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/raw/CryptoDiversity_Desjardins_Tree.tre"
 desj_tree <- read.tree(desj_tree_path)
 # outgroup_clade <- metadata %>%
 #     filter(lineage == "VNII")%>%
@@ -40,7 +40,7 @@ desj_tree <- read.tree(desj_tree_path)
 VNII_root <- getMRCA(desj_tree, c("C2","C12"))
 edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
 desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
-write.tree(desj_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desj_tree.newick")
+write.tree(desj_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/desj_tree.newick")
 
 # Plot of Desjardins tree
 
@@ -53,13 +53,13 @@ d1 <- gheatmap(d, lineage, width=.06, colnames=FALSE, offset=0.1) +
 d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.12) +
             scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/desjardins_tree.png", d2, height = 10, width = 10, units = "in", dpi = 300)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/desjardins_tree.png", d2, height = 10, width = 10, units = "in", dpi = 300)
 
 
 
 #### Ashton tree ####
 
-ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
+ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
 ashton_tree_unrooted <- read.tree(ashton_tree_path)
 
 # Rename tips to use strains
@@ -85,7 +85,7 @@ pu <- ggtree(ashton_tree_unrooted, layout = "circular") +
 pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/ashton_tree_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/ashton_tree_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
 
 # Root Ashton tree at the middle of the branch leading to VNIa
 VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
@@ -97,8 +97,8 @@ p <- ggtree(ashton_tree, layout = "circular") +
 p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/ashton_tree.png", p1, height = 10, width = 10, units = "in", dpi = 600)
-write.tree(ashton_tree, file = "analyses/cnv_plot/desjardins/data/ashton_tree.newick")
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/ashton_tree.png", p1, height = 10, width = 10, units = "in", dpi = 600)
+write.tree(ashton_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
 
 #### Merge Desjardins and Ashton trees ####
 
@@ -143,7 +143,7 @@ merged <- tree.merger(backbone = backtree,
                         plot=FALSE,
                         node.ages = nodeages,
                         tip.ages = tipages)
-write.tree(merged, file = "analyses/cnv_plot/desjardins/data/merged_tree.newick")
+write.tree(merged, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/merged_tree.newick")
 
 # Plot merged tree
 p <- ggtree(merged, layout = "circular", size = 0.1) +  
@@ -158,7 +158,7 @@ m1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
 m2 <- gheatmap(m1, lineage, width=.06, colnames=FALSE, offset=.02) +
     scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)
 
-ggsave("analyses/cnv_plot/desjardins/results/merged_tree.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/merged_tree2.png", m2, height = 10, width = 10, units = "in", dpi = 600)
 
 
 #### Explore the branch lengths of all trees and compare ####
