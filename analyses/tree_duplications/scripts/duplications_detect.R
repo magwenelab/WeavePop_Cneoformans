@@ -143,7 +143,7 @@ p
 #### Get multiple summary tables ==========================================================================
 
 write_tsv(duplications, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/duplications.tsv")
-
+# Use this file duplications.tsv in plots_duplicated.xsh to gather the depth by window plots to manually inspect the duplications
 
 dup_sample <- duplications %>%
     group_by(dataset,lineage, sample, strain, source) %>%

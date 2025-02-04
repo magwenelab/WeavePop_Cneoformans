@@ -1,0 +1,151 @@
+# Use this script with the quarto environment
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/")
+
+library(tidyverse)
+library(ggbeeswarm)
+library(ggtree)
+library(ggtreeExtra)
+library(ape)
+library(phytools)
+library(ggnewscale)
+library(RColorBrewer)
+#### Data
+# Load the necessary data
+metadata <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/metadata.csv")
+duplications <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/duplications.csv")
+
+# Prepare the duplications_full data frame
+duplications_full <- duplications %>%
+    select(strain, chromosome) %>%
+    distinct()
+
+#### Plot the tree with duplicated chromosomes ####
+# Make matrix of duplicated chromosomes
+dup_chroms <- duplications_full %>%
+    select(strain, chromosome)%>%
+    mutate(duplicated_full = 1)%>%
+    arrange(chromosome)%>%
+    pivot_wider(names_from = chromosome, values_from = duplicated_full, values_fill = 0)%>%
+    column_to_rownames("strain")%>%
+    mutate(across(everything(), ~ ifelse(. == 1, cur_column(),"Euploid")))
+
+euploid_strain <- metadata %>%
+    filter(!strain %in% duplicated_full$strain)%>%
+    select(strain)
+
+for (chrom in colnames(dup_chroms)){
+    euploid_strain[chrom] <- "Euploid"
+}
+
+dup_chroms <- euploid_strain %>%
+    column_to_rownames("strain") %>%
+    bind_rows(dup_chroms)
+
+# Get metadata
+
+lineage <- metadata %>%
+    select(strain, lineage)%>%
+    column_to_rownames("strain")
+
+source <- metadata %>%
+    select(strain, source)%>%
+    column_to_rownames("strain")
+
+sublineage <- metadata %>%
+    select(strain, vni_subdivision)%>%
+    column_to_rownames("strain")
+
+dataset <- metadata %>%
+    select(strain, dataset)%>%
+    column_to_rownames("strain")
+
+# Desjardins tree
+desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desj_tree.newick"
+desj_tree <- read.tree(desj_tree_path)
+
+### Ashton tree
+ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/ashton_tree.newick"
+ashton_tree <- read.tree(ashton_tree_path)
+
+# Merged tree
+merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/merged_tree.newick"
+tree <- read.tree(merged_tree_path)
+
+chrom_colors <- c(brewer.pal(nlevels(duplications$chromosome), "Paired"), "grey93")
+names(chrom_colors) <- c(levels(duplications$chromosome), "Euploid")
+
+p <- ggtree(tree, layout = "circular", size = 0.1, branch.length = "none") + 
+    geom_tiplab(aes(label = label), size = 0.2, align =TRUE, 
+                    linetype = "dashed", linesize = .05)
+
+p1 <- gheatmap(p, dataset, width=.05, colnames=FALSE, offset=3) +
+    scale_fill_brewer(palette = "PiYG", name="Dataset",  na.translate = FALSE)+ 
+    guides(fill = guide_legend(order = 1))+
+    new_scale_fill()
+
+p2 <- gheatmap(p1, lineage, width=.05, colnames=FALSE, offset=5) +
+    scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+ 
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()
+
+p3 <- gheatmap(p2, sublineage, width=.05, colnames=FALSE, offset=7,) +
+    scale_fill_brewer(palette="Set3", name="VNI Sublineage", na.translate = FALSE)+ 
+    guides(fill = guide_legend(order = 3))+
+    new_scale_fill()
+
+p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=9,) +
+        scale_fill_brewer(palette="Set1", name="Source", na.translate = FALSE)+ 
+        guides(fill = guide_legend(order = 4))+
+        new_scale_fill()
+
+p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=11,) +
+    scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 5))+
+    theme(legend.position = "right",
+        legend.direction = "vertical",
+        legend.title = element_text(size=9),
+        legend.text=element_text(size=7),
+        legend.key.size = unit(0.3, "cm"),
+        plot.margin = margin(0, 0, 0, 0, "cm"))
+p5
+# display colorblind friendly palettes
+display.brewer.all(colorblindFriendly = TRUE)
+
+ggsave("../results/tree_merged_duplications.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+
+# Chromosomes 12, 13
+dup_chroms_12_13 <- dup_chroms %>%
+    select(chr12, chr13)
+
+p <- ggtree(tree, layout = "circular", size = 0.1, branch.length = "none") + 
+    geom_tiplab(aes(label = label), size = 0.2, align =TRUE, 
+                    linetype = "dashed", linesize = .05)
+
+p1 <- gheatmap(p, dataset, width=.05, colnames=FALSE, offset=3) +
+    scale_fill_brewer(palette = "Set1", name="Dataset",  na.translate = FALSE)+ 
+    new_scale_fill()
+
+p2 <- gheatmap(p1, lineage, width=.05, colnames=FALSE, offset=5) +
+    scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+ 
+    new_scale_fill()
+
+p3 <- gheatmap(p2, sublineage, width=.05, colnames=FALSE, offset=7,) +
+    scale_fill_brewer(palette="Set3", name="VNI Sublineage", na.translate = FALSE)+ 
+    new_scale_fill() 
+
+p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=9,) +
+        scale_fill_brewer(palette="Set2", name="Source", na.translate = FALSE)+ 
+        new_scale_fill()
+
+p5 <- gheatmap(p4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
+    scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.value = "white")+
+    theme(#legend.position = "bottom",
+        #legend.direction = "vertical",
+        legend.title = element_text( size=7),
+        legend.text=element_text(size=5),
+        legend.key.size = unit(0.3, "cm"),
+        plot.margin = margin(0, 0, 0, 0, "cm"))
+
+ggsave("../results/duplications_merged_tree_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("../results/duplications_merged_tree.svg", p5, height = 7, width = 7, units = "in")
+
