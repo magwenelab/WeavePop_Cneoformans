@@ -11,8 +11,8 @@ library(ggnewscale)
 library(RColorBrewer)
 #### Data
 # Load the necessary data
-metadata <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/metadata.csv")
-duplications <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/duplications.csv")
+metadata <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/metadata_fixed.csv")
+duplications <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/polished/full_duplicated.tsv", sep = "\t", header = TRUE, stringsAsFactors = TRUE)
 
 # Prepare the duplications_full data frame
 duplications_full <- duplications %>%
@@ -30,7 +30,7 @@ dup_chroms <- duplications_full %>%
     mutate(across(everything(), ~ ifelse(. == 1, cur_column(),"Euploid")))
 
 euploid_strain <- metadata %>%
-    filter(!strain %in% duplicated_full$strain)%>%
+    filter(!strain %in% duplications_full$strain)%>%
     select(strain)
 
 for (chrom in colnames(dup_chroms)){
@@ -60,16 +60,20 @@ dataset <- metadata %>%
     column_to_rownames("strain")
 
 # Desjardins tree
-desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/desj_tree.newick"
+desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/desj_tree.newick"
 desj_tree <- read.tree(desj_tree_path)
 
 ### Ashton tree
-ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/ashton_tree.newick"
+ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick"
 ashton_tree <- read.tree(ashton_tree_path)
 
 # Merged tree
-merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/desjardins/data/merged_tree.newick"
+merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/merged_tree.newick"
 tree <- read.tree(merged_tree_path)
+
+# display colorblind friendly palettes
+# display.brewer.all(colorblindFriendly = TRUE)
+# display.brewer.all(colorblindFriendly = FALSE)
 
 chrom_colors <- c(brewer.pal(nlevels(duplications$chromosome), "Paired"), "grey93")
 names(chrom_colors) <- c(levels(duplications$chromosome), "Euploid")
@@ -79,7 +83,7 @@ p <- ggtree(tree, layout = "circular", size = 0.1, branch.length = "none") +
                     linetype = "dashed", linesize = .05)
 
 p1 <- gheatmap(p, dataset, width=.05, colnames=FALSE, offset=3) +
-    scale_fill_brewer(palette = "PiYG", name="Dataset",  na.translate = FALSE)+ 
+    scale_fill_brewer(palette = "Set1", name="Dataset",  na.translate = FALSE)+ 
     guides(fill = guide_legend(order = 1))+
     new_scale_fill()
 
@@ -94,7 +98,7 @@ p3 <- gheatmap(p2, sublineage, width=.05, colnames=FALSE, offset=7,) +
     new_scale_fill()
 
 p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=9,) +
-        scale_fill_brewer(palette="Set1", name="Source", na.translate = FALSE)+ 
+        scale_fill_brewer(palette="Set2", name="Source", na.translate = FALSE)+ 
         guides(fill = guide_legend(order = 4))+
         new_scale_fill()
 
@@ -107,11 +111,8 @@ p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=11,) +
         legend.text=element_text(size=7),
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
-p5
-# display colorblind friendly palettes
-display.brewer.all(colorblindFriendly = TRUE)
 
-ggsave("../results/tree_merged_duplications.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/duplications_merged_tree.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
 # Chromosomes 12, 13
 dup_chroms_12_13 <- dup_chroms %>%
@@ -146,6 +147,5 @@ p5 <- gheatmap(p4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
 
-ggsave("../results/duplications_merged_tree_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
-ggsave("../results/duplications_merged_tree.svg", p5, height = 7, width = 7, units = "in")
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/duplications_merged_tree_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
