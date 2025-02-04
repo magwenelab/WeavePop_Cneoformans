@@ -16,6 +16,10 @@ dependencies:
   - r-patchwork
   - r-ggbeeswarm
   - r-cowplot
+  - ipykernel
+  - pandas
+  - matplotlib
+
 
 # using install.packages("package"):
 # httpgd
