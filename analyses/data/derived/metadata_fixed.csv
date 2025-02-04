@@ -1,0 +1,1072 @@
+sample,strain,name,dataset,run,source,lineage,vni_subdivision
+SRS881178,NRHc5005.ENR,NRHc5005.ENR,Desjardins,,Clinical,VNBI,
+SRS881184,Ftc202-1,Ftc202-1,Desjardins,,Environment,VNBI,
+SRS881232,Ftc239-1,Ftc239-1,Desjardins,,Environment,VNBI,
+SRS885855,Ftc137-1,Ftc137-1,Desjardins,,Environment,VNBI,
+SRS885893,NRHc5045.ENR.CLIN.ISO,NRHc5045.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881243,Muc479-1,Muc479-1,Desjardins,,Environment,VNBI,
+SRS881143,Ftc555-1,Ftc555-1,Desjardins,,Environment,VNBI,
+SRS881161,PMHc1052.ENR.STOR,PMHc1052.ENR.STOR,Desjardins,,Clinical,VNBII,
+SRS881156,NRHc5044.REL.INI.CLIN.ISO,NRHc5044.REL.INI.CLIN.ISO,Desjardins,SRR1925894,Clinical,VNI,VNIa-Y
+SRS881213,Muc364-1,Muc364-1,Desjardins,,Environment,VNBI,
+SRS885173,NRHc5004.ENR,NRHc5004.ENR,Desjardins,,Clinical,VNBI,
+SRS885889,PMHc1039.ENR.STOR,PMHc1039.ENR.STOR,Desjardins,SRR1943005,Clinical,VNI,VNIa-Y
+SRS885168,Ftc170-1,Ftc170-1,Desjardins,,Environment,VNBI,
+SRS881185,PMHc1049.THER1.STOR,PMHc1049.THER1.STOR,Desjardins,,Clinical,VNBII,
+SRS881149,Muc503-1,Muc503-1,Desjardins,,Environment,VNBI,
+SRS881202,Gbc39-1,Gbc39-1,Desjardins,SRR1926079,Environment,VNI,VNIc
+SRS881168,Ftc239-2,Ftc239-2,Desjardins,,Environment,VNBI,
+SRS881191,Ftc111-1,Ftc111-1,Desjardins,,Environment,VNBI,
+SRS881238,PMHc1026.ENR,PMHc1026.ENR,Desjardins,,Clinical,VNBI,
+SRS885171,NRHc5008.ENR,NRHc5008.ENR,Desjardins,,Clinical,VNBII,
+SRS881162,NRHc5039.ENR.STOR,NRHc5039.ENR.STOR,Desjardins,,Clinical,VNBI,
+SRS881205,Muc387-2,Muc387-2,Desjardins,,Environment,VNBII,
+SRS881235,Ftc209-3,Ftc209-3,Desjardins,,Environment,VNBI,
+SRS885915,Ftc211-1,Ftc211-1,Desjardins,,Environment,VNBI,
+SRS881216,PMHc1024.ENR,PMHc1024.ENR,Desjardins,,Clinical,VNBII,
+SRS881189,NRHc5014.ENR,NRHc5014.ENR,Desjardins,,Clinical,VNBII,
+SRS885892,PMHc1001.ENR,PMHc1001.ENR,Desjardins,,Clinical,VNBI,
+SRS881204,Gbc42-1,Gbc42-1,Desjardins,SRR1925987,Environment,VNI,VNIc
+SRS881188,Muc504-1,Muc504-1,Desjardins,,Environment,VNBI,
+SRS885884,PMHc1040.ENR.STOR,PMHc1040.ENR.STOR,Desjardins,SRR1942988,Clinical,VNI,VNIa-outlier
+SRS881236,NRHc5041.ENR.STOR,NRHc5041.ENR.STOR,Desjardins,,Clinical,VNBI,
+SRS881228,NRHc5024.ENR.CLIN.1,NRHc5024.ENR.CLIN.1,Desjardins,,Clinical,VNBI,
+SRS885843,PMHc1032.ENR,PMHc1032.ENR,Desjardins,SRR1942909,Clinical,VNI,VNIc
+SRS881227,Muc437-1,Muc437-1,Desjardins,,Environment,VNBI,
+SRS881214,Muc416-4,Muc416-4,Desjardins,,Environment,VNBI,
+SRS885170,Gbc16-1,Gbc16-1,Desjardins,SRR1931695,Environment,VNI,VNIc
+SRS881222,Ftc146-1,Ftc146-1,Desjardins,,Environment,VNBI,
+SRS881183,Muc451-1,Muc451-1,Desjardins,,Environment,VNBI,
+SRS885854,Ftc167-1,Ftc167-1,Desjardins,,Environment,VNBI,
+SRS881246,Gbc95-1,Gbc95-1,Desjardins,SRR1926059,Environment,VNI,VNIc
+SRS881210,PMHc1002.ENR,PMHc1002.ENR,Desjardins,,Clinical,VNBII,
+SRS881217,Ftc241-1,Ftc241-1,Desjardins,,Environment,VNBI,
+SRS881170,NRHc5036.ENR,NRHc5036.ENR,Desjardins,SRR1925911,Clinical,VNI,VNIa-Y
+SRS881226,PMHc1009.ENR,PMHc1009.ENR,Desjardins,,Clinical,VNBII,
+SRS881160,NRHc5001.ENR,NRHc5001.ENR,Desjardins,SRR1925902,Clinical,VNI,VNIc
+SRS885880,NRHc5042.ENR.STOR,NRHc5042.ENR.STOR,Desjardins,,Clinical,VNBI,
+SRS885192,Ftc225-3,Ftc225-3,Desjardins,,Environment,VNBI,
+SRS881174,Ftc321-1,Ftc321-1,Desjardins,,Environment,VNBI,
+SRS881200,Gbc98-1,Gbc98-1,Desjardins,SRR1925975,Environment,VNI,VNIc
+SRS881234,Ftc109-1,Ftc109-1,Desjardins,,Environment,VNBI,
+SRS881148,NRHc5013.REL.INI,NRHc5013.REL.INI,Desjardins,,Clinical,VNBI,
+SRS881207,NRHc5011.ENR,NRHc5011.ENR,Desjardins,,Clinical,VNBI,
+SRS885188,NRHc5022.ENR,NRHc5022.ENR,Desjardins,,Clinical,VNBI,
+SRS881229,Ftc321-2,Ftc321-2,Desjardins,,Environment,VNBI,
+SRS881206,Ftc327-1,Ftc327-1,Desjardins,,Environment,VNBI,
+SRS881166,NRHc5032.ENR.CLIN.ISO,NRHc5032.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881219,Ftc151-1,Ftc151-1,Desjardins,,Environment,VNBI,
+SRS885853,Muc418-1,Muc418-1,Desjardins,,Environment,VNBI,
+SRS881172,NRHc5026.ENR.CLIN.ISO,NRHc5026.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS885863,Ftc222-2,Ftc222-2,Desjardins,,Environment,VNBI,
+SRS881245,Ftc134-3,Ftc134-3,Desjardins,,Environment,VNBI,
+SRS885916,PMHc1031A.ENR.INI.LP,PMHc1031A.ENR.INI.LP,Desjardins,SRR1943071,Clinical,VNI,VNIc
+SRS881196,PMHc1020.CLIN.1,PMHc1020.CLIN.1,Desjardins,SRR1925952,Clinical,VNI,VNIc
+SRS885875,NRHc5013.ENR,NRHc5013.ENR,Desjardins,,Clinical,VNBI,
+SRS881140,NRHc5030.ENR.CLIN.ISO,NRHc5030.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881177,Ftc200-1,Ftc200-1,Desjardins,,Environment,VNBI,
+SRS881237,NRHc5025.ENR.CLIN.1,NRHc5025.ENR.CLIN.1,Desjardins,SRR1926039,Clinical,VNI,VNIa-5
+SRS881151,NRHc5029.ENR.CLIN.ISO,NRHc5029.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS885874,Gbc39-2,Gbc39-2,Desjardins,SRR1942967,Environment,VNI,VNIc
+SRS881225,NRHc5031.ENR.CLIN.ISO,NRHc5031.ENR.CLIN.ISO,Desjardins,,Clinical,VNBII,
+SRS881240,NRHc5021.ENR,NRHc5021.ENR,Desjardins,,Clinical,VNBI,
+SRS881215,Ftc207-1,Ftc207-1,Desjardins,,Environment,VNBI,
+SRS881199,Ftc102-1,Ftc102-1,Desjardins,,Environment,VNBI,
+SRS881194,Muc457-1,Muc457-1,Desjardins,,Environment,VNBI,
+SRS881241,PMHc1022.ENR,PMHc1022.ENR,Desjardins,SRR1926056,Clinical,VNI,VNIc
+SRS881159,PMHc1033.ENR,PMHc1033.ENR,Desjardins,,Clinical,VNBII,
+SRS885191,Muc460-3,Muc460-3,Desjardins,,Environment,VNBI,
+SRS881221,Ftc555-2,Ftc555-2,Desjardins,,Environment,VNBI,
+SRS881212,PMHc1023.ENR,PMHc1023.ENR,Desjardins,,Clinical,VNII,
+SRS885841,NRHc5009.REL.INI,NRHc5009.REL.INI,Desjardins,,Clinical,VNBI,
+SRS881147,Ftc209-1,Ftc209-1,Desjardins,,Environment,VNBI,
+SRS881220,Gbc51-2,Gbc51-2,Desjardins,SRR1926013,Environment,VNI,VNIc
+SRS881218,Ftc195-1,Ftc195-1,Desjardins,,Environment,VNBI,
+SRS881224,Ftc236-1,Ftc236-1,Desjardins,,Environment,VNBI,
+SRS885894,Muc498-2,Muc498-2,Desjardins,,Environment,VNBI,
+SRS885816,Ftc225-1,Ftc225-1,Desjardins,,Environment,VNBI,
+SRS881211,PMHc1050.ENR.CLIN1,PMHc1050.ENR.CLIN1,Desjardins,,Clinical,VNBI,
+SRS881198,Ftc153-1,Ftc153-1,Desjardins,,Environment,VNBI,
+SRS885879,NRHc5015.REL.CLIN.ISO,NRHc5015.REL.CLIN.ISO,Desjardins,SRR1942971,Clinical,VNI,VNIc
+SRS881157,NRHc5035.ENR.CLIN.ISO,NRHc5035.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS885857,Ftc192-1,Ftc192-1,Desjardins,,Environment,VNBI,
+SRS881193,Muc489-1,Muc489-1,Desjardins,,Environment,VNBI,
+SRS881233,Muc402-1,Muc402-1,Desjardins,,Environment,VNBI,
+SRS881142,NRHc5017.ENR,NRHc5017.ENR,Desjardins,SRR1925881,Clinical,VNI,VNIc
+SRS885167,Ftc321-3,Ftc321-3,Desjardins,,Environment,VNBI,
+SRS881201,NRHc5027.ENR.CLIN1,NRHc5027.ENR.CLIN1,Desjardins,,Clinical,VNBI,
+SRS885865,Ftc158-2,Ftc158-2,Desjardins,,Environment,VNBI,
+SRS885878,Ftc168-1,Ftc168-1,Desjardins,,Environment,VNBI,
+SRS881223,Ftc267-2,Ftc267-2,Desjardins,,Environment,VNBI,
+SRS885169,Gbc573-1,Gbc573-1,Desjardins,,Environment,VNBI,
+SRS885877,NRHc5023.ENR,NRHc5023.ENR,Desjardins,,Clinical,VNBI,
+SRS885882,Muc449-1,Muc449-1,Desjardins,,Environment,VNBI,
+SRS881150,Ftc132-1,Ftc132-1,Desjardins,,Environment,VNBI,
+SRS885176,NRHc5037.ENR.CLIN1,NRHc5037.ENR.CLIN1,Desjardins,,Clinical,VNBI,
+SRS881239,NRHc5048.ENR.ISO,NRHc5048.ENR.ISO,Desjardins,SRR1926048,Clinical,VNI,VNIc
+SRS885847,PMHc1047.ENR.CLIN1,PMHc1047.ENR.CLIN1,Desjardins,,Clinical,VNBII,
+SRS881173,Muc463-2,Muc463-2,Desjardins,,Environment,VNBI,
+SRS885871,Muc367-1,Muc367-1,Desjardins,,Environment,VNBI,
+SRS881242,PMHc1014.ENR,PMHc1014.ENR,Desjardins,,Clinical,VNBI,
+SRS885174,NRHc5010.ENR,NRHc5010.ENR,Desjardins,SRR1931699,Clinical,VNI,VNIa-outlier
+SRS881244,NRHc5015.ENR,NRHc5015.ENR,Desjardins,SRR1926055,Clinical,VNI,VNIc
+SRS881175,Ftc103-1,Ftc103-1,Desjardins,,Environment,VNBI,
+SRS881152,PMHc1034.ENR.STOR,PMHc1034.ENR.STOR,Desjardins,SRR1925890,Clinical,VNI,VNIc
+SRS881171,Ftc173-1,Ftc173-1,Desjardins,,Environment,VNBI,
+SRS881208,PMHc1018.ENR,PMHc1018.ENR,Desjardins,SRR1926080,Clinical,VNI,VNIa-32
+SRS881180,PMHc1029.ENR.STOR,PMHc1029.ENR.STOR,Desjardins,,Clinical,VNBII,
+SRS881176,PMHc1035.ENR.STOR,PMHc1035.ENR.STOR,Desjardins,,Clinical,VNBII,
+SRS885851,NRHc5009.ENR,NRHc5009.ENR,Desjardins,,Clinical,VNBI,
+SRS885852,NRHc5024A.ENR.CLIN.ISO,NRHc5024A.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881169,PMHc1043.ENR.STOR,PMHc1043.ENR.STOR,Desjardins,SRR1925912,Clinical,VNI,VNIc
+SRS885177,NRHc5019.ENR,NRHc5019.ENR,Desjardins,,Clinical,VNBI,
+SRS885186,NRHc5020.ENR,NRHc5020.ENR,Desjardins,,Clinical,VNBI,
+SRS885887,Muc525-1,Muc525-1,Desjardins,,Environment,VNBI,
+SRS881247,Ftc257-1,Ftc257-1,Desjardins,,Environment,VNBI,
+SRS885888,NRHc5040.ENR.CLIN.ISO,NRHc5040.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881165,Muc466-1,Muc466-1,Desjardins,,Environment,VNBI,
+SRS881181,Muc458-2,Muc458-2,Desjardins,,Environment,VNBI,
+SRS885850,Muc516-1,Muc516-1,Desjardins,,Environment,VNBI,
+SRS881203,Muc466-3,Muc466-3,Desjardins,,Environment,VNBI,
+SRS885172,NRHc5028.ENR.STOR,NRHc5028.ENR.STOR,Desjardins,SRR1931698,Clinical,VNI,VNIa-outlier
+SRS881164,PMHc1038.ENR.CLIN1,PMHc1038.ENR.CLIN1,Desjardins,,Clinical,VNBI,
+SRS881155,Ftc267-1,Ftc267-1,Desjardins,,Environment,VNBI,
+SRS885842,Ftc217-1,Ftc217-1,Desjardins,,Environment,VNBI,
+SRS885833,Muc387-1,Muc387-1,Desjardins,,Environment,VNBII,
+SRS881197,Gbc44-1,Gbc44-1,Desjardins,SRR1925938,Environment,VNI,VNIc
+SRS881179,PMHc1030.ENR.CLIN.ISO,PMHc1030.ENR.CLIN.ISO,Desjardins,,Clinical,VNBI,
+SRS881158,PMHc1011.ENR,PMHc1011.ENR,Desjardins,,Clinical,VNBI,
+SRS885858,Ftc214-1,Ftc214-1,Desjardins,,Environment,VNBI,
+SRS409479,125.91,Cryptococcus_neoformans_125.91,Desjardins,SRR642853,Clinical,VNI,VNIa-outlier
+SRS409112,Bt63,Cryptococcus_neoformans_Bt63,Desjardins,,Clinical,VNBI,
+SRS409066,Bt85,Cryptococcus_neoformans_Bt85,Desjardins,,Clinical,VNBI,
+SRS409058,AD2-60a,Cryptococcus neoformans var. grubii AD2-60a,Desjardins,SRR642849,Clinical,VNI,VNIb
+SRS409061,Ze90-1,Cryptococcus neoformans var. grubii Ze90-1,Desjardins,,Environment,VNBII,
+SRS409060,A2-102-5,Cryptococcus neoformans var. grubii A2-102-5,Desjardins,SRR642223,Environment,VNI,VNIa-outlier
+SRS409059,C8,Cryptococcus_neoformans_C8,Desjardins,SRR642860,Clinical,VNI,VNIa-5
+SRS409482,C23,Cryptococcus_neoformans_C23,Desjardins,SRR642845,Clinical,VNI,VNIb
+SRS409074,Th84,Cryptococcus_neoformans_Th84,Desjardins,SRR642861,Clinical,VNI,VNIa-4
+SRS409075,Bt206,Cryptococcus_neoformans_Bt206,Desjardins,,Clinical,VNBII,
+SRS409065,Bt1,Cryptococcus_neoformans_Bt1,Desjardins,,Clinical,VNBII,
+SRS409062,Bt15,Cryptococcus_neoformans_Bt15,Desjardins,SRR642852,Clinical,VNI,VNIc
+SRS409076,Tu259-1,Cryptococcus neoformans var. grubii Tu259-1,Desjardins,SRR642856,Environment,VNI,VNIa-outlier
+SRS409781,D17-1,Cryptococcus neoformans var. grubii D17-1,Desjardins,SRR642847,Environment,VNI,VNIa-outlier
+SRS409175,CHC193,Cryptococcus_neoformans_CHC193,Desjardins,SRR642854,Clinical,VNI,VNIa-5
+SRS409176,C45,Cryptococcus_neoformans_C45,Desjardins,,Clinical,VNII,
+SRS409478,AD1-7a,Cryptococcus neoformans var. grubii AD1-7a,Desjardins,SRR642855,Clinical,VNI,VNIb
+SRS403287,Gb118,Cryptococcus_neoformans_Gb118,Desjardins,SRR642858,Environment,VNI,VNIa-X
+SRS409113,Br795,Cryptococcus_neoformans_Br795,Desjardins,SRR642863,Clinical,VNI,VNIa-93
+SRS409063,AD1-83a,Cryptococcus neoformans var. grubii AD1-83a,Desjardins,SRR642859,Clinical,VNI,VNIa-5
+SRS409483,Tu401-1,Cryptococcus neoformans var. grubii Tu401-1,Desjardins,,Environment,VNBI,
+SRS523961,Bt120,Cryptococcus neoformans var. grubii Bt120,Desjardins,SRR642846,Clinical,VNI,VNIc
+SRS409064,MW-RSA1955,Cryptococcus neoformans var. grubii MW-RSA1955,Desjardins,SRR642220,Clinical,VNI,VNIa-5
+SRS409177,MW-RSA36,Cryptococcus neoformans var. grubii MW-RSA36,Desjardins,SRR642862,Clinical,VNI,VNIa-X
+SRS409067,MW-RSA852,Cryptococcus neoformans var. grubii MW-RSA852,Desjardins,,Clinical,VNII,
+SRS404442,Bt211,Cryptococcus_neoformans var. grubii_Bt211,Desjardins,SRR799061,Clinical,VNI,VNIc
+SRS404443,A5-35-17,Cryptococcus neoformans var. grubii A5-35-17,Desjardins,SRR798290,Environment,VNI,VNIa-5
+SRS404444,Bt106,Cryptococcus_neoformans var. grubii_Bt106,Desjardins,SRR797707,Clinical,VNI,VNIc
+SRS404447,Bt99,Cryptococcus_neoformans_Bt99,Desjardins,SRR797736,Clinical,VNI,VNIa-4
+SRS404448,Bt76,Cryptococcus_neoformans var. grubii_Bt76,Desjardins,,Clinical,VNBII,
+SRS404449,Bt213,Cryptococcus_neoformans var. grubii_Bt213,Desjardins,SRR798638,Clinical,VNI,VNIc
+SRS404451,Bt42,Cryptococcus_neoformans var. grubii_Bt42,Desjardins,SRR798735,Clinical,VNI,VNIc
+SRS404452,MW-RSA2628,Cryptococcus_neoformans var. grubii_MW-RSA2628,Desjardins,SRR798582,Clinical,VNI,VNIb
+SRS404454,Bt37,Cryptococcus_neoformans var. grubii_Bt37,Desjardins,SRR797763,Clinical,VNI,VNIc
+SRS404456,IUM-96-28-28,Cryptococcus_neoformans var. grubii_IUM 96-28-28,Desjardins,SRR797737,Environment,VNI,VNIb
+SRS404457,Bt212,Cryptococcus_neoformans var. grubii_Bt212,Desjardins,SRR797723,Clinical,VNI,VNIa-X
+SRS404458,Bt89,Cryptococcus_neoformans var. grubii_Bt89,Desjardins,,Clinical,VNBII,
+SRS404460,Bt43,Cryptococcus_neoformans_Bt43,Desjardins,SRR797740,Clinical,VNI,VNIc
+SRS404461,Bt54,Cryptococcus_neoformans var. grubii_Bt54,Desjardins,,Clinical,VNBII,
+SRS404462,A1-35-8,Cryptococcus neoformans var. grubii A1-35-8,Desjardins,SRR798691,Environment,VNI,VNIb
+SRS404463,Bt55,Cryptococcus_neoformans var. grubii_Bt55,Desjardins,,Clinical,VNBII,
+SRS404475,LP-RSA3042,Cryptococcus_neoformans var. grubii_LP-RSA3042,Desjardins,SRR797746,Clinical,VNI,VNIc
+SRS404466,Jo278-1,Cryptococcus_neoformans var. grubii_Jo278-1,Desjardins,SRR797733,Environment,VNI,VNIa-5
+SRS404467,Bt41,Cryptococcus_neoformans var. grubii_Bt41,Desjardins,,Clinical,VNBII,
+SRS404468,Bt32,Cryptococcus_neoformans var. grubii_Bt32,Desjardins,,Clinical,VNBII,
+SRS404469,Bt60,Cryptococcus_neoformans_Bt60,Desjardins,,Clinical,VNBI,
+SRS404470,Bt118,Cryptococcus_neoformans var. grubii_Bt118,Desjardins,SRR797748,Clinical,VNI,VNIc
+SRS404472,Bt103,Cryptococcus_neoformans var. grubii_Bt103,Desjardins,,Clinical,VNBII,
+SRS404473,Bt10,Cryptococcus_neoformans var. grubii_Bt10,Desjardins,,Clinical,VNBII,
+SRS404477,Bt27,Cryptococcus_neoformans var. grubii_Bt27,Desjardins,,Clinical,VNBII,
+SRS404479,WM148,Cryptococcus_neoformans var. grubii_WM148,Desjardins,SRR797807,Clinical,VNI,VNIb
+SRS404480,Gb159-1,Cryptococcus_neoformans var. grubii_Gb159-1,Desjardins,SRR797784,Environment,VNI,VNIc
+SRS404481,Bt139,Cryptococcus_neoformans var. grubii_Bt139,Desjardins,SRR797754,Clinical,VNI,VNIa-5
+SRS404488,Bt23,Cryptococcus_neoformans var. grubii_Bt23,Desjardins,SRR798765,Clinical,VNI,VNIc
+SRS404484,Bt98,Cryptococcus_neoformans_Bt98,Desjardins,,Clinical,VNBII,
+SRS404485,Bt130,Cryptococcus_neoformans var. grubii_Bt130,Desjardins,SRR797760,Clinical,VNI,VNIc
+SRS404486,Bt101,Cryptococcus_neoformans var. grubii_Bt101,Desjardins,SRR798186,Clinical,VNI,VNIc
+SRS404489,Bt203,Cryptococcus_neoformans var. grubii_Bt203,Desjardins,SRR797764,Clinical,VNI,VNIc
+SRS404490,Bt3,Cryptococcus_neoformans var. grubii_Bt3,Desjardins,SRR797765,Clinical,VNI,VNIa-93
+SRS404491,Bt155,Cryptococcus_neoformans var. grubii_Bt155,Desjardins,SRR797766,Clinical,VNI,VNIc
+SRS404492,MW-RSA4119,Cryptococcus_neoformans var. grubii_MW-RSA4119,Desjardins,,Clinical,VNII,
+SRS404493,Bt2,Cryptococcus_neoformans_Bt2,Desjardins,SRR797768,Clinical,VNI,VNIc
+SRS404494,Tu241-1,Cryptococcus_neoformans var. grubii_Tu241-1,Desjardins,SRR797778,Environment,VNI,VNIa-outlier
+SRS404495,Bt75,Cryptococcus_neoformans var. grubii_Bt75,Desjardins,,Clinical,VNBII,
+SRS404496,A3-1-1,Cryptococcus_neoformans var. grubii_29593,Desjardins,SRR798211,Environment,VNI,VNIb
+SRS404498,LP-RSA116,Cryptococcus_neoformans var. grubii_LP-RSA116,Desjardins,SRR797791,Clinical,VNI,VNIc
+SRS404499,Bt25,Cryptococcus_neoformans var. grubii_Bt25,Desjardins,,Clinical,VNBII,
+SRS404501,Bt68,Cryptococcus_neoformans_Bt68,Desjardins,SRR797782,Clinical,VNI,VNIc
+SRS404503,Bt107,Cryptococcus_neoformans var. grubii_Bt107,Desjardins,SRR797785,Clinical,VNI,VNIa-32
+SRS404505,LP-RSA1343,Cryptococcus_neoformans var. grubii_LP-RSA1343,Desjardins,SRR797789,Clinical,VNI,VNIc
+SRS404506,Bt102,Cryptococcus_neoformans var. grubii_Bt102,Desjardins,,Clinical,VNBI,
+SRS404507,Bt150,Cryptococcus_neoformans var. grubii_Bt150,Desjardins,SRR797793,Clinical,VNI,VNIc
+SRS404508,Bt123,Cryptococcus_neoformans var. grubii_Bt123,Desjardins,SRR797794,Clinical,VNI,VNIc
+SRS404511,Bt19,Cryptococcus_neoformans_Bt19,Desjardins,SRR797799,Clinical,VNI,VNIc
+SRS404512,Bt160,Cryptococcus_neoformans var. grubii_Bt160,Desjardins,SRR797800,Clinical,VNI,VNIc
+SRS404513,MW-RSA722,Cryptococcus_neoformans_MW-RSA722,Desjardins,SRR798677,Clinical,VNI,VNIb
+SRS404514,Bt7,Cryptococcus_neoformans_Bt7,Desjardins,,Clinical,VNBI,
+SRS404516,Bt49,Cryptococcus_neoformans var. grubii_Bt49,Desjardins,SRR797808,Clinical,VNI,VNIb
+SRS404517,Bt100,Cryptococcus_neoformans var. grubii_Bt100,Desjardins,SRR798270,Clinical,VNI,VNIc
+SRS404518,Bt134,Cryptococcus_neoformans var. grubii_Bt134,Desjardins,SRR797810,Clinical,VNI,VNIa-5
+SRS404735,Bt22,Cryptococcus_neoformans var. grubii_Bt22,Desjardins,,Clinical,VNBI,
+SRS404739,Bt40,Cryptococcus_neoformans var. grubii_Bt40,Desjardins,,Clinical,VNBII,
+SRS404740,LP-RSA2296,Cryptococcus_neoformans var. grubii_LP-RSA2296,Desjardins,SRR798138,Clinical,VNI,VNIa-outlier
+SRS404741,Bt45,Cryptococcus_neoformans_Bt45,Desjardins,,Clinical,VNBI,
+SRS404743,Bt34,Cryptococcus_neoformans var. grubii_Bt34,Desjardins,,Clinical,VNBII,
+SRS404746,Bt33,Cryptococcus_neoformans var. grubii_Bt33,Desjardins,,Clinical,VNBII,
+SRS404745,Bt18,Cryptococcus_neoformans_Bt18,Desjardins,SRR798140,Clinical,VNI,VNIa-Y
+SRS404750,Bt31,Cryptococcus_neoformans var. grubii_Bt31,Desjardins,,Clinical,VNBII,
+SRS404759,Bt93,Cryptococcus_neoformans var. grubii_Bt93,Desjardins,SRR798915,Clinical,VNI,VNIc
+SRS404753,Bt6,Cryptococcus_neoformans var. grubii_Bt6,Desjardins,SRR798697,Clinical,VNI,VNIa-Y
+SRS404766,Bt126,Cryptococcus_neoformans var. grubii_Bt126,Desjardins,SRR798161,Clinical,VNI,VNIc
+SRS404755,Bt84,Cryptococcus_neoformans var. grubii_Bt84,Desjardins,,Clinical,VNBII,
+SRS404756,Bt20,Cryptococcus_neoformans_Bt20,Desjardins,SRR798163,Clinical,VNI,VNIc
+SRS404760,Bt132,Cryptococcus_neoformans_Bt132,Desjardins,SRR798175,Clinical,VNI,VNIa-4
+SRS404761,MW-RSA606,Cryptococcus_neoformans var. grubii_MW-RSA606,Desjardins,SRR798870,Clinical,VNI,VNIb
+SRS404775,Bt156,Cryptococcus_neoformans var. grubii_Bt156,Desjardins,SRR798180,Clinical,VNI,VNIc
+SRS404765,Bt56,Cryptococcus_neoformans var. grubii_Bt56,Desjardins,,Clinical,VNBII,
+SRS404772,Bt141,Cryptococcus_neoformans var. grubii_Bt141,Desjardins,SRR798191,Clinical,VNI,VNIa-5
+SRS404773,Bt119,Cryptococcus_neoformans var. grubii_Bt119,Desjardins,SRR798197,Clinical,VNI,VNIa-93
+SRS404786,Bt72,Cryptococcus_neoformans var. grubii_Bt72,Desjardins,SRR798959,Clinical,VNI,VNIc
+SRS404777,Bt78,Cryptococcus_neoformans var. grubii_Bt78,Desjardins,SRR798589,Clinical,VNI,VNIc
+SRS404792,Bt87,Cryptococcus_neoformans var. grubii_Bt87,Desjardins,SRR798238,Clinical,VNI,VNIc
+SRS404778,Bt88,Cryptococcus_neoformans var. grubii_Bt88,Desjardins,,Clinical,VNBII,
+SRS404779,Bt46,Cryptococcus_neoformans_Bt46,Desjardins,,Clinical,VNBII,
+SRS404780,Bt114,Cryptococcus_neoformans var. grubii_Bt114,Desjardins,SRR798220,Clinical,VNI,VNIc
+SRS404781,Bt52,Cryptococcus_neoformans var. grubii_Bt52,Desjardins,,Clinical,VNBII,
+SRS404782,Bt44,Cryptococcus_neoformans_Bt44,Desjardins,SRR798222,Clinical,VNI,VNIc
+SRS404783,Bt214,Cryptococcus_neoformans var. grubii_Bt214,Desjardins,SRR798599,Clinical,VNI,VNIc
+SRS404784,Bt38,Cryptococcus_neoformans var. grubii_Bt38,Desjardins,,Clinical,VNBII,
+SRS404785,Bt207,Cryptococcus_neoformans var. grubii_Bt207,Desjardins,SRR798661,Clinical,VNI,VNIc
+SRS404789,Bt53,Cryptococcus_neoformans var. grubii_Bt53,Desjardins,,Clinical,VNBII,
+SRS404788,Bt129,Cryptococcus_neoformans var. grubii_Bt129,Desjardins,SRR798230,Clinical,VNI,VNIc
+SRS404791,Bt79,Cryptococcus_neoformans var. grubii_Bt79,Desjardins,SRR798236,Clinical,VNI,VNIc
+SRS404793,MW-RSA6134,Cryptococcus_neoformans var. grubii_MW-RSA6134,Desjardins,SRR798242,Clinical,VNI,VNIb
+SRS404795,MW-RSA82,Cryptococcus_neoformans_MW-RSA82,Desjardins,SRR798243,Clinical,VNI,VNIb
+SRS404794,Bt202,Cryptococcus_neoformans_Bt202,Desjardins,SRR798246,Clinical,VNI,VNIc
+SRS404797,C2,Cryptococcus_neoformans_C2,Desjardins,,Clinical,VNII,
+SRS404800,Bt24,Cryptococcus_neoformans var. grubii_Bt24,Desjardins,,Clinical,VNBI,
+SRS404808,Bt81,Cryptococcus_neoformans var. grubii_Bt81,Desjardins,,Clinical,VNBII,
+SRS404803,MW-RSA1869,Cryptococcus_neoformans var. grubii_MW-RSA1869,Desjardins,SRR798269,Clinical,VNI,VNIb
+SRS404805,Bt39,Cryptococcus_neoformans var. grubii_Bt39,Desjardins,,Clinical,VNBII,
+SRS404807,Bt28,Cryptococcus_neoformans var. grubii_Bt28,Desjardins,SRR798275,Clinical,VNI,VNIa-32
+SRS404809,Bt209,Cryptococcus_neoformans var. grubii_Bt209,Desjardins,SRR798708,Clinical,VNI,VNIc
+SRS404810,Bt5,Cryptococcus_neoformans var. grubii_Bt5,Desjardins,,Clinical,VNBII,
+SRS404812,Bt161,Cryptococcus_neoformans var. grubii_Bt161,Desjardins,SRR798282,Clinical,VNI,VNIc
+SRS404813,LP-RSA848,Cryptococcus_neoformans var. grubii_LP-RSA848,Desjardins,SRR798283,Clinical,VNI,VNIc
+SRS405098,Bt17,Cryptococcus_neoformans_Bt17,Desjardins,SRR798584,Clinical,VNI,VNIc
+SRS405099,A3-38-20,Cryptococcus_neoformans var. grubii_36362,Desjardins,SRR798587,Environment,VNI,VNIb
+SRS405101,T4,Cryptococcus_neoformans var. grubii_T4,Desjardins,,Environment,VNII,
+SRS405102,MW-RSA5387,Cryptococcus_neoformans var. grubii_MW-RSA5387,Desjardins,SRR798703,Clinical,VNI,VNIa-X
+SRS405107,Bt153,Cryptococcus_neoformans var. grubii_Bt153,Desjardins,SRR798633,Clinical,VNI,VNIc
+SRS405109,Bt92,Cryptococcus_neoformans var. grubii_Bt92,Desjardins,SRR798819,Clinical,VNI,VNIa-5
+SRS405110,C27,Cryptococcus_neoformans var. grubii_C27,Desjardins,SRR798960,Clinical,VNI,VNIa-32
+SRS405111,Bt83,Cryptococcus_neoformans var. grubii_Bt83,Desjardins,SRR798700,Clinical,VNI,VNIc
+SRS405113,Bt137,Cryptococcus_neoformans var. grubii_Bt137,Desjardins,SRR798659,Clinical,VNI,VNIc
+SRS405114,Bt164,Cryptococcus_neoformans_Bt164,Desjardins,SRR798663,Clinical,VNI,VNIa-4
+SRS405116,A4-1-12,Cryptococcus_neoformans var. grubii_33519,Desjardins,SRR798667,Environment,VNI,VNIb
+SRS405118,Bt30,Cryptococcus_neoformans var. grubii_Bt30,Desjardins,SRR798668,Clinical,VNI,VNIc
+SRS405119,Bt90,Cryptococcus_neoformans var. grubii_Bt90,Desjardins,SRR799041,Clinical,VNI,VNIc
+SRS405120,Bt70,Cryptococcus_neoformans_Bt70,Desjardins,,Clinical,VNBI,
+SRS405121,Bt47,Cryptococcus_neoformans_Bt47,Desjardins,SRR798707,Clinical,VNI,VNIc
+SRS405122,Bt11,Cryptococcus_neoformans var. grubii_Bt11,Desjardins,SRR798717,Clinical,VNI,VNIc
+SRS405123,Bt96,Cryptococcus_neoformans_Bt96,Desjardins,,Clinical,VNBI,
+SRS405124,Bt77,Cryptococcus_neoformans var. grubii_Bt77,Desjardins,SRR798729,Clinical,VNI,VNIc
+SRS405126,A4-34-6,Cryptococcus_neoformans var. grubii_31427,Desjardins,SRR798738,Environment,VNI,VNIa-32
+SRS405127,Th206,Cryptococcus_neoformans var. grubii_Th206,Desjardins,SRR798739,Clinical,VNI,VNIa-4
+SRS405128,Bt205,Cryptococcus_neoformans var. grubii_Bt205,Desjardins,SRR798742,Clinical,VNI,VNIc
+SRS405129,Bt108,Cryptococcus_neoformans var. grubii_Bt108,Desjardins,SRR798743,Clinical,VNI,VNIc
+SRS405130,Bt59,Cryptococcus_neoformans var. grubii_Bt59,Desjardins,SRR798752,Clinical,VNI,VNIc
+SRS405132,Bt121,Cryptococcus_neoformans var. grubii_Bt121,Desjardins,SRR798768,Clinical,VNI,VNIc
+SRS405134,Bt151,Cryptococcus_neoformans var. grubii_Bt151,Desjardins,SRR798775,Clinical,VNI,VNIc
+SRS405133,Pr68,Cryptococcus_neoformans_Pr68,Desjardins,SRR798777,Environment,VNI,VNIb
+SRS405135,Bt110,Cryptococcus_neoformans var. grubii_Bt110,Desjardins,SRR798780,Clinical,VNI,VNIc
+SRS405136,Bt62,Cryptococcus_neoformans_Bt62,Desjardins,SRR798803,Clinical,VNI,VNIc
+SRS405137,Bt97,Cryptococcus_neoformans_Bt97,Desjardins,SRR798807,Clinical,VNI,VNIc
+SRS405139,Bt95,Cryptococcus_neoformans var. grubii_Bt95,Desjardins,SRR798833,Clinical,VNI,VNIc
+SRS405141,Bt111,Cryptococcus_neoformans var. grubii_Bt111,Desjardins,SRR798837,Clinical,VNI,VNIb
+SRS405142,Bt104,Cryptococcus_neoformans var. grubii_Bt104,Desjardins,SRR798839,Clinical,VNI,VNIc
+SRS405144,Bt48,Cryptococcus_neoformans var. grubii_Bt48,Desjardins,SRR798853,Clinical,VNI,VNIa-X
+SRS405145,Bt117,Cryptococcus_neoformans var. grubii_Bt117,Desjardins,SRR798882,Clinical,VNI,VNIc
+SRS405146,Bt8,Cryptococcus_neoformans var. grubii_Bt8,Desjardins,SRR799026,Clinical,VNI,VNIc
+SRS405147,Bt116,Cryptococcus_neoformans var. grubii_Bt116,Desjardins,SRR798922,Clinical,VNI,VNIc
+SRS405148,Bt58,Cryptococcus_neoformans var. grubii_Bt58,Desjardins,SRR798957,Clinical,VNI,VNIa-X
+SRS405149,LP-RSA1684,Cryptococcus_neoformans var. grubii_LP-RSA1684,Desjardins,,Clinical,VNII,
+SRS405151,Bt57,Cryptococcus_neoformans var. grubii_Bt57,Desjardins,SRR799053,Clinical,VNI,VNIc
+SRS417571,8-1,Cryptococcus_neoformans var. grubii_41487,Desjardins,,Clinical,VNII,
+SRS417572,AD1-68a,Cryptococcus_neoformans var. grubii_AD1-68a,Desjardins,SRR836540,Clinical,VNI,VNIa-93
+SRS417573,AD1-86a,Cryptococcus_neoformans var. grubii_AD1-86a,Desjardins,SRR836547,Clinical,VNI,VNIa-5
+SRS417583,AD1-90a,Cryptococcus_neoformans var. grubii_AD1-90a,Desjardins,SRR836557,Clinical,VNI,VNIb
+SRS417575,AD1-95a,Cryptococcus_neoformans var. grubii_AD1-95a,Desjardins,SRR836558,Clinical,VNI,VNIb
+SRS417576,AD2-04a,Cryptococcus_neoformans var. grubii_AD2-04a,Desjardins,SRR836564,Clinical,VNI,VNIa-93
+SRS417577,AD2-6a,Cryptococcus_neoformans var. grubii_AD2-6a,Desjardins,SRR836570,Clinical,VNI,VNIb
+SRS417578,AD2-82a,Cryptococcus_neoformans var. grubii_AD2-82a,Desjardins,SRR836581,Clinical,VNI,VNIa-5
+SRS417586,AD2-99a,Cryptococcus_neoformans var. grubii_AD2-99a,Desjardins,SRR836588,Clinical,VNI,VNIb
+SRS417579,AD3-11a,Cryptococcus_neoformans var. grubii_AD3-11a,Desjardins,,Clinical,VNII,
+SRS417581,AD3-41a,Cryptococcus_neoformans var. grubii_AD3-41a,Desjardins,SRR836599,Clinical,VNI,VNIb
+SRS417582,AD3-55a,Cryptococcus_neoformans var. grubii_AD3-55a,Desjardins,SRR836604,Clinical,VNI,VNIb
+SRS417585,AD3-58,Cryptococcus_neoformans var. grubii_AD3-58,Desjardins,SRR836610,Clinical,VNI,VNIb
+SRS417587,AD3-83a,Cryptococcus_neoformans var. grubii_AD3-83a,Desjardins,SRR836615,Clinical,VNI,VNIb
+SRS417588,AD3-95a,Cryptococcus_neoformans var. grubii_AD3-95a,Desjardins,SRR836620,Clinical,VNI,VNIa-4
+SRS417597,AD3-9a,Cryptococcus_neoformans var. grubii_AD3-9a,Desjardins,,Clinical,VNII,
+SRS417590,AD4-47a,Cryptococcus_neoformans var. grubii_AD4-47a,Desjardins,SRR836631,Clinical,VNI,VNIb
+SRS417591,AD4-63a,Cryptococcus_neoformans var. grubii_AD4-63a,Desjardins,SRR836636,Clinical,VNI,VNIa-93
+SRS417593,AD4-76a,Cryptococcus_neoformans var. grubii_AD4-76a,Desjardins,SRR836642,Clinical,VNI,VNIa-4
+SRS417594,AD4-92a,Cryptococcus_neoformans var. grubii_AD4-92a,Desjardins,SRR836648,Clinical,VNI,VNIb
+SRS417603,AD5-39a,Cryptococcus_neoformans var. grubii_AD5-39a,Desjardins,SRR836654,Clinical,VNI,VNIa-93
+SRS417595,AD5-45a,Cryptococcus_neoformans var. grubii_AD5-45a,Desjardins,SRR836660,Clinical,VNI,VNIb
+SRS417596,AD5-53a,Cryptococcus_neoformans var. grubii_AD5-53a,Desjardins,SRR836666,Clinical,VNI,VNIa-5
+SRS417599,AD5-67a,Cryptococcus_neoformans var. grubii_AD5-67a,Desjardins,,Clinical,VNII,
+SRS417600,AD6-54a,Cryptococcus_neoformans var. grubii_AD6-54a,Desjardins,SRR842038,Clinical,VNI,VNIb
+SRS417601,AD6-55a,Cryptococcus_neoformans var. grubii_AD6-55a,Desjardins,SRR836683,Clinical,VNI,VNIb
+SRS417604,Arg1366,Cryptococcus_neoformans var. grubii_Arg1366,Desjardins,SRR836689,Clinical,VNI,VNIb
+SRS417605,Bt105,Cryptococcus_neoformans var. grubii_Bt105,Desjardins,,Clinical,VNBII,
+SRS417606,Bt109,Cryptococcus_neoformans var. grubii_Bt109,Desjardins,,Clinical,VNBII,
+SRS417607,Bt115,Cryptococcus_neoformans var. grubii_Bt115,Desjardins,,Clinical,VNBII,
+SRS417609,Bt128,Cryptococcus_neoformans var. grubii_Bt128,Desjardins,,Clinical,VNBII,
+SRS417611,Bt133,Cryptococcus_neoformans var. grubii_Bt133,Desjardins,,Clinical,VNBII,
+SRS417612,Bt136,Cryptococcus_neoformans var. grubii_Bt136,Desjardins,,Clinical,VNBII,
+SRS417614,Bt138,Cryptococcus_neoformans var. grubii_Bt138,Desjardins,SRR836772,Clinical,VNI,VNIa-Y
+SRS417615,Bt143,Cryptococcus_neoformans var. grubii_Bt143,Desjardins,,Clinical,VNBII,
+SRS417616,Bt146,Cryptococcus_neoformans var. grubii_Bt146,Desjardins,,Clinical,VNBII,
+SRS417618,Bt147,Cryptococcus_neoformans var. grubii_Bt147,Desjardins,,Clinical,VNBI,
+SRS417619,Bt148,Cryptococcus_neoformans var. grubii_Bt148,Desjardins,,Clinical,VNBI,
+SRS417620,Bt149,Cryptococcus_neoformans var. grubii_Bt149,Desjardins,,Clinical,VNBII,
+SRS417622,Bt152,Cryptococcus_neoformans var. grubii_Bt152,Desjardins,,Clinical,VNBII,
+SRS417624,Bt154,Cryptococcus_neoformans var. grubii_Bt154,Desjardins,,Clinical,VNBI,
+SRS417625,Bt157,Cryptococcus_neoformans var. grubii_Bt157,Desjardins,,Clinical,VNBII,
+SRS417635,Bt204,Cryptococcus_neoformans var. grubii_Bt204,Desjardins,,Clinical,VNBI,
+SRS417636,Bt208,Cryptococcus_neoformans var. grubii_Bt208,Desjardins,,Clinical,VNBII,
+SRS417637,Bt4,Cryptococcus_neoformans var. grubii_Bt4,Desjardins,SRR836871,Clinical,VNI,VNIc
+SRS417639,Bt65,Cryptococcus_neoformans var. grubii_Bt65,Desjardins,,Clinical,VNBII,
+SRS417641,C12,Cryptococcus_neoformans var. grubii_C12,Desjardins,,Clinical,VNII,
+SRS417642,In2632,Cryptococcus_neoformans var. grubii_In2632,Desjardins,SRR836892,Clinical,VNI,VNIa-32
+SRS417643,Jp1088,Cryptococcus_neoformans var. grubii_Jp1088,Desjardins,SRR836898,Clinical,VNI,VNIa-5
+SRS417644,LP-RSA3144,Cryptococcus_neoformans var. grubii_LP-RSA3144,Desjardins,,Clinical,VNBII,
+SRS417647,LP-RSA6618,Cryptococcus_neoformans var. grubii_LP-RSA6618,Desjardins,,Clinical,VNBI,
+SRS417658,LP-RSA756,Cryptococcus_neoformans var. grubii_LP-RSA756,Desjardins,,Clinical,VNBI,
+SRS417650,MW-RSA1186,Cryptococcus_neoformans var. grubii_MW-RSA1186,Desjardins,,Clinical,VNBII,
+SRS417651,MW-RSA1607,Cryptococcus_neoformans var. grubii_MW-RSA1607,Desjardins,,Clinical,VNBII,
+SRS417652,MW-RSA2967,Cryptococcus_neoformans var. grubii_MW-RSA2967,Desjardins,,Clinical,VNBII,
+SRS417653,MW-RSA3179,Cryptococcus_neoformans var. grubii_MW-RSA3179,Desjardins,,Clinical,VNBII,
+SRS417654,MW-RSA3321,Cryptococcus_neoformans var. grubii_MW-RSA3321,Desjardins,,Clinical,VNBII,
+SRS417655,PLR10,Cryptococcus_neoformans var. grubii_PLR10,Desjardins,,Environment,VNBI,
+SRS417656,Pr284-1,Cryptococcus_neoformans var. grubii_Pr284-1,Desjardins,SRR836964,Environment,VNI,VNIb
+SRS417657,RTC1,Cryptococcus_neoformans var. grubii_RTC1,Desjardins,SRR836978,Clinical,VNI,VNIa-93
+SRS417659,RTC3,Cryptococcus_neoformans var. grubii_RTC3,Desjardins,,Clinical,VNBI,
+SRS417661,Tu229-1,Cryptococcus_neoformans var. grubii_Tu229-1,Desjardins,,Environment,VNBI,
+SRS417662,RTC5,Cryptococcus_neoformans var. grubii_RTC5,Desjardins,SRR836988,Clinical,VNI,VNIc
+SRS417665,Tu360-1,Cryptococcus_neoformans var. grubii_Tu360-1,Desjardins,,Environment,VNBI,
+SRS417667,Tu369-1,Cryptococcus_neoformans var. grubii_Tu369-1,Desjardins,,Environment,VNBI,
+SRS417668,Tu406-1,Cryptococcus_neoformans var. grubii_Tu406-1,Desjardins,,Environment,VNBI,
+SRS417669,Tu416-1,Cryptococcus_neoformans var. grubii_Tu416-1,Desjardins,,Environment,VNBI,
+SRS417675,Tu422-1,Cryptococcus_neoformans var. grubii_Tu422-1,Desjardins,,Environment,VNBI,
+SRS417676,Ug2459,Cryptococcus_neoformans var. grubii_Ug2459,Desjardins,SRR837084,Clinical,VNI,VNIb
+SRS417678,Ug2462,Cryptococcus_neoformans var. grubii_Ug2462,Desjardins,,Clinical,VNII,
+SRS417680,Ug2463,Cryptococcus_neoformans var. grubii_Ug2463,Desjardins,SRR837099,Clinical,VNI,VNIa-4
+SRS429660,Bt210,Cryptococcus_neoformans var. grubii_Bt210,Desjardins,SRR868750,Clinical,VNI,VNIc
+SRS502193,Bt142,Cryptococcus_neoformans var. grubii_Bt142,Desjardins,,Clinical,VNBI,
+SRS520130,Bt35,Cryptococcus neoformans Bt35,Desjardins,,Clinical,VNBII,
+SRS520173,A1-84-14,Cryptococcus neoformans var. grubii A1-84-14,Desjardins,SRR1063253,Environment,VNI,VNIb
+SRS520174,LP-RSA2297,Cryptococcus neoformans var. grubii LP-RSA2297,Desjardins,SRR1063256,Clinical,VNI,VNIa-4
+SRS520177,MW-RSA1327,Cryptococcus neoformans var. grubii MW-RSA1327,Desjardins,,Clinical,VNII,
+SRS520178,MW-RSA3834,Cryptococcus neoformans var. grubii MW-RSA3834,Desjardins,SRR1063265,Clinical,VNI,VNIc
+SRS520179,MW-RSA3956,Cryptococcus neoformans var. grubii MW-RSA3956,Desjardins,,Clinical,VNII,
+SRS520180,MW-RSA524,Cryptococcus neoformans var. grubii MW-RSA524,Desjardins,SRR1063269,Clinical,VNI,VNIc
+SRS520181,MW-RSA913,Cryptococcus neoformans var. grubii MW-RSA913,Desjardins,,Clinical,VNBII,
+SRS520182,WM626,Cryptococcus neoformans var. grubii WM626 (MMRL 3150),Desjardins,,Clinical,VNII,
+SRS520184,TCl-11,Cryptococcus sp. TCl-11,Desjardins,SRR1063286,Clinical,VNI,VNIb
+SRS520185,TCl-14,Cryptococcus sp. TCl-14,Desjardins,SRR1063288,Clinical,VNI,VNIb
+ERS2541303,04CN-03-001,04CN-03-001,Ashton,ERR2624232,Clinical,VNI,VNIa-5
+ERS2541302,04CN-03-002,04CN-03-002,Ashton,ERR2624486,Clinical,VNI,VNIa-4
+ERS2541293,04CN-03-003,04CN-03-003,Ashton,ERR2624426,Clinical,VNI,VNIa-4
+ERS2541301,04CN-03-004,04CN-03-004,Ashton,ERR2624478,Clinical,VNI,VNIa-4
+ERS2541292,04CN-03-006,04CN-03-006,Ashton,ERR2624325,Clinical,VNI,VNIa-4
+ERS2540976,04CN-03-008,04CN-03-008,Ashton,ERR2624146,Clinical,VNI,VNIa-4
+ERS2541326,04CN-03-009,04CN-03-009,Ashton,ERR2624169,Clinical,VNI,VNIa-5
+ERS2541116,04CN-03-011,04CN-03-011,Ashton,ERR2624104,Clinical,VNI,VNIa-4
+ERS2541111,04CN-03-012,04CN-03-012,Ashton,ERR2624108,Clinical,VNI,VNIa-5
+ERS2541099,04CN-03-013,04CN-03-013,Ashton,ERR2624313,Clinical,VNI,VNIa-4
+ERS2541088,04CN-03-014,04CN-03-014,Ashton,ERR2624121,Clinical,VNI,VNIa-5
+ERS2541157,04CN-03-015,04CN-03-015,Ashton,ERR2624355,Clinical,VNI,VNIa-4
+ERS2541249,04CN-03-016,04CN-03-016,Ashton,ERR2624105,Clinical,VNI,VNIa-5
+ERS2541283,04CN-03-017,04CN-03-017,Ashton,ERR2624408,Clinical,VNI,VNIa-4
+ERS2541164,04CN-03-020,04CN-03-020,Ashton,ERR2624327,Clinical,VNI,VNIa-5
+ERS2541154,04CN-03-021,04CN-03-021,Ashton,ERR2624502,Clinical,VNI,VNIa-5
+ERS2541334,04CN-03-022,04CN-03-022,Ashton,ERR2624124,Clinical,VNI,VNIa-5
+ERS2541115,04CN-03-024,04CN-03-024,Ashton,ERR2624401,Clinical,VNI,VNIa-5
+ERS2541171,04CN-03-028,04CN-03-028,Ashton,ERR2624298,Clinical,VNI,VNIa-4
+ERS2541256,04CN-03-031,04CN-03-031,Ashton,ERR2624093,Clinical,VNI,
+ERS2541098,04CN-03-032,04CN-03-032,Ashton,ERR2624348,Clinical,VNI,VNIa-4
+ERS2541270,04CN-03-036,04CN-03-036,Ashton,ERR2624474,Clinical,VNI,VNIa-93
+ERS2541244,04CN-03-037,04CN-03-037,Ashton,ERR2624424,Clinical,VNI,VNIa-4
+ERS2541136,04CN-03-038,04CN-03-038,Ashton,ERR2624120,Clinical,VNI,VNIa-93
+ERS2541212,04CN-03-039,04CN-03-039,Ashton,ERR2624354,Clinical,VNI,VNIa-5
+ERS2541275,04CN-03-040,04CN-03-040,Ashton,ERR2624443,Clinical,VNI,VNIa-4
+ERS2541226,04CN-03-042,04CN-03-042,Ashton,ERR2624365,Clinical,VNI,VNIa-32
+ERS2541216,04CN-03-046,04CN-03-046,Ashton,ERR2624453,Clinical,VNI,VNIa-4
+ERS2541331,04CN-03-047,04CN-03-047,Ashton,ERR2624393,Clinical,VNI,VNIa-5
+ERS2541184,04CN-03-049,04CN-03-049,Ashton,ERR2624258,Clinical,VNI,VNIa-93
+ERS2541121,04CN-03-050,04CN-03-050,Ashton,ERR2624188,Clinical,VNI,VNIa-93
+ERS2541178,04CN-03-051,04CN-03-051,Ashton,ERR2624138,Clinical,VNI,VNIa-5
+ERS2541267,04CN-03-052,04CN-03-052,Ashton,ERR2624273,Clinical,VNI,VNIa-4
+ERS2541138,04CN-03-053,04CN-03-053,Ashton,ERR2624176,Clinical,VNI,VNIa-5
+ERS2541117,04CN-03-056,04CN-03-056,Ashton,ERR2624119,Clinical,VNI,VNIa-4
+ERS2541150,04CN-03-058,04CN-03-058,Ashton,ERR2624388,Clinical,VNI,VNIa-5
+ERS2541259,04CN-03-059,04CN-03-059,Ashton,ERR2624445,Clinical,VNI,VNIa-4
+ERS2541148,04CN-03-061,04CN-03-061,Ashton,ERR2624187,Clinical,VNI,VNIa-4
+ERS2541196,04CN-03-062,04CN-03-062,Ashton,ERR2624411,Clinical,VNI,VNIa-93
+ERS2541234,04CN-03-063,04CN-03-063,Ashton,ERR2624489,Clinical,VNI,VNIa-5
+ERS2541225,04CN-03-064,04CN-03-064,Ashton,ERR2624283,Clinical,VNI,VNIa-4
+ERS2541204,04CN-03-067,04CN-03-067,Ashton,ERR2624488,Clinical,VNI,VNIa-4
+ERS2541094,04CN-03-068,04CN-03-068,Ashton,ERR2624333,Clinical,VNI,VNIa-4
+ERS2541229,04CN-03-069,04CN-03-069,Ashton,ERR2624125,Clinical,VNI,VNIa-5
+ERS2541147,04CN-03-072,04CN-03-072,Ashton,ERR2624091,Clinical,VNI,VNIa-93
+ERS2541211,04CN-03-073,04CN-03-073,Ashton,ERR2624155,Clinical,VNI,VNIa-5
+ERS2541170,04CN-03-074,04CN-03-074,Ashton,ERR2624467,Clinical,VNI,VNII
+ERS2541288,04CN-03-075,04CN-03-075,Ashton,ERR2624459,Clinical,VNI,VNIa-4
+ERS2541194,04CN-03-076,04CN-03-076,Ashton,ERR2624199,Clinical,VNI,VNIa-5
+ERS2541181,04CN-03-077,04CN-03-077,Ashton,ERR2624464,Clinical,VNI,VNIa-5
+ERS2541266,04CN-03-078,04CN-03-078,Ashton,ERR2624305,Clinical,VNI,VNIa-4
+ERS2541251,04CN-03-081,04CN-03-081,Ashton,ERR2624110,Clinical,VNI,VNIa-5
+ERS2541146,04CN-03-082,04CN-03-082,Ashton,ERR2624412,Clinical,VNI,VNIa-4
+ERS2541180,04CN-03-084,04CN-03-084,Ashton,ERR2624241,Clinical,VNI,VNIa-4
+ERS2541190,04CN-03-085,04CN-03-085,Ashton,ERR2624248,Clinical,VNI,VNIa-4
+ERS2541120,04CN-03-086,04CN-03-086,Ashton,ERR2624460,Clinical,VNI,VNIa-4
+ERS2541093,04CN-03-087,04CN-03-087,Ashton,ERR2624435,Clinical,VNI,VNIa-4
+ERS2541130,04CN-03-088,04CN-03-088,Ashton,ERR2624180,Clinical,VNI,VNII
+ERS2541142,04CN-03-089,04CN-03-089,Ashton,ERR2624234,Clinical,VNI,VNIa-5
+ERS2541205,04CN-03-090,04CN-03-090,Ashton,ERR2624389,Clinical,VNI,VNIa-5
+ERS2541085,04CN-03-091,04CN-03-091,Ashton,ERR2624378,Clinical,VNI,VNIa-5
+ERS2541250,04CN-03-092,04CN-03-092,Ashton,ERR2624143,Clinical,VNI,VNIa-4
+ERS2541248,04CN-03-093,04CN-03-093,Ashton,ERR2624129,Clinical,VNI,VNIa-4
+ERS2541271,04CN-03-094,04CN-03-094,Ashton,ERR2624303,Clinical,VNI,VNIa-5
+ERS2541104,04CN-03-095,04CN-03-095,Ashton,ERR2624179,Clinical,VNI,VNIa-4
+ERS2541177,04CN-03-098,04CN-03-098,Ashton,ERR2624160,Clinical,VNI,VNIa-4
+ERS2541232,04CN-03-099,04CN-03-099,Ashton,ERR2624332,Clinical,VNI,VNIa-5
+ERS2541160,04CN-03-100,04CN-03-100,Ashton,ERR2624094,Clinical,VNI,VNIa-4
+ERS2541113,04CN-03-101,04CN-03-101,Ashton,ERR2624117,Clinical,VNI,VNIa-93
+ERS2541084,04CN-03-102,04CN-03-102,Ashton,ERR2624128,Clinical,VNI,VNIa-5
+ERS2541289,04CN-11-001,04CN-11-001,Ashton,ERR2624366,Clinical,VNI,VNIa-4
+ERS2541268,04CN-11-003,04CN-11-003,Ashton,ERR2624431,Clinical,VNI,VNIa-4
+ERS2541236,04CN-11-004,04CN-11-004,Ashton,ERR2624197,Clinical,VNI,VNIa-5
+ERS2541108,04CN-11-005,04CN-11-005,Ashton,ERR2624475,Clinical,VNI,VNIa-4
+ERS2541213,04CN-11-006,04CN-11-006,Ashton,ERR2624420,Clinical,VNI,VNIa-4
+ERS2541163,04CN-11-007,04CN-11-007,Ashton,ERR2624255,Clinical,VNI,VNIa-4
+ERS2541186,04CN-11-008,04CN-11-008,Ashton,ERR2624330,Clinical,VNI,VNIa-4
+ERS2541238,04CN-11-009,04CN-11-009,Ashton,ERR2624363,Clinical,VNI,VNIa-5
+ERS2541219,04CN-11-010,04CN-11-010,Ashton,ERR2624376,Clinical,VNI,VNIa-4
+ERS2541286,04CN-11-011,04CN-11-011,Ashton,ERR2624153,Clinical,VNI,VNIa-4
+ERS2541141,04CN-11-012,04CN-11-012,Ashton,ERR2624206,Clinical,VNI,VNIa-4
+ERS2541140,04CN-11-013,04CN-11-013,Ashton,ERR2624149,Clinical,VNI,VNIa-93
+ERS2541135,04CN-11-014,04CN-11-014,Ashton,ERR2624392,Clinical,VNI,VNIa-4
+ERS2541166,04CN-11-015,04CN-11-015,Ashton,ERR2624101,Clinical,VNI,VNIa-4
+ERS2541241,04CN-11-018,04CN-11-018,Ashton,ERR2624144,Clinical,VNI,VNIa-4
+ERS2541221,04CN-11-019,04CN-11-019,Ashton,ERR2624375,Clinical,VNI,VNIa-4
+ERS2541124,04CN-11-020,04CN-11-020,Ashton,ERR2624290,Clinical,VNI,VNIa-5
+ERS2541083,04CN-11-021,04CN-11-021,Ashton,ERR2624338,Clinical,VNI,VNIa-5
+ERS2541215,04CN-11-022,04CN-11-022,Ashton,ERR2624312,Clinical,VNI,VNIa-5
+ERS2541280,04CN-20-004,04CN-20-004,Ashton,ERR2624461,Clinical,VNI,VNIa-4
+ERS2541182,04CN-20-006,04CN-20-006,Ashton,ERR2624322,Clinical,VNI,VNIa-5
+ERS2541222,04CN-30-001,04CN-30-001,Ashton,ERR2624116,Clinical,VNI,VNIa-4
+ERS2541332,04CN-30-002,04CN-30-002,Ashton,ERR2624175,Clinical,VNI,VNIa-4
+ERS2541107,04CN-30-008,04CN-30-008,Ashton,ERR2624496,Clinical,VNI,VNIa-4
+ERS2541167,04CN-30-016,04CN-30-016,Ashton,ERR2624134,Clinical,VNI,VNIa-5
+ERS2541172,04CN-30-019,04CN-30-019,Ashton,ERR2624398,Clinical,VNI,VNIa-5
+ERS2541060,04CN-32-001,04CN-32-001,Ashton,ERR2624168,Clinical,VNI,VNIa-4
+ERS2541016,04CN-32-004,04CN-32-004,Ashton,ERR2624346,Clinical,VNI,VNIa-4
+ERS2541307,04CN-32-005,04CN-32-005,Ashton,ERR2624201,Clinical,VNI,VNIa-4
+ERS2541312,04CN-32-011,04CN-32-011,Ashton,ERR2624178,Clinical,VNI,VNIa-4
+ERS2540948,04CN-32-019,04CN-32-019,Ashton,ERR2624439,Clinical,VNI,VNIa-4
+ERS2540967,04CN-32-020,04CN-32-020,Ashton,ERR2624479,Clinical,VNI,VNIa-4
+ERS2541314,04CN-32-025,04CN-32-025,Ashton,ERR2624359,Clinical,VNI,VNIa-4
+ERS2540937,04CN-32-031,04CN-32-031,Ashton,ERR2624449,Clinical,VNI,VNIa-4
+ERS2540954,04CN-32-040,04CN-32-040,Ashton,ERR2624326,Clinical,VNI,VNIa-4
+ERS2541319,04CN-32-042,04CN-32-042,Ashton,ERR2624470,Clinical,VNI,VNIa-5
+ERS2541300,04CN-32-043,04CN-32-043,Ashton,ERR2624410,Clinical,VNI,VNIa-4
+ERS2541272,04CN-32-044B,04CN-32-044B,Ashton,ERR2624269,Clinical,VNI,VNIa-4
+ERS2541290,04CN-32-053,04CN-32-053,Ashton,ERR2624271,Clinical,VNI,VNIa-5
+ERS2541294,04CN-32-059,04CN-32-059,Ashton,ERR2624441,Clinical,VNI,VNIa-4
+ERS2541299,04CN-32-067,04CN-32-067,Ashton,ERR2624239,Clinical,VNI,VNIa-4
+ERS2541298,04CN-32-071,04CN-32-071,Ashton,ERR2624291,Clinical,VNI,VNIa-4
+ERS2541297,04CN-32-074,04CN-32-074,Ashton,ERR2624195,Clinical,VNI,VNIa-4
+ERS2541291,04CN-32-083,04CN-32-083,Ashton,ERR2624276,Clinical,VNI,VNIa-4
+ERS2541295,04CN-32-084,04CN-32-084,Ashton,ERR2624427,Clinical,VNI,VNIa-4
+ERS2541296,04CN-32-086,04CN-32-086,Ashton,ERR2624430,Clinical,VNI,VNIa-4
+ERS2541027,04CN-32-089,04CN-32-089,Ashton,ERR2624165,Clinical,VNI,VNIa-4
+ERS2541074,04CN-32-090,04CN-32-090,Ashton,ERR2624162,Clinical,VNI,VNIa-4
+ERS2540930,04CN-32-093,04CN-32-093,Ashton,ERR2624250,Clinical,VNI,VNIa-4
+ERS2541026,04CN-32-105,04CN-32-105,Ashton,ERR2624132,Clinical,VNI,VNIa-4
+ERS2541015,04CN-32-106,04CN-32-106,Ashton,ERR2624422,Clinical,VNI,VNIa-4
+ERS2540946,04CN-33-002,04CN-33-002,Ashton,ERR2624437,Clinical,VNI,VNIa-4
+ERS2541048,04CN-33-004,04CN-33-004,Ashton,ERR2624164,Clinical,VNI,VNIa-4
+ERS2541010,04CN-33-015,04CN-33-015,Ashton,ERR2624320,Clinical,VNI,VNIa-4
+ERS2541004,04CN-33-023,04CN-33-023,Ashton,ERR2624185,Clinical,VNI,VNIa-4
+ERS2540939,04CN-33-026,04CN-33-026,Ashton,ERR2624150,Clinical,VNI,VNIa-4
+ERS2541011,04CN-33-034,04CN-33-034,Ashton,ERR2624096,Clinical,VNI,VNIa-4
+ERS2541025,04CN-33-045,04CN-33-045,Ashton,ERR2624140,Clinical,VNI,VNIa-4
+ERS2541076,04CN-33-061,04CN-33-061,Ashton,ERR2624154,Clinical,VNI,VNIa-4
+ERS2540940,04CN-33-062,04CN-33-062,Ashton,ERR2624099,Clinical,VNI,VNIa-4
+ERS2540982,04CN-33-065,04CN-33-065,Ashton,ERR2624198,Clinical,VNI,VNIa-4
+ERS2540929,04CN-33-066,04CN-33-066,Ashton,ERR2624440,Clinical,VNI,VNIa-4
+ERS2540990,04CN-33-067,04CN-33-067,Ashton,ERR2624221,Clinical,VNI,VNIa-4
+ERS2540949,04CN-33-068,04CN-33-068,Ashton,ERR2624103,Clinical,VNI,VNIa-5
+ERS2540997,04CN-33-093,04CN-33-093,Ashton,ERR2624266,Clinical,VNI,VNIa-4
+ERS2540957,04CN-33-094,04CN-33-094,Ashton,ERR2624251,Clinical,VNI,VNIa-5
+ERS2540962,04CN-63-001,04CN-63-001,Ashton,ERR2624118,Clinical,VNI,VNIa-93
+ERS2541054,04CN-63-002,04CN-63-002,Ashton,ERR2624245,Clinical,VNI,VNIa-5
+ERS2540944,04CN-63-007,04CN-63-007,Ashton,ERR2624448,Clinical,VNI,VNIa-X
+ERS2540970,04CN-63-008,04CN-63-008,Ashton,ERR2624493,Clinical,VNI,VNIa-5
+ERS2540956,04CN-63-009,04CN-63-009,Ashton,ERR2624265,Clinical,VNI,VNIa-93
+ERS2540971,04CN-63-012,04CN-63-012,Ashton,ERR2624238,Clinical,VNI,VNIa-Y
+ERS2540955,04CN-63-019,04CN-63-019,Ashton,ERR2624249,Clinical,VNI,VNIa-32
+ERS2540998,04CN-63-022,04CN-63-022,Ashton,ERR2624284,Clinical,VNI,VNIa-93
+ERS2540952,04CN-63-023,04CN-63-023,Ashton,ERR2624308,Clinical,VNI,VNIa-93
+ERS2540979,04CN-63-024,04CN-63-024,Ashton,ERR2624421,Clinical,VNI,VNIa-93
+ERS2540974,04CN-63-033,04CN-63-033,Ashton,ERR2624233,Clinical,VNI,VNIa-5
+ERS2541305,04CN-63-036,04CN-63-036,Ashton,ERR2624319,Clinical,VNI,VNIa-32
+ERS2540965,04CN-63-037,04CN-63-037,Ashton,ERR2624236,Clinical,VNI,VNIa-X
+ERS2541075,04CN-64-001,04CN-64-001,Ashton,ERR2624499,Clinical,VNI,VNIa-93
+ERS2541037,04CN-64-002,04CN-64-002,Ashton,ERR2624222,Clinical,VNI,VNIa-5
+ERS2541020,04CN-64-006,04CN-64-006,Ashton,ERR2624127,Clinical,VNI,VNIa-4
+ERS2541067,04CN-64-007,04CN-64-007,Ashton,ERR2624463,Clinical,VNI,VNIa-93
+ERS2541022,04CN-64-008,04CN-64-008,Ashton,ERR2624115,Clinical,VNI,VNIa-93
+ERS2540980,04CN-64-011,04CN-64-011,Ashton,ERR2624369,Clinical,VNI,VNIa-93
+ERS2540993,04CN-64-014,04CN-64-014,Ashton,ERR2624159,Clinical,VNI,VNIa-5
+ERS2541006,04CN-64-019,04CN-64-019,Ashton,ERR2624429,Clinical,VNI,VNIb
+ERS2540951,04CN-64-024,04CN-64-024,Ashton,ERR2624384,Clinical,VNI,VNIa-93
+ERS2540988,04CN-64-027,04CN-64-027,Ashton,ERR2624192,Clinical,VNI,VNIa-93
+ERS2541038,04CN-64-028,04CN-64-028,Ashton,ERR2624288,Clinical,VNI,VNIa-93
+ERS2541005,04CN-64-029,04CN-64-029,Ashton,ERR2624216,Clinical,VNI,VNIa-outlier
+ERS2540989,04CN-64-030,04CN-64-030,Ashton,ERR2624447,Clinical,VNI,VNIa-93
+ERS2541008,04CN-64-032,04CN-64-032,Ashton,ERR2624442,Clinical,VNI,VNIa-93
+ERS2540994,04CN-64-033,04CN-64-033,Ashton,ERR2624280,Clinical,VNI,VNIa-93
+ERS2540999,04CN-64-037,04CN-64-037,Ashton,ERR2624231,Clinical,VNI,VNIa-5
+ERS2540968,04CN-64-039,04CN-64-039,Ashton,ERR2624131,Clinical,VNI,VNIa-93
+ERS2540960,04CN-64-041,04CN-64-041,Ashton,ERR2624371,Clinical,VNI,VNIa-93
+ERS2541336,04CN-64-042,04CN-64-042,Ashton,ERR2624173,Clinical,VNI,VNIa-93
+ERS2540934,04CN-64-046,04CN-64-046,Ashton,ERR2624490,Clinical,VNI,VNIa-93
+ERS2540966,04CN-64-047,04CN-64-047,Ashton,ERR2624324,Clinical,VNI,VNIa-93
+ERS2540961,04CN-64-048,04CN-64-048,Ashton,ERR2624286,Clinical,VNI,VNIa-93
+ERS2540922,04CN-64-053,04CN-64-053,Ashton,ERR2624186,Clinical,VNI,VNIa-Y
+ERS2541031,04CN-64-059,04CN-64-059,Ashton,ERR2624148,Clinical,VNI,VNIa-93
+ERS2541063,04CN-64-061,04CN-64-061,Ashton,ERR2624501,Clinical,VNI,VNIa-93
+ERS2540987,04CN-64-064,04CN-64-064,Ashton,ERR2624226,Clinical,VNI,VNIa-93
+ERS2540972,04CN-64-065,04CN-64-065,Ashton,ERR2624485,Clinical,VNI,VNIa-32
+ERS2541039,04CN-64-067,04CN-64-067,Ashton,ERR2624399,Clinical,VNI,VNIa-93
+ERS2540941,04CN-64-068,04CN-64-068,Ashton,ERR2624307,Clinical,VNI,VNIa-93
+ERS2541045,04CN-64-069,04CN-64-069,Ashton,ERR2624209,Clinical,VNI,VNIa-93
+ERS2541044,04CN-64-074,04CN-64-074,Ashton,ERR2624414,Clinical,VNI,VNIa-93
+ERS2541064,04CN-64-075,04CN-64-075,Ashton,ERR2624174,Clinical,VNI,VNIa-93
+ERS2541313,04CN-64-076,04CN-64-076,Ashton,ERR2624262,Clinical,VNI,VNIa-93
+ERS2541041,04CN-64-077,04CN-64-077,Ashton,ERR2624400,Clinical,VNI,VNIa-93
+ERS2541066,04CN-64-078,04CN-64-078,Ashton,ERR2624360,Clinical,VNI,VNIa-93
+ERS2540977,04CN-64-080,04CN-64-080,Ashton,ERR2624292,Clinical,VNI,VNIa-93
+ERS2541308,04CN-64-081,04CN-64-081,Ashton,ERR2624191,Clinical,VNI,VNIa-Y
+ERS2541061,04CN-64-088,04CN-64-088,Ashton,ERR2624166,Clinical,VNI,VNIa-93
+ERS2541073,04CN-64-089,04CN-64-089,Ashton,ERR2624208,Clinical,VNI,VNIa-93
+ERS2541317,04CN-64-090,04CN-64-090,Ashton,ERR2624122,Clinical,VNI,VNIa-5
+ERS2541050,04CN-64-092,04CN-64-092,Ashton,ERR2624285,Clinical,VNI,
+ERS2541017,04CN-64-093,04CN-64-093,Ashton,ERR2624306,Clinical,VNI,VNIa-Y
+ERS2541052,04CN-64-097,04CN-64-097,Ashton,ERR2624270,Clinical,VNI,VNIa-outlier
+ERS2541021,04CN-64-099,04CN-64-099,Ashton,ERR2624352,Clinical,VNI,VNIa-93
+ERS2540933,04CN-64-100,04CN-64-100,Ashton,ERR2624142,Clinical,VNI,VNIa-93
+ERS2540969,04CN-64-101,04CN-64-101,Ashton,ERR2624425,Clinical,VNI,VNIa-93
+ERS2540984,04CN-64-105,04CN-64-105,Ashton,ERR2624240,Clinical,VNI,VNIa-93
+ERS2541030,04CN-64-116,04CN-64-116,Ashton,ERR2624300,Clinical,VNI,VNIa-Y
+ERS2540932,04CN-64-117,04CN-64-117,Ashton,ERR2624385,Clinical,VNI,VNIa-93
+ERS2541009,04CN-64-127,04CN-64-127,Ashton,ERR2624466,Clinical,VNI,VNIa-outlier
+ERS2541018,04CN-64-128,04CN-64-128,Ashton,ERR2624225,Clinical,VNI,VNIa-93
+ERS2541000,04CN-64-129,04CN-64-129,Ashton,ERR2624193,Clinical,VNI,VNIa-93
+ERS2540958,04CN-64-134,04CN-64-134,Ashton,ERR2624438,Clinical,VNI,VNIa-93
+ERS2541032,04CN-64-136,04CN-64-136,Ashton,ERR2624497,Clinical,VNI,VNIa-5
+ERS2541068,04CN-64-138,04CN-64-138,Ashton,ERR2624446,Clinical,VNI,VNIa-93
+ERS2541028,04CN-64-150,04CN-64-150,Ashton,ERR2624465,Clinical,VNI,VNIa-93
+ERS2540986,04CN-65-001,04CN-65-001,Ashton,ERR2624214,Clinical,VNI,VNIa-93
+ERS2541065,04CN-65-002,04CN-65-002,Ashton,ERR2624469,Clinical,VNI,VNIa-93
+ERS2540995,04CN-65-003,04CN-65-003,Ashton,ERR2624403,Clinical,VNI,VNIa-93
+ERS2541034,04CN-65-004,04CN-65-004,Ashton,ERR2624353,Clinical,VNI,VNIa-93
+ERS2540926,04CN-65-005,04CN-65-005,Ashton,ERR2624217,Clinical,VNI,VNIa-93
+ERS2540973,04CN-65-006,04CN-65-006,Ashton,ERR2624317,Clinical,VNI,VNIa-Y
+ERS2540985,04CN-65-007,04CN-65-007,Ashton,ERR2624476,Clinical,VNI,VNIa-93
+ERS2540983,04CN-65-008,04CN-65-008,Ashton,ERR2624294,Clinical,VNI,VNIa-93
+ERS2541033,04CN-65-010,04CN-65-010,Ashton,ERR2624268,Clinical,VNI,VNIa-Y
+ERS2540963,04CN-65-013,04CN-65-013,Ashton,ERR2624277,Clinical,VNI,VNIa-5
+ERS2541329,04CN-65-016,04CN-65-016,Ashton,ERR2624109,Clinical,VNI,VNIa-93
+ERS2540991,04CN-65-017,04CN-65-017,Ashton,ERR2624253,Clinical,VNI,VNIa-93
+ERS2541069,04CN-65-018,04CN-65-018,Ashton,ERR2624272,Clinical,VNI,VNIa-5
+ERS2541321,04CN-65-019,04CN-65-019,Ashton,ERR2624434,Clinical,VNI,
+ERS2541057,04CN-65-023,04CN-65-023,Ashton,ERR2624237,Clinical,VNI,VNIa-outlier
+ERS2541040,04CN-65-024,04CN-65-024,Ashton,ERR2624484,Clinical,VNI,VNIa-93
+ERS2540964,04CN-65-027,04CN-65-027,Ashton,ERR2624331,Clinical,VNI,VNIa-X
+ERS2541046,04CN-65-030,04CN-65-030,Ashton,ERR2624184,Clinical,VNI,VNIa-93
+ERS2541042,04CN-65-031,04CN-65-031,Ashton,ERR2624151,Clinical,VNI,VNII
+ERS2541051,04CN-65-032,04CN-65-032,Ashton,ERR2624171,Clinical,VNI,VNIa-X
+ERS2541001,04CN-65-035,04CN-65-035,Ashton,ERR2624361,Clinical,VNI,VNIa-93
+ERS2541029,04CN-65-038,04CN-65-038,Ashton,ERR2624358,Clinical,VNI,VNIa-93
+ERS2540924,04CN-65-040,04CN-65-040,Ashton,ERR2624492,Clinical,VNI,VNIa-93
+ERS2541058,04CN-65-043,04CN-65-043,Ashton,ERR2624092,Clinical,VNI,VNIa-93
+ERS2541071,04CN-65-044,04CN-65-044,Ashton,ERR2624468,Clinical,VNI,VNIa-93
+ERS2541007,04CN-65-045,04CN-65-045,Ashton,ERR2624196,Clinical,VNI,VNIb
+ERS2541062,04CN-65-046,04CN-65-046,Ashton,ERR2624504,Clinical,VNI,VNIa-outlier
+ERS2541013,04CN-65-047,04CN-65-047,Ashton,ERR2624367,Clinical,VNI,VNIb
+ERS2541047,04CN-65-049,04CN-65-049,Ashton,ERR2624210,Clinical,VNI,VNIa-93
+ERS2540942,04CN-65-054,04CN-65-054,Ashton,ERR2624172,Clinical,VNI,VNIa-93
+ERS2541304,04CN-65-056,04CN-65-056,Ashton,ERR2624219,Clinical,VNI,VNIa-5
+ERS2541023,04CN-65-059,04CN-65-059,Ashton,ERR2624141,Clinical,VNI,VNIa-93
+ERS2541056,04CN-65-062,04CN-65-062,Ashton,ERR2624337,Clinical,VNI,VNIb
+ERS2541053,04CN-65-064,04CN-65-064,Ashton,ERR2624458,Clinical,VNI,VNIa-93
+ERS2541309,04CN-65-070,04CN-65-070,Ashton,ERR2624212,Clinical,VNI,VNIa-93
+ERS2540938,04CN-65-071,04CN-65-071,Ashton,ERR2624189,Clinical,VNI,VNIa-93
+ERS2540945,04CN-65-072,04CN-65-072,Ashton,ERR2624432,Clinical,VNI,VNIa-32
+ERS2540943,04CN-65-073,04CN-65-073,Ashton,ERR2624202,Clinical,VNI,VNIa-Y
+ERS2541002,04CN-65-074,04CN-65-074,Ashton,ERR2624181,Clinical,VNI,VNIb
+ERS2541310,04CN-65-080,04CN-65-080,Ashton,ERR2624147,Clinical,VNI,VNIa-93
+ERS2541059,04CN-65-085,04CN-65-085,Ashton,ERR2624323,Clinical,VNI,VNIa-93
+ERS2541311,04CN-65-086,04CN-65-086,Ashton,ERR2624205,Clinical,VNI,VNIa-93
+ERS2541316,04CN-65-087,04CN-65-087,Ashton,ERR2624097,Clinical,VNI,VNIb
+ERS2541043,04CN-65-089,04CN-65-089,Ashton,ERR2624329,Clinical,VNI,VNIa-93
+ERS2541012,04CN-65-091,04CN-65-091,Ashton,ERR2624387,Clinical,VNI,VNIa-93
+ERS2540927,04CN-65-095,04CN-65-095,Ashton,ERR2624095,Clinical,VNI,VNIa-93
+ERS2541014,04CN-65-096,04CN-65-096,Ashton,ERR2624275,Clinical,VNI,VNIb
+ERS2541003,04CN-65-098,04CN-65-098,Ashton,ERR2624418,Clinical,VNI,VNIa-93
+ERS2541333,04CN-65-100,04CN-65-100,Ashton,ERR2624382,Clinical,VNI,VNIa-93
+ERS2541324,04CN-65-102,04CN-65-102,Ashton,ERR2624315,Clinical,VNI,VNIa-93
+ERS2540935,04CN-65-103,04CN-65-103,Ashton,ERR2624334,Clinical,VNI,VNIa-93
+ERS2540950,04CN-65-106,04CN-65-106,Ashton,ERR2624139,Clinical,VNI,VNII
+ERS2540959,04CN-65-108,04CN-65-108,Ashton,ERR2624349,Clinical,VNI,VNIa-93
+ERS2540992,04CN-65-125,04CN-65-125,Ashton,ERR2624183,Clinical,VNI,VNIb
+ERS2541055,04CN-65-127,04CN-65-127,Ashton,ERR2624281,Clinical,VNI,VNIa-93
+ERS2540925,04CN-65-129,04CN-65-129,Ashton,ERR2624242,Clinical,VNI,
+ERS2541019,04CN-65-130,04CN-65-130,Ashton,ERR2624350,Clinical,VNI,VNIa-X
+ERS2541072,04CN-65-131,04CN-65-131,Ashton,ERR2624264,Clinical,VNI,VNIa-93
+ERS2541077,04CN-65-132,04CN-65-132,Ashton,ERR2624477,Clinical,VNI,VNIb
+ERS2540931,04CN-65-133,04CN-65-133,Ashton,ERR2624415,Clinical,VNI,
+ERS2540981,04CN-65-134,04CN-65-134,Ashton,ERR2624267,Clinical,VNI,VNIa-93
+ERS2541035,04CN-65-135,04CN-65-135,Ashton,ERR2624380,Clinical,VNI,VNIa-93
+ERS2540947,04CN-65-137,04CN-65-137,Ashton,ERR2624357,Clinical,VNI,VNIa-93
+ERS2541036,04CN-65-141,04CN-65-141,Ashton,ERR2624456,Clinical,VNI,VNIa-93
+ERS2540978,04CN-65-142,04CN-65-142,Ashton,ERR2624215,Clinical,VNI,VNIa-93
+ERS2541049,04CN-65-161,04CN-65-161,Ashton,ERR2624145,Clinical,VNI,VNIa-32
+ERS2540928,04CN-65-163,04CN-65-163,Ashton,ERR2624344,Clinical,VNI,VNIa-93
+ERS2541320,04CN-65-164,04CN-65-164,Ashton,ERR2624482,Clinical,VNI,VNIa-93
+ERS2540923,04CN-65-165,04CN-65-165,Ashton,ERR2624383,Clinical,VNI,VNIa-93
+ERS2540996,04CN-65-166,04CN-65-166,Ashton,ERR2624252,Clinical,VNI,VNIa-93
+ERS2541024,04CN-65-167,04CN-65-167,Ashton,ERR2624230,Clinical,VNI,VNIa-93
+ERS1142690,BK1,20949_2#1,Ashton,ERR1756534,Clinical,VNI,VNIa-4
+ERS1142757,BK100,20427_2#60,Ashton,ERR1671658,Clinical,VNI,VNIa-4
+ERS542396,BK101,14936_1#5,Ashton,ERR842637,Clinical,VNI,VNIa-32
+ERS542397,BK102,14936_1#6,Ashton,ERR842638,Clinical,VNI,VNIa-5
+ERS542398,BK105,14936_1#7,Ashton,ERR842639,Clinical,VNI,VNIa-5
+ERS1142758,BK106,20427_2#61,Ashton,ERR1671659,Clinical,VNI,VNIa-4
+ERS542400,BK107,14936_1#9,Ashton,ERR842640,Clinical,VNI,VNIa-5
+ERS1142759,BK108,20427_2#62,Ashton,ERR1671660,Clinical,VNI,VNIa-93
+ERS1142760,BK109,20427_2#63,Ashton,ERR1671661,Clinical,VNI,VNIa-4
+ERS1142696,BK11,20427_2#5,Ashton,ERR1671603,Clinical,VNI,VNIa-32
+ERS542403,BK111,15277_3#1,Ashton,ERR852919,Clinical,VNI,VNIa-4
+ERS1142761,BK112,20427_2#64,Ashton,ERR1671662,Clinical,VNI,VNIa-93
+ERS1142762,BK113,20427_2#65,Ashton,ERR1671663,Clinical,VNI,VNIa-4
+ERS542406,BK114,14936_1#15,Ashton,ERR842644,Clinical,VNI,VNIa-4
+ERS1142763,BK115,20427_2#66,Ashton,ERR1671664,Clinical,VNI,VNIa-5
+ERS1142764,BK116,20427_2#67,Ashton,ERR1671665,Clinical,VNI,VNIa-5
+ERS1142765,BK117,20427_2#68,Ashton,ERR1671666,Clinical,VNI,VNIa-5
+ERS1142697,BK12,20427_2#6,Ashton,ERR1671604,Clinical,VNI,VNIa-93
+ERS542413,BK123,14936_1#22,Ashton,ERR842647,Clinical,VNI,VNIa-4
+ERS542414,BK125,15277_3#7,Ashton,ERR852925,Clinical,VNI,VNIa-4
+ERS542415,BK127,15277_3#8,Ashton,ERR852926,Clinical,VNI,VNIa-4
+ERS1142767,BK128,20949_2#10,Ashton,ERR1756543,Clinical,VNI,VNIa-5
+ERS1142768,BK129,20427_2#69,Ashton,ERR1671667,Clinical,VNI,VNIa-93
+ERS1142698,BK13,20427_2#7,Ashton,ERR1671605,Clinical,VNI,VNIa-4
+ERS1142769,BK132,20427_2#70,Ashton,ERR1671668,Clinical,VNI,VNIa-93
+ERS1142770,BK134,20427_2#71,Ashton,ERR1671669,Clinical,VNI,VNIa-4
+ERS1142773,BK137,20427_3#1,Ashton,ERR1671671,Clinical,VNI,VNIa-4
+ERS1142774,BK138,20949_2#12,Ashton,ERR1756545,Clinical,VNI,VNIa-93
+ERS1142775,BK139,20949_2#13,Ashton,ERR1756546,Clinical,VNI,VNIa-5
+ERS1142699,BK14,20427_2#8,Ashton,ERR1671606,Clinical,VNI,VNIa-4
+ERS1142776,BK140,20949_2#14,Ashton,ERR1756547,Clinical,VNI,VNIa-5
+ERS1142777,BK141,20427_3#2,Ashton,ERR1671672,Clinical,VNI,VNIa-5
+ERS1142778,BK142,20949_2#15,Ashton,ERR1756548,Clinical,VNI,VNIa-5
+ERS1142779,BK143,20427_3#3,Ashton,ERR1671673,Clinical,VNI,VNIa-4
+ERS542429,BK144,14936_1#38,Ashton,ERR842658,Clinical,VNI,VNIa-93
+ERS1142780,BK145,20949_2#16,Ashton,ERR1756549,Clinical,VNI,VNIa-32
+ERS1142781,BK146,20949_2#17,Ashton,ERR1756550,Clinical,VNI,VNIa-5
+ERS542578,BK147,14893_1#90,Ashton,ERR842628,Clinical,VNI,VNIa-5
+ERS1142782,BK148,20949_2#18,Ashton,ERR1756551,Clinical,VNI,VNIa-4
+ERS1142783,BK149,20427_3#4,Ashton,ERR1671674,Clinical,VNI,VNIa-4
+ERS542301,BK15,14892_1#6,Ashton,ERR842481,Clinical,VNI,VNIa-5
+ERS542434,BK150,14936_1#43,Ashton,ERR842661,Clinical,VNI,VNIa-93
+ERS1142784,BK151,20427_3#5,Ashton,ERR1671675,Clinical,VNI,VNIa-4
+ERS542436,BK153,14936_1#45,Ashton,ERR842663,Clinical,VNI,VNIa-93
+ERS542437,BK155,14936_1#46,Ashton,ERR842664,Clinical,VNI,VNIa-4
+ERS542435,BK156,14936_1#44,Ashton,ERR842662,Clinical,VNI,VNIa-4
+ERS1142785,BK157,20427_3#6,Ashton,ERR1671676,Clinical,VNI,VNIa-93
+ERS1142786,BK158,20427_3#7,Ashton,ERR1671677,Clinical,VNI,VNIa-outlier
+ERS542440,BK159,14936_1#49,Ashton,ERR842666,Clinical,VNI,VNIa-5
+ERS542309,BK16,14892_1#14,Ashton,ERR842488,Clinical,VNI,VNIa-4
+ERS1142787,BK160,20427_3#8,Ashton,ERR1671678,Clinical,VNI,VNIa-5
+ERS542442,BK161,14936_1#51,Ashton,ERR842668,Clinical,VNI,VNIa-5
+ERS1142788,BK162,20427_3#9,Ashton,ERR1671679,Clinical,VNI,VNIa-93
+ERS1142789,BK163,20427_3#10,Ashton,ERR1671680,Clinical,VNI,VNIa-4
+ERS542445,BK164,14936_1#54,Ashton,ERR842670,Clinical,VNI,VNIa-4
+ERS1142790,BK165,20427_3#11,Ashton,ERR1671681,Clinical,VNI,VNIa-4
+ERS1142791,BK166,20427_3#12,Ashton,ERR1671682,Clinical,VNI,VNIa-93
+ERS542448,BK167,14936_1#57,Ashton,ERR842672,Clinical,VNI,VNIa-32
+ERS1142793,BK169,20427_3#13,Ashton,ERR1671683,Clinical,VNI,VNIa-5
+ERS542317,BK17,14892_1#22,Ashton,ERR842495,Clinical,VNI,VNIa-32
+ERS542451,BK171,14936_1#60,Ashton,ERR842675,Clinical,VNI,VNIa-5
+ERS1142794,BK172,20427_3#14,Ashton,ERR1671684,Clinical,VNI,VNIa-4
+ERS542452,BK173,14936_1#61,Ashton,ERR842676,Clinical,VNI,VNIa-5
+ERS542453,BK174,14936_1#62,Ashton,ERR842677,Clinical,VNI,VNIa-93
+ERS1142795,BK175,20427_3#15,Ashton,ERR1671685,Clinical,VNI,VNIa-5
+ERS542456,BK177,15277_3#18,Ashton,ERR852936,Clinical,VNI,VNIa-4
+ERS1142797,BK178,20427_3#16,Ashton,ERR1671686,Clinical,VNI,VNIa-4
+ERS1142798,BK179,20949_2#21,Ashton,ERR1756554,Clinical,VNI,VNIa-93
+ERS542325,BK18,14892_1#1,Ashton,ERR842477,Clinical,VNI,VNIa-4
+ERS542459,BK180,14936_1#68,Ashton,ERR842680,Clinical,VNI,VNIa-4
+ERS1142799,BK181,20427_3#17,Ashton,ERR1671687,Clinical,VNI,VNIa-5
+ERS1142800,BK182,20427_3#18,Ashton,ERR1671688,Clinical,VNI,VNIa-4
+ERS1142801,BK183,20949_2#22,Ashton,ERR1756555,Clinical,VNI,VNIa-4
+ERS1142802,BK184,20427_3#19,Ashton,ERR1671689,Clinical,VNI,VNIa-5
+ERS1142803,BK185,20949_2#23,Ashton,ERR1756556,Clinical,VNI,VNIa-5
+ERS1142804,BK186,20949_2#24,Ashton,ERR1756557,Clinical,VNI,VNIa-5
+ERS1142805,BK187,20949_2#25,Ashton,ERR1756558,Clinical,VNI,VNIa-5
+ERS1142806,BK188,20427_3#20,Ashton,ERR1671690,Clinical,VNI,VNIa-4
+ERS542468,BK189,14936_1#77,Ashton,ERR842689,Clinical,VNI,VNIa-4
+ERS1142700,BK19,20427_2#9,Ashton,ERR1671607,Clinical,VNI,VNIa-32
+ERS1142807,BK190,20427_3#21,Ashton,ERR1671691,Clinical,VNI,VNIa-5
+ERS542470,BK191,14936_1#79,Ashton,ERR842690,Clinical,VNI,VNIa-4
+ERS542471,BK192,14936_1#80,Ashton,ERR842691,Clinical,VNI,VNIa-4
+ERS1142808,BK193,20427_3#22,Ashton,ERR1671692,Clinical,VNI,VNIa-4
+ERS1142811,BK196,20427_3#23,Ashton,ERR1671693,Clinical,VNI,VNIa-5
+ERS1142812,BK197,20427_3#24,Ashton,ERR1671694,Clinical,VNI,VNIa-5
+ERS1142813,BK198,20949_2#27,Ashton,ERR1756560,Clinical,VNI,VNIa-4
+ERS1142814,BK199,20427_3#25,Ashton,ERR1671695,Clinical,VNI,VNIa-4
+ERS1142691,BK2,20949_2#2,Ashton,ERR1756535,Clinical,VNI,VNIa-4
+ERS542341,BK20,14892_1#45,Ashton,ERR842511,Clinical,VNI,VNIa-5
+ERS1142815,BK200,20427_3#26,Ashton,ERR1671696,Clinical,VNI,VNIa-4
+ERS1142816,BK201,20427_3#27,Ashton,ERR1671697,Clinical,VNI,VNIa-5
+ERS1142817,BK202,20427_3#28,Ashton,ERR1671698,Clinical,VNI,VNIa-4
+ERS1142818,BK203,20427_3#29,Ashton,ERR1671699,Clinical,VNI,VNIa-4
+ERS1142819,BK204,20427_3#30,Ashton,ERR1671700,Clinical,VNI,VNIa-4
+ERS542484,BK205,14936_1#93,Ashton,ERR842704,Clinical,VNI,VNIa-4
+ERS1142820,BK206,20949_2#28,Ashton,ERR1756561,Clinical,VNI,VNIa-93
+ERS1142821,BK207,20427_3#31,Ashton,ERR1671701,Clinical,VNI,VNIa-5
+ERS542488,BK209,14893_1#2,Ashton,ERR842558,Clinical,VNI,VNIa-32
+ERS1142701,BK21,20427_2#10,Ashton,ERR1671608,Clinical,VNI,VNIa-5
+ERS542489,BK210,14893_1#3,Ashton,ERR842559,Clinical,VNI,VNIa-5
+ERS542490,BK211,14893_1#4,Ashton,ERR842560,Clinical,VNI,VNIa-5
+ERS1142823,BK212,20427_3#32,Ashton,ERR1671702,Clinical,VNI,VNIa-4
+ERS1142824,BK213,20949_2#29,Ashton,ERR1756562,Clinical,VNI,VNIa-93
+ERS1142825,BK214,20427_3#33,Ashton,ERR1671703,Clinical,VNI,VNIa-5
+ERS542494,BK215,14893_1#8,Ashton,ERR842563,Clinical,VNI,VNIa-4
+ERS1142826,BK216,20427_3#34,Ashton,ERR1671704,Clinical,VNI,VNIa-4
+ERS542496,BK217,14893_1#10,Ashton,ERR842565,Clinical,VNI,VNIa-5
+ERS542497,BK218,14893_1#11,Ashton,ERR842566,Clinical,VNI,VNIa-4
+ERS542498,BK219,14893_1#12,Ashton,ERR842567,Clinical,VNI,VNIa-4
+ERS1142702,BK22,20427_2#11,Ashton,ERR1671609,Clinical,VNI,VNIa-5
+ERS1142827,BK220,20427_3#35,Ashton,ERR1671705,Clinical,VNI,VNIa-4
+ERS542500,BK221,14893_1#14,Ashton,ERR842569,Clinical,VNI,VNIa-5
+ERS542501,BK222,14893_1#15,Ashton,ERR842570,Clinical,VNI,VNIa-5
+ERS1142829,BK224,20427_3#36,Ashton,ERR1671706,Clinical,VNI,VNIa-4
+ERS1142830,BK225,20427_3#37,Ashton,ERR1671707,Clinical,VNI,VNIa-4
+ERS542584,BK226,15277_3#42,Ashton,ERR852960,Clinical,VNI,VNIa-93
+ERS542502,BK227,14893_1#16,Ashton,ERR842571,Clinical,VNI,VNIa-93
+ERS1142831,BK228,20427_3#38,Ashton,ERR1671708,Clinical,VNI,VNIa-93
+ERS1142832,BK229,20427_3#39,Ashton,ERR1671709,Clinical,VNI,VNIa-5
+ERS1142703,BK23,20427_2#12,Ashton,ERR1671610,Clinical,VNI,VNIa-4
+ERS1142833,BK230,20427_3#40,Ashton,ERR1671710,Clinical,VNI,VNIa-X
+ERS1142834,BK231,20427_3#41,Ashton,ERR1671711,Clinical,VNI,VNIa-4
+ERS1142835,BK232,20949_2#31,Ashton,ERR1756564,Clinical,VNI,VNIa-4
+ERS1142836,BK233,20427_3#42,Ashton,ERR1671712,Clinical,VNI,VNIa-5
+ERS1142837,BK234,20427_3#43,Ashton,ERR1671713,Clinical,VNI,VNIa-4
+ERS1142838,BK235,20427_3#44,Ashton,ERR1671714,Clinical,VNI,VNIa-4
+ERS1142839,BK236,20427_3#45,Ashton,ERR1671715,Clinical,VNI,VNIa-5
+ERS1142840,BK237,20427_3#46,Ashton,ERR1671716,Clinical,VNI,VNIa-93
+ERS1142841,BK238,20427_3#47,Ashton,ERR1671717,Clinical,VNI,VNIa-4
+ERS1142842,BK239,20427_3#48,Ashton,ERR1671718,Clinical,VNI,VNIa-4
+ERS1142704,BK24,20427_2#13,Ashton,ERR1671611,Clinical,VNI,VNIa-93
+ERS1142843,BK240,20427_3#49,Ashton,ERR1671719,Clinical,VNI,VNIa-4
+ERS1142844,BK241,20427_3#50,Ashton,ERR1671720,Clinical,VNI,VNIa-5
+ERS1142845,BK242,20427_3#51,Ashton,ERR1671721,Clinical,VNI,VNIa-5
+ERS1142846,BK243,20427_3#52,Ashton,ERR1671722,Clinical,VNI,VNIa-93
+ERS1142847,BK244,20427_3#53,Ashton,ERR1671723,Clinical,VNI,VNIa-4
+ERS542520,BK245,14893_1#34,Ashton,ERR842589,Clinical,VNI,VNIa-4
+ERS1142848,BK246,20427_3#54,Ashton,ERR1671724,Clinical,VNI,VNIa-4
+ERS1142849,BK247,20427_3#55,Ashton,ERR1671725,Clinical,VNI,VNIa-4
+ERS1142850,BK248,20427_3#56,Ashton,ERR1671726,Clinical,VNI,VNIa-4
+ERS1142851,BK249,20427_3#57,Ashton,ERR1671727,Clinical,VNI,VNIa-5
+ERS1142705,BK25,20427_2#14,Ashton,ERR1671612,Clinical,VNI,VNIa-5
+ERS1142852,BK250,20427_3#58,Ashton,ERR1671728,Clinical,VNI,VNIa-4
+ERS1142853,BK251,20949_2#32,Ashton,ERR1756565,Clinical,VNI,VNIa-5
+ERS542527,BK252,14893_1#40,Ashton,ERR842593,Clinical,VNI,VNIa-93
+ERS1142854,BK253,20949_2#33,Ashton,ERR1756566,Clinical,VNI,VNIa-4
+ERS1142855,BK254,20949_2#34,Ashton,ERR1756567,Clinical,VNI,VNIa-4
+ERS1142856,BK255,20949_2#35,Ashton,ERR1756568,Clinical,VNI,VNIa-5
+ERS1142857,BK256,20949_2#36,Ashton,ERR1756569,Clinical,VNI,VNIa-93
+ERS1142858,BK257,20949_2#37,Ashton,ERR1756570,Clinical,VNI,VNIa-5
+ERS1142859,BK258,20949_2#38,Ashton,ERR1756571,Clinical,VNI,VNIa-93
+ERS1142860,BK259,20949_2#39,Ashton,ERR1756572,Clinical,VNI,VNIa-93
+ERS542389,BK26,14892_1#93,Ashton,ERR842555,Clinical,VNI,VNIa-5
+ERS1142861,BK260,20427_4#1,Ashton,ERR1671729,Clinical,VNI,VNIa-4
+ERS542536,BK261,14893_1#48,Ashton,ERR842599,Clinical,VNI,VNIa-4
+ERS542537,BK262,14893_1#49,Ashton,ERR842600,Clinical,VNI,VNIa-5
+ERS1142862,BK263,20427_4#2,Ashton,ERR1671730,Clinical,VNI,VNIa-4
+ERS542539,BK264,14893_1#51,Ashton,ERR842602,Clinical,VNI,VNIa-4
+ERS542540,BK265,14893_1#52,Ashton,ERR842603,Clinical,VNI,VNIa-4
+ERS1142863,BK266,20427_4#3,Ashton,ERR1671731,Clinical,VNI,VNIa-4
+ERS1142864,BK267,20427_4#4,Ashton,ERR1671732,Clinical,VNI,VNIa-4
+ERS1142865,BK268,20949_2#40,Ashton,ERR1756573,Clinical,VNI,VNIa-4
+ERS1142866,BK269,20427_4#5,Ashton,ERR1671733,Clinical,VNI,VNIa-5
+ERS542302,BK27,14892_1#7,Ashton,ERR842482,Clinical,VNI,VNIa-32
+ERS542545,BK270,14893_1#57,Ashton,ERR842607,Clinical,VNI,VNIa-4
+ERS542546,BK271,14893_1#58,Ashton,ERR842608,Clinical,VNI,VNIa-4
+ERS1142867,BK272,20949_2#41,Ashton,ERR1756574,Clinical,VNI,VNIa-5
+ERS1142868,BK273,20427_4#6,Ashton,ERR1671734,Clinical,VNI,VNIa-93
+ERS1142869,BK274,20949_2#42,Ashton,ERR1756575,Clinical,VNI,VNIa-4
+ERS1142870,BK275,20427_4#7,Ashton,ERR1671735,Clinical,VNI,VNIa-5
+ERS1142871,BK276,20427_4#8,Ashton,ERR1671736,Clinical,VNI,VNIa-4
+ERS1142872,BK277,20949_2#43,Ashton,ERR1756576,Clinical,VNI,VNIa-93
+ERS1142873,BK278,20427_4#9,Ashton,ERR1671737,Clinical,VNI,VNIa-4
+ERS542554,BK279,14893_1#66,Ashton,ERR842612,Clinical,VNI,VNIa-4
+ERS542310,BK28,14892_1#15,Ashton,ERR842489,Clinical,VNI,VNIa-5
+ERS1142874,BK280,20427_4#10,Ashton,ERR1671738,Clinical,VNI,VNIa-4
+ERS1142875,BK282,20427_4#11,Ashton,ERR1671739,Clinical,VNI,VNIa-4
+ERS1142876,BK283,20949_2#44,Ashton,ERR1756577,Clinical,VNI,VNIa-93
+ERS542558,BK284,14893_1#70,Ashton,ERR842614,Clinical,VNI,VNIa-4
+ERS1142877,BK285,20427_4#12,Ashton,ERR1671740,Clinical,VNI,VNIa-4
+ERS1142878,BK286,20427_4#13,Ashton,ERR1671741,Clinical,VNI,VNIa-4
+ERS2541102,BK287,BK287,Ashton,ERR2624293,Clinical,VNI,VNIa-4
+ERS1142880,BK288,20427_4#15,Ashton,ERR1671743,Clinical,VNI,VNIa-5
+ERS1142881,BK289,20949_2#45,Ashton,ERR1756578,Clinical,VNI,VNIa-93
+ERS1142706,BK29,20949_2#3,Ashton,ERR1756536,Clinical,VNI,VNIa-93
+ERS1142882,BK290,20949_2#46,Ashton,ERR1756579,Clinical,VNI,VNIa-5
+ERS1142883,BK291,20427_4#16,Ashton,ERR1671744,Clinical,VNI,VNIa-4
+ERS1142885,BK293,20427_4#17,Ashton,ERR1671745,Clinical,VNI,VNIa-5
+ERS1142886,BK294,20949_2#48,Ashton,ERR1756581,Clinical,VNI,VNIa-5
+ERS1142887,BK295,20949_2#49,Ashton,ERR1756582,Clinical,VNI,VNIa-4
+ERS1142888,BK296,20427_4#18,Ashton,ERR1671746,Clinical,VNI,VNIa-5
+ERS1142889,BK297,20427_4#19,Ashton,ERR1671747,Clinical,VNI,VNIa-5
+ERS1142890,BK298,20949_2#50,Ashton,ERR1756583,Clinical,VNI,VNIa-5
+ERS1142692,BK3,20427_2#1,Ashton,ERR1671599,Clinical,VNI,VNIa-5
+ERS542326,BK30,14892_1#30,Ashton,ERR842498,Clinical,VNI,VNIa-4
+ERS1142892,BK301,20949_2#52,Ashton,ERR1756585,Clinical,VNI,VNIa-5
+ERS542334,BK31,14892_1#38,Ashton,ERR842505,Clinical,VNI,VNIa-5
+ERS542342,BK32,14892_1#46,Ashton,ERR842512,Clinical,VNI,VNIa-4
+ERS1142707,BK33,20427_2#15,Ashton,ERR1671613,Clinical,VNI,VNIa-93
+ERS1142708,BK34,20949_2#4,Ashton,ERR1756537,Clinical,VNI,VNIa-5
+ERS542366,BK35,14892_1#70,Ashton,ERR842534,Clinical,VNI,VNIa-4
+ERS542374,BK36,14892_1#78,Ashton,ERR842541,Clinical,VNI,VNIa-32
+ERS1142709,BK37,20427_2#16,Ashton,ERR1671614,Clinical,VNI,VNIa-5
+ERS1142710,BK38,20949_2#5,Ashton,ERR1756538,Clinical,VNI,VNIa-5
+ERS542303,BK39,14892_1#8,Ashton,ERR842483,Clinical,VNI,VNIa-5
+ERS542324,BK4,14892_1#29,Ashton,ERR842497,Clinical,VNI,VNIa-5
+ERS542311,BK40,14892_1#16,Ashton,ERR842490,Clinical,VNI,VNIa-4
+ERS1142711,BK41,20427_2#17,Ashton,ERR1671615,Clinical,VNI,VNIa-5
+ERS1142712,BK42,20427_2#18,Ashton,ERR1671616,Clinical,VNI,VNIa-5
+ERS542335,BK43,14892_1#39,Ashton,ERR842506,Clinical,VNI,VNIa-5
+ERS542343,BK44,14892_1#47,Ashton,ERR842513,Clinical,VNI,VNIa-5
+ERS1142713,BK45,20427_2#19,Ashton,ERR1671617,Clinical,VNI,VNIa-5
+ERS1142714,BK46,20427_2#20,Ashton,ERR1671618,Clinical,VNI,VNIa-32
+ERS1142715,BK47,20949_2#6,Ashton,ERR1756539,Clinical,VNI,VNIa-5
+ERS1142716,BK48,20427_2#21,Ashton,ERR1671619,Clinical,VNI,VNIa-4
+ERS1142717,BK49,20427_2#22,Ashton,ERR1671620,Clinical,VNI,VNIa-5
+ERS1142693,BK5,20427_2#2,Ashton,ERR1671600,Clinical,VNI,VNIa-4
+ERS542391,BK50,14892_1#95,Ashton,ERR842557,Clinical,VNI,VNIa-5
+ERS1142718,BK51,20427_2#23,Ashton,ERR1671621,Clinical,VNI,VNIa-5
+ERS542312,BK52,14892_1#17,Ashton,ERR842491,Clinical,VNI,VNIa-4
+ERS1142719,BK53,20427_2#24,Ashton,ERR1671622,Clinical,VNI,VNIa-4
+ERS542328,BK54,14892_1#32,Ashton,ERR842500,Clinical,VNI,VNIa-5
+ERS542336,BK55,14892_1#40,Ashton,ERR842507,Clinical,VNI,VNIa-93
+ERS542344,BK56,14892_1#48,Ashton,ERR842514,Clinical,VNI,VNIa-4
+ERS1142720,BK57,20427_2#25,Ashton,ERR1671623,Clinical,VNI,VNIa-4
+ERS1142721,BK58,20427_2#26,Ashton,ERR1671624,Clinical,VNI,VNIa-4
+ERS1142722,BK59,20427_2#27,Ashton,ERR1671625,Clinical,VNI,VNIa-4
+ERS542340,BK6,14892_1#44,Ashton,ERR842510,Clinical,VNI,VNIa-4
+ERS1142723,BK60,20427_2#28,Ashton,ERR1671626,Clinical,VNI,VNIa-5
+ERS1142724,BK61,20427_2#29,Ashton,ERR1671627,Clinical,VNI,VNIa-4
+ERS542392,BK62,14936_1#1,Ashton,ERR842634,Clinical,VNI,VNIa-5
+ERS1142725,BK63,20427_2#30,Ashton,ERR1671628,Clinical,VNI,VNIa-5
+ERS1142726,BK64,20427_2#31,Ashton,ERR1671629,Clinical,VNI,VNIa-4
+ERS542321,BK65,14892_1#26,Ashton,ERR842496,Clinical,VNI,VNIa-5
+ERS1142727,BK66,20427_2#32,Ashton,ERR1671630,Clinical,VNI,VNIa-32
+ERS1142728,BK68,20427_2#33,Ashton,ERR1671631,Clinical,VNI,VNIa-32
+ERS1142729,BK69,20427_2#34,Ashton,ERR1671632,Clinical,VNI,VNIa-4
+ERS1142694,BK7,20427_2#3,Ashton,ERR1671601,Clinical,VNI,VNIa-4
+ERS542361,BK70,14892_1#65,Ashton,ERR842530,Clinical,VNI,VNIa-4
+ERS1142730,BK71,20427_2#35,Ashton,ERR1671633,Clinical,VNI,VNIa-4
+ERS1142731,BK72,20427_2#36,Ashton,ERR1671634,Clinical,VNI,VNIa-93
+ERS1142732,BK73,20427_2#37,Ashton,ERR1671635,Clinical,VNI,VNIa-4
+ERS1142733,BK74,20427_2#38,Ashton,ERR1671636,Clinical,VNI,VNIa-4
+ERS542306,BK75,14892_1#11,Ashton,ERR842485,Clinical,VNI,VNIa-4
+ERS1142734,BK76,20427_2#39,Ashton,ERR1671637,Clinical,VNI,VNIa-5
+ERS1142735,BK77,20949_2#7,Ashton,ERR1756540,Clinical,VNI,VNIa-5
+ERS1142736,BK78,20949_2#8,Ashton,ERR1756541,Clinical,VNI,VNIa-5
+ERS1142737,BK79,20427_2#40,Ashton,ERR1671638,Clinical,VNI,VNIa-4
+ERS1142695,BK8,20427_2#4,Ashton,ERR1671602,Clinical,VNI,VNIb
+ERS1142738,BK80,20427_2#41,Ashton,ERR1671639,Clinical,VNI,VNIa-4
+ERS1142739,BK81,20427_2#42,Ashton,ERR1671640,Clinical,VNI,VNIa-32
+ERS1142740,BK82,20427_2#43,Ashton,ERR1671641,Clinical,VNI,VNIa-5
+ERS1142741,BK83,20427_2#44,Ashton,ERR1671642,Clinical,VNI,VNIa-4
+ERS1142742,BK84,20427_2#45,Ashton,ERR1671643,Clinical,VNI,VNIa-4
+ERS1142743,BK85,20427_2#46,Ashton,ERR1671644,Clinical,VNI,VNIa-93
+ERS1142744,BK86,20427_2#47,Ashton,ERR1671645,Clinical,VNI,VNIa-4
+ERS542394,BK87,14936_1#3,Ashton,ERR842635,Clinical,VNI,VNIa-4
+ERS1142745,BK88,20427_2#48,Ashton,ERR1671646,Clinical,VNI,VNIa-4
+ERS1142746,BK89,20427_2#49,Ashton,ERR1671647,Clinical,VNI,VNIa-4
+ERS1142747,BK90,20427_2#50,Ashton,ERR1671648,Clinical,VNI,VNIa-4
+ERS1142748,BK91,20427_2#51,Ashton,ERR1671649,Clinical,VNI,VNIa-5
+ERS1142749,BK92,20427_2#52,Ashton,ERR1671650,Clinical,VNI,VNIa-32
+ERS1142750,BK93,20427_2#53,Ashton,ERR1671651,Clinical,VNI,VNIa-4
+ERS1142751,BK94,20427_2#54,Ashton,ERR1671652,Clinical,VNI,VNIa-5
+ERS1142752,BK95,20427_2#55,Ashton,ERR1671653,Clinical,VNI,VNIa-4
+ERS1142753,BK96,20427_2#56,Ashton,ERR1671654,Clinical,VNI,VNIa-4
+ERS1142754,BK97,20427_2#57,Ashton,ERR1671655,Clinical,VNI,VNIa-5
+ERS1142755,BK98,20427_2#58,Ashton,ERR1671656,Clinical,VNI,VNIa-4
+ERS1142756,BK99,20427_2#59,Ashton,ERR1671657,Clinical,VNI,VNIa-5
+ERS542586,BMD0367,14893_3#52,Ashton,ERR775391,Clinical,VNI,VNIa-5
+ERS2541335,BMD101,BMD101,Ashton,ERR2624100,Clinical,VNI,VNIa-5
+ERS542587,BMD1198,14893_3#53,Ashton,ERR775392,Clinical,VNI,VNIa-5
+ERS2541165,BMD1228,BMD1228,Ashton,ERR2624491,Clinical,VNI,VNIa-5
+ERS2541240,BMD1232,BMD1232,Ashton,ERR2624416,Clinical,VNI,VNIa-5
+ERS2541258,BMD1291,BMD1291,Ashton,ERR2624106,Clinical,VNI,VNIa-5
+ERS1142896,BMD1338,20949_2#56,Ashton,ERR1764085,Clinical,VNI,VNIa-5
+ERS2541242,BMD1353,BMD1353,Ashton,ERR2624126,Clinical,VNI,VNIa-5
+ERS2541109,BMD1392,BMD1392,Ashton,ERR2624444,Clinical,VNI,VNIa-4
+ERS2541103,BMD1415,BMD1415,Ashton,ERR2624218,Clinical,VNI,VNIa-4
+ERS2541176,BMD1452,BMD1452,Ashton,ERR2624297,Clinical,VNI,VNIa-5
+ERS2541129,BMD1465,BMD1465,Ashton,ERR2624494,Clinical,VNI,VNIa-5
+ERS2541208,BMD1534,BMD1534,Ashton,ERR2624177,Clinical,VNI,VNIa-5
+ERS2541252,BMD1592,BMD1592,Ashton,ERR2624472,Clinical,VNI,VNIa-5
+ERS1142898,BMD1646,20427_4#20,Ashton,ERR1671748,Clinical,VNI,VNIa-5
+ERS2541306,BMD1673,BMD1673,Ashton,ERR2624391,Clinical,VNI,VNIa-5
+ERS2541096,BMD1713,BMD1713,Ashton,ERR2624256,Clinical,VNI,VNIa-5
+ERS2541101,BMD1716,BMD1716,Ashton,ERR2624394,Clinical,VNI,VNIa-5
+ERS2541112,BMD1828,BMD1828,Ashton,ERR2624152,Clinical,VNI,VNIa-5
+ERS2541152,BMD1879,BMD1879,Ashton,ERR2624158,Clinical,VNI,VNIa-4
+ERS2541228,BMD1903,BMD1903,Ashton,ERR2624340,Clinical,VNI,VNIa-5
+ERS2541195,BMD1929,BMD1929,Ashton,ERR2624316,Clinical,VNI,VNIa-4
+ERS2541279,BMD2031,BMD2031,Ashton,ERR2624133,Clinical,VNI,VNIa-5
+ERS2541122,BMD2106,BMD2106,Ashton,ERR2624102,Clinical,VNI,VNIa-5
+ERS2541247,BMD2209,BMD2209,Ashton,ERR2624406,Clinical,VNI,VNIa-4
+ERS2541192,BMD2216,BMD2216,Ashton,ERR2624246,Clinical,VNI,VNIa-32
+ERS2541161,BMD2298,BMD2298,Ashton,ERR2624090,Clinical,VNI,VNIa-5
+ERS2541230,BMD2407,BMD2407,Ashton,ERR2624356,Clinical,VNI,VNIa-5
+ERS2541327,BMD2495,BMD2495,Ashton,ERR2624343,Clinical,VNI,VNIa-5
+ERS2541162,BMD2617,BMD2617,Ashton,ERR2624480,Clinical,VNI,VNIa-5
+ERS2541159,BMD2620,BMD2620,Ashton,ERR2624314,Clinical,VNI,VNIa-93
+ERS2541330,BMD2655,BMD2655,Ashton,ERR2624227,Clinical,VNI,VNIa-5
+ERS2541090,BMD2733,BMD2733,Ashton,ERR2624130,Clinical,VNI,VNIa-4
+ERS2541328,BMD2765,BMD2765,Ashton,ERR2624404,Clinical,VNI,VNIa-5
+ERS2541134,BMD2773,BMD2773,Ashton,ERR2624450,Clinical,VNI,VNIa-4
+ERS2541198,BMD2801,BMD2801,Ashton,ERR2624299,Clinical,VNI,VNIa-32
+ERS2541218,BMD2806,BMD2806,Ashton,ERR2624211,Clinical,VNI,VNIa-4
+ERS2541128,BMD2809,BMD2809,Ashton,ERR2624351,Clinical,VNI,VNIa-5
+ERS2541287,BMD2834,BMD2834,Ashton,ERR2624235,Clinical,VNI,VNIa-4
+ERS2541114,BMD2973,BMD2973,Ashton,ERR2624503,Clinical,VNI,VNIa-4
+ERS2541315,BMD3002,BMD3002,Ashton,ERR2624278,Clinical,VNI,VNIa-5
+ERS2541273,BMD3079,BMD3079,Ashton,ERR2624194,Clinical,VNI,VNIa-5
+ERS2541264,BMD3117,BMD3117,Ashton,ERR2624428,Clinical,VNI,VNIa-5
+ERS2541207,BMD3118,BMD3118,Ashton,ERR2624483,Clinical,VNI,VNIa-5
+ERS2541284,BMD3135,BMD3135,Ashton,ERR2624112,Clinical,VNI,VNIa-5
+ERS2541126,BMD3144,BMD3144,Ashton,ERR2624423,Clinical,VNI,VNIa-5
+ERS2541086,BMD3244,BMD3244,Ashton,ERR2624377,Clinical,VNI,VNIa-5
+ERS2541220,BMD368,BMD368,Ashton,ERR2624495,Clinical,VNI,VNIa-5
+ERS2541153,BMD394,BMD394,Ashton,ERR2624402,Clinical,VNI,VNIa-4
+ERS2541183,BMD494,BMD494,Ashton,ERR2624345,Clinical,VNI,VNIa-5
+ERS2541202,BMD534,BMD534,Ashton,ERR2624417,Clinical,VNI,VNIa-5
+ERS1142899,BMD673,20949_2#58,Ashton,ERR1756590,Clinical,VNI,VNIa-5
+ERS542590,BMD700,14893_3#56,Ashton,ERR775395,Clinical,VNI,VNIa-5
+ERS2541087,BMD732,BMD732,Ashton,ERR2624114,Clinical,VNI,VNIa-5
+ERS2541149,BMD745,BMD745,Ashton,ERR2624301,Clinical,VNI,VNIa-4
+ERS2541274,BMD761,BMD761,Ashton,ERR2624203,Clinical,VNI,VNIa-5
+ERS2541188,BMD852,BMD852,Ashton,ERR2624161,Clinical,VNI,VNIa-5
+ERS1142893,BMD854,20949_2#53,Ashton,ERR1756586,Clinical,VNI,VNIa-5
+ERS2541097,BMD865,BMD865,Ashton,ERR2624454,Clinical,VNI,VNIa-5
+ERS2541081,BMD867,BMD867,Ashton,ERR2624339,Clinical,VNI,VNIa-5
+ERS2541169,BMD894,BMD894,Ashton,ERR2624170,Clinical,VNI,VNIa-5
+ERS2541210,BMD899,BMD899,Ashton,ERR2624279,Clinical,VNI,VNIa-5
+ERS1142894,BMD903,20949_2#54,Ashton,ERR1756587,Clinical,VNI,VNIa-5
+ERS2541246,BMD910,BMD910,Ashton,ERR2624481,Clinical,VNI,VNIa-5
+ERS2541156,BMD915,BMD915,Ashton,ERR2624113,Clinical,VNI,VNIa-32
+ERS2541105,BMD942,BMD942,Ashton,ERR2624207,Clinical,VNI,VNIa-32
+ERS1142895,BMD973,20949_2#55,Ashton,ERR1756588,Clinical,VNI,VNIa-4
+ERS2541405,CNS_1017,CNS_1017,Ashton,ERR2624163,Clinical,VNI,VNIa-4
+ERS2541404,CNS_1026,CNS_1026,Ashton,ERR2624282,Clinical,VNI,VNIa-4
+ERS2541403,CNS_1047,CNS_1047,Ashton,ERR2624220,Clinical,VNI,VNIa-4
+ERS2541402,CNS_1085,CNS_1085,Ashton,ERR2624098,Clinical,VNI,VNIa-4
+ERS2541401,CNS_1087,CNS_1087,Ashton,ERR2624223,Clinical,VNI,VNIa-4
+ERS2541400,CNS_1089,CNS_1089,Ashton,ERR2624368,Clinical,VNI,VNIa-4
+ERS2541399,CNS_1110,CNS_1110,Ashton,ERR2624228,Clinical,VNI,VNIa-4
+ERS2541398,CNS_1125,CNS_1125,Ashton,ERR2624254,Clinical,VNI,VNIa-4
+ERS2541397,CNS_1129,CNS_1129,Ashton,ERR2624341,Clinical,VNI,VNIa-4
+ERS2541396,CNS_1156,CNS_1156,Ashton,ERR2624243,Clinical,VNI,VNIa-4
+ERS2541395,CNS_1179,CNS_1179,Ashton,ERR2624200,Clinical,VNI,VNIa-4
+ERS2541394,CNS_1181,CNS_1181,Ashton,ERR2624111,Clinical,VNI,VNIa-4
+ERS2541393,CNS_121,CNS_121,Ashton,ERR2624433,Clinical,VNI,VNIa-5
+ERS2541392,CNS_1302,CNS_1302,Ashton,ERR2624318,Clinical,VNI,VNIa-4
+ERS2541340,CNS_133-2,CNS_133-2,Ashton,ERR2624136,Clinical,VNI,VNIa-4
+ERS2541391,CNS_1379,CNS_1379,Ashton,ERR2624487,Clinical,VNI,VNIa-4
+ERS2541390,CNS_1385,CNS_1385,Ashton,ERR2624379,Clinical,VNI,VNIa-4
+ERS2541389,CNS_1394,CNS_1394,Ashton,ERR2624381,Clinical,VNI,VNIa-4
+ERS2541341,CNS_1396-2,CNS_1396-2,Ashton,ERR2624229,Clinical,VNI,VNIa-5
+ERS2541388,CNS_1403,CNS_1403,Ashton,ERR2624107,Clinical,VNI,VNIa-4
+ERS2541387,CNS_1413,CNS_1413,Ashton,ERR2624405,Clinical,VNI,VNIa-4
+ERS2541386,CNS_1419,CNS_1419,Ashton,ERR2624396,Clinical,VNI,VNIa-4
+ERS2541385,CNS_1420,CNS_1420,Ashton,ERR2624123,Clinical,VNI,VNIa-4
+ERS2541384,CNS_1453,CNS_1453,Ashton,ERR2624386,Clinical,VNI,VNIa-4
+ERS2541382,CNS_1474,CNS_1474,Ashton,ERR2624190,Clinical,VNI,VNIa-4
+ERS2541381,CNS_1569,CNS_1569,Ashton,ERR2624167,Clinical,VNI,VNIa-5
+ERS2541380,CNS_1589,CNS_1589,Ashton,ERR2624213,Clinical,VNI,VNIa-4
+ERS2541379,CNS_198,CNS_198,Ashton,ERR2624347,Clinical,VNI,VNIa-4
+ERS2541378,CNS_199,CNS_199,Ashton,ERR2624335,Clinical,VNI,VNIa-4
+ERS2541377,CNS_245,CNS_245,Ashton,ERR2624457,Clinical,VNI,VNIa-4
+ERS2541376,CNS_289,CNS_289,Ashton,ERR2624407,Clinical,VNI,VNIa-4
+ERS2541375,CNS_430,CNS_430,Ashton,ERR2624473,Clinical,VNI,VNIa-4
+ERS2541374,CNS_445,CNS_445,Ashton,ERR2624328,Clinical,VNI,VNIa-4
+ERS2541373,CNS_447,CNS_447,Ashton,ERR2624261,Clinical,VNI,VNIa-4
+ERS2541372,CNS_456,CNS_456,Ashton,ERR2624289,Clinical,VNI,VNIa-4
+ERS2541371,CNS_487,CNS_487,Ashton,ERR2624296,Clinical,VNI,VNIa-93
+ERS2541370,CNS_517,CNS_517,Ashton,ERR2624304,Clinical,VNI,VNIa-5
+ERS2541369,CNS_569,CNS_569,Ashton,ERR2624373,Clinical,VNI,VNIa-4
+ERS2541368,CNS_595,CNS_595,Ashton,ERR2624390,Clinical,VNI,VNIa-4
+ERS2541367,CNS_625,CNS_625,Ashton,ERR2624302,Clinical,VNI,VNIa-4
+ERS2541366,CNS_626,CNS_626,Ashton,ERR2624342,Clinical,VNI,VNIa-4
+ERS2541365,CNS_681,CNS_681,Ashton,ERR2624295,Clinical,VNI,VNIa-4
+ERS2541364,CNS_806,CNS_806,Ashton,ERR2624182,Clinical,VNI,VNIa-4
+ERS2541363,CNS_811,CNS_811,Ashton,ERR2624287,Clinical,VNI,VNIa-93
+ERS2541362,CNS_814,CNS_814,Ashton,ERR2624455,Clinical,VNI,VNIa-4
+ERS2541361,CNS_863,CNS_863,Ashton,ERR2624372,Clinical,VNI,VNIa-4
+ERS2541360,CNS_897,CNS_897,Ashton,ERR2624471,Clinical,VNI,VNIa-4
+ERS2541359,CNS_929,CNS_929,Ashton,ERR2624336,Clinical,VNI,VNIa-4
+ERS2541358,CNS_936,CNS_936,Ashton,ERR2624204,Clinical,VNI,VNIa-5
+ERS2541357,CNS_955,CNS_955,Ashton,ERR2624311,Clinical,VNI,VNIa-4
+ERS2541356,CNS_978,CNS_978,Ashton,ERR2624452,Clinical,VNI,VNIa-4
+ERS2541355,CNS_999,CNS_999,Ashton,ERR2624137,Clinical,VNI,VNIa-4
+ERS2541354,CNS_FS_1931,CNS_FS_1931,Ashton,ERR2624498,Clinical,VNI,VNIa-4
+ERS2541353,CNS_FS_4256,CNS_FS_4256,Ashton,ERR2624364,Clinical,VNI,VNIa-4
+ERS2541352,CNS_ST_1930,CNS_ST_1930,Ashton,ERR2624257,Clinical,VNI,VNIa-4
+ERS2541351,HC_ST_2296,HC_ST_2296,Ashton,ERR2624310,Clinical,VNI,VNIa-4
+ERS2541350,HC_ST_352,HC_ST_352,Ashton,ERR2624409,Clinical,VNI,VNIa-4
+ERS1142900,LD1,20949_2#59,Ashton,ERR1756591,Environment,VNI,VNIa-4
+ERS542598,LD2,15277_3#47,Ashton,ERR852965,Environment,VNI,VNIa-5
+ERS542599,NT7533,14893_3#64,Ashton,ERR775398,Environment,VNI,VNIa-5
+ERS2541349,UI_11199,UI_11199,Ashton,ERR2624224,Clinical,VNI,VNIa-4
+ERS2541348,UI_12808,UI_12808,Ashton,ERR2624395,Clinical,VNI,VNIa-4
+ERS2541347,UI_14167,UI_14167,Ashton,ERR2624362,Clinical,VNI,VNIa-4
+ERS2541346,UI_14344,UI_14344,Ashton,ERR2624260,Clinical,VNI,VNIa-4
+ERS2541345,UI_16721,UI_16721,Ashton,ERR2624370,Clinical,VNI,VNIa-4
+ERS2541344,UI_16771,UI_16771,Ashton,ERR2624157,Clinical,VNI,VNIa-4
+ERS2541343,UI_21616,UI_21616,Ashton,ERR2624274,Clinical,VNI,VNIa-4
+ERS2541342,UI_31647-2,UI_31647-2,Ashton,ERR2624321,Clinical,VNI,VNIa-4
+ERS2541318,UI29674,UI29674,Ashton,ERR2624436,Clinical,VNI,VNIa-4
+ERS2541323,UI32312,UI32312,Ashton,ERR2624374,Clinical,VNI,VNIa-4
+GCF_000149245,H99,H99,,GCF_000149245,Clinical,VNI,VNIb

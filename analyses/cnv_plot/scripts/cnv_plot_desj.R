@@ -6,18 +6,18 @@ suppressPackageStartupMessages(library(patchwork))
 suppressPackageStartupMessages(library(ggtree))
 suppressPackageStartupMessages(library(ggtreeExtra))
 suppressPackageStartupMessages(library(ape))
-setwd("/FastData/czirion/Crypto_Desjardins/cnv_plot")
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline")
 
 repeat_threshold <- 0.3
-CHROM_NAMES_FILE <- "/FastData/czirion/Crypto_Desjardins/config/chromosomes.csv"
-CHROM_LENGTHS_FILE <- "/FastData/czirion/Crypto_Desjardins/cnv_plot/chromosome_lengths.tsv"
-LOCI_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/references/loci_to_plot.tsv"
-VNI_REPEATS_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/references/VNI/repeats/VNI_repeats.bed"
-VNII_REPEATS_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/references/VNII/repeats/VNII_repeats.bed"
-VNBI_REPEATS_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/references/VNBI/repeats/VNBI_repeats.bed"
-VNBII_REPEATS_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/references/VNBII/repeats/VNBII_repeats.bed"
-METADATA_FILE <- "/FastData/czirion/Crypto_Desjardins/config/metadata.csv"
-CNV_FILE <- "/FastData/czirion/Crypto_Desjardins/results_2024-08-19/dataset/cnv/cnv_calls.tsv"
+CHROM_NAMES_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/config/chromosomes.csv"
+CHROM_LENGTHS_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/chromosome_lengths.tsv"
+LOCI_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/04.Intermediate_files/03.References/loci_to_plot.tsv"
+VNI_REPEATS_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/03.References/VNI/VNI_repeats.bed"
+VNII_REPEATS_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/03.References/VNII/VNII_repeats.bed"
+VNBI_REPEATS_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/03.References/VNBI/VNBI_repeats.bed"
+VNBII_REPEATS_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/03.References/VNBII/VNBII_repeats.bed"
+METADATA_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/config/metadata.csv"
+CNV_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/02.Dataset/cnv/cnv_calls.tsv"
 
 chrom_names <- read.delim(CHROM_NAMES_FILE, sep = ",", header = TRUE, col.names = c("Lineage", "Accession", "Chromosome"), colClasses = c("factor", "factor", "integer"))
 lengths <- read.delim(CHROM_LENGTHS_FILE, sep = "\t", header = FALSE, col.names = c("Accession", "Length"), stringsAsFactors=TRUE)
@@ -30,7 +30,7 @@ metadata <- read.delim(METADATA_FILE, sep = ",", header = TRUE)
 cnv <- read.delim(CNV_FILE, sep = "\t", header = TRUE, stringsAsFactors=TRUE)
 
 # =============================================================================
-TREE_FILE <- "/FastData/czirion/Crypto_Desjardins/cnv_plot/CryptoDiversity_Desjardins_Tree.tre" 
+TREE_FILE <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/raw/CryptoDiversity_Desjardins_Tree.tre" 
 
 tree <- read.tree(TREE_FILE)
 outgroup_clade <- metadata %>%
@@ -68,10 +68,10 @@ lengths <- lengths %>% select(Chromosome, Lineage, End = Length)%>%
     mutate(Start = 0, Strain = "Chromosomes", Feature = "Chromosomes")
 # =============================================================================
 
-loci <- loci %>% rename("Accession" = seq_id)
+loci <- loci %>% rename("Accession" = accession)
 loci <- left_join(loci, chrom_names, by = "Accession")
 loci <- loci %>%
-    select(Chromosome, Start = start, End = end, Feature = Loci, Lineage)
+    select(Chromosome, Start = start, End = end, Feature = loci, Lineage)
 
 centromeres <- loci %>% filter(Feature == "Centromeres")%>%
     group_by(Lineage, Chromosome)%>%
@@ -91,18 +91,19 @@ repeats <- repeats %>%
 
 # =============================================================================
 
+cnv <- cnv %>% rename("Sample" = sample, "Repeat_fraction" = repeat_fraction, "Accession" = accession, "Start" = start, "End" = end)
 cnv <- left_join(cnv, metadata, by = "Sample")%>%
     filter(Repeat_fraction < repeat_threshold)
 cnv <- left_join(cnv, chrom_names, by = c("Accession", "Lineage"))
 cnv <- cnv %>%
-    select(Chromosome, Start, End, Feature = Structure, Sample, Strain, Lineage)
+    select(Chromosome, Start, End, Feature = cnv, Sample, Strain, Lineage)
 
 # =============================================================================
 
 df <- bind_rows(lst(cnv, mat, centromeres, repeats, lengths), .id = "Sample_Reference")
 df$Sample_Reference <- ifelse(df$Sample_Reference == "cnv", "Samples", "Reference")
 df$Sample_Reference <- factor(df$Sample_Reference, levels = c("Samples", "Reference"))
-df$Feature <- factor(df$Feature, levels = c("DELETION", "DUPLICATION", "MAT Locus", "Centromeres", "Repeats", "Chromosomes"))
+df$Feature <- factor(df$Feature, levels = c("deletion", "duplication", "MAT Locus", "Centromeres", "Repeats", "Chromosomes"))
 df$Strain <- factor(df$Strain, levels = c("Chromosomes", "Repeats","Centromeres", "MAT Locus",  levels(metadata$Strain)))
 # =============================================================================
 
@@ -129,5 +130,5 @@ for (lineage in lineages){
               axis.title.x = element_blank())+
         labs(title = paste("Copy-number variants of lineage", lineage))
     print("Saving plot")
-    ggsave(paste("cnv_", lineage, ".png", sep = ""), plot, height = pheight, width = 32, units = "cm", limitsize = FALSE)
+    ggsave(paste("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/cnv_plot/results/cnv_", lineage, ".png", sep = ""), plot, height = pheight, width = 32, units = "cm", limitsize = FALSE)
 }
