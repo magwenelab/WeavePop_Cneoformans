@@ -53,7 +53,7 @@ d1 <- gheatmap(d, lineage, width=.06, colnames=FALSE, offset=0.1) +
 d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.12) +
             scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/desjardins_tree.png", d2, height = 10, width = 10, units = "in", dpi = 300)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_desjardins.png", d2, height = 10, width = 10, units = "in", dpi = 300)
 
 
 
@@ -85,7 +85,7 @@ pu <- ggtree(ashton_tree_unrooted, layout = "circular") +
 pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/ashton_tree_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
 
 # Root Ashton tree at the middle of the branch leading to VNIa
 VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
@@ -97,7 +97,7 @@ p <- ggtree(ashton_tree, layout = "circular") +
 p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
     scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/ashton_tree.png", p1, height = 10, width = 10, units = "in", dpi = 600)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
 write.tree(ashton_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
 
 #### Merge Desjardins and Ashton trees ####
@@ -149,16 +149,30 @@ write.tree(merged, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/
 p <- ggtree(merged, layout = "circular", size = 0.1) +  
       geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
                     linetype = "dashed", linesize = .05)+
-    geom_treescale(x=0.38, y=0, width=0.01, offset = 5)
+    geom_treescale(x=0.4, y=0, width=0.01, offset = 5)
 
-m1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
-    scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)+
+m1 <- gheatmap(p, lineage, width=.05, colnames=FALSE, offset=.025) +
+    scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+
     new_scale_fill()
 
-m2 <- gheatmap(m1, lineage, width=.06, colnames=FALSE, offset=.02) +
-    scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)
+m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=.042) +
+    scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/merged_tree2.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_branchlengths.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+
+p <- ggtree(merged, layout = "circular", size = 0.1, branch.length = "none") +  
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .05)
+
+m1 <- gheatmap(p, lineage, width=.05, colnames=FALSE, offset=3) +
+    scale_fill_brewer(palette = "Dark2", name="Lineage",  na.translate = FALSE)+
+    new_scale_fill()
+
+m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=5) +
+    scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
+
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+
 
 
 #### Explore the branch lengths of all trees and compare ####
