@@ -1,14 +1,11 @@
-# #Data for the project
 .snakemake/
-.vscode
+.vscode/
 *test*
 *results*
 *backup*
 *workflow*
 *.log
 logs/
-data/*
-analyses/variants/data/
-analyses/cnv_plot/ashton/data/
-analyses/cnv_plot/desjardins/data/
 Crypto_Ashton/data/samples/*
+analyses/variants/source/
+
