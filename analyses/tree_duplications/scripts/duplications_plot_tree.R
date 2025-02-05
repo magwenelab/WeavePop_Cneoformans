@@ -71,6 +71,9 @@ ashton_tree <- read.tree(ashton_tree_path)
 merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/merged_tree.newick"
 tree <- read.tree(merged_tree_path)
 
+# Remove tips that are not in metadata$strain
+tree <- drop.tip(tree, setdiff(tree$tip.label, metadata$strain))
+
 # display colorblind friendly palettes
 # display.brewer.all(colorblindFriendly = TRUE)
 # display.brewer.all(colorblindFriendly = FALSE)
@@ -112,7 +115,7 @@ p5 <- gheatmap(p4, dup_chroms, width=.32, colnames = FALSE, offset=11,) +
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/duplications_merged_tree.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
 # Chromosomes 12, 13
 dup_chroms_12_13 <- dup_chroms %>%
@@ -140,12 +143,10 @@ p4 <- gheatmap(p3, source, width=.05, colnames=FALSE, offset=9,) +
 
 p5 <- gheatmap(p4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
     scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.value = "white")+
-    theme(#legend.position = "bottom",
-        #legend.direction = "vertical",
-        legend.title = element_text( size=7),
+    theme(legend.title = element_text( size=7),
         legend.text=element_text(size=5),
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/duplications_merged_tree_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
