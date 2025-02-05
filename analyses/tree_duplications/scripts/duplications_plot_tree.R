@@ -148,41 +148,40 @@ p5
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
 #### Plot the tree with only the samples that have duplications and the references####
-keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22")
+keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt81")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
 
-p <- ggtree(tree_dups, layout = "circular", size = 0.5, branch.length = "none") + 
-    geom_tiplab(aes(label = label), size = 1, align =TRUE, 
-                    linetype = "dashed", linesize = 0.1, offset = 2)
+p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
+    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
+                    linetype = "dashed", linesize = 0.1, offset = 1)
 
-p1 <- gheatmap(p, dataset, width=0.1, colnames=FALSE, offset=9) +
+p1 <- gheatmap(p, dataset, width=0.1, colnames=FALSE, offset=8) +
     scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
     guides(fill = guide_legend(order = 1))+
     new_scale_fill()
 
-p2 <- gheatmap(p1, lineage, width=0.1, colnames=FALSE, offset=10.5) +
+p2 <- gheatmap(p1, lineage, width=0.1, colnames=FALSE, offset=9.5) +
     scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
     guides(fill = guide_legend(order = 2))+
     new_scale_fill()
 
-p3 <- gheatmap(p2, sublineage, width=.1, colnames=FALSE, offset=12) +
+p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=11) +
     scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
     guides(fill = guide_legend(order = 3))+
     new_scale_fill()
 
-p4 <- gheatmap(p3, source, width=.1, colnames=FALSE, offset=13.5,) +
+p4 <- gheatmap(p3, source, width=0.1, colnames=FALSE, offset=12.5) +
         scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
         guides(fill = guide_legend(order = 4))+
         new_scale_fill()
 
-p5 <- gheatmap(p4, dup_chroms, width=.5, colnames = FALSE, offset=15.3,) +
+p5 <- gheatmap(p4, dup_chroms, width=0.7, colnames = FALSE, offset=14) +
     scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
     guides(fill = guide_legend(order = 5))+
     theme(legend.position = "right",
         legend.direction = "vertical",
         legend.title = element_text(size=9),
         legend.text=element_text(size=7),
-        legend.key.size = unit(0.5, "cm"),
-        plot.margin = margin(0, 0, 0, 0, "cm"))
+        legend.key.size = unit(0.5, "cm"))
 
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated.png", p5, height = 7, width = 7, units = "in", dpi = 900)
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated.png", p5, height = 7, width = 9, units = "in", dpi = 900)
