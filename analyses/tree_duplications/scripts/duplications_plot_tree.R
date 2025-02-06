@@ -2,13 +2,12 @@
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/")
 
 library(tidyverse)
-library(ggbeeswarm)
 library(ggtree)
 library(ggtreeExtra)
 library(ape)
-# library(phytools)
 library(ggnewscale)
 library(RColorBrewer)
+
 #### Data
 # Load the necessary data
 metadata <- read.csv("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/metadata_fixed.csv")
@@ -41,7 +40,7 @@ dup_chroms <- euploid_strain %>%
     column_to_rownames("strain") %>%
     bind_rows(dup_chroms)
 
-# Get metadata
+# Get one dataframe for each variable to be plotted as a separate metadata column in the tree
 
 lineage <- metadata %>%
     select(strain, lineage)%>%
@@ -59,15 +58,8 @@ dataset <- metadata %>%
     select(strain, dataset)%>%
     column_to_rownames("strain")
 
-# Desjardins tree
-desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/desj_tree.newick"
-desj_tree <- read.tree(desj_tree_path)
 
-### Ashton tree
-ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick"
-ashton_tree <- read.tree(ashton_tree_path)
-
-# Merged tree
+# Import tree
 merged_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/merged_tree.newick"
 tree <- read.tree(merged_tree_path)
 
@@ -78,6 +70,7 @@ tree <- drop.tip(tree, setdiff(tree$tip.label, metadata$strain))
 # display.brewer.all(colorblindFriendly = TRUE)
 # display.brewer.all(colorblindFriendly = FALSE)
 
+# Create vectors of colors for each metadata variable with the name of the levels as names of the colors
 dataset_colors <- c("white", brewer.pal(9, "Set1")[c(1, 2)])
 names(dataset_colors) <- levels(as.factor(metadata$dataset))
 
@@ -93,7 +86,7 @@ names(chrom_colors) <- c(levels(duplications$chromosome), "Euploid")
 source_colors <- brewer.pal(11, "BrBG")[c(9, 3)] # 9, 3 are the colors for the two sources
 names(source_colors) <- levels(as.factor(metadata$source))
 
-
+#### Plot the tree of all samples with duplications of chromosomes ####
 
 p <- ggtree(tree, layout = "circular", size = 0.1, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 0.2, align =TRUE, 
@@ -132,6 +125,8 @@ p5
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
 #### Plot tree with duplications of chromosomes 12 and 13 ####
+
+# Subset the duplications_full data frame to only include strains with duplications of chromosomes 12 and 13
 dup_chroms_12_13 <- dup_chroms %>%
     select(chr12, chr13)
 
@@ -144,13 +139,14 @@ p5 <- gheatmap(p4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
         legend.text=element_text(size=7),
         legend.key.size = unit(0.3, "cm"),
         plot.margin = margin(0, 0, 0, 0, "cm"))
-p5
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_12_13.png", p5, height = 7, width = 7, units = "in", dpi = 900)
 
 #### Plot the tree with only the samples that have duplications and the references####
+# Keep in the tree only the strains that have duplications and the references
 keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt81")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
 
+# Option 1
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
                     linetype = "dashed", linesize = 0.1, offset = 1)
@@ -186,6 +182,7 @@ p5 <- gheatmap(p4, dup_chroms, width=0.7, colnames = FALSE, offset=14) +
 
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated.png", p5, height = 7, width = 9, units = "in", dpi = 900)
 
+# Option 2
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
                     linetype = "dashed", linesize = 0.1, offset = 1)
@@ -211,21 +208,17 @@ p3 <- gheatmap(p2, dup_chroms, width=0.7, colnames = FALSE, offset=12) +
 
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated2.png", p3, height = 7, width = 9, units = "in", dpi = 900)
 
-t<- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
-    geom_tiplab(aes(label = label)) + 
-    geom_nodelab(aes(label=node), geom="label")
-
-d <- data.frame(node=c(104, 60, 57, 63), type=c("VNII", "VNBI", "VNBII", "VNI"))
-
+# Option 3
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
-                    linetype = "dashed", linesize = 0.1, offset = 1)+
-    geom_hilight(data=d, aes(node=node, fill=type), type = "rect")+
+                    linetype = "dashed", linesize = 0.1, offset = 1)
+
+p1 <- gheatmap(p, lineage, width=0.1, colnames=FALSE, offset=8) +
     scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
-    guides(fill = guide_legend(order = 1))+
+    guides(fill = guide_legend(order = 2))+
     new_scale_fill()
 
-p2 <- gheatmap(p, dup_chroms, width=0.7, colnames = FALSE, offset=10) +
+p2 <- gheatmap(p1, dup_chroms, width=0.7, colnames = FALSE, offset=10) +
     scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
     guides(fill = guide_legend(order = 2))+
     new_scale_fill()
