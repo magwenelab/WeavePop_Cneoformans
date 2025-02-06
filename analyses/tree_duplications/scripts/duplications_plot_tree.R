@@ -6,7 +6,7 @@ library(ggbeeswarm)
 library(ggtree)
 library(ggtreeExtra)
 library(ape)
-library(phytools)
+# library(phytools)
 library(ggnewscale)
 library(RColorBrewer)
 #### Data
@@ -185,3 +185,58 @@ p5 <- gheatmap(p4, dup_chroms, width=0.7, colnames = FALSE, offset=14) +
         legend.key.size = unit(0.5, "cm"))
 
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated.png", p5, height = 7, width = 9, units = "in", dpi = 900)
+
+p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
+    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
+                    linetype = "dashed", linesize = 0.1, offset = 1)
+
+p1 <- gheatmap(p, lineage, width=0.1, colnames=FALSE, offset=8) +
+    scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()
+
+p2 <- gheatmap(p1, sublineage, width=0.1, colnames=FALSE, offset=10) +
+    scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
+    guides(fill = guide_legend(order = 3))+
+    new_scale_fill()
+
+p3 <- gheatmap(p2, dup_chroms, width=0.7, colnames = FALSE, offset=12) +
+    scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 5))+
+    theme(legend.position = "right",
+        legend.direction = "vertical",
+        legend.title = element_text(size=9),
+        legend.text=element_text(size=7),
+        legend.key.size = unit(0.5, "cm"))
+
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated2.png", p3, height = 7, width = 9, units = "in", dpi = 900)
+
+t<- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
+    geom_tiplab(aes(label = label)) + 
+    geom_nodelab(aes(label=node), geom="label")
+
+d <- data.frame(node=c(104, 60, 57, 63), type=c("VNII", "VNBI", "VNBII", "VNI"))
+
+p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
+    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
+                    linetype = "dashed", linesize = 0.1, offset = 1)+
+    geom_hilight(data=d, aes(node=node, fill=type), type = "rect")+
+    scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+    guides(fill = guide_legend(order = 1))+
+    new_scale_fill()
+
+p2 <- gheatmap(p, dup_chroms, width=0.7, colnames = FALSE, offset=10) +
+    scale_fill_manual(values = chrom_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()
+
+p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=19.5) +
+    scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
+    guides(fill = guide_legend(order = 3))+
+    theme(legend.position = "right",
+        legend.direction = "vertical",
+        legend.title = element_text(size=9),
+        legend.text=element_text(size=7),
+        legend.key.size = unit(0.5, "cm"))
+
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_duplications_only_duplicated3.png", p3, height = 7, width = 9, units = "in", dpi = 900)
