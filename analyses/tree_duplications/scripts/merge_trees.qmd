@@ -5,7 +5,7 @@ date: "2025-02-10"
 format: html
 df-print: kable
 editor: visual
-embed-resources: true
+embed-resources: false
 code-overflow: wrap
 ---
 ## Setup
