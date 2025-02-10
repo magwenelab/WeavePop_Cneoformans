@@ -100,6 +100,15 @@ p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
 ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
 write.tree(ashton_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
 
+# REctangular
+
+ashton_tree <- read.tree("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
+p <- ggtree(ashton_tree, layout = "rectangular") +  
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE,linetype = "dashed", linesize = .05)
+p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
+    scale_fill_brewer(palette = "Paired", name="SubLineage",  na.translate = FALSE)
+
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton_rectangular.pdf", p1, height = 10, width = 10, units = "in", dpi = 600)
 #### Merge Desjardins and Ashton trees ####
 
 # Specify clades in Desjardins tree
