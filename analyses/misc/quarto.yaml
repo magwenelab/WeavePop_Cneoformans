@@ -7,34 +7,28 @@ dependencies:
   - r-base=4.4.*
   - r-essentials
   - r-quarto
+  - r-irkernel
+  - ipykernel
+  - r-httpgd
   - r-svglite
   - r-tidyverse
   - r-rcolorbrewer
   - r-scales
-  - bioconductor-complexheatmap
   - r-ggnewscale
   - r-patchwork
   - r-ggbeeswarm
   - r-cowplot
-  - ipykernel
-  - pandas
-  - matplotlib
+  - r-igraph
 
 
-# using install.packages("package"):
+# Using install.packages("package"):
+
 # httpgd
 # RRphylo
 # phytools
 # ape
 # languageserver
-
-# Intall bioconductor packages
-# if (!require("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-
+# BiocManager
 # BiocManager::install("ggtree")
 # BiocManager::install("ggtreeExtra")
 # BiocManager::install("ComplexHeatmap")
-
-
-
