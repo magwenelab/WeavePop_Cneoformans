@@ -1,0 +1,316 @@
+---
+title: "Merge Desjardins and Ashton trees"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-10"
+format: html
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+## Setup
+```{r, output=FALSE}
+library(RRphylo)
+library(manipulate)
+library(ape)
+library(phytools)
+library(ggtree)
+library(tidyverse)
+library(RColorBrewer)
+library(ggnewscale)
+```
+
+## Metadata
+Make separate dataframes for each metadata field.
+```{r}
+metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/metadata_fixed.csv", header=TRUE, sep=",")
+metadata$vni_subdivision[metadata$vni_subdivision == ""] <- NA
+metadata$vni_subdivision <- factor(metadata$vni_subdivision, levels = c("VNIa-4", "VNIa-5", "VNIa-32", "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", "VNIc", "VNIa-outlier", "VNII"))
+
+sublineage <- metadata %>%
+                filter(lineage == "VNI")%>%
+                select(strain, vni_subdivision)%>%
+                column_to_rownames("strain")%>%
+                droplevels()
+lineage <- metadata %>%
+            select(strain, lineage)%>%
+            column_to_rownames("strain")
+dataset <- metadata %>%
+            select(strain, dataset)%>%
+            column_to_rownames("strain")
+source <- metadata %>%
+            select(strain, source)%>%
+            column_to_rownames("strain")
+```
+Make color vectors for all plots
+```{r}
+lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4)]
+names(lineage_colors) <- levels(as.factor(metadata$lineage))
+
+sublineage_colors <- c(brewer.pal(12, "Set3")[c(1:10)], "white")
+names(sublineage_colors) <- levels(sublineage$vni_subdivision)
+
+```
+
+## Desjardins tree
+Import the raw Desjardins tree
+```{r}
+desj_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/raw/CryptoDiversity_Desjardins_Tree.tre"
+desj_tree <- read.tree(desj_tree_path)
+```
+
+Reroot the tree at the middle of the branch leading to VNII
+```{r}
+VNII_root <- getMRCA(desj_tree, c("C2","C12"))
+edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
+desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
+write.tree(desj_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/desj_tree.newick")
+```
+
+Plot of Desjardins tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+d <- ggtree(desj_tree, layout = "circular", size = 0.1) +  
+            geom_tiplab(aes(label = label), size = 0.6, align =TRUE, linetype = "dashed", linesize = .05)+
+            geom_treescale(x=0.1, y=0, width=0.01, offset = 0.5)
+d1 <- gheatmap(d, lineage, width=.06, colnames=FALSE, offset=0.1) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            new_scale_fill()
+d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.12) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE, 
+                                limits = levels(sublineage$vni_subdivision))
+d2
+```
+
+```{r, echo=FALSE, eval=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_desjardins.png", d2, height = 10, width = 10, units = "in", dpi = 300)
+```
+
+
+## Ashton tree
+Import the raw Ashton tree
+```{r}
+ashton_tree_path <- "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
+ashton_tree_unrooted <- read.tree(ashton_tree_path)
+```
+
+Rename tips to use strain names
+```{r}
+ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
+    if (x %in% metadata$run) {
+        metadata$strain[metadata$run == x]
+    } else {
+        x
+    }
+})
+ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
+    if (x %in% metadata$name) {
+        metadata$strain[metadata$name == x]
+    } else {
+        x
+    }
+})
+```
+
+Plot unrooted Ashton tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+pu <- ggtree(ashton_tree_unrooted, layout = "circular", size = 0.1) +  
+      geom_tiplab(aes(label = label),size =0.6, align =TRUE, linetype = "dashed", linesize = .05)
+pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+pu1
+```
+```{r, echo=FALSE, eval=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton_unrooted.png", pu1, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+Root Ashton tree at the middle of the branch leading to VNIa
+```{r}
+VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
+edge_length <- subset(ashton_tree_unrooted$edge.length, ashton_tree_unrooted$edge[,2] == VNIa_root)
+ashton_tree <- reroot(ashton_tree_unrooted, VNIa_root, edge_length/2)
+```
+
+Plot the rooted Ashton tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+p <- ggtree(ashton_tree, layout = "circular", size =0.1) +  
+      geom_tiplab(aes(label = label), size =0.6, align =TRUE,linetype = "dashed", linesize = .05)
+p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+p1
+```
+
+```{r, echo=FALSE, eval=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
+write.tree(ashton_tree, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
+```
+
+Plot a rectangular version of the Ashton tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+ashton_tree <- read.tree("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/ashton_tree.newick")
+p <- ggtree(ashton_tree, layout = "rectangular", size =0.1) +  
+      geom_tiplab(aes(label = label), size = 1.6, align =TRUE,linetype = "dashed", linesize = .05)
+p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+p1
+```
+```{r, echo=FALSE, eval=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_ashton.pdf", p1, height = 50, width = 20, units = "in", dpi = 900, limitsize = FALSE)
+```
+
+## Merge Desjardins and Ashton trees
+
+Specify clades in Desjardins tree
+```{r}
+VNI <- c("Bt92", "Bt79")
+VNI_node <- getMRCA(desj_tree, VNI)
+VNII <- c("C2","C12")
+VNII_node <- getMRCA(desj_tree, VNII)
+VNB <- c("Bt7", "Bt34")
+VNB_node <- getMRCA(desj_tree, VNB)
+```
+
+Get the ages of the nodes from the original Desjardins tree
+```{r}
+edge_lengths <- node.depth.edgelength(desj_tree)
+node_labels <- c(desj_tree$tip.label, desj_tree$node.label)
+edge_length_mapping <- data.frame(node = node_labels, edge_length = edge_lengths, max_length = max(edge_lengths))
+edge_length_mapping <- edge_length_mapping %>% 
+                        mutate(age = max_length - edge_length) %>%
+                        rownames_to_column("node_id")
+clade_ages <- edge_length_mapping %>% 
+                filter(node_id %in% c(VNI_node, VNII_node, VNB_node))
+nodeages <- c("Bt92-Bt79" = clade_ages$age[clade_ages$node_id == VNI_node],
+             "C2-C12" = clade_ages$age[clade_ages$node_id == VNII_node],
+             "Bt7-Bt34" = clade_ages$age[clade_ages$node_id == VNB_node])
+tip_ages <- edge_length_mapping %>% 
+                filter(node %in% metadata$strain)
+tipages <- tip_ages$age
+names(tipages) <- tip_ages$node
+```
+
+Remove VNI clade from Desjardins tree to use it as backtree
+```{r}
+VNI_tips <- tips(desj_tree, VNI_node)
+backtree <- drop.tip(desj_tree, VNI_tips)
+```
+
+Create the reference tables
+```{r}
+reference <- data.frame(bind=c("CNS_289-BK8"),
+                   reference=c("Bt7-Bt34"), # "H99"
+                   poly=c(FALSE))
+```
+
+Merge
+```{r,output=FALSE}
+merged <- tree.merger(backbone = backtree,
+                        data=reference,
+                        source.tree = ashton_tree,
+                        plot=FALSE,
+                        node.ages = nodeages,
+                        tip.ages = tipages)
+```
+
+```{r, eval=FALSE, echo= FALSE}
+write.tree(merged, file = "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/processed/merged_tree.newick")
+```
+
+Plot merged tree with branchlengths (not real)
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+p <- ggtree(merged, layout = "circular", size = 0.1) +  
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .05)+
+    geom_treescale(x=0.4, y=0, width=0.01, offset = 5)
+
+m1 <- gheatmap(p, lineage, width=.05, colnames=FALSE, offset=.025) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            new_scale_fill()
+
+m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=.042) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+m2
+```
+
+```{r, eval=FALSE, echo=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged_branchlengths.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+Plot cladogram of merged tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+p <- ggtree(merged, layout = "circular", size = 0.1, branch.length = "none") +  
+      geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .05)
+
+m1 <- gheatmap(p, lineage, width=.05, colnames=FALSE, offset=3) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            new_scale_fill()
+
+m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=5) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+m2
+```
+
+```{r, echo=FALSE, eval=FALSE}
+ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/tree_merged.png", m2, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+## Plot minimal version of the tree
+
+Get one sample of each lineage, and VNI sublineage, and all VNIa-outlier
+```{r}
+VNI <- metadata %>%
+    filter(lineage == "VNI", vni_subdivision != "VNIa-outlier") %>%
+    group_by(vni_subdivision) %>%
+    slice(1) %>%
+    ungroup()
+VNIa_outlier <- metadata %>%
+    filter(vni_subdivision == "VNIa-outlier")
+VNII <- metadata %>%
+    filter(lineage == "VNII") %>%
+    slice(1) %>%
+    ungroup()
+VNBI <- metadata %>%
+    filter(lineage == "VNBI") %>%
+    slice(1) %>%
+    ungroup()
+VNBII <- metadata %>%
+    filter(lineage == "VNBII") %>%
+    slice(1) %>%
+    ungroup()
+tips <- rbind(VNI, VNIa_outlier, VNII, VNBI, VNBII)%>%
+    select(strain)
+```
+Make a small version of the merged tree only with the tips in `tips`
+
+```{r}
+small_tree <- drop.tip(merged, setdiff(merged$tip.label, tips$strain))
+```
+
+Plot the small tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+p <- ggtree(small_tree, layout = "rectangular", size = 1, branch.length = "none")+  
+            geom_tiplab(aes(label = label),
+                            size = 3, align = TRUE, linetype = "dashed",
+                            linesize = .05,
+                            offset = 0.5)+
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 5)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 5.5) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            new_scale_fill()
+p1 
+```
