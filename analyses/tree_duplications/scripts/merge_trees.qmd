@@ -4,12 +4,11 @@ author: "Claudia Zirión-Martínez"
 date: "2025-02-10"
 format: 
     PrettyPDF-pdf:
-        keep-tex: true
+        keep-tex: false
 df-print: kable
 editor: visual
 embed-resources: true
 code-overflow: wrap
-fig-align: center
 ---
 ## Setup
 ```{r, output=FALSE}
@@ -26,9 +25,8 @@ library(ggnewscale)
 ## Metadata
 Make separate dataframes for each metadata field.
 ```{r}
-metadata <- read.delim(
-  "../../data/derived/metadata_fixed.csv",
-  header=TRUE, sep=",")
+metadata <- read.delim(  "../../data/derived/metadata_fixed.csv", header=TRUE, sep=",")
+
 metadata$vni_subdivision[metadata$vni_subdivision == ""] <- NA
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
@@ -72,33 +70,42 @@ Reroot the tree at the middle of the branch leading to VNII
 VNII_root <- getMRCA(desj_tree, c("C2","C12"))
 edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
 desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
-write.tree(desj_tree, 
-    file = "../../data/processed/desj_tree.newick")
+write.tree(desj_tree, file = "../../data/processed/desj_tree.newick")
 ```
 ```{r, echo=FALSE}
 desj_tree <- read.tree("../../data/processed/desj_tree.newick")
 ```
 
-Plot of Desjardins tree
-```{r, message=FALSE, warning=FALSE, echo=FALSE, fig.height=4,fig.width=6}
-d <- ggtree(desj_tree, layout = "circular", size = 0.1) +  
+### Plot of Desjardins tree
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 6.5
+#| fig-width: 7
+#| fig-align: center
+d <- ggtree(desj_tree, layout = "rectangular", size = 0.1) +  
             geom_tiplab(aes(label = label),
-                        size = 0.6, align =TRUE, 
-                        linetype = "dashed", linesize = .05)+
-            geom_treescale(x=0.1, y=0, width=0.01, offset = 0.5)
-d1 <- gheatmap(d, lineage, width=.06, colnames=FALSE, offset=0.1) +
-            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+                        size = 0.5, align =TRUE, 
+                        linetype = "dashed", linesize = .03)+
+            geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=2)
+d1 <- gheatmap(d, lineage, width=.08, colnames=FALSE, offset=0.05) +
+            scale_fill_manual(values = lineage_colors, name="Lineage",
+                                na.translate = FALSE)+
             new_scale_fill()
-d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.12) +
+d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.1) +
             scale_fill_manual(values = sublineage_colors, 
             name="VNI Sublineage", na.translate = FALSE, 
-            limits = levels(sublineage$vni_subdivision))
+            limits = levels(sublineage$vni_subdivision))+
+            theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=9),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"))
 d2
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
 ggsave("../results/figures/tree_desjardins.png", 
-    d2, height = 10, width = 10, units = "in", dpi = 300)
+        d2, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
 
 
@@ -127,15 +134,23 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
 })
 ```
 
-Plot unrooted Ashton tree
+### Plot unrooted Ashton tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-pu <- ggtree(ashton_tree_unrooted, layout = "circular", size = 0.1) +  
-      geom_tiplab(aes(label = label),size =0.6, align =TRUE, linetype = "dashed", linesize = .05)
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+pu <- ggtree(ashton_tree_unrooted, layout = "circular", size = 0.1) +
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 2)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
 pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
             scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
                                 limits = levels(sublineage$vni_subdivision))
 
-pu1
+pu
 ```
 ```{r, echo=FALSE, eval=FALSE}
 ggsave("../results/figures/tree_ashton_unrooted.png", 
@@ -148,32 +163,44 @@ VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
 edge_length <- subset(ashton_tree_unrooted$edge.length, 
     ashton_tree_unrooted$edge[,2] == VNIa_root)
 ashton_tree <- reroot(ashton_tree_unrooted, VNIa_root, edge_length/2)
+write.tree(ashton_tree, file = "../../data/processed/ashton_tree.newick")
 ```
 
 ```{r, echo=FALSE}
 ashton_tree <- read.tree("../../data/processed/ashton_tree.newick")
 ```
 
-Plot the rooted Ashton tree
+### Plot the rooted Ashton tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-p <- ggtree(ashton_tree, layout = "circular", size =0.1) +  
-      geom_tiplab(aes(label = label), size =0.6, align =TRUE,linetype = "dashed", linesize = .05)
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p <- ggtree(ashton_tree, layout = "circular", size =0.1)+
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 2)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
 p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
             scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
                                 limits = levels(sublineage$vni_subdivision))
 
-p1
+p
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
 ggsave("../tree_duplications/results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
-write.tree(ashton_tree, file = "../../data/processed/ashton_tree.newick")
 ```
 
-Plot a rectangular version of the Ashton tree
+### Plot a rectangular version of the Ashton tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 10
+#| fig-width: 7
+#| fig-align: center
 p <- ggtree(ashton_tree, layout = "rectangular", size =0.1) +  
-      geom_tiplab(aes(label = label), size = 1.6, align =TRUE,linetype = "dashed", linesize = .05)
+      geom_tiplab(aes(label = label), size = 0.6, align =TRUE,linetype = "dashed", linesize = .05)
 p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
             scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
                                 limits = levels(sublineage$vni_subdivision))
@@ -249,6 +276,9 @@ merged<- read.tree("../../data/processed/merged_tree.newick")
 ```
 Plot merged tree with branchlengths (not real)
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
 p <- ggtree(merged, layout = "circular", size = 0.1) +  
       geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
                     linetype = "dashed", linesize = .05)+
@@ -272,6 +302,9 @@ ggsave("../results/figures/tree_merged_branchlengths.png",
 
 Plot cladogram of merged tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
 p <- ggtree(merged, layout = "circular", size = 0.1, branch.length = "none") +  
       geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
                     linetype = "dashed", linesize = .05)
@@ -325,6 +358,9 @@ small_tree <- drop.tip(merged, setdiff(merged$tip.label, tips$strain))
 
 Plot the small tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
 p <- ggtree(small_tree, layout = "rectangular", size = 1, branch.length = "none")+  
             geom_tiplab(aes(label = label),
                             size = 3, align = TRUE, linetype = "dashed",
@@ -337,7 +373,7 @@ p <- ggtree(small_tree, layout = "rectangular", size = 1, branch.length = "none"
                                 na.translate = FALSE,
                                 limits = levels(sublineage$vni_subdivision))
 
-p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 5.5) +
+p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 6) +
             scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
             new_scale_fill()
 p1 
