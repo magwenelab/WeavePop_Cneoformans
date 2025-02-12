@@ -20,7 +20,7 @@ references:
 
 metadata: "Crypto_Ashton/config/metadata.csv" # Relative path to metadata CSV table.
 chromosomes: "Crypto_Ashton/config/chromosomes.csv" # Relative path to chromosomes CSV table.
-samples_to_exclude: # Optional: Relative path to list of samples to exclude from analyses.
+samples_to_exclude: "Crypto_Ashton/config/exclude.txt" # Optional: Relative path to list of samples to exclude from analyses.
 
 # ------------------Output-------------------------------------------------------------------------
 

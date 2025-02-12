@@ -25,13 +25,13 @@ library(ggnewscale)
 ## Metadata
 Make separate dataframes for each metadata field.
 ```{r}
-metadata <- read.delim(  "../../data/derived/metadata_fixed.csv", header=TRUE, sep=",")
+metadata <- read.delim(  "../../data/derived/metadata.csv", header=TRUE, sep=",")
 
 metadata$vni_subdivision[metadata$vni_subdivision == ""] <- NA
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
                             "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", 
-                            "VNIc", "VNIa-outlier", "VNII"))
+                            "VNIc", "VNIa-outlier"))
 
 sublineage <- metadata %>%
                 filter(lineage == "VNI")%>%
@@ -50,7 +50,7 @@ source <- metadata %>%
 ```
 Make color vectors for all plots
 ```{r}
-lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4)]
+lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4,5)]
 names(lineage_colors) <- levels(as.factor(metadata$lineage))
 
 sublineage_colors <- c(brewer.pal(12, "Set3")[c(1:10)], "white")
@@ -125,15 +125,19 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
         x
     }
 })
-ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-    if (x %in% metadata$name) {
-        metadata$strain[metadata$name == x]
-    } else {
-        x
-    }
-})
+#ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
+#    if (x %in% metadata$name) {
+#        metadata$strain[metadata$name == x]
+#    } else {
+#        x
+#    }
+#})
 ```
-
+```{r}
+tips <- ashton_tree_unrooted$tip.label
+missing_tips <- setdiff(tips, metadata$strain)
+missing_tips
+```
 ### Plot unrooted Ashton tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #| fig-height: 5
