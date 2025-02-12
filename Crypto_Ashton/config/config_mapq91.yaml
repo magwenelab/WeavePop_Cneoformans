@@ -1,0 +1,117 @@
+# =================================================================================================
+#   Choose which workflow to run
+# =================================================================================================
+
+workflow: "analysis" # Options: "analysis", "join_datasets"
+
+# =================================================================================================
+# Analysis workflow parameters
+# =================================================================================================
+
+# ------------------Input--------------------------------------------------------------------------
+
+fastqs:
+  directory: "Crypto_Ashton/data/samples" # Relative path to directory with all FASTQ files.
+  fastq_suffix1: "_1.fq.gz" # Suffix after the sample name of the forward reads file.
+  fastq_suffix2: "_2.fq.gz" # Suffix after the sample name of the reverse reads file.
+
+references: 
+  directory: "Crypto_Ashton/data/references" # Path to directory with reference genomes.
+
+metadata: "Crypto_Ashton/config/metadata.csv" # Relative path to metadata CSV table.
+chromosomes: "Crypto_Ashton/config/chromosomes.csv" # Relative path to chromosomes CSV table.
+samples_to_exclude: "Crypto_Ashton/config/exclude.txt" # Optional: Relative path to list of samples to exclude from analyses.
+
+# ------------------Output-------------------------------------------------------------------------
+
+output_directory: "Crypto_Ashton/results" # Name for the output directory.
+
+# ------------------Annotation of reference genomes------------------------------------------------
+
+annotate_references:
+  activate: True # True to run the annotation of the reference genomes. Empty or False to skip.
+  directory: "Crypto_Ashton/data/main_reference" # Relative path to directory with main reference files.
+  fasta: "FungiDB-65_CneoformansH99_Genome.fasta" # Filename of the main reference genome FASTA file.
+  gff: "FungiDB-65_CneoformansH99.gff" # Filename of the main reference genome GFF file.
+  liftoff:
+    threads: 12 # Number of threads for Liftoff.
+    extra: "" # Extra parameters for Liftoff.
+
+# ------------------Depth and quality analyses and filter-----------------------------------------------------
+
+depth_quality: 
+  mosdepth: 
+    threads: 12  # Number of threads for mosdepth.
+    window: 500 # Window size for mosdepth.
+    min_mapq: 20 # Minimum mapping quality for mosdepth.
+    extra: "" # Extra parameters for mosdepth.
+  flag_quality: 
+    low_MAPQ_limit: 20 # Max MAPQ to be considered low quality.
+    high_MAPQ_limit: 60 # Min MAPQ to be considered high quality.
+    exclude_samples: True # True to exclude samples that do not meet the quality thresholds.
+    min_position_depth: 5 # Minimum depth for a position to be considered covered.
+    min_percent_coverage: 50 # If percent of genome covered is below this value, the sample is excluded.
+    min_percent_MAPQ: 91 # If percent of high quality reads is below this value, the sample is excluded.
+    min_percent_genome-wide_depth: 2 # If genome-wide depth (Global mode) is below this value, the sample is excluded.
+    min_percent_properly_paired_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
+
+# ------------------Depth and quality of genetic features---------------------------------------------
+
+depth_quality_features:
+  activate: # True to activate the module. Empty or False to skip.
+
+# ------------------Copy-number variant calling----------------------------------------------------
+
+cnv:
+  activate:  # True to activate the module. Empty or False to skip.
+  smoothing_size: 25 # Parameter for median filtering smoothing of the read depth.
+  depth_threshold: 0.6 # Min deviation from the global depth to be considered a CNV.
+  repeats:
+    repeats_database: "Crypto_Ashton/config/RepBase.fasta" # Relative path to the RepBase FASTA file.
+    repeats_threads: 20 # Number of threads for RepeatModeler and RepeatMasker.
+
+# ------------------Annotation of SNP effects------------------------------------------------------
+
+snpeff:
+  activate: # True to activate the module. Empty or False to skip.
+  extra: "" # Extra parameters for SnpEff.
+
+# ------------------Plotting-----------------------------------------------------------------------
+
+plotting: 
+  activate: True # True to activate the module. Empty or False to skip.
+  loci: "Crypto_Ashton/config/loci.csv" # Relative path to table with loci to add to plots.
+  metadata2color : "source" # Column name in the samples table to color the samples in the plots.
+  scale : 2 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
+
+# ------------------Database-----------------------------------------------------------------------
+
+database:
+  activate: True # True to activate the module. Empty or False to skip.
+
+# =================================================================================================
+# Join datasets workflow parameters
+# =================================================================================================
+# This workflow joins the results of running the sample_workflow in different datasets. 
+# It assumes that if the same lineage is present in the different datasets, 
+# the same reference genome was used.
+
+datasets_paths: "" # Commas separated list of paths to the directories with the results of the analysis workflow.
+datasets_names: "" # Commas separated list of names for the datasets, in the same order as the paths.
+joint_output_directory: "" # Relative path to the directory where the joined results will be saved.
+
+# =================================================================================================
+#   Parameters for individual tools
+# =================================================================================================
+
+snippy:
+  threads: 12
+  extra: ""
+
+liftoff:
+  threads: 12
+  extra: ""
+
+agat:
+  extra: ""
+

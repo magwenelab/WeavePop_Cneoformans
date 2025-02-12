@@ -20,13 +20,20 @@ library(ggtree)
 library(tidyverse)
 library(RColorBrewer)
 library(ggnewscale)
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/scripts")
 ```
 
 ## Metadata
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055).  
 Make separate dataframes for each metadata field.
-```{r}
+```{r, message=FALSE, warning=FALSE}
 metadata <- read.delim(  "../../data/derived/metadata.csv", header=TRUE, sep=",")
-
+summary <- metadata %>% 
+    group_by(dataset, lineage) %>% 
+    summarize(count = n())
+summary
+```
+```{r}
 metadata$vni_subdivision[metadata$vni_subdivision == ""] <- NA
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
@@ -50,7 +57,7 @@ source <- metadata %>%
 ```
 Make color vectors for all plots
 ```{r}
-lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4,5)]
+lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4)]
 names(lineage_colors) <- levels(as.factor(metadata$lineage))
 
 sublineage_colors <- c(brewer.pal(12, "Set3")[c(1:10)], "white")
@@ -103,7 +110,7 @@ d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.1) +
 d2
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 ggsave("../results/figures/tree_desjardins.png", 
         d2, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
@@ -125,19 +132,23 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
         x
     }
 })
-#ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-#    if (x %in% metadata$name) {
-#        metadata$strain[metadata$name == x]
-#    } else {
-#        x
-#    }
-#})
 ```
 ```{r}
 tips <- ashton_tree_unrooted$tip.label
-missing_tips <- setdiff(tips, metadata$strain)
-missing_tips
+length(tips)
+tips_missing_from_final_dataset <- setdiff(tips, metadata$strain)
 ```
+
+Comparte list of strains missing from metadata with the oringinal Ashton metadata
+```{r}
+ashton_metadata <-read.delim(  "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/config/metadata_all_ashton_and_vni_desj.csv", header=TRUE, sep=",")
+metadata_missing_from_dataset <- ashton_metadata %>%
+    filter(strain %in% tips_missing_from_final_dataset)%>%
+    select(sample, strain, lineage, VNI_subdivision)
+metadata_missing_from_dataset
+
+```
+
 ### Plot unrooted Ashton tree
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #| fig-height: 5
@@ -156,7 +167,7 @@ pu1 <- gheatmap(pu, sublineage, width=.08, colnames=FALSE, offset=.01) +
 
 pu
 ```
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 ggsave("../results/figures/tree_ashton_unrooted.png", 
     pu1, height = 10, width = 10, units = "in", dpi = 600)
 ```
@@ -194,8 +205,8 @@ p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
 p
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-ggsave("../tree_duplications/results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
+```{r, echo=FALSE}
+ggsave("../results/figures/tree_ashton.png", p1, height = 10, width = 10, units = "in", dpi = 600)
 ```
 
 ### Plot a rectangular version of the Ashton tree
@@ -210,7 +221,7 @@ p1 <- gheatmap(p, sublineage, width=.08, colnames=FALSE, offset=.01) +
                                 limits = levels(sublineage$vni_subdivision))
 p1
 ```
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 ggsave("../results/figures/tree_ashton.pdf", p1, height = 50, width = 20, units = "in", dpi = 900, limitsize = FALSE)
 ```
 
@@ -256,13 +267,13 @@ backtree <- drop.tip(desj_tree, VNI_tips)
 
 Create the reference tables
 ```{r, eval=FALSE}
-reference <- data.frame(bind=c("CNS_289-BK8"),
-                   reference=c("Bt7-Bt34"), # "H99"
+reference <- data.frame(bind=c("CNS_289-20427_2#4"),
+                   reference=c("Bt7-Bt34"),
                    poly=c(FALSE))
 ```
 
 Merge
-```{r,output=FALSE, eval=FALSE}
+```{r, eval=FALSE}
 merged <- tree.merger(backbone = backtree,
                         data=reference,
                         source.tree = ashton_tree,
@@ -271,7 +282,7 @@ merged <- tree.merger(backbone = backtree,
                         tip.ages = tipages)
 ```
 
-```{r, eval=FALSE, echo= FALSE}
+```{r, eval=FALSE}
 write.tree(merged, file = "../../data/processed/merged_tree.newick")
 ```
 
@@ -299,7 +310,7 @@ m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=.042) +
 m2
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE}
 ggsave("../results/figures/tree_merged_branchlengths.png",
     m2, height = 10, width = 10, units = "in", dpi = 600)
 ```
@@ -324,13 +335,14 @@ m2 <- gheatmap(m1, sublineage, width=.05, colnames=FALSE, offset=5) +
 m2
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 ggsave("../results/figures/tree_merged.png", m2, height = 10, width = 10, units = "in", dpi = 600)
 ```
 
 ## Plot minimal version of the tree
 
-Get one sample of each lineage, and VNI sublineage, and all VNIa-outlier
+Get one sample of each non-VNI lineage, VNI sublineage, and all VNIa-outlier
+
 ```{r}
 VNI <- metadata %>%
     filter(lineage == "VNI", vni_subdivision != "VNIa-outlier") %>%
