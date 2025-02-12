@@ -19,7 +19,7 @@ SRS405110,SRR798960,C27,VNI,VNIa-32,Desjardins,Clinical,Cryptococcus_neoformans 
 ERS542448,ERR842672,14936_1#57,VNI,VNIa-32,Ashton,Clinical,,,Vietnam,,,,,,BK167,Cryptococcus neoformans var. grubii H99,Ashton,positive,Asia,2006.0,31.39142484,0.959203932,BK167
 ERS2540945,ERR2624432,04CN-65-072,VNI,VNIa-32,Ashton,Clinical,,,Uganda,,,,,,04CN-65-072,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,54.0415131,0.990783801,04CN-65-072
 ERS1142700,ERR1671607,20427_2#9,VNI,VNIa-32,Ashton,Clinical,,,Vietnam,,,,,,BK19,Cryptococcus neoformans var. grubii H99,Ashton,positive,Asia,2004.0,38.77920802,0.960296968,BK19
-SRS405126,SRR798738,A4-34-6,VNI,VNIa-32,Desjardins,Environment,Cryptococcus_neoformans var. grubii_31427,α,USA,pigeon guano ,G26167,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798738
+SRS405126,SRR798738,A4-34-6,VNI,VNIa-32,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_31427,α,USA,pigeon guano ,G26167,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798738
 ERS2541049,ERR2624145,04CN-65-161,VNI,VNIa-32,Ashton,Clinical,,,Uganda,,,,,,04CN-65-161,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,,45.41327671,0.991485609,04CN-65-161
 ERS2541305,ERR2624319,04CN-63-036,VNI,VNIa-32,Ashton,Clinical,,,Malawi,,,,,,04CN-63-036,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,49.20097444,0.987907593,04CN-63-036
 SRS404503,SRR797785,Bt107,VNI,VNIa-32,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt107,α,Botswana ,CSF /HIV+ ,G26147,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR797785
@@ -511,9 +511,9 @@ ERS542590,ERR775395,14893_3#56,VNI,VNIa-5,Ashton,Clinical,,,Vietnam,,,,,,BMD700,
 SRS404518,SRR797810,Bt134,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt134,α,Botswana ,CSF /HIV+ ,G26153,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR797810
 SRS405109,SRR798819,Bt92,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt92,α,Botswana ,CSF /HIV+ ,G25976,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798819
 SRS404481,SRR797754,Bt139,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt139,α,Botswana ,CSF /HIV+ ,G26163,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR797754
-SRS404466,SRR797733,Jo278-1,VNI,VNIa-5,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Jo278-1,α,S. Africa,soil,G26055,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR797733
+SRS404466,SRR797733,Jo278-1,VNI,VNIa-5,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Jo278-1,α,S. Africa,soil,G26055,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR797733
 SRS417573,SRR836547,AD1-86a,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD1-86a,α,France ,Clinical,G27144,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836547
-SRS404443,SRR798290,A5-35-17,VNI,VNIa-5,Desjardins,Environment,Cryptococcus neoformans var. grubii A5-35-17,α,USA,pigeon guano,G26307,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798290
+SRS404443,SRR798290,A5-35-17,VNI,VNIa-5,Desjardins,Environmental,Cryptococcus neoformans var. grubii A5-35-17,α,USA,pigeon guano,G26307,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798290
 SRS409063,SRR642859,AD1-83a,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus neoformans var. grubii AD1-83a,α,France ,Clinical,G18570,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR642859
 SRS417578,SRR836581,AD2-82a,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD2-82a,α,France ,Clinical,G27127,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836581
 SRS409175,SRR642854,CHC193,VNI,VNIa-5,Desjardins,Clinical,Cryptococcus_neoformans_CHC193,α,China,Clinical,G18573,Chen et al 2008 Emerg Infect Dis,No,No,,,,,,,,,SRR642854
@@ -682,7 +682,7 @@ SRS405148,SRR798957,Bt58,VNI,VNIa-X,Desjardins,Clinical,Cryptococcus_neoformans 
 ERS2540965,ERR2624236,04CN-63-037,VNI,VNIa-X,Ashton,Clinical,,,Malawi,,,,,,04CN-63-037,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,34.96692072,0.985774482,04CN-63-037
 ERS2540964,ERR2624331,04CN-65-027,VNI,VNIa-X,Ashton,Clinical,,,Uganda,,,,,,04CN-65-027,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,61.13074468,0.987905846,04CN-65-027
 ERS2541019,ERR2624350,04CN-65-130,VNI,VNIa-X,Ashton,Clinical,,,Uganda,,,,,,04CN-65-130,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,47.75994973,0.984398233,04CN-65-130
-SRS403287,SRR642858,Gb118,VNI,VNIa-X,Desjardins,Environment,Cryptococcus_neoformans_Gb118,α,Botswana ,pigeon guano,G18569,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR642858
+SRS403287,SRR642858,Gb118,VNI,VNIa-X,Desjardins,Environmental,Cryptococcus_neoformans_Gb118,α,Botswana ,pigeon guano,G18569,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR642858
 SRS409177,SRR642862,MW-RSA36,VNI,VNIa-X,Desjardins,Clinical,Cryptococcus neoformans var. grubii MW-RSA36,α,S. Africa ,Clinical,G18568,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR642862
 SRS405144,SRR798853,Bt48,VNI,VNIa-X,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt48,α,Botswana ,CSF /HIV+ ,G26037,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798853
 ERS2541051,ERR2624171,04CN-65-032,VNI,VNIa-X,Ashton,Clinical,,,Uganda,,,,,,04CN-65-032,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,59.39387703,0.984599808,04CN-65-032
@@ -709,15 +709,15 @@ ERS2541062,ERR2624504,04CN-65-046,VNI,VNIa-outlier,Ashton,Clinical,,,Uganda,,,,,
 ERS2541009,ERR2624466,04CN-64-127,VNI,VNIa-outlier,Ashton,Clinical,,,Uganda,,,,,,04CN-64-127,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,31.15428666,0.988213661,04CN-64-127
 ERS2541052,ERR2624270,04CN-64-097,VNI,VNIa-outlier,Ashton,Clinical,,,Uganda,,,,,,04CN-64-097,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,59.77162914,0.985862936,04CN-64-097
 ERS2541057,ERR2624237,04CN-65-023,VNI,VNIa-outlier,Ashton,Clinical,,,Uganda,,,,,,04CN-65-023,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,70.22522908,0.989874435,04CN-65-023
-SRS409060,SRR642223,A2-102-5,VNI,VNIa-outlier,Desjardins,Environment,Cryptococcus neoformans var. grubii A2-102-5,α,USA,pigeon guano,G18557,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR642223
+SRS409060,SRR642223,A2-102-5,VNI,VNIa-outlier,Desjardins,Environmental,Cryptococcus neoformans var. grubii A2-102-5,α,USA,pigeon guano,G18557,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR642223
 SRS404740,SRR798138,LP-RSA2296,VNI,VNIa-outlier,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_LP-RSA2296,α,S. Africa,Clinical,G25967,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR798138
-SRS409076,SRR642856,Tu259-1,VNI,VNIa-outlier,Desjardins,Environment,Cryptococcus neoformans var. grubii Tu259-1,α,Botswana ,Mopane tree,G18575,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR642856
-SRS409781,SRR642847,D17-1,VNI,VNIa-outlier,Desjardins,Environment,Cryptococcus neoformans var. grubii D17-1,α,S. Africa,pigeon guano,G18577,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR642847
-SRS404494,SRR797778,Tu241-1,VNI,VNIa-outlier,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu241-1,α,Botswana ,Mopane tree,G25982,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR797778
+SRS409076,SRR642856,Tu259-1,VNI,VNIa-outlier,Desjardins,Environmental,Cryptococcus neoformans var. grubii Tu259-1,α,Botswana ,Mopane tree,G18575,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR642856
+SRS409781,SRR642847,D17-1,VNI,VNIa-outlier,Desjardins,Environmental,Cryptococcus neoformans var. grubii D17-1,α,S. Africa,pigeon guano,G18577,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR642847
+SRS404494,SRR797778,Tu241-1,VNI,VNIa-outlier,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu241-1,α,Botswana ,Mopane tree,G25982,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR797778
 SRS885172,SRR1931698,NRHc5028.ENR.STOR,VNI,VNIa-outlier,Desjardins,Clinical,NRHc5028.ENR.STOR,α,Botswana,Clinical,G84341,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1931698
 SRS409479,SRR642853,125.91,VNI,VNIa-outlier,Desjardins,Clinical,Cryptococcus_neoformans_125.91,a,Tanzania,Clinical ,G18554,"Litvintseva et al 2011 PLoS One, Litvintseva et al 2007 PLoS Pathogens",No,No,,,,,,,,,SRR642853
 SRS404513,SRR798677,MW-RSA722,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans_MW-RSA722,α,S. Africa,Clinical,G26286,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR798677
-SRS404496,SRR798211,A3-1-1,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans var. grubii_29593,α,USA,pigeon guano,G26305,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR798211
+SRS404496,SRR798211,A3-1-1,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_29593,α,USA,pigeon guano,G26305,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR798211
 SRS520185,SRR1063288,TCl-14,VNI,VNIb,Desjardins,Clinical,Cryptococcus sp. TCl-14,α,Togo,Clinical,G29902,This study,No,No,,,,,,,,,SRR1063288
 ERS2541013,ERR2624367,04CN-65-047,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-047,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,64.37993583,0.994917102,04CN-65-047
 SRS404761,SRR798870,MW-RSA606,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA606,α,S. Africa,Clinical,G26051,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR798870
@@ -725,12 +725,12 @@ SRS404793,SRR798242,MW-RSA6134,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoform
 SRS404795,SRR798243,MW-RSA82,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans_MW-RSA82,α,S. Africa,Clinical,G26128,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR798243
 SRS404803,SRR798269,MW-RSA1869,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA1869,α,S. Africa,Clinical,G26033,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR798269
 SRS404479,SRR797807,WM148,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_WM148,α,Australia,Clinical,G26027,"Litvintseva et al 2006 Genetics, Meyer et al 2009 Med Mycol",No,No,,,,,,,,,SRR797807
-SRS404462,SRR798691,A1-35-8,VNI,VNIb,Desjardins,Environment,Cryptococcus neoformans var. grubii A1-35-8,α,USA,pigeon guano,G26303,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798691
+SRS404462,SRR798691,A1-35-8,VNI,VNIb,Desjardins,Environmental,Cryptococcus neoformans var. grubii A1-35-8,α,USA,pigeon guano,G26303,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798691
 SRS409058,SRR642849,AD2-60a,VNI,VNIb,Desjardins,Clinical,Cryptococcus neoformans var. grubii AD2-60a,α,France ,Clinical ,G18556,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR642849
 SRS404452,SRR798582,MW-RSA2628,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA2628,α,S. Africa,Clinical,G25977,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR798582
 SRS409478,SRR642855,AD1-7a,VNI,VNIb,Desjardins,Clinical,Cryptococcus neoformans var. grubii AD1-7a,α,France ,Clinical,G18578,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR642855
 SRS409482,SRR642845,C23,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans_C23,α,USA,bronch. wash/HIV- ,G18558,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR642845
-SRS405099,SRR798587,A3-38-20,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans var. grubii_36362,α,USA,pigeon guano,G26160,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798587
+SRS405099,SRR798587,A3-38-20,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_36362,α,USA,pigeon guano,G26160,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR798587
 ERS1142695,ERR1671602,20427_2#4,VNI,VNIb,Ashton,Clinical,,,Vietnam,,,,,,BK8,Cryptococcus neoformans var. grubii H99,Ashton,positive,Asia,2004.0,44.55160567,0.966607303,BK8
 ERS2541077,ERR2624477,04CN-65-132,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-132,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,60.55988904,0.995224812,04CN-65-132
 ERS2540992,ERR2624183,04CN-65-125,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-125,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2014.0,39.30766728,0.994221699,04CN-65-125
@@ -739,8 +739,8 @@ ERS2541014,ERR2624275,04CN-65-096,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65
 ERS2541002,ERR2624181,04CN-65-074,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-074,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,,49.55331296,0.993829294,04CN-65-074
 ERS2541006,ERR2624429,04CN-64-019,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-64-019,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,36.21372038,0.993632112,04CN-64-019
 ERS2541007,ERR2624196,04CN-65-045,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-045,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,33.33470771,0.999392151,04CN-65-045
-SRS404456,SRR797737,IUM-96-28-28,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans var. grubii_IUM 96-28-28,a,Italy,soil,G25985,Viviani et al 2001 Med. Mycol.,No,No,,,,,,,,,SRR797737
-SRS405116,SRR798667,A4-1-12,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans var. grubii_33519,α,USA,pigeon guano,G26164,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR798667
+SRS404456,SRR797737,IUM-96-28-28,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_IUM 96-28-28,a,Italy,soil,G25985,Viviani et al 2001 Med. Mycol.,No,No,,,,,,,,,SRR797737
+SRS405116,SRR798667,A4-1-12,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_33519,α,USA,pigeon guano,G26164,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR798667
 SRS404516,SRR797808,Bt49,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt49,α,Botswana ,CSF /HIV+ ,G26042,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR797808
 ERS2541056,ERR2624337,04CN-65-062,VNI,VNIb,Ashton,Clinical,,,Uganda,,,,,,04CN-65-062,Cryptococcus neoformans var. grubii H99,Ashton,positive,Africa,2013.0,45.89574136,0.993197042,04CN-65-062
 SRS417581,SRR836599,AD3-41a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD3-41a,α,France ,Clinical,G27191,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836599
@@ -750,23 +750,23 @@ SRS417575,SRR836558,AD1-95a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans
 SRS417585,SRR836610,AD3-58,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD3-58,α,France ,Clinical ,G27192,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836610
 SRS417583,SRR836557,AD1-90a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD1-90a,α,France ,Clinical,G27169,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836557
 SRS417587,SRR836615,AD3-83a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD3-83a,α,France ,Clinical ,G27145,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836615
-SRS405133,SRR798777,Pr68,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans_Pr68,α,S. Africa,pigeon guano,G26131,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR798777
+SRS405133,SRR798777,Pr68,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans_Pr68,α,S. Africa,pigeon guano,G26131,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR798777
 SRS417590,SRR836631,AD4-47a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD4-47a,α,France ,Clinical ,G27148,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836631
 SRS417594,SRR836648,AD4-92a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD4-92a,α,France ,Clinical ,G27194,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836648
 SRS417595,SRR836660,AD5-45a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD5-45a,α,France ,Clinical,G27196,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836660
 SRS417582,SRR836604,AD3-55a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD3-55a,α,France ,Clinical,G27164,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836604
 SRS417601,SRR836683,AD6-55a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD6-55a,α,France ,Clinical,G27124,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR836683
 SRS417604,SRR836689,Arg1366,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Arg1366,α,Argentina,Clinical ,G27132,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR836689
-SRS417656,SRR836964,Pr284-1,VNI,VNIb,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Pr284-1,α,Botswana ,avian guano,G27160,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR836964
+SRS417656,SRR836964,Pr284-1,VNI,VNIb,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Pr284-1,α,Botswana ,avian guano,G27160,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR836964
 SRS520184,SRR1063286,TCl-11,VNI,VNIb,Desjardins,Clinical,Cryptococcus sp. TCl-11,α,Togo,Clinical,G29901,This study,No,No,,,,,,,,,SRR1063286
 SRS417676,SRR837084,Ug2459,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Ug2459,α,Uganda,Clinical ,G27184,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,SRR837084
 SRS417600,SRR842038,AD6-54a,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_AD6-54a,α,France ,Clinical,G27178,Dromer et al 2007 PLoS Med,No,No,,,,,,,,,SRR842038
-SRS520173,SRR1063253,A1-84-14,VNI,VNIb,Desjardins,Environment,Cryptococcus neoformans var. grubii A1-84-14,α,USA,pigeon guano,G26155,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR1063253
+SRS520173,SRR1063253,A1-84-14,VNI,VNIb,Desjardins,Environmental,Cryptococcus neoformans var. grubii A1-84-14,α,USA,pigeon guano,G26155,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR1063253
 SRS405141,SRR798837,Bt111,VNI,VNIb,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt111,α,Botswana ,CSF /HIV+ ,G26168,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798837
 SRS881244,SRR1926055,NRHc5015.ENR,VNI,VNIc,Desjardins,Clinical,NRHc5015.ENR,α,Botswana,Clinical,G84327,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926055
 SRS881152,SRR1925890,PMHc1034.ENR.STOR,VNI,VNIc,Desjardins,Clinical,PMHc1034.ENR.STOR,α,Botswana,Clinical,G84299,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925890
 SRS881169,SRR1925912,PMHc1043.ENR.STOR,VNI,VNIc,Desjardins,Clinical,PMHc1043.ENR.STOR,α,Botswana,Clinical,G84306,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925912
-SRS881197,SRR1925938,Gbc44-1,VNI,VNIc,Desjardins,Environment,Gbc44-1,α,Botswana,Acacia tree,G84363,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925938
+SRS881197,SRR1925938,Gbc44-1,VNI,VNIc,Desjardins,Environmental,Gbc44-1,α,Botswana,Acacia tree,G84363,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925938
 SRS404444,SRR797707,Bt106,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt106,α,Botswana ,CSF /HIV+ ,G26143,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR797707
 SRS409062,SRR642852,Bt15,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans_Bt15,α,Botswana ,CSF /HIV+ ,G18564,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR642852
 SRS405151,SRR799053,Bt57,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt57,α,Botswana ,CSF /HIV+ ,G26054,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR799053
@@ -775,27 +775,27 @@ SRS405147,SRR798922,Bt116,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans v
 SRS523961,SRR642846,Bt120,VNI,VNIc,Desjardins,Clinical,Cryptococcus neoformans var. grubii Bt120,α,Botswana ,CSF /HIV+ ,G18571,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR642846
 SRS404449,SRR798638,Bt213,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt213,α,Botswana ,CSF /HIV+ ,G26022,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798638
 SRS405146,SRR799026,Bt8,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt8,α,Botswana ,CSF /HIV+ ,G26060,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR799026
-SRS885874,SRR1942967,Gbc39-2,VNI,VNIc,Desjardins,Environment,Gbc39-2,α,Botswana,Acacia tree,G84361,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1942967
+SRS885874,SRR1942967,Gbc39-2,VNI,VNIc,Desjardins,Environmental,Gbc39-2,α,Botswana,Acacia tree,G84361,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1942967
 SRS881142,SRR1925881,NRHc5017.ENR,VNI,VNIc,Desjardins,Clinical,NRHc5017.ENR,α,Botswana,Clinical,G84329,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925881
 SRS520180,SRR1063269,MW-RSA524,VNI,VNIc,Desjardins,Clinical,Cryptococcus neoformans var. grubii MW-RSA524,α,S. Africa,Clinical,G29896,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR1063269
 SRS520178,SRR1063265,MW-RSA3834,VNI,VNIc,Desjardins,Clinical,Cryptococcus neoformans var. grubii MW-RSA3834,α,S. Africa,Clinical,G29899,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,SRR1063265
 SRS429660,SRR868750,Bt210,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt210,α,Botswana ,CSF /HIV+ ,G26052,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR868750
 SRS417662,SRR836988,RTC5,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_RTC5,α,Botswana ,CSF /HIV+ ,G27168,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR836988
 SRS417637,SRR836871,Bt4,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt4,α,Botswana ,CSF /HIV+ ,G27155,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR836871
-SRS881202,SRR1926079,Gbc39-1,VNI,VNIc,Desjardins,Environment,Gbc39-1,α,Botswana,Acacia tree,G84360,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926079
-SRS881204,SRR1925987,Gbc42-1,VNI,VNIc,Desjardins,Environment,Gbc42-1,α,Botswana,Acacia tree,G84362,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925987
+SRS881202,SRR1926079,Gbc39-1,VNI,VNIc,Desjardins,Environmental,Gbc39-1,α,Botswana,Acacia tree,G84360,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926079
+SRS881204,SRR1925987,Gbc42-1,VNI,VNIc,Desjardins,Environmental,Gbc42-1,α,Botswana,Acacia tree,G84362,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925987
 SRS885843,SRR1942909,PMHc1032.ENR,VNI,VNIc,Desjardins,Clinical,PMHc1032.ENR,α,Botswana,Clinical,G84297,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1942909
 SRS881239,SRR1926048,NRHc5048.ENR.ISO,VNI,VNIc,Desjardins,Clinical,NRHc5048.ENR.ISO,α,Botswana,Clinical,G84358,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926048
-SRS885170,SRR1931695,Gbc16-1,VNI,VNIc,Desjardins,Environment,Gbc16-1,α,Botswana,decayed tree ,G84359,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1931695
+SRS885170,SRR1931695,Gbc16-1,VNI,VNIc,Desjardins,Environmental,Gbc16-1,α,Botswana,decayed tree ,G84359,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1931695
 SRS881160,SRR1925902,NRHc5001.ENR,VNI,VNIc,Desjardins,Clinical,NRHc5001.ENR,α,Botswana,Clinical,G84314,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925902
-SRS881200,SRR1925975,Gbc98-1,VNI,VNIc,Desjardins,Environment,Gbc98-1,α,Botswana,unknown tree,G84366,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925975
+SRS881200,SRR1925975,Gbc98-1,VNI,VNIc,Desjardins,Environmental,Gbc98-1,α,Botswana,unknown tree,G84366,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925975
 SRS885916,SRR1943071,PMHc1031A.ENR.INI.LP,VNI,VNIc,Desjardins,Clinical,PMHc1031A.ENR.INI.LP,α,Botswana,Clinical,G84296,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1943071
 SRS881196,SRR1925952,PMHc1020.CLIN.1,VNI,VNIc,Desjardins,Clinical,PMHc1020.CLIN.1,α,Botswana,Clinical,G84288,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1925952
 SRS404451,SRR798735,Bt42,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt42,α,Botswana ,CSF /HIV+ ,G26030,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798735
 SRS881241,SRR1926056,PMHc1022.ENR,VNI,VNIc,Desjardins,Clinical,PMHc1022.ENR,α,Botswana,Clinical,G84289,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926056
-SRS881220,SRR1926013,Gbc51-2,VNI,VNIc,Desjardins,Environment,Gbc51-2,α,Botswana,Acacia tree,G84364,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926013
+SRS881220,SRR1926013,Gbc51-2,VNI,VNIc,Desjardins,Environmental,Gbc51-2,α,Botswana,Acacia tree,G84364,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926013
 SRS885879,SRR1942971,NRHc5015.REL.CLIN.ISO,VNI,VNIc,Desjardins,Clinical,NRHc5015.REL.CLIN.ISO,α,Botswana,Clinical,G84328,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1942971
-SRS881246,SRR1926059,Gbc95-1,VNI,VNIc,Desjardins,Environment,Gbc95-1,α,Botswana,unknown tree,G84365,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926059
+SRS881246,SRR1926059,Gbc95-1,VNI,VNIc,Desjardins,Environmental,Gbc95-1,α,Botswana,unknown tree,G84365,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR1926059
 SRS405145,SRR798882,Bt117,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt117,α,Botswana ,CSF /HIV+ ,G26148,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798882
 SRS405119,SRR799041,Bt90,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt90,α,Botswana ,CSF /HIV+ ,G26032,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR799041
 SRS405118,SRR798668,Bt30,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt30,α,Botswana ,CSF /HIV+ ,G26058,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798668
@@ -830,7 +830,7 @@ SRS404460,SRR797740,Bt43,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans_Bt
 SRS404475,SRR797746,LP-RSA3042,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_LP-RSA3042,α,S. Africa,Clinical,G25972,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,SRR797746
 SRS404470,SRR797748,Bt118,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt118,α,Botswana ,CSF /HIV+ ,G26152,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR797748
 SRS405139,SRR798833,Bt95,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt95,α,Botswana ,CSF /HIV+ ,G26044,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798833
-SRS404480,SRR797784,Gb159-1,VNI,VNIc,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Gb159-1,α,Botswana ,unknown tree,G25981,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR797784
+SRS404480,SRR797784,Gb159-1,VNI,VNIc,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Gb159-1,α,Botswana ,unknown tree,G25981,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,SRR797784
 SRS404488,SRR798765,Bt23,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt23,α,Botswana ,CSF /HIV+ ,G26036,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798765
 SRS404485,SRR797760,Bt130,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt130,a,Botswana ,CSF /HIV+ ,G26149,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,SRR797760
 SRS404486,SRR798186,Bt101,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt101,α,Botswana ,CSF /HIV+ ,G26314,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798186
@@ -853,123 +853,123 @@ SRS405132,SRR798768,Bt121,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans v
 SRS405136,SRR798803,Bt62,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans_Bt62,α,Botswana ,CSF /HIV+ ,G26134,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798803
 SRS405142,SRR798839,Bt104,VNI,VNIc,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt104,α,Botswana ,CSF /HIV+ ,G26139,Litvintseva et al 2003 Euk. Cell,No,No,,,,,,,,,SRR798839
 SRS881178,"SRR1925990, SRR1926071, SRR1944719",NRHc5005.ENR,VNBI,,Desjardins,Clinical,NRHc5005.ENR,α,Botswana,Clinical,G84316,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881184,"SRR1925933, SRR1926009, SRR1942977",Ftc202-1,VNBI,,Desjardins,Environment,Ftc202-1,α,Botswana,Mopane tree,G84227,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881232,"SRR1926034, SRR1931691, SRR1942979, SRR1944785",Ftc239-1,VNBI,,Desjardins,Environment,Ftc239-1,α,Botswana,Mopane tree,G84238,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885855,"SRR1942921, SRR1942926, SRR1944803",Ftc137-1,VNBI,,Desjardins,Environment,Ftc137-1,α,Botswana,Mopane tree,G84214,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881184,"SRR1925933, SRR1926009, SRR1942977",Ftc202-1,VNBI,,Desjardins,Environmental,Ftc202-1,α,Botswana,Mopane tree,G84227,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881232,"SRR1926034, SRR1931691, SRR1942979, SRR1944785",Ftc239-1,VNBI,,Desjardins,Environmental,Ftc239-1,α,Botswana,Mopane tree,G84238,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885855,"SRR1942921, SRR1942926, SRR1944803",Ftc137-1,VNBI,,Desjardins,Environmental,Ftc137-1,α,Botswana,Mopane tree,G84214,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885893,"SRR1943021, SRR1947212, SRR1947255",NRHc5045.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5045.ENR.CLIN.ISO,a,Botswana,Clinical,G84357,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881243,"SRR1926089, SRR1944710, SRR1944771",Muc479-1,VNBI,,Desjardins,Environment,Muc479-1,α,Botswana,Mopane tree,G84265,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881143,"SRR1925884, SRR1926001, SRR1943020",Ftc555-1,VNBI,,Desjardins,Environment,Ftc555-1,a,Botswana,Mopane tree,G84272,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881243,"SRR1926089, SRR1944710, SRR1944771",Muc479-1,VNBI,,Desjardins,Environmental,Muc479-1,α,Botswana,Mopane tree,G84265,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881143,"SRR1925884, SRR1926001, SRR1943020",Ftc555-1,VNBI,,Desjardins,Environmental,Ftc555-1,a,Botswana,Mopane tree,G84272,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881161,"SRR1925900, SRR1925986, SRR1944755",PMHc1052.ENR.STOR,VNBII,,Desjardins,Clinical,PMHc1052.ENR.STOR,a,Botswana,Clinical,G84313,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
-SRS881213,"SRR1925996, SRR1926000, SRR1943115, SRR1944735",Muc364-1,VNBI,,Desjardins,Environment,Muc364-1,α,Botswana,Mopane tree,G84249,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881213,"SRR1925996, SRR1926000, SRR1943115, SRR1944735",Muc364-1,VNBI,,Desjardins,Environmental,Muc364-1,α,Botswana,Mopane tree,G84249,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885173,"SRR1931703, SRR1944823, SRR1944843",NRHc5004.ENR,VNBI,,Desjardins,Clinical,NRHc5004.ENR,a,Botswana,Clinical,G84315,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885168,"SRR1931688, SRR1944700, SRR1944805",Ftc170-1,VNBI,,Desjardins,Environment,Ftc170-1,a,Botswana,Mopane tree,G84222,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885168,"SRR1931688, SRR1944700, SRR1944805",Ftc170-1,VNBI,,Desjardins,Environmental,Ftc170-1,a,Botswana,Mopane tree,G84222,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881185,"SRR1925935, SRR1944777, SRR1944793",PMHc1049.THER1.STOR,VNBII,,Desjardins,Clinical,PMHc1049.THER1.STOR,α,Botswana,Clinical,G84311,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
-SRS881149,"SRR1925887, SRR1943127, SRR1944792",Muc503-1,VNBI,,Desjardins,Environment,Muc503-1,α,Botswana,Mopane tree,G84268,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881168,"SRR1943111, SRR1926068, SRR1944783, SRR1944814",Ftc239-2,VNBI,,Desjardins,Environment,Ftc239-2,a,Botswana,Mopane tree,G84239,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881191,"SRR1925955, SRR1942993, SRR1944749",Ftc111-1,VNBI,,Desjardins,Environment,Ftc111-1,a,Botswana,Mopane tree,G84370,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881149,"SRR1925887, SRR1943127, SRR1944792",Muc503-1,VNBI,,Desjardins,Environmental,Muc503-1,α,Botswana,Mopane tree,G84268,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881168,"SRR1943111, SRR1926068, SRR1944783, SRR1944814",Ftc239-2,VNBI,,Desjardins,Environmental,Ftc239-2,a,Botswana,Mopane tree,G84239,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881191,"SRR1925955, SRR1942993, SRR1944749",Ftc111-1,VNBI,,Desjardins,Environmental,Ftc111-1,a,Botswana,Mopane tree,G84370,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881238,"SRR1926038, SRR1926046, SRR1944778",PMHc1026.ENR,VNBI,,Desjardins,Clinical,PMHc1026.ENR,α,Botswana,Clinical,G84293,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885171,"SRR1931697, SRR1944807, SRR1944811",NRHc5008.ENR,VNBII,,Desjardins,Clinical,NRHc5008.ENR,a,Botswana,Clinical,G84318,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881162,"SRR1925904, SRR1925991, SRR1926023",NRHc5039.ENR.STOR,VNBI,,Desjardins,Clinical,NRHc5039.ENR.STOR,α,Botswana,Clinical,G84352,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881205,"SRR1925985, SRR1944718, SRR1944724",Muc387-2,VNBII,,Desjardins,Environment,Muc387-2,α,Botswana,Mopane tree,G84252,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881235,"SRR1926045, SRR1943107, SRR1944826",Ftc209-3,VNBI,,Desjardins,Environment,Ftc209-3,a,Botswana,Mopane tree,G84230,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885915,"SRR1943061, SRR1943069, SRR1947210",Ftc211-1,VNBI,,Desjardins,Environment,Ftc211-1,α,Botswana,Mopane tree,G84231,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881205,"SRR1925985, SRR1944718, SRR1944724",Muc387-2,VNBII,,Desjardins,Environmental,Muc387-2,α,Botswana,Mopane tree,G84252,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881235,"SRR1926045, SRR1943107, SRR1944826",Ftc209-3,VNBI,,Desjardins,Environmental,Ftc209-3,a,Botswana,Mopane tree,G84230,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885915,"SRR1943061, SRR1943069, SRR1947210",Ftc211-1,VNBI,,Desjardins,Environmental,Ftc211-1,α,Botswana,Mopane tree,G84231,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881216,"SRR1926008, SRR1944740, SRR1944825",PMHc1024.ENR,VNBII,,Desjardins,Clinical,PMHc1024.ENR,a,Botswana,Clinical,G84291,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881189,"SRR1925974, SRR1925999, SRR1944768",NRHc5014.ENR,VNBII,,Desjardins,Clinical,NRHc5014.ENR,a,Botswana,Clinical,G84326,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885892,"SRR1943011, SRR1943013, SRR1947257",PMHc1001.ENR,VNBI,,Desjardins,Clinical,PMHc1001.ENR,α,Botswana,Clinical,G84275,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881188,"SRR1925937, SRR1926030, SRR1944766",Muc504-1,VNBI,,Desjardins,Environment,Muc504-1,α,Botswana,Mopane tree,G84269,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881188,"SRR1925937, SRR1926030, SRR1944766",Muc504-1,VNBI,,Desjardins,Environmental,Muc504-1,α,Botswana,Mopane tree,G84269,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881236,"SRR1926040, SRR1943117, SRR1944780",NRHc5041.ENR.STOR,VNBI,,Desjardins,Clinical,NRHc5041.ENR.STOR,α,Botswana,Clinical,G84354,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881228,"SRR1926029, SRR1943126, SRR1944720",NRHc5024.ENR.CLIN.1,VNBI,,Desjardins,Clinical,NRHc5024.ENR.CLIN.1,α,Botswana,Clinical,G84336,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881227,"SRR1926086, SRR1943063, SRR1944729",Muc437-1,VNBI,,Desjardins,Environment,Muc437-1,α,Botswana,Mopane tree,G84256,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881214,"SRR1925995, SRR1926021, SRR1931715",Muc416-4,VNBI,,Desjardins,Environment,Muc416-4,α,Botswana,Mopane tree,G84254,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881222,"SRR1926085, SRR1943160, SRR1944815",Ftc146-1,VNBI,,Desjardins,Environment,Ftc146-1,α,Botswana,Mopane tree,G84215,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881183,"SRR1925926, SRR1926016, SRR1944806",Muc451-1,VNBI,,Desjardins,Environment,Muc451-1,α,Botswana,Mopane tree,G84258,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885854,"SRR1942923, SRR1942933, SRR1944840",Ftc167-1,VNBI,,Desjardins,Environment,Ftc167-1,α,Botswana,Mopane tree,G84220,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881227,"SRR1926086, SRR1943063, SRR1944729",Muc437-1,VNBI,,Desjardins,Environmental,Muc437-1,α,Botswana,Mopane tree,G84256,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881214,"SRR1925995, SRR1926021, SRR1931715",Muc416-4,VNBI,,Desjardins,Environmental,Muc416-4,α,Botswana,Mopane tree,G84254,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881222,"SRR1926085, SRR1943160, SRR1944815",Ftc146-1,VNBI,,Desjardins,Environmental,Ftc146-1,α,Botswana,Mopane tree,G84215,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881183,"SRR1925926, SRR1926016, SRR1944806",Muc451-1,VNBI,,Desjardins,Environmental,Muc451-1,α,Botswana,Mopane tree,G84258,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885854,"SRR1942923, SRR1942933, SRR1944840",Ftc167-1,VNBI,,Desjardins,Environmental,Ftc167-1,α,Botswana,Mopane tree,G84220,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881210,"SRR1925994, SRR1926084, SRR1943001",PMHc1002.ENR,VNBII,,Desjardins,Clinical,PMHc1002.ENR,α,Botswana,Clinical,G84276,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881217,"SRR1926010, SRR1931694, SRR1944712, SRR1944854",Ftc241-1,VNBI,,Desjardins,Environment,Ftc241-1,a,Botswana,Mopane tree,G84240,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881217,"SRR1926010, SRR1931694, SRR1944712, SRR1944854",Ftc241-1,VNBI,,Desjardins,Environmental,Ftc241-1,a,Botswana,Mopane tree,G84240,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881226,"SRR1926011, SRR1926036, SRR1944775",PMHc1009.ENR,VNBII,,Desjardins,Clinical,PMHc1009.ENR,α,Botswana,Clinical,G84277,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885880,"SRR1942973, SRR1944813, SRR1944844",NRHc5042.ENR.STOR,VNBI,,Desjardins,Clinical,NRHc5042.ENR.STOR,α,Botswana,Clinical,G84355,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885192,"SRR1931725, SRR1944699, SRR1944866",Ftc225-3,VNBI,,Desjardins,Environment,Ftc225-3,a,Botswana,Mopane tree,G84236,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881174,"SRR1925917, SRR1943015, SRR1944716",Ftc321-1,VNBI,,Desjardins,Environment,Ftc321-1,α,Botswana,Mopane tree,G84245,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881234,"SRR1926026, SRR1942912, SRR1943073",Ftc109-1,VNBI,,Desjardins,Environment,Ftc109-1,α,Botswana,Mopane tree,G84369,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885192,"SRR1931725, SRR1944699, SRR1944866",Ftc225-3,VNBI,,Desjardins,Environmental,Ftc225-3,a,Botswana,Mopane tree,G84236,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881174,"SRR1925917, SRR1943015, SRR1944716",Ftc321-1,VNBI,,Desjardins,Environmental,Ftc321-1,α,Botswana,Mopane tree,G84245,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881234,"SRR1926026, SRR1942912, SRR1943073",Ftc109-1,VNBI,,Desjardins,Environmental,Ftc109-1,α,Botswana,Mopane tree,G84369,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881148,"SRR1925888, SRR1943062, SRR1944794",NRHc5013.REL.INI,VNBI,,Desjardins,Clinical,NRHc5013.REL.INI,a,Botswana,Clinical,G84325,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881207,"SRR1926082, SRR1942886, SRR1943128",NRHc5011.ENR,VNBI,,Desjardins,Clinical,NRHc5011.ENR,α,Botswana,Clinical,G84322,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885188,"SRR1931722, SRR1944685, SRR1944702",NRHc5022.ENR,VNBI,,Desjardins,Clinical,NRHc5022.ENR,α,Botswana,Clinical,G84334,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881229,"SRR1926031, SRR1944790, SRR1944829",Ftc321-2,VNBI,,Desjardins,Environment,Ftc321-2,α,Botswana,Mopane tree,G84246,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881206,"SRR1926081, SRR1944725, SRR1944732",Ftc327-1,VNBI,,Desjardins,Environment,Ftc327-1,α,Botswana,Mopane tree,G84248,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881229,"SRR1926031, SRR1944790, SRR1944829",Ftc321-2,VNBI,,Desjardins,Environmental,Ftc321-2,α,Botswana,Mopane tree,G84246,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881206,"SRR1926081, SRR1944725, SRR1944732",Ftc327-1,VNBI,,Desjardins,Environmental,Ftc327-1,α,Botswana,Mopane tree,G84248,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881166,"SRR1925908, SRR1926015, SRR1942891",NRHc5032.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5032.ENR.CLIN.ISO,α,Botswana,Clinical,G84345,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881219,"SRR1926005, SRR1944770, SRR1944788",Ftc151-1,VNBI,,Desjardins,Environment,Ftc151-1,a,Botswana,Mopane tree,G84216,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885853,"SRR1942918, SRR1942928, SRR1944745",Muc418-1,VNBI,,Desjardins,Environment,Muc418-1,α,Botswana,Mopane tree,G84255,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881219,"SRR1926005, SRR1944770, SRR1944788",Ftc151-1,VNBI,,Desjardins,Environmental,Ftc151-1,a,Botswana,Mopane tree,G84216,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885853,"SRR1942918, SRR1942928, SRR1944745",Muc418-1,VNBI,,Desjardins,Environmental,Muc418-1,α,Botswana,Mopane tree,G84255,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881172,"SRR1925914, SRR1926012, SRR1942996",NRHc5026.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5026.ENR.CLIN.ISO,α,Botswana,Clinical,G84339,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885863,"SRR1942945, SRR1944824, SRR1944827",Ftc222-2,VNBI,,Desjardins,Environment,Ftc222-2,α,Botswana,Mopane tree,G84234,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881245,"SRR1926061, SRR1943220, SRR1944761, SRR1944776",Ftc134-3,VNBI,,Desjardins,Environment,Ftc134-3,α,Botswana,Mopane tree,G84213,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885863,"SRR1942945, SRR1944824, SRR1944827",Ftc222-2,VNBI,,Desjardins,Environmental,Ftc222-2,α,Botswana,Mopane tree,G84234,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881245,"SRR1926061, SRR1943220, SRR1944761, SRR1944776",Ftc134-3,VNBI,,Desjardins,Environmental,Ftc134-3,α,Botswana,Mopane tree,G84213,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885875,"SRR1942968, SRR1944849, SRR1944851",NRHc5013.ENR,VNBI,,Desjardins,Clinical,NRHc5013.ENR,a,Botswana,Clinical,G84324,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881140,"SRR1925880, SRR1942898, SRR1944802",NRHc5030.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5030.ENR.CLIN.ISO,a,Botswana,Clinical,G84343,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881177,"SRR1925925, SRR1925997, SRR1943114",Ftc200-1,VNBI,,Desjardins,Environment,Ftc200-1,α,Botswana,Mopane tree,G84226,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881177,"SRR1925925, SRR1925997, SRR1943114",Ftc200-1,VNBI,,Desjardins,Environmental,Ftc200-1,α,Botswana,Mopane tree,G84226,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881151,"SRR1925891, SRR1943068, SRR1943130",NRHc5029.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5029.ENR.CLIN.ISO,α,Botswana,Clinical,G84342,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881225,"SRR1926020, SRR1943159, SRR1944756",NRHc5031.ENR.CLIN.ISO,VNBII,,Desjardins,Clinical,NRHc5031.ENR.CLIN.ISO,α,Botswana,Clinical,G84344,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881240,"SRR1926047, SRR1931726, SRR1944705",NRHc5021.ENR,VNBI,,Desjardins,Clinical,NRHc5021.ENR,a,Botswana,Clinical,G84333,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881215,"SRR1926006, SRR1926022, SRR1944707",Ftc207-1,VNBI,,Desjardins,Environment,Ftc207-1,a,Botswana,Mopane tree,G84228,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881199,"SRR1925977, SRR1926007, SRR1943116",Ftc102-1,VNBI,,Desjardins,Environment,Ftc102-1,a,Botswana,Mopane tree,G84367,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881194,"SRR1925976, SRR1926078, SRR1944796",Muc457-1,VNBI,,Desjardins,Environment,Muc457-1,α,Botswana,Mopane tree,G84259,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881215,"SRR1926006, SRR1926022, SRR1944707",Ftc207-1,VNBI,,Desjardins,Environmental,Ftc207-1,a,Botswana,Mopane tree,G84228,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881199,"SRR1925977, SRR1926007, SRR1943116",Ftc102-1,VNBI,,Desjardins,Environmental,Ftc102-1,a,Botswana,Mopane tree,G84367,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881194,"SRR1925976, SRR1926078, SRR1944796",Muc457-1,VNBI,,Desjardins,Environmental,Muc457-1,α,Botswana,Mopane tree,G84259,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881159,"SRR1925899, SRR1944786, SRR1944791",PMHc1033.ENR,VNBII,,Desjardins,Clinical,PMHc1033.ENR,α,Botswana,Clinical,G84298,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
-SRS885191,"SRR1931716, SRR1944687, SRR1944701",Muc460-3,VNBI,,Desjardins,Environment,Muc460-3,α,Botswana,Mopane tree,G84261,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881221,"SRR1926087, SRR1926088, SRR1944804",Ftc555-2,VNBI,,Desjardins,Environment,Ftc555-2,α,Botswana,Mopane tree,G84273,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885191,"SRR1931716, SRR1944687, SRR1944701",Muc460-3,VNBI,,Desjardins,Environmental,Muc460-3,α,Botswana,Mopane tree,G84261,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881221,"SRR1926087, SRR1926088, SRR1944804",Ftc555-2,VNBI,,Desjardins,Environmental,Ftc555-2,α,Botswana,Mopane tree,G84273,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881212,"SRR1926004, SRR1926050, SRR1944812",PMHc1023.ENR,VNII,,Desjardins,Clinical,PMHc1023.ENR,α,Botswana,Clinical,G84290,Chen et. al 2015 Mol. Ecol.,No,No,,,,,,,,,
 SRS885841,"SRR1942901, SRR1942919, SRR1944818",NRHc5009.REL.INI,VNBI,,Desjardins,Clinical,NRHc5009.REL.INI,α,Botswana,Clinical,G84320,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881147,"SRR1925889, SRR1942904, SRR1944833",Ftc209-1,VNBI,,Desjardins,Environment,Ftc209-1,α,Botswana,Mopane tree,G84229,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881218,"SRR1926017, SRR1926058, SRR1926083, SRR1942941",Ftc195-1,VNBI,,Desjardins,Environment,Ftc195-1,α,Botswana,Mopane tree,G84225,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881224,"SRR1926019, SRR1944726, SRR1944779",Ftc236-1,VNBI,,Desjardins,Environment,Ftc236-1,α,Botswana,Mopane tree,G84237,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885894,"SRR1943023, SRR1947215, SRR1947216",Muc498-2,VNBI,,Desjardins,Environment,Muc498-2,a,Botswana,Mopane tree,G84267,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885816,"SRR1942884, SRR1944748, SRR1944850",Ftc225-1,VNBI,,Desjardins,Environment,Ftc225-1,α,Botswana,Mopane tree,G84235,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881147,"SRR1925889, SRR1942904, SRR1944833",Ftc209-1,VNBI,,Desjardins,Environmental,Ftc209-1,α,Botswana,Mopane tree,G84229,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881218,"SRR1926017, SRR1926058, SRR1926083, SRR1942941",Ftc195-1,VNBI,,Desjardins,Environmental,Ftc195-1,α,Botswana,Mopane tree,G84225,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881224,"SRR1926019, SRR1944726, SRR1944779",Ftc236-1,VNBI,,Desjardins,Environmental,Ftc236-1,α,Botswana,Mopane tree,G84237,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885894,"SRR1943023, SRR1947215, SRR1947216",Muc498-2,VNBI,,Desjardins,Environmental,Muc498-2,a,Botswana,Mopane tree,G84267,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885816,"SRR1942884, SRR1944748, SRR1944850",Ftc225-1,VNBI,,Desjardins,Environmental,Ftc225-1,α,Botswana,Mopane tree,G84235,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881211,"SRR1926002, SRR1943129, SRR1944750",PMHc1050.ENR.CLIN1,VNBI,,Desjardins,Clinical,PMHc1050.ENR.CLIN1,α,Botswana,Clinical,G84312,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881198,"SRR1925978, SRR1931705, SRR1943090",Ftc153-1,VNBI,,Desjardins,Environment,Ftc153-1,a,Botswana,Mopane tree,G84217,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881198,"SRR1925978, SRR1931705, SRR1943090",Ftc153-1,VNBI,,Desjardins,Environmental,Ftc153-1,a,Botswana,Mopane tree,G84217,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881157,"SRR1925903, SRR1943007, SRR1944760",NRHc5035.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5035.ENR.CLIN.ISO,α,Botswana,Clinical,G84348,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885857,"SRR1942932, SRR1944767, SRR1944853",Ftc192-1,VNBI,,Desjardins,Environment,Ftc192-1,a,Botswana,Mopane tree,G84224,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881193,"SRR1925954, SRR1926003, SRR1944753",Muc489-1,VNBI,,Desjardins,Environment,Muc489-1,α,Botswana,Mopane tree,G84266,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881233,"SRR1926037, SRR1942947, SRR1944731",Muc402-1,VNBI,,Desjardins,Environment,Muc402-1,α,Botswana,Mopane tree,G84253,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885167,"SRR1931687, SRR1944688, SRR1944810",Ftc321-3,VNBI,,Desjardins,Environment,Ftc321-3,a,Botswana,Mopane tree,G84247,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885857,"SRR1942932, SRR1944767, SRR1944853",Ftc192-1,VNBI,,Desjardins,Environmental,Ftc192-1,a,Botswana,Mopane tree,G84224,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881193,"SRR1925954, SRR1926003, SRR1944753",Muc489-1,VNBI,,Desjardins,Environmental,Muc489-1,α,Botswana,Mopane tree,G84266,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881233,"SRR1926037, SRR1942947, SRR1944731",Muc402-1,VNBI,,Desjardins,Environmental,Muc402-1,α,Botswana,Mopane tree,G84253,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885167,"SRR1931687, SRR1944688, SRR1944810",Ftc321-3,VNBI,,Desjardins,Environmental,Ftc321-3,a,Botswana,Mopane tree,G84247,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881201,"SRR1925984, SRR1943110, SRR1944800",NRHc5027.ENR.CLIN1,VNBI,,Desjardins,Clinical,NRHc5027.ENR.CLIN1,α,Botswana,Clinical,G84340,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885865,"SRR1942949, SRR1944870, SRR1944872",Ftc158-2,VNBI,,Desjardins,Environment,Ftc158-2,a,Botswana,Avian droppings ,G84218,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885878,"SRR1942972, SRR1944809, SRR1944857",Ftc168-1,VNBI,,Desjardins,Environment,Ftc168-1,a,Botswana,Mopane tree,G84221,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881223,"SRR1926024, SRR1944739, SRR1944743",Ftc267-2,VNBI,,Desjardins,Environment,Ftc267-2,α,Botswana,Mopane tree,G84244,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885169,"SRR1931690, SRR1931723, SRR1944715",Gbc573-1,VNBI,,Desjardins,Environment,Gbc573-1,α,Botswana,Unknown tree ,G84274,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885865,"SRR1942949, SRR1944870, SRR1944872",Ftc158-2,VNBI,,Desjardins,Environmental,Ftc158-2,a,Botswana,Avian droppings ,G84218,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885878,"SRR1942972, SRR1944809, SRR1944857",Ftc168-1,VNBI,,Desjardins,Environmental,Ftc168-1,a,Botswana,Mopane tree,G84221,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881223,"SRR1926024, SRR1944739, SRR1944743",Ftc267-2,VNBI,,Desjardins,Environmental,Ftc267-2,α,Botswana,Mopane tree,G84244,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885169,"SRR1931690, SRR1931723, SRR1944715",Gbc573-1,VNBI,,Desjardins,Environmental,Gbc573-1,α,Botswana,Unknown tree ,G84274,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885877,"SRR1943219, SRR1944728, SRR1944871",NRHc5023.ENR,VNBI,,Desjardins,Clinical,NRHc5023.ENR,α,Botswana,Clinical,G84335,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885882,"SRR1942975, SRR1943017, SRR1944839",Muc449-1,VNBI,,Desjardins,Environment,Muc449-1,α,Botswana,Mopane tree,G84257,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881150,"SRR1925892, SRR1926018, SRR1944836",Ftc132-1,VNBI,,Desjardins,Environment,Ftc132-1,α,Botswana,Mopane tree,G84212,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885882,"SRR1942975, SRR1943017, SRR1944839",Muc449-1,VNBI,,Desjardins,Environmental,Muc449-1,α,Botswana,Mopane tree,G84257,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881150,"SRR1925892, SRR1926018, SRR1944836",Ftc132-1,VNBI,,Desjardins,Environmental,Ftc132-1,α,Botswana,Mopane tree,G84212,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885176,"SRR1931706, SRR1944713, SRR1944861",NRHc5037.ENR.CLIN1,VNBI,,Desjardins,Clinical,NRHc5037.ENR.CLIN1,a,Botswana,Clinical,G84350,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885847,"SRR1942908, SRR1944828, SRR1944862",PMHc1047.ENR.CLIN1,VNBII,,Desjardins,Clinical,PMHc1047.ENR.CLIN1,α,Botswana,Clinical,G84309,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
-SRS881173,"SRR1925916, SRR1925981, SRR1943009",Muc463-2,VNBI,,Desjardins,Environment,Muc463-2,α,Botswana,Mopane tree,G84262,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
-SRS885871,"SRR1942965, SRR1944834, SRR1944838",Muc367-1,VNBI,,Desjardins,Environment,Muc367-1,α,Botswana,Mopane tree,G84250,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881173,"SRR1925916, SRR1925981, SRR1943009",Muc463-2,VNBI,,Desjardins,Environmental,Muc463-2,α,Botswana,Mopane tree,G84262,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
+SRS885871,"SRR1942965, SRR1944834, SRR1944838",Muc367-1,VNBI,,Desjardins,Environmental,Muc367-1,α,Botswana,Mopane tree,G84250,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881242,"SRR1926060, SRR1943016, SRR1944784",PMHc1014.ENR,VNBI,,Desjardins,Clinical,PMHc1014.ENR,a,Botswana,Clinical,G84281,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881175,"SRR1925979, SRR1926069, SRR1944751",Ftc103-1,VNBI,,Desjardins,Environment,Ftc103-1,α,Botswana,Mopane tree,G84368,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881171,"SRR1925913, SRR1925980, SRR1942885",Ftc173-1,VNBI,,Desjardins,Environment,Ftc173-1,α,Botswana,Mopane tree,G84223,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881175,"SRR1925979, SRR1926069, SRR1944751",Ftc103-1,VNBI,,Desjardins,Environmental,Ftc103-1,α,Botswana,Mopane tree,G84368,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881171,"SRR1925913, SRR1925980, SRR1942885",Ftc173-1,VNBI,,Desjardins,Environmental,Ftc173-1,α,Botswana,Mopane tree,G84223,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881180,"SRR1926072, SRR1943065, SRR1944730",PMHc1029.ENR.STOR,VNBII,,Desjardins,Clinical,PMHc1029.ENR.STOR,α,Botswana,Clinical,G84294,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
 SRS881176,"SRR1926070, SRR1942974, SRR1943059",PMHc1035.ENR.STOR,VNBII,,Desjardins,Clinical,PMHc1035.ENR.STOR,α,Botswana,Clinical,G84300,Chen et. al 2015 Mol. Ecol.,Yes,No,,,,,,,,,
 SRS885851,"SRR1942916, SRR1944754, SRR1944763",NRHc5009.ENR,VNBI,,Desjardins,Clinical,NRHc5009.ENR,not assigned,Botswana,Clinical,G84319,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885852,"SRR1942917, SRR1944711, SRR1944848",NRHc5024A.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5024A.ENR.CLIN.ISO,α,Botswana,Clinical,G84337,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885177,"SRR1931717, SRR1944686, SRR1944741",NRHc5019.ENR,VNBI,,Desjardins,Clinical,NRHc5019.ENR,α,Botswana,Clinical,G84331,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885186,"SRR1931718, SRR1944698, SRR1944734",NRHc5020.ENR,VNBI,,Desjardins,Clinical,NRHc5020.ENR,a,Botswana,Clinical,G84332,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885887,"SRR1942997, SRR1942998, SRR1947213",Muc525-1,VNBI,,Desjardins,Environment,Muc525-1,α,Botswana,Soil ,G84271,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881247,"SRR1926052, SRR1942936, SRR1944847, SRR1944868",Ftc257-1,VNBI,,Desjardins,Environment,Ftc257-1,α,Botswana,Mopane tree,G84241,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885887,"SRR1942997, SRR1942998, SRR1947213",Muc525-1,VNBI,,Desjardins,Environmental,Muc525-1,α,Botswana,Soil ,G84271,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881247,"SRR1926052, SRR1942936, SRR1944847, SRR1944868",Ftc257-1,VNBI,,Desjardins,Environmental,Ftc257-1,α,Botswana,Mopane tree,G84241,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS885888,"SRR1943004, SRR1943012, SRR1943019",NRHc5040.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,NRHc5040.ENR.CLIN.ISO,α,Botswana,Clinical,G84353,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881165,"SRR1925910, SRR1925936, SRR1944746",Muc466-1,VNBI,,Desjardins,Environment,Muc466-1,α,Botswana,Mopane tree,G84263,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881181,"SRR1925924, SRR1926053, SRR1943057",Muc458-2,VNBI,,Desjardins,Environment,Muc458-2,α,Botswana,Mopane tree,G84260,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885850,"SRR1942915, SRR1944821, SRR1944859",Muc516-1,VNBI,,Desjardins,Environment,Muc516-1,α,Botswana,Mopane tree,G84270,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881203,"SRR1925982, SRR1943108, SRR1944765",Muc466-3,VNBI,,Desjardins,Environment,Muc466-3,α,Botswana,Mopane tree,G84264,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881165,"SRR1925910, SRR1925936, SRR1944746",Muc466-1,VNBI,,Desjardins,Environmental,Muc466-1,α,Botswana,Mopane tree,G84263,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881181,"SRR1925924, SRR1926053, SRR1943057",Muc458-2,VNBI,,Desjardins,Environmental,Muc458-2,α,Botswana,Mopane tree,G84260,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885850,"SRR1942915, SRR1944821, SRR1944859",Muc516-1,VNBI,,Desjardins,Environmental,Muc516-1,α,Botswana,Mopane tree,G84270,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881203,"SRR1925982, SRR1943108, SRR1944765",Muc466-3,VNBI,,Desjardins,Environmental,Muc466-3,α,Botswana,Mopane tree,G84264,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881164,"SRR1925907, SRR1944744, SRR1944747",PMHc1038.ENR.CLIN1,VNBI,,Desjardins,Clinical,PMHc1038.ENR.CLIN1,α,Botswana,Clinical,G84302,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS881155,"SRR1925895, SRR1925989, SRR1944799",Ftc267-1,VNBI,,Desjardins,Environment,Ftc267-1,α,Botswana,Mopane tree,G84243,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885842,"SRR1942905, SRR1944752, SRR1944801",Ftc217-1,VNBI,,Desjardins,Environment,Ftc217-1,α,Botswana,Mopane tree,G84233,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885833,"SRR1942887, SRR1944832, SRR1944835",Muc387-1,VNBII,,Desjardins,Environment,Muc387-1,α,Botswana,Mopane tree,G84251,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS881155,"SRR1925895, SRR1925989, SRR1944799",Ftc267-1,VNBI,,Desjardins,Environmental,Ftc267-1,α,Botswana,Mopane tree,G84243,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885842,"SRR1942905, SRR1944752, SRR1944801",Ftc217-1,VNBI,,Desjardins,Environmental,Ftc217-1,α,Botswana,Mopane tree,G84233,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885833,"SRR1942887, SRR1944832, SRR1944835",Muc387-1,VNBII,,Desjardins,Environmental,Muc387-1,α,Botswana,Mopane tree,G84251,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881179,"SRR1925922, SRR1944738, SRR1944769",PMHc1030.ENR.CLIN.ISO,VNBI,,Desjardins,Clinical,PMHc1030.ENR.CLIN.ISO,α,Botswana,Clinical,G84295,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS881158,"SRR1942986, SRR1925901, SRR1943109, SRR1944819",PMHc1011.ENR,VNBI,,Desjardins,Clinical,PMHc1011.ENR,a,Botswana,Clinical,G84278,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
-SRS885858,"SRR1942937, SRR1944820, SRR1944860",Ftc214-1,VNBI,,Desjardins,Environment,Ftc214-1,α,Botswana,Mopane tree,G84232,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
+SRS885858,"SRR1942937, SRR1944820, SRR1944860",Ftc214-1,VNBI,,Desjardins,Environmental,Ftc214-1,α,Botswana,Mopane tree,G84232,Chen et. al 2015 Mol. Ecol.,Yes,Yes,,,,,,,,,
 SRS409112,"SRX189619, SRX189366, SRX189593",Bt63,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans_Bt63,a,Botswana ,CSF /HIV+ ,G18576,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",Yes,Yes,,,,,,,,,
 SRS409066,"SRX189630, SRX189367, SRX189594",Bt85,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans_Bt85,a,Botswana ,CSF /HIV+ ,G18579,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
-SRS409061,"SRX189605, SRX189369, SRX189608",Ze90-1,VNBII,,Desjardins,Environment,Cryptococcus neoformans var. grubii Ze90-1,α,S. Africa,Eucalyptus tree,G18574,Litvintseva et al 2011 PLoS One,Yes,No,,,,,,,,,
+SRS409061,"SRX189605, SRX189369, SRX189608",Ze90-1,VNBII,,Desjardins,Environmental,Cryptococcus neoformans var. grubii Ze90-1,α,S. Africa,Eucalyptus tree,G18574,Litvintseva et al 2011 PLoS One,Yes,No,,,,,,,,,
 SRS409075,"SRX189601, SRX189620, SRX189374",Bt206,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans_Bt206,a,Botswana ,CSF /HIV+ ,G18561,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",Yes,Yes,,,,,,,,,
 SRS409065,"SRX189615, SRX189609, SRX189375",Bt1,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans_Bt1,α,Botswana ,CSF /HIV+ ,G18555,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",Yes,Yes,,,,,,,,,
 SRS409176,SRX189611,C45,VNII,,Desjardins,Clinical,Cryptococcus_neoformans_C45,α,USA,sputum/HIV-,G18565,"Litvintseva et al 2009 Infect Immun, Litvintseva et al 2006 Genetics",No,No,,,,,,,,,
-SRS409483,"SRX189632, SRX189623",Tu401-1,VNBI,,Desjardins,Environment,Cryptococcus neoformans var. grubii Tu401-1,α,Botswana ,Mopane tree,G18562,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS409483,"SRX189632, SRX189623",Tu401-1,VNBI,,Desjardins,Environmental,Cryptococcus neoformans var. grubii Tu401-1,α,Botswana ,Mopane tree,G18562,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
 SRS409067,"SRX189631, SRX256488, SRX219293",MW-RSA852,VNII,,Desjardins,Clinical,Cryptococcus neoformans var. grubii MW-RSA852,α,S. Africa,Clinical,G18572,Van Wyk et al  2014 J. Clin. Microbiol.,No,No,,,,,,,,,
 SRS404448,"SRX255602, SRX255580, SRX256359",Bt76,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt76,α,Botswana ,CSF /HIV+ ,G25984,"Litvintseva et al 2003 Euk. Cell, Litvintseva et al 2006 Genetics",Yes,Yes,,,,,,,,,
 SRS404458,"SRX255594, SRX255662",Bt89,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt89,α,Botswana ,CSF /HIV+ ,G25966,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
@@ -1005,7 +1005,7 @@ SRS404800,"SRX256530, SRX256520, SRX256042",Bt24,VNBI,,Desjardins,Clinical,Crypt
 SRS404808,"SRX256380, SRX256047",Bt81,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt81,a,Botswana ,CSF /HIV+ ,G25988,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
 SRS404805,"SRX256051, SRX256385",Bt39,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt39,α,Botswana ,CSF /HIV+ ,G25965,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
 SRS404810,"SRX256355, SRX256055",Bt5,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt5,α,Botswana ,CSF /HIV+ ,G25979,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
-SRS405101,"SRX256361, SRX256495",T4,VNII,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_T4,α,USA,oak tree,G26062,This study,No,No,,,,,,,,,
+SRS405101,"SRX256361, SRX256495",T4,VNII,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_T4,α,USA,oak tree,G26062,This study,No,No,,,,,,,,,
 SRS405120,"SRX256415, SRX256490, SRX256505",Bt70,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans_Bt70,a,Botswana ,CSF /HIV+ ,G26290,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
 SRS405123,"SRX256429, SRX256439, SRX256428",Bt96,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans_Bt96,α,Botswana ,CSF /HIV+ ,G26293,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
 SRS405149,"SRX256550, SRX256537",LP-RSA1684,VNII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_LP-RSA1684,α,S. Africa,Clinical,G26061,Litvintseva et al 2011 PLoS One,No,No,,,,,,,,,
@@ -1039,14 +1039,14 @@ SRS417651,"SRX273189, SRX273355, SRX273190",MW-RSA1607,VNBII,,Desjardins,Clinica
 SRS417652,SRX273191,MW-RSA2967,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA2967,α,S. Africa,Clinical,G27126,Van Wyk et al  2014 J. Clin. Microbiol.,Yes,Yes,,,,,,,,,
 SRS417653,SRX273192,MW-RSA3179,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA3179,α,S. Africa,Clinical,G27147,Van Wyk et al  2014 J. Clin. Microbiol.,Yes,Yes,,,,,,,,,
 SRS417654,SRX273193,MW-RSA3321,VNBII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_MW-RSA3321,α,S. Africa,Clinical,G27123,Van Wyk et al  2014 J. Clin. Microbiol.,Yes,Yes,,,,,,,,,
-SRS417655,"SRX273194, SRX273195",PLR10,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_PLR10,α,Botswana ,Mopane tree,G27179,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417655,"SRX273194, SRX273195",PLR10,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_PLR10,α,Botswana ,Mopane tree,G27179,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
 SRS417659,"SRX273199, SRX273200",RTC3,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_RTC3,α,Botswana ,CSF /HIV+ ,G27171,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417661,"SRX273202, SRX273203",Tu229-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu229-1,α,Botswana ,Mopane tree,G27188,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417665,"SRX273208, SRX273209",Tu360-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu360-1,α,Botswana ,Mopane tree,G27150,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417667,"SRX273212, SRX273211, SRX273213 ",Tu369-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu369-1,α,Botswana ,Mopane tree,G27129,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417668,"SRX273216, SRX273214, SRX273215",Tu406-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu406-1,α,Botswana ,Mopane tree,G27189,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417669,"SRX273217, SRX273218, SRX273219",Tu416-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu416-1,α,Botswana ,Mopane tree,G27142,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
-SRS417675,"SRX273263, SRX273264",Tu422-1,VNBI,,Desjardins,Environment,Cryptococcus_neoformans var. grubii_Tu422-1,a,Botswana ,Mopane tree,G27170,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417661,"SRX273202, SRX273203",Tu229-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu229-1,α,Botswana ,Mopane tree,G27188,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417665,"SRX273208, SRX273209",Tu360-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu360-1,α,Botswana ,Mopane tree,G27150,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417667,"SRX273212, SRX273211, SRX273213 ",Tu369-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu369-1,α,Botswana ,Mopane tree,G27129,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417668,"SRX273216, SRX273214, SRX273215",Tu406-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu406-1,α,Botswana ,Mopane tree,G27189,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417669,"SRX273217, SRX273218, SRX273219",Tu416-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu416-1,α,Botswana ,Mopane tree,G27142,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
+SRS417675,"SRX273263, SRX273264",Tu422-1,VNBI,,Desjardins,Environmental,Cryptococcus_neoformans var. grubii_Tu422-1,a,Botswana ,Mopane tree,G27170,Litvintseva et al 2011 PLoS One,Yes,Yes,,,,,,,,,
 SRS417678,SRX273266,Ug2462,VNII,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Ug2462,α,Uganda,Clinical ,G27157,Litvintseva et al 2006 Genetics,No,No,,,,,,,,,
 SRS502193,"SRX377406, SRX377405",Bt142,VNBI,,Desjardins,Clinical,Cryptococcus_neoformans var. grubii_Bt142,a,Botswana ,CSF /HIV+ ,G27187,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,
 SRS520130,SRX399940,Bt35,VNBII,,Desjardins,Clinical,Cryptococcus neoformans Bt35,α,Botswana ,CSF /HIV+ ,G26124,Litvintseva et al 2003 Euk. Cell,Yes,Yes,,,,,,,,,

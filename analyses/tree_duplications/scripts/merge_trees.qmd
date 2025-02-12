@@ -24,15 +24,18 @@ setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/sc
 ```
 
 ## Metadata
-Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055).  
-Make separate dataframes for each metadata field.
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset and H99 (n = 1056).  
 ```{r, message=FALSE, warning=FALSE}
-metadata <- read.delim(  "../../data/derived/metadata.csv", header=TRUE, sep=",")
+metadata <- read.delim(
+    "../../data/processed/metadata_ashton_desj_all_fungalpop_H99.csv",
+    header=TRUE,
+    sep=",")
 summary <- metadata %>% 
     group_by(dataset, lineage) %>% 
     summarize(count = n())
 summary
 ```
+Make separate dataframes for each metadata field.
 ```{r}
 metadata$vni_subdivision[metadata$vni_subdivision == ""] <- NA
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
@@ -57,12 +60,17 @@ source <- metadata %>%
 ```
 Make color vectors for all plots
 ```{r}
-lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4)]
-names(lineage_colors) <- levels(as.factor(metadata$lineage))
+dataset_colors <- c(brewer.pal(9, "Set1")[c(1, 2)], "white")
+names(dataset_colors) <- levels(as.factor(dataset$dataset))
 
-sublineage_colors <- c(brewer.pal(12, "Set3")[c(1:10)], "white")
+lineage_colors <- brewer.pal(8, "Dark2")[c(1, 2, 3, 4)]
+names(lineage_colors) <- levels(as.factor(lineage$lineage))
+
+sublineage_colors <- c(brewer.pal(12, "Set3")[c(1:9)])
 names(sublineage_colors) <- levels(sublineage$vni_subdivision)
 
+source_colors <- brewer.pal(11, "BrBG")[c(9, 3)] # 9, 3 are the colors for the two sources
+names(source_colors) <- levels(as.factor(source$source))
 ```
 
 ## Desjardins tree
@@ -88,11 +96,12 @@ desj_tree <- read.tree("../../data/processed/desj_tree.newick")
 #| fig-height: 6.5
 #| fig-width: 7
 #| fig-align: center
-d <- ggtree(desj_tree, layout = "rectangular", size = 0.1) +  
+d <- ggtree(desj_tree, layout = "circular", size = 0.1) +  
             geom_tiplab(aes(label = label),
                         size = 0.5, align =TRUE, 
                         linetype = "dashed", linesize = .03)+
             geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=2)
+
 d1 <- gheatmap(d, lineage, width=.08, colnames=FALSE, offset=0.05) +
             scale_fill_manual(values = lineage_colors, name="Lineage",
                                 na.translate = FALSE)+
@@ -101,13 +110,18 @@ d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.1) +
             scale_fill_manual(values = sublineage_colors, 
             name="VNI Sublineage", na.translate = FALSE, 
             limits = levels(sublineage$vni_subdivision))+
-            theme(legend.position = "right",
+            new_scale_fill()
+
+d3 <- gheatmap(d2, source, width=.08, colnames=FALSE, offset=0.15) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        theme(legend.position = "right",
                 legend.direction = "vertical",
                 legend.title = element_text(size=9),
                 legend.text=element_text(size=7),
                 legend.key.size = unit(0.3, "cm"),
                 plot.margin = margin(0, 0, 0, 0, "cm"))
-d2
+d3
 ```
 
 ```{r, echo=FALSE}
@@ -393,4 +407,7 @@ p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 6) +
             scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
             new_scale_fill()
 p1 
+```
+```{r, echo=FALSE}
+ggsave("../results/figures/tree_merged_small.png", p1, height = 6, width = 10, units = "in", dpi = 600)
 ```
