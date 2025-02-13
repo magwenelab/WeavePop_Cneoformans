@@ -1,6 +1,17 @@
-# Use this script with the quarto environment
-setwd("/FastData/czirion/Crypto_Diversity_Pipeline/")
-
+---
+title: "Detect chromosomal duplications"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-13"
+format: 
+    PrettyPDF-pdf:
+        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+## Setup
+```{r, output=FALSE}
 library(tidyverse)
 library(ggbeeswarm)
 library(ggtree)
@@ -9,14 +20,23 @@ library(ape)
 library(phytools)
 library(ggnewscale)
 library(RColorBrewer)
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/scripts")
+```
 
-#### Metadata #### ========================================================================================================================
-metadata <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/metadata_fixed.csv", header=TRUE, sep=",")
-
+## Metadata
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99 .  
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    "../../data/processed/metadata_ashton_desj_all_fungalpop_H99.csv",
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+```
+Select needed columns, remove H99 and get the number of samples per dataset and lineage, per lineage, and total.
+```{r}
 metadata <- metadata %>%
-    select(sample, strain, source, lineage, dataset,name, vni_subdivision)%>%
+    select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
     filter(!strain == "H99") %>%
-    mutate(source = ifelse(source == "Environmental", "Environment", source))%>%
     group_by(dataset, lineage)%>%
     mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
     ungroup() %>%
@@ -24,21 +44,53 @@ metadata <- metadata %>%
     mutate(samples_in_lineage = n_distinct(sample))%>%
     ungroup()%>%
     mutate(total_samples = n_distinct(sample))
+```
 
-chromosome_names = read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins_Ashton/results_joined_241204/02.Dataset/chromosomes.csv", header=TRUE, sep=",")
+## Chromosome names and length
+
+Get the nice chromosome names 
+```{r}
+chromosome_names = read.delim(
+    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/chromosomes.csv",
+    header=TRUE, sep=",")
 chromosome_names <- chromosome_names %>%
     mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
     mutate(chromosome = as.factor(chromosome))
 levels(chromosome_names$chromosome) <- paste("chr", chromosome_names$chromosome, sep="")
+```
+Get the chromosome lengths
 
-#### Get metrics of chromosomes from called CNVs #### ==========================================================================
+```{bash, eval=FALSE}
+# /usr/bin/bash
+tail -n +2 ../../../Crypto_Desjardins/config/chromosomes.csv | \
+    cut -d',' -f1 | sort | uniq | while read line \
+do
+seqkit fx2tab ../../../Crypto_Desjardins/data/references/$line.fasta \
+    -l -i -n >> ../../data/processed/chromosome_lengths.tsv
+done
 
-cnv_calls <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins_Ashton/results_joined_241204/02.Dataset/cnv/cnv_calls.tsv", header=TRUE , sep="\t")
-chromosome_lengths = read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/data/derived/chromosome_lengths.tsv", header=FALSE, col.names=c("accession", "length"), sep="\t")
+```
+```{r}
+chromosome_lengths = read.delim(
+    "../../data/processed/chromosome_lengths.tsv", header=FALSE, col.names=c("accession", "length"), sep="\t")
+```
 
+## Get metrics of chromosomes from called CNVs
+
+```{r}
+cnv_calls <- read.delim(
+    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/cnv/cnv_calls.tsv", 
+    header=TRUE, sep="\t")
+```
+
+Define a threshold of allowed fraction of repetitive sequences in called CNV regions.
+```{r}
 repeat_fraction_threshold <- 0.2
+```
 
-# Percentage of each chromosome duplicated 
+Get the percentage of the size of each chromosome that is part of called duplications `percent_cnv_size` and
+the percentage of the size of the chromosome that is in between the leftmost and rightmost duplicated regions `percent_size_covered`.
+```{r, message=FALSE}
 cnv_percent <- cnv_calls %>%
     filter(repeat_fraction < repeat_fraction_threshold) %>%
     filter(cnv == "duplication")%>%
@@ -56,9 +108,12 @@ cnv_percent <- cnv_calls %>%
             percent_size_covered = round((size_covered / length) * 100, 2))%>%
     mutate(chromosome = as.factor(chromosome)) %>%
     select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,total_samples, sample,strain, source, accession, chromosome, percent_cnv_size, percent_size_covered, mean_smooth_depth, n_cnvs)
-
-
-boxplot <- ggplot(cnv_percent)+
+```
+```{r, echo=FALSE}
+#| fig-height: 7
+#| fig-width: 9
+#| fig-align: center
+ggplot(cnv_percent)+
     geom_quasirandom(aes(x=chromosome, y=percent_cnv_size, color = source))+
     facet_grid(lineage~chromosome, scales="free")+
     labs(x="Chromosome", y="Percent of chromosome duplicated (%)", title=paste("Distribution of the size of duplications with ", repeat_fraction_threshold, "fraction of repeats allowed"))+
@@ -69,20 +124,26 @@ boxplot <- ggplot(cnv_percent)+
         panel.grid.minor.y = element_blank(),
         panel.background = element_rect(fill = "white"),
         axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2))
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/boxplot_cnv_percent.png", boxplot, height = 8, width = 8, units = "in", dpi = 500)
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+        legend.position = "bottom")
+```
 
-#### Percentage of each chromosome covered by repeats #### ==========================================================================
+Get the percentage of each chromosome covered by repeats to know how much of a chromosome might not have reliable CNV calls.
 
+```{r}
 lineages <- unique(metadata$lineage)
 repeats_all <- data.frame()
 for(lineage in lineages){
-    repeats_path <-paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/03.References/", lineage, "/", lineage, "_repeats.bed", sep ="")
+    repeats_path <-paste(
+        "../../../Crypto_Desjardins/results/03.References/",
+        lineage, "/", lineage, "_repeats.bed",
+        sep ="")
     repeats <- read.delim(repeats_path, header=FALSE, col.names=c("accession", "start", "end", "repeat_type"), sep="\t")
     repeats$lineage <- lineage
     repeats_all <- rbind(repeats_all, repeats)
 }
-
+```
+```{r, message=FALSE}
 repeats_percent <- repeats_all %>%
     mutate(repeat_size_each = end - start)%>%
     group_by(accession, lineage) %>%
@@ -92,8 +153,13 @@ repeats_percent <- repeats_all %>%
     mutate(percent_repeat_size = round((repeat_size / length) * 100, 2))%>%
     mutate(chromosome = as.factor(chromosome))%>%
     select(lineage, accession, chromosome, percent_repeat_size)
+```
 
-barplot <- ggplot(repeats_percent)+
+```{r, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+#| fig-align: center
+ggplot(repeats_percent)+
     geom_col(aes(x=lineage, y=percent_repeat_size, fill = lineage))+
     facet_grid(~chromosome, scales="free")+
     labs(title = "Percentage of each chromosome covered by repeats", x="Lineage", y="Percent of chromosome covered by repeats (%)")+
@@ -103,87 +169,126 @@ barplot <- ggplot(repeats_percent)+
         panel.grid.minor.y = element_blank(),
         panel.background = element_rect(fill = "white"),
         axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2))
-ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/figures/barplot_repeats.png", barplot, height = 8, width = 8, units = "in", dpi = 500)   
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+        legend.position = "none")
+```
+Most chromosomes have repeats in between 5 and 10% of the size. In VNBII it is closer to 15% for some chormosomes.
 
-#### Get chromosome median depth #### ==========================================================================
-depth_by_chrom_good_desjardins <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results_241202/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
-depth_by_chrom_good_ashton <- read.delim("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results_241203/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv", header=TRUE, sep="\t")
+## Get the chromosome median depth as another measure to dectect duplicated chromosomes
+
+```{r}
+depth_by_chrom_good_desjardins <- read.delim(
+    "../../../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv",
+     header=TRUE, sep="\t")
+depth_by_chrom_good_ashton <- read.delim(
+    "../../../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv",
+     header=TRUE, sep="\t")
 depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)
 depth_by_chrom <- depth_by_chrom_good %>%
     select(sample, accession, norm_chrom_median)
+```
 
+## Join CNV metrics with normalized chromosome depth
 
-#### Join CNV metrics with normalized chromosome depth #### ==========================================================================
-
+```{r}
 cnv_and_depth <- left_join(depth_by_chrom, cnv_percent, by = c("sample", "accession" ))
-
+```
+Make a threshold for the size of the chromosome that must be in called duplicated regions and a threshold for the normalized chromosome median depth.
+```{r}
 percent_size_threshold <- 80
 depth_threshold <- 1.55
+```
 
-# Filter chromosomes by normalized depth OR percent of the chromosome in CNV regions
+Keep, as putative duplications, the chromosomes whose metrics are above any of the thresholds.
+```{r}
 duplications <- cnv_and_depth %>%
     filter(norm_chrom_median > depth_threshold | percent_cnv_size > percent_size_threshold)%>%
     select(dataset, lineage, samples_in_lineage, samples_in_dataset_lineage, total_samples, source, strain, sample, chromosome, norm_chrom_median, mean_smooth_depth, percent_cnv_size, percent_size_covered, n_cnvs)
+```
+```{r}
+head(duplications)
+```
 
+Write the duplications table to a table to use it in the scripts `duplications_gather_plots.xsh`
+and `duplications_polish.qmd` to polish the results. 
+```{r}
+dir.create("../results/tables/putative", recursive = TRUE, showWarnings = FALSE)
+write_tsv(duplications, "../results/tables/duplications_putative.tsv")
+```
+Plot all metrics of putative duplications.
 
-# Plot all metrics of putative duplications
+```{r}
 duplications_long <- duplications  %>%
     arrange(percent_cnv_size) %>%
     mutate(chrom_sample = paste(chromosome, sample, sep="_"))
 duplications_long$chrom_sample <- factor(duplications_long$chrom_sample, levels = duplications_long$chrom_sample)
-duplications_long <- pivot_longer(duplications_long, cols = c("percent_cnv_size", "percent_size_covered", "norm_chrom_median", "mean_smooth_depth", "n_cnvs"), names_to = "variable", values_to = "value")
-
-p <- ggplot(duplications_long, aes(x = chrom_sample, y = value, color = variable))+
+duplications_long <- pivot_longer(duplications_long, 
+    cols = c("percent_cnv_size", "percent_size_covered", "norm_chrom_median", "mean_smooth_depth", "n_cnvs"), names_to = "variable", 
+    values_to = "value")
+```
+```{r, echo = FALSE}
+#| fig-height: 9
+#| fig-width: 7
+#| fig-align: center
+ggplot(duplications_long, aes(x = chrom_sample, y = value, color = variable))+
         geom_point()+
         facet_grid(scales="free", rows= vars(variable))+
-        theme(axis.text.x = element_text(angle = 90, hjust = 1))
-p
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        legend.position = "none")
+```
 
-#### Get multiple summary tables ==========================================================================
+## Get multiple summary tables
 
-write_tsv(duplications, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/duplications.tsv")
-# Use this file duplications.tsv in plots_duplicated.xsh to gather the depth by window plots to manually inspect the duplications
-
+Number of duplicated chromosomes per sample.
+```{r,message=FALSE}
 dup_sample <- duplications %>%
     group_by(dataset,lineage, sample, strain, source) %>%
     summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", ")) %>%
     arrange(desc(n_chroms))
-write_tsv(dup_sample, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/dup_sample.tsv")
+dup_sample
+```
 
+Number of samples with duplications in each group of dataset-lineage-chromosome.
+```{r, message=FALSE}
 dup_dataset_lineage_chromosome <- duplications %>%
     group_by(dataset,lineage, chromosome) %>%
     summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
     mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
     select(dataset,lineage, chromosome, n_samples, samples_in_dataset_lineage, percent_samples)%>%
     arrange(chromosome, desc(lineage), desc(n_samples))
+dup_dataset_lineage_chromosome
+```
 
-write_tsv(dup_dataset_lineage_chromosome, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/dup_dataset_lineage_chromosome.tsv")
-
+Number of samples with duplications in each group of lineage-chromosome.
+```{r,message=FALSE}
 dup_lineage_chromosome <- duplications%>%
     group_by(lineage, chromosome) %>%
     summarise(n_samples = n_distinct(sample), samples_in_lineage = first(samples_in_lineage))%>%
     mutate(percent_samples = round((n_samples / samples_in_lineage) * 100, 1))%>%
     select(lineage, chromosome, n_samples, samples_in_lineage,percent_samples)%>%
     arrange(chromosome, desc(lineage), desc(n_samples))
+dup_lineage_chromosome 
+```
 
-write_tsv(dup_lineage_chromosome, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/dup_lineage_chromosome.tsv")
-
+Number of samples with duplications in each group of lineage-datset.
+```{r, message=FALSE}
 dup_lineage_dataset <- duplications%>%
     group_by(dataset,lineage) %>%
     summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
     mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
     select(lineage, n_samples, samples_in_dataset_lineage, percent_samples)%>%
     arrange(desc(lineage), desc(n_samples))
+dup_lineage_dataset
 
-write_tsv(dup_lineage_dataset, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/dup_lineage_dataset.tsv")
+```
 
+Number of samples with duplications in each chromosome.
+```{r, message=FALSE}
 dup_chromosome <- duplications %>%
     group_by(chromosome) %>%
     summarise(n_samples = n_distinct(sample), total_samples = first(total_samples))%>%
     mutate(percent_samples = round((n_samples / total_samples) * 100, 1))%>%
     select(chromosome, n_samples,total_samples, percent_samples)%>%
     arrange(chromosome, desc(n_samples))
-
-write_tsv(dup_chromosome, "/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/results/tables/putative/dup_chromosome.tsv")
-
+dup_chromosome 
+```

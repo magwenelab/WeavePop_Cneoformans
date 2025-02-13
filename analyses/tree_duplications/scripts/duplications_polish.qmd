@@ -1,0 +1,123 @@
+---
+title: "Detect chromosomal duplications"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-13"
+format: 
+    PrettyPDF-pdf:
+        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+
+## Setup
+```{r, message=FALSE}
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/scripts")
+library(tidyverse)
+```
+
+## Detect partial duplications
+After manual inspection of plots (see scripts `duplications_detect.qmd` `duplications_gather_plots.xsh`) I found that the following samples have partial duplications instead of full chromosome duplications.
+
+```{r}
+partial <- data.frame(sample= 
+                            c("ERS2541051",
+                            "ERS2541051",
+                            "ERS542397",
+                            "ERS1142798",
+                            "ERS542490",
+                            "ERS1142878",
+                            "ERS2541358",
+                            "SRS881238",
+                            "ERS542397",
+                            "ERS542498"),
+                    chromosome = 
+                            c("chr09",
+                            "chr12",
+                            "chr02",
+                            "chr14",
+                            "chr04",
+                            "chr09",
+                            "chr02",
+                            "chr09",
+                            "chr04",
+                            "chr04"))
+
+partial$sample_chromosome <- paste(partial$sample, partial$chromosome, sep="_")
+```
+
+## Remove partial duplications
+
+```{r, message=FALSE}
+duplications_putative <- read_tsv("../results/tables/duplications_putative.tsv")
+
+duplications <- duplications_putative %>%
+    mutate(sample_chromosome = paste(sample, chromosome, sep="_"))%>%
+    filter(!sample_chromosome %in% partial$sample_chromosome)
+
+duplicated_full_strain <- duplications %>%
+    select(dataset, lineage, sample, strain,
+            source, chromosome, 
+            norm_chrom_median, percent_cnv_size)
+```
+
+```{r}
+write_tsv(duplicated_full_strain,
+    "../results/tables/duplications_polished.tsv")
+```
+## Get multiple summary tables
+
+Number of duplicated chromosomes per sample.
+```{r,message=FALSE}
+dup_sample <- duplications %>%
+    group_by(dataset,lineage, sample, strain, source) %>%
+    summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms))
+dup_sample
+```
+
+Number of samples with duplications in each group of dataset-lineage-chromosome.
+```{r, message=FALSE}
+dup_dataset_lineage_chromosome <- duplications %>%
+    group_by(dataset,lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(dataset,lineage, chromosome, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_dataset_lineage_chromosome
+```
+
+Number of samples with duplications in each group of lineage-chromosome.
+```{r,message=FALSE}
+dup_lineage_chromosome <- duplications%>%
+    group_by(lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    select(lineage, chromosome, n_samples, samples_in_lineage,percent_samples)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_lineage_chromosome 
+```
+
+Number of samples with duplications in each group of lineage-datset.
+```{r, message=FALSE}
+dup_lineage_dataset <- duplications%>%
+    group_by(dataset,lineage) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(lineage, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    arrange(desc(lineage), desc(n_samples))
+dup_lineage_dataset
+
+```
+
+Number of samples with duplications in each chromosome.
+```{r, message=FALSE}
+dup_chromosome <- duplications %>%
+    group_by(chromosome) %>%
+    summarise(n_samples = n_distinct(sample), total_samples = first(total_samples))%>%
+    mutate(percent_samples = round((n_samples / total_samples) * 100, 1))%>%
+    select(chromosome, n_samples,total_samples, percent_samples)%>%
+    arrange(chromosome, desc(n_samples))
+dup_chromosome 
+```
