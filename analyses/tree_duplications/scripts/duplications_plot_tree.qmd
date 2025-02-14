@@ -208,7 +208,7 @@ tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
 #### Dataset, lineage, sublineage, source, duplications
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #| fig-height: 7
-#| fig-width: 7
+#| fig-width: 9
 #| fig-align: center
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
@@ -253,7 +253,7 @@ ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/r
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #| fig-height: 7
-#| fig-width: 7
+#| fig-width: 9
 #| fig-align: center
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
@@ -287,7 +287,7 @@ ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/r
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #| fig-height: 7
-#| fig-width: 7
+#| fig-width: 9
 #| fig-align: center
 p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
     geom_tiplab(aes(label = label), size = 3, align =TRUE, 
