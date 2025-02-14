@@ -31,21 +31,25 @@ metadata <- read.csv(
 
 Get one dataframe for each variable to be plotted as a separate metadata column in the tree
 ```{r}
-lineage <- metadata %>%
-    select(strain, lineage)%>%
-    column_to_rownames("strain")
-
-source <- metadata %>%
-    select(strain, source)%>%
-    column_to_rownames("strain")
+metadata$vni_subdivision <- factor(metadata$vni_subdivision,
+                            levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
+                            "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", 
+                            "VNIc", "VNIa-outlier"))
 
 sublineage <- metadata %>%
-    select(strain, vni_subdivision)%>%
-    column_to_rownames("strain")
-
+                filter(lineage == "VNI")%>%
+                select(strain, vni_subdivision)%>%
+                column_to_rownames("strain")%>%
+                droplevels()
+lineage <- metadata %>%
+            select(strain, lineage)%>%
+            column_to_rownames("strain")
 dataset <- metadata %>%
-    select(strain, dataset)%>%
-    column_to_rownames("strain")
+            select(strain, dataset)%>%
+            column_to_rownames("strain")
+source <- metadata %>%
+            select(strain, source)%>%
+            column_to_rownames("strain")
 ```
 
 ## Duplications
@@ -203,6 +207,9 @@ ggsave("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/r
 ```{r}
 keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt81")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
+sublineage <- sublineage %>%
+                filter(rownames(.) %in% keep_strains)%>%
+                droplevels()
 ```
 
 #### Dataset, lineage, sublineage, source, duplications
@@ -225,7 +232,9 @@ p2 <- gheatmap(p1, lineage, width=0.1, colnames=FALSE, offset=9.5) +
     new_scale_fill()
 
 p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=11) +
-    scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
+    scale_fill_manual(values = sublineage_colors,
+        name="VNI Sublineage", na.translate = FALSE,
+        limits = levels(sublineage$vni_subdivision))+
     guides(fill = guide_legend(order = 3))+
     new_scale_fill()
 
@@ -264,7 +273,9 @@ p1 <- gheatmap(p, lineage, width=0.1, colnames=FALSE, offset=8) +
     new_scale_fill()
 
 p2 <- gheatmap(p1, sublineage, width=0.1, colnames=FALSE, offset=10) +
-    scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
+    scale_fill_manual(values = sublineage_colors,
+        name="VNI Sublineage", na.translate = FALSE,
+        limits = levels(sublineage$vni_subdivision))+
     guides(fill = guide_legend(order = 3))+
     new_scale_fill()
 
@@ -304,7 +315,9 @@ p2 <- gheatmap(p1, dup_chroms, width=0.7, colnames = FALSE, offset=10) +
     new_scale_fill()
 
 p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=19.5) +
-    scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE)+ 
+    scale_fill_manual(values = sublineage_colors,
+        name="VNI Sublineage", na.translate = FALSE,
+        limits = levels(sublineage$vni_subdivision))+
     guides(fill = guide_legend(order = 3))+
     theme(legend.position = "right",
         legend.direction = "vertical",
