@@ -1,0 +1,206 @@
+---
+title: "Identify ploidy with heterozygous varians"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-14"
+format: 
+    PrettyPDF-pdf:
+        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+
+```{r, output=FALSE}
+library(tidyverse)
+library(vcfR)
+library(pinfsc50)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
+```
+# Example in
+[vcfR documentation](https://knausb.github.io/vcfR_documentation/determining_ploidy_1.html)
+```{r, eval=FALSE}
+vcf_file <- system.file("extdata", "pinf_sc50.vcf.gz",
+                        package = "pinfsc50")
+vcf <- read.vcfR(vcf_file, verbose = FALSE)
+vcf          
+```
+
+## One Desjardins sample with high heterozygosity Bt206
+
+```{r}
+sample <- "SRS409075"
+```
+```{r, output=FALSE}
+vcf <- read.vcfR(paste("../data/processed/haploid_freebayes/", sample, ".snps.raw.vcf", sep = ""))
+```
+
+```{r}
+vcf
+```
+
+## Extract genotype
+```{r}
+head(vcf@gt)
+```
+
+## Extract Allele Depth
+```{r}
+ad <- extract.gt(vcf, element = 'AD')
+head(ad)
+```
+
+Show rows with at least three alleles
+```{r}
+ad[grep("[^0],[^0],[^0]", ad[,sample]),]
+```
+Show rows with at least four alleles
+```{r}
+ad[grep("[^0],[^0],[^0],[^0]", ad[,sample]),]
+```
+Show rows with at least five alleles
+```{r}
+ad[grep("[^0],[^0],[^0],[^0],[^0]", ad[,sample]),]
+```
+
+## Fraction of depth for each allele
+If one variant has AD "3,6" the allele with the lowst depth (*a1*) is found with a depth of 3, and the allele with the highest depth (*a2*) with a depth of 6. *a1* has a fraction of depth of `r 3/(3+6)` and *a2* has a fraction of depth of `r 6/(3+6)`.  
+
+Split the fraction of depth of each allele in two tables.
+```{r}
+allele1 <- masplit(ad, record = 1)
+allele2 <- masplit(ad, record = 2)
+
+ad1 <- allele1 / (allele1 + allele2)
+ad2 <- allele2 / (allele1 + allele2)
+```
+
+Histogram of frequency of each value of fraction of allele depth. The low frequency alleles in dark blue and the high frequency alleles in ligth blue.
+```{r}
+hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main = "Histogram of fraction of depth")
+hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
+axis(side=1, at=c(0,0.25,0.333,0.5,0.666,0.75,1), labels=c(0,"1/4","1/3","1/2","1/3","3/4",1))
+```
+
+Remove homozygote variants and get the frequency of the fraction of the depth again.
+```{r}
+gt <- extract.gt(vcf, element = 'GT')
+hets <- is_het(gt)
+
+is.na( ad[ !hets ] ) <- TRUE
+
+allele1 <- masplit(ad, record = 1)
+allele2 <- masplit(ad, record = 2)
+
+ad1 <- allele1 / (allele1 + allele2)
+ad2 <- allele2 / (allele1 + allele2)
+
+hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main = "Histogram of fraction of depth")
+hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
+axis(side=1, at=c(0,0.25,0.333,0.5,0.666,0.75,1), labels=c(0,"1/4","1/3","1/2","2/3","3/4",1))
+```
+
+## Allele depth instead of frequency of fraction of depth
+```{r}
+ad <- extract.gt(vcf, element = 'AD')
+
+allele1 <- masplit(ad, record = 1)
+allele2 <- masplit(ad, record = 2)
+```
+```{r}
+tmp1 <- allele1[,sample]
+tmp1 <- tmp1[tmp1 <= 400]
+
+```
+```{r}
+sums <- apply(allele1, MARGIN=2, quantile, probs=c(0.15, 0.95), na.rm=TRUE)
+sums[,sample]
+```
+
+```{r}
+hist(tmp1, breaks=seq(0,400,by=1), col="#808080", main ="Frequency of depth of most abundant alleles")
+abline(v=sums[,sample], col=2, lwd=2)
+```
+
+```{r}
+tmp2 <- allele2[,sample]
+tmp2 <- tmp2[tmp2>0]
+tmp2 <- tmp2[tmp2<=400]
+```
+```{r}
+hist(tmp2, breaks=seq(1,400,by=1), col="#808080", main="Frequency of depth of least abundant alleles")
+abline(v=sums[,sample], col=2, lwd=2)
+```
+
+```{r}
+head(allele1)
+```
+
+```{r}
+head(allele2)
+```
+```{r}
+boxplot(allele1)
+```
+```{r}
+boxplot(allele2)
+```
+
+
+## This filter does not make sense for Bt206
+Set as NA the variants that are outside the 15 and 95 quantiles.
+```{r}
+sums <- apply(allele1, MARGIN=2, quantile, probs=c(0.15, 0.95), na.rm=TRUE)
+```
+### Allele 1 (high frequency allele)
+Substract the 15 quartile value from the allele1 depth
+```{r}
+dp2 <- sweep(allele1, MARGIN=2, FUN = "-", sums[1,])
+```
+
+In the VCF genotype informations, set to NA the rows that ended up being negative in the dp2 table
+```{r}
+vcf@gt[,-1][dp2 < 0 & !is.na(vcf@gt[,-1]) ] <- NA
+```
+Substract the 95 quartile value from the allele1 depth
+In the VCF genotype informations, set to NA the rows that ended up being negative in the dp2 table
+
+```{r}
+dp2 <- sweep(allele1, MARGIN=2, FUN = "-", sums[2,])
+vcf@gt[,-1][dp2 > 0] <- NA
+```
+### Allele 2 (low frequency allele)
+```{r}
+dp2 <- sweep(allele2, MARGIN=2, FUN = "-", sums[1,])
+vcf@gt[,-1][ dp2 < 0 & !is.na(vcf@gt[,-1]) ] <- NA
+```
+```{r}
+dp2 <- sweep(allele2, MARGIN=2, FUN = "-", sums[2,])
+vcf@gt[,-1][dp2 > 0] <- NA
+```
+
+```{r}
+ad <- extract.gt(vcf, element = 'AD')
+allele1 <- masplit(ad, record = 1)
+allele2 <- masplit(ad, record = 2)
+boxplot(allele1, las=3)
+```
+
+```{r}
+gt <- extract.gt(vcf, element = 'GT')
+hets <- is_het(gt)
+is.na( ad[ !hets ] ) <- TRUE
+
+allele1 <- masplit(ad, record = 1)
+allele2 <- masplit(ad, record = 2)
+
+ad1 <- allele1 / (allele1 + allele2)
+ad2 <- allele2 / (allele1 + allele2)
+
+hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main=sample)
+hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
+
+```
