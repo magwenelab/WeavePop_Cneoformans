@@ -11,23 +11,20 @@ embed-resources: true
 code-overflow: wrap
 ---
 
+## Setup
+
 ```{r, output=FALSE}
 library(tidyverse)
 library(vcfR)
 library(pinfsc50)
+library(patchwork)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 ```
-# Example in
+
 [vcfR documentation](https://knausb.github.io/vcfR_documentation/determining_ploidy_1.html)
-```{r, eval=FALSE}
-vcf_file <- system.file("extdata", "pinf_sc50.vcf.gz",
-                        package = "pinfsc50")
-vcf <- read.vcfR(vcf_file, verbose = FALSE)
-vcf          
-```
 
 ## One Desjardins sample with high heterozygosity Bt206
 
@@ -42,165 +39,299 @@ vcf <- read.vcfR(paste("../data/processed/haploid_freebayes/", sample, ".snps.ra
 vcf
 ```
 
-## Extract genotype
+## Extract all info
+Extract fixed fields
 ```{r}
-head(vcf@gt)
+chrom_pos_qual <- as.data.frame(vcf@fix[, c("CHROM", "POS", "QUAL", "REF", "ALT")])
+chrom_pos_qual$QUAL <- as.numeric(chrom_pos_qual$QUAL)
 ```
-
-## Extract Allele Depth
-```{r}
-ad <- extract.gt(vcf, element = 'AD')
-head(ad)
-```
-
-Show rows with at least three alleles
-```{r}
-ad[grep("[^0],[^0],[^0]", ad[,sample]),]
-```
-Show rows with at least four alleles
-```{r}
-ad[grep("[^0],[^0],[^0],[^0]", ad[,sample]),]
-```
-Show rows with at least five alleles
-```{r}
-ad[grep("[^0],[^0],[^0],[^0],[^0]", ad[,sample]),]
-```
-
-## Fraction of depth for each allele
-If one variant has AD "3,6" the allele with the lowst depth (*a1*) is found with a depth of 3, and the allele with the highest depth (*a2*) with a depth of 6. *a1* has a fraction of depth of `r 3/(3+6)` and *a2* has a fraction of depth of `r 6/(3+6)`.  
-
-Split the fraction of depth of each allele in two tables.
-```{r}
-allele1 <- masplit(ad, record = 1)
-allele2 <- masplit(ad, record = 2)
-
-ad1 <- allele1 / (allele1 + allele2)
-ad2 <- allele2 / (allele1 + allele2)
-```
-
-Histogram of frequency of each value of fraction of allele depth. The low frequency alleles in dark blue and the high frequency alleles in ligth blue.
-```{r}
-hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main = "Histogram of fraction of depth")
-hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
-axis(side=1, at=c(0,0.25,0.333,0.5,0.666,0.75,1), labels=c(0,"1/4","1/3","1/2","1/3","3/4",1))
-```
-
-Remove homozygote variants and get the frequency of the fraction of the depth again.
+Extract genotype fields
 ```{r}
 gt <- extract.gt(vcf, element = 'GT')
-hets <- is_het(gt)
-
-is.na( ad[ !hets ] ) <- TRUE
-
-allele1 <- masplit(ad, record = 1)
-allele2 <- masplit(ad, record = 2)
-
-ad1 <- allele1 / (allele1 + allele2)
-ad2 <- allele2 / (allele1 + allele2)
-
-hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main = "Histogram of fraction of depth")
-hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
-axis(side=1, at=c(0,0.25,0.333,0.5,0.666,0.75,1), labels=c(0,"1/4","1/3","1/2","2/3","3/4",1))
-```
-
-## Allele depth instead of frequency of fraction of depth
-```{r}
+dp <- extract.gt(vcf, element = 'DP', as.numeric = TRUE)
 ad <- extract.gt(vcf, element = 'AD')
-
-allele1 <- masplit(ad, record = 1)
-allele2 <- masplit(ad, record = 2)
+```
+Extract the type of variant from the INFO field
+```{r}
+variant_type <- extract.info(vcf, element = "TYPE", as.numeric=FALSE)
+# variant_AB <- extract.info(vcf, element = "AB", as.numeric=FALSE)
+```
+Combine into a dataframe
+```{r}
+variant_info <- data.frame(
+  CHROM = chrom_pos_qual[, "CHROM"],
+  POS = chrom_pos_qual[, "POS"],
+  QUAL = chrom_pos_qual[, "QUAL"],
+  REF = chrom_pos_qual[, "REF"],
+  ALT = chrom_pos_qual[, "ALT"],
+  GT = gt[, sample],
+  DP = dp[, sample],
+  AD = ad[, sample],
+  TYPE = variant_type
+#   AB= variant_AB
+)
 ```
 ```{r}
-tmp1 <- allele1[,sample]
-tmp1 <- tmp1[tmp1 <= 400]
-
-```
-```{r}
-sums <- apply(allele1, MARGIN=2, quantile, probs=c(0.15, 0.95), na.rm=TRUE)
-sums[,sample]
-```
-
-```{r}
-hist(tmp1, breaks=seq(0,400,by=1), col="#808080", main ="Frequency of depth of most abundant alleles")
-abline(v=sums[,sample], col=2, lwd=2)
-```
-
-```{r}
-tmp2 <- allele2[,sample]
-tmp2 <- tmp2[tmp2>0]
-tmp2 <- tmp2[tmp2<=400]
-```
-```{r}
-hist(tmp2, breaks=seq(1,400,by=1), col="#808080", main="Frequency of depth of least abundant alleles")
-abline(v=sums[,sample], col=2, lwd=2)
+head(variant_info)
 ```
 
+## Filter variants by quality and depth
+QUAL=Phred-scaled probability that the site has no variant.  
+DP=Total read depth in the site.
 ```{r}
-head(allele1)
+variant_filtered <- variant_info %>%
+    filter(QUAL >= 100)%>%
+    filter(DP >=20)
+```
+```{r, echo=FALSE}
+cat("Number of discarded variants:", nrow(variant_info) - nrow(variant_filtered), "\n")
+```
+
+## Separate data for each allele into diferent columns
+```{r}
+ad_split <- str_split_fixed(variant_filtered$AD, ",", n = max(str_count(variant_filtered$AD, ",") + 1))
+type_split <- str_split_fixed(variant_filtered$TYPE, ",", n = max(str_count(variant_filtered$TYPE, ",") + 1))
+
+ad_split_df <- as.data.frame(ad_split)
+type_split_df <- as.data.frame(type_split)
+
+colnames(ad_split_df) <- paste0("AD_", seq_len(ncol(ad_split_df)))
+colnames(type_split_df) <- paste0("TYPE_", seq_len(ncol(type_split_df)))
+
+variant_split <- cbind(variant_filtered, ad_split_df, type_split_df)
+
+variant_split <- variant_split %>%
+    rename(AD_R = AD_1,
+            AD_a1 = AD_2,
+            AD_a2 = AD_3,
+            TYPE_a1 = TYPE_1,
+            TYPE_a2 = TYPE_2)
+
+head(variant_split[,6:14])
+```
+
+## Allelic fractions
+DP is not allways the sum of the depth of all alleles (AD_R + AD_a1 + AD_a2) because some reads are counted in the DP but "don't support any allele", so they are not included in AD.
+
+Calculate Total Allele Depth (TAD), get the fraction of depth of each allele. Separate the alleles into 
+allele with major, intermediate and minimal fraction (instead of using the original order).
+```{r}
+variant_fractions <- variant_split %>%
+    mutate(AD_R = as.numeric(AD_R),
+           AD_a1 = as.numeric(AD_a1),
+           AD_a2 = as.numeric(AD_a2)) %>%
+    mutate(TAD = rowSums(across(c(AD_R, AD_a1, AD_a2), ~replace_na(., 0))),
+           AF_R = AD_R / TAD,
+           AF_a1 = AD_a1 / TAD,
+           AF_a2 = AD_a2 / TAD)%>%
+    mutate(AF_aMax = pmax(AF_R, AF_a1, AF_a2, na.rm=TRUE),
+           AF_aMed = apply(cbind(AF_R, AF_a1, AF_a2), 1, median),
+           AF_aMin = pmin(AF_R, AF_a1, AF_a2, na.rm=TRUE))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p_all <- ggplot(variant_fractions) +
+    geom_histogram(aes(AF_aMax), color = "darkgray", fill = "darkgray", bins = 100) +
+    geom_histogram(aes(AF_aMin), color = "blue", fill = "blue", bins = 100) +
+    geom_histogram(aes(AF_aMed), color = "darkgreen", fill = "darkgreen", bins = 100) +
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of all Alleles", y = "Count")
+p_all
+
+```
+
+## Separate Homo and Heterozygotes
+
+Possible genotypes
+```{r}
+unique(variant_fractions$GT)
+```
+
+Name | GT | Description
+|--|--|--|
+homo_alt | "1/1" | The reference allele has 0 or very small depth
+hetero_1alt | "0/1" | Heterozygous with one alternate allele
+hetero_2alt | "0/2" or "1/2" | Heterozygous with two alternate allele
+
+```{r}
+homo_alt <- variant_fractions %>%
+    filter(GT == "1/1")
+hetero_1alt <- variant_fractions %>%
+    filter(GT == "0/1")
+hetero_2alt <- variant_fractions %>%
+    filter(GT %in% c("1/2","0/2"))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 5
+#| fig-align: center
+homo <- ggplot(homo_alt) +
+    geom_histogram(aes(AF_aMax), color = "darkgray", fill = "darkgray", bins = 100) +
+    geom_histogram(aes(AF_aMin), color = "blue", fill = "blue", bins = 100) +
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of Homozygous Allele", y = "Count")
+homo
+```
+We can see that there are some variants that are not *true* homozygotes, so we will filter by the values of the frequency of alleles instead.
+
+```{r}
+homo_alt <- variant_fractions %>%
+    filter(AF_aMin == 0 & AF_aMax == 1)
+hetero_1alt <- variant_fractions %>%
+    filter(AF_aMin != 0 & is.na(AF_aMed))
+hetero_2alt <- variant_fractions %>%
+    filter(!is.na(AF_aMed))
+```
+
+```{r, echo=FALSE}
+cat("Number of rows in homo_alt:", nrow(homo_alt), "\n")
+cat("Number of rows in hetero_1alt:", nrow(hetero_1alt), "\n")
+cat("Number of rows in hetero_2alt:", nrow(hetero_2alt), "\n")
+```
+Get median and standard deviation of Allele frequencies
+
+```{r}
+hetero_a1_AF_stats <- hetero_1alt %>%
+    summarise(
+        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
+        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
+        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
+        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
+        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
+        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
+    )
+hetero_a1_AF_stats
+```
+
+We will color by genotype because we have mixed *called* genotypes within the heterozygotes.
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p_hetero_1alt <- ggplot(hetero_1alt) +
+    geom_histogram(aes(AF_aMax, fill = GT), bins = 100) +
+    geom_histogram(aes(AF_aMin, fill = GT), bins = 100) +
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of Alleles in Biallelic Sites", y = "Count")
+p_hetero_1alt
+```
+Filter out the *called* homozygotes because they have a different distribution due to very low depth of the reference allele (the alternative allele is not in all reads).
+
+```{r}
+hetero_1alt <- hetero_1alt %>%
+    filter(GT != "1/1")
+```
+```{r}
+hetero_a1_AF_stats <- hetero_1alt %>%
+    summarise(
+        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
+        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
+        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
+        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
+        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
+        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
+    )
+```
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p_hetero_1alt <- ggplot(hetero_1alt) +
+    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
+    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
+    geom_vline(data = hetero_a1_AF_stats, aes(xintercept = median_AF_aMax), color = "black", linetype = "solid", size = 1) +
+    geom_text(data = hetero_a1_AF_stats, aes(x = median_AF_aMax, y = Inf, label = round(median_AF_aMax, 2)), vjust = 2, hjust = 1.5, size = 7) +
+    geom_vline(data = hetero_a1_AF_stats, aes(xintercept = median_AF_aMin), color = "black", linetype = "solid", size = 1) +
+    geom_text(data = hetero_a1_AF_stats, aes(x = median_AF_aMin, y = Inf, label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 7) +
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of Alleles in Biallelic Sites", y = "Count")
+p_hetero_1alt
 ```
 
 ```{r}
-head(allele2)
-```
-```{r}
-boxplot(allele1)
-```
-```{r}
-boxplot(allele2)
-```
+hetero_a2_AF_stats <- hetero_2alt %>%
+    summarise(
+        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
+        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
+        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
+        median_AF_aMed = median(AF_aMed, na.rm = TRUE),
+        mean_AF_aMed = mean(AF_aMed, na.rm = TRUE),
+        sd_AF_aMed = sd(AF_aMed, na.rm = TRUE),
+        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
+        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
+        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
+    )
 
-
-## This filter does not make sense for Bt206
-Set as NA the variants that are outside the 15 and 95 quantiles.
-```{r}
-sums <- apply(allele1, MARGIN=2, quantile, probs=c(0.15, 0.95), na.rm=TRUE)
 ```
-### Allele 1 (high frequency allele)
-Substract the 15 quartile value from the allele1 depth
-```{r}
-dp2 <- sweep(allele1, MARGIN=2, FUN = "-", sums[1,])
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p_hetero_2alt <- ggplot(hetero_2alt) +
+    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
+    geom_histogram(aes(AF_aMed), fill = "darkgreen", bins = 100) +
+    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
+    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMax),
+        color = "black", linetype = "solid", size = 0.5) +
+    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMax, y = Inf, label = round (median_AF_aMax, 2)),
+        vjust = 2, hjust = 1.5, size = 4) +
+    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMed),
+        color = "black", linetype = "solid", size = 0.5) +
+    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMed, y = Inf, label = round(median_AF_aMed, 2)),
+        vjust = 2, hjust = 1.5, size = 4) +
+    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMin),
+        color = "black", linetype = "solid", size = 0.5) +
+    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMin, y = Inf,
+        label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 4) +
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of Alleles in Triallelic Sites", y = "Count")
+p_hetero_2alt
+
 ```
+The triallelic variants have very similar distributions as the biallelic ones, so it looks like there are biallelic sites where the reference allele was detected in a very low proportion of reads.
 
-In the VCF genotype informations, set to NA the rows that ended up being negative in the dp2 table
+## By chromosome
 ```{r}
-vcf@gt[,-1][dp2 < 0 & !is.na(vcf@gt[,-1]) ] <- NA
+hetero_a1_AF_stats_chrom <- hetero_1alt %>%
+    group_by(CHROM)%>%
+    summarise(
+        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
+        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
+        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
+        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
+        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
+        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
+    )
 ```
-Substract the 95 quartile value from the allele1 depth
-In the VCF genotype informations, set to NA the rows that ended up being negative in the dp2 table
-
-```{r}
-dp2 <- sweep(allele1, MARGIN=2, FUN = "-", sums[2,])
-vcf@gt[,-1][dp2 > 0] <- NA
-```
-### Allele 2 (low frequency allele)
-```{r}
-dp2 <- sweep(allele2, MARGIN=2, FUN = "-", sums[1,])
-vcf@gt[,-1][ dp2 < 0 & !is.na(vcf@gt[,-1]) ] <- NA
-```
-```{r}
-dp2 <- sweep(allele2, MARGIN=2, FUN = "-", sums[2,])
-vcf@gt[,-1][dp2 > 0] <- NA
-```
-
-```{r}
-ad <- extract.gt(vcf, element = 'AD')
-allele1 <- masplit(ad, record = 1)
-allele2 <- masplit(ad, record = 2)
-boxplot(allele1, las=3)
-```
-
-```{r}
-gt <- extract.gt(vcf, element = 'GT')
-hets <- is_het(gt)
-is.na( ad[ !hets ] ) <- TRUE
-
-allele1 <- masplit(ad, record = 1)
-allele2 <- masplit(ad, record = 2)
-
-ad1 <- allele1 / (allele1 + allele2)
-ad2 <- allele2 / (allele1 + allele2)
-
-hist(ad2[,sample], breaks = seq(0,1,by=0.02), col = "#1f78b4", xaxt="n", main=sample)
-hist(ad1[,sample], breaks = seq(0,1,by=0.02), col = "#a6cee3", add = TRUE)
-
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+p_hetero_1alt <- ggplot(hetero_1alt) +
+    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
+    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
+    geom_vline(data = hetero_a1_AF_stats_chrom, aes(xintercept = median_AF_aMax), color = "black", linetype = "solid", size = 1) +
+    geom_text(data = hetero_a1_AF_stats_chrom, aes(x = median_AF_aMax, y = Inf, label = round(median_AF_aMax, 2)), vjust = 2, hjust = 1.5, size = 4) +
+    geom_vline(data = hetero_a1_AF_stats_chrom, aes(xintercept = median_AF_aMin), color = "black", linetype = "solid", size = 1) +
+    geom_text(data = hetero_a1_AF_stats_chrom, aes(x = median_AF_aMin, y = Inf, label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 4) +
+    facet_wrap(~CHROM, ncol = 2)+
+    xlim(0, 1) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
+    labs(x = "Frequency of Alleles in Biallelic Sites per Chromosome", y = "Count")
+p_hetero_1alt
 ```
