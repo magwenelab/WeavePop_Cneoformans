@@ -26,13 +26,40 @@ setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 
 [vcfR documentation](https://knausb.github.io/vcfR_documentation/determining_ploidy_1.html)
 
-## One Desjardins sample with high heterozygosity Bt206
+## Get highly heterozygous samples
 
 ```{r}
-sample <- "SRS409075"
+num_snps <- read_csv("../data/processed/count_hetero/summary.csv")
+```
+
+```{r}
+p <- ggplot(num_snps)+
+    geom_histogram(aes(n_hetero), bins =387)
+p
+```
+
+```{r}
+num_snps <-num_snps %>%
+    filter(n_hetero <10000)
+```
+```{r}
+p <- ggplot(num_snps)+
+    geom_histogram(aes(n_hetero), bins =387)
+p
+```
+
+```{r}
+head(arrange(num_snps,desc(n_hetero)))
+```
+
+## One Desjardins sample with high heterozygosity Bt65
+
+```{r}
+sample <- "SRS417639"
 ```
 ```{r, output=FALSE}
-vcf <- read.vcfR(paste("../data/processed/haploid_freebayes/", sample, ".snps.raw.vcf", sep = ""))
+vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
+#vcf <- read.vcfR("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/data/processed/haploid_freebayes/PMY3519.snps.raw.vcf")
 ```
 
 ```{r}
@@ -81,10 +108,11 @@ DP=Total read depth in the site.
 ```{r}
 variant_filtered <- variant_info %>%
     filter(QUAL >= 100)%>%
-    filter(DP >=20)
+    filter(DP >=10)
 ```
 ```{r, echo=FALSE}
 cat("Number of discarded variants:", nrow(variant_info) - nrow(variant_filtered), "\n")
+cat("Number of remaining variants:", nrow(variant_filtered), "\n")
 ```
 
 ## Separate data for each allele into diferent columns
@@ -334,4 +362,30 @@ p_hetero_1alt <- ggplot(hetero_1alt) +
                        labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
     labs(x = "Frequency of Alleles in Biallelic Sites per Chromosome", y = "Count")
 p_hetero_1alt
+```
+```{r, echo=FALSE}
+ggsave(paste("../results/figures/hist_", sample,".png",sep=""), p_hetero_1alt, height = 9 , width = 9)
+```
+
+```{r}
+#| fig-height: 10
+#| fig-width: 7
+#| fig-align: center
+p_sites <- ggplot(hetero_1alt) +
+    geom_col(aes(x=POS, y = AF_aMin), color = "lightblue") +
+    facet_wrap(~CHROM, ncol = 2)+
+    scale_y_continuous(breaks = c(0, 0.25, 0.333, 0.5),
+                       labels = c(0, "1/4", "1/3", "1/2"),
+                       limits = c(0, 0.55)
+                       )+
+    theme(panel.background = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_line(color = "black", linetype="solid", linewidth=1)
+    )
+
+p_sites
+```
+
+```{r, echo=FALSE}
+ggsave(paste("../results/figures/bars_",sample,".png",sep=""), p_sites, height = 9, width = 9)
 ```
