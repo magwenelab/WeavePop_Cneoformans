@@ -1,5 +1,5 @@
 ---
-title: "Identify ploidy with heterozygous varians"
+title: "Ploidy detection with allele frequency of heterozygous variants"
 author: "Claudia Zirión-Martínez"
 date: "2025-02-14"
 format: 
@@ -26,43 +26,25 @@ setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 
 [vcfR documentation](https://knausb.github.io/vcfR_documentation/determining_ploidy_1.html)
 
-## Get highly heterozygous samples
+## Analysis for one sample
 
 ```{r}
-num_snps <- read_csv("../data/processed/count_hetero/summary.csv")
+sample <- "SRS417606"
 ```
-
-```{r}
-p <- ggplot(num_snps)+
-    geom_histogram(aes(n_hetero), bins =387)
-p
-```
-
-```{r}
-num_snps <-num_snps %>%
-    filter(n_hetero <10000)
-```
-```{r}
-p <- ggplot(num_snps)+
-    geom_histogram(aes(n_hetero), bins =387)
-p
-```
-
-```{r}
-head(arrange(num_snps,desc(n_hetero)))
-```
-
-## One Desjardins sample with high heterozygosity Bt65
-
-```{r}
-sample <- "SRS417639"
-```
-```{r, output=FALSE}
+If is Desjardins sample:
+```{r, output=FALSE, eval=TRUE}
 vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
-#vcf <- read.vcfR("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/data/processed/haploid_freebayes/PMY3519.snps.raw.vcf")
+```
+If is Ashton sample:
+```{r,output=FALSE, eval=FALSE}
+vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
+```
+If is PMY sample:
+```{r,output=FALSE, eval=FALSE}
+vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
 ```
 
-```{r}
+```{r,output=FALSE}
 vcf
 ```
 
