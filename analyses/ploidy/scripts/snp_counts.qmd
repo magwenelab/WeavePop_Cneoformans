@@ -1,0 +1,152 @@
+---
+title: "Count called variants in Desjardins Ashton dataset"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-14"
+format: 
+    PrettyPDF-pdf:
+        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+
+## R Setup
+```{r, output=FALSE}
+library(tidyverse)
+library(patchwork)
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
+```
+
+## Desjardins
+
+### Number of raw and filtered variants
+Using bash count the number of variants called by Freebayes and filter by Snippy.  
+Snippy filter are:   
+**GT == 1/1**  
+**QUAL >= 100**   
+**DP >= 10**  
+**A0/DP >= 0**  
+```{bash, eval=FALSE}
+cd /FastData/czirion/Crypto_Diversity_Pipeline/
+tail -n +2 Crypto_Desjardins/config/metadata.csv | cut -d',' -f2 | while read line
+do 
+    raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    filt=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$filt >> analyses/ploidy/data/processed/snp_counts_desjardins.csv
+done 
+```
+
+### Metadata
+```{r, output=FALSE}
+metadata <- read_csv("../../../Crypto_Desjardins/config/metadata.csv")
+metadata <- metadata %>%
+    select(sample, strain, lineage)
+```
+### Variant counts
+```{r, message=FALSE}
+snp_counts <- read_csv("../data/processed/snp_counts_desjardins.csv", col_names = c("sample", "n_raw", "n_filt"))
+
+snp_counts <- snp_counts %>%
+        mutate(n_removed = n_raw - n_filt, percent_filt = (n_filt / n_raw)*100)%>%
+        left_join(metadata, by = "sample")
+           
+```
+```{r, echo=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+r <- ggplot(snp_counts, aes(x = n_raw, fill = lineage, color = lineage)) +
+    geom_histogram(bins = 387) +
+    theme_minimal() +
+    labs(title = "Histograms of Raw and Filtered SNP Counts by Lineage", x = "Number of Raw SNPs", y = "Count", fill = "Lineage", color = "Lineage")
+f <- ggplot(snp_counts, aes(x = n_filt, fill = lineage, color = lineage)) +
+    geom_histogram(bins = 387) +
+    theme_minimal() +
+    labs(x = "Number of Filtered SNPs", y = "Count", fill = "Lineage", color = "Lineage") +
+    theme(legend.position = "none")
+r/f
+```
+
+```{r}
+summary <- snp_counts %>%
+    summarise(max_raw = max(n_raw),
+              max_filtered = max(n_filt),
+              max_removed = max(n_removed),
+              median_raw = median(n_raw),
+              median_filt = median(n_filt),
+              median_removed = median(n_removed))
+summary   
+```
+```{r}
+sorted <- snp_counts %>%
+    arrange(desc(n_removed))
+head(sorted, 30)
+```
+
+
+## Ashton
+### Number of raw and filtered variants
+Using bash count the number of variants called by Freebayes and filter by Snippy.  
+Snippy filter are:   
+**GT == 1/1**  
+**QUAL >= 100**   
+**DP >= 10**  
+**A0/DP >= 0**  
+```{bash, eval=FALSE}
+cd /FastData/czirion/Crypto_Diversity_Pipeline/
+tail -n +2 Crypto_Ashton/config/metadata.csv | cut -d',' -f2 | while read line
+do 
+    raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    filt=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$filt >> analyses/ploidy/data/processed/snp_counts_ashton.csv
+done 
+```
+### Metadata
+```{r, output=FALSE}
+metadata <- read_csv("../../../Crypto_Ashton/config/metadata.csv")
+metadata <- metadata %>%
+    select(sample, strain, lineage, VNI_subdivision)
+```
+### Variant counts
+```{r, output=FALSE}
+snp_counts <- read_csv("../data/processed/snp_counts_ashton.csv", col_names = c("sample", "n_raw", "n_filt"))
+```
+```{r}
+
+snp_counts <- snp_counts %>%
+        mutate(n_removed = n_raw - n_filt, percent_filt = (n_filt / n_raw)*100)%>%
+        left_join(metadata, by = "sample")
+```
+
+```{r, echo=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+r <- ggplot(snp_counts, aes(x = n_raw, fill = VNI_subdivision, color = VNI_subdivision)) +
+    geom_histogram(bins = 387) +
+    theme_minimal() +
+    labs(title = "Histograms of Raw and Filtered SNP Counts by Sublineage", x = "Number of Raw SNPs", y = "Count", fill = "Sublineage", color = "Sublineage")
+f <- ggplot(snp_counts, aes(x = n_filt, fill = VNI_subdivision, color = VNI_subdivision)) +
+    geom_histogram(bins = 387) +
+    theme_minimal() +
+    labs(x = "Number of Filtered SNPs", y = "Count", fill = "Sublineage", color = "Sublineage") +
+    theme(legend.position = "none")
+r/f
+```
+
+```{r}
+summary <- snp_counts %>%
+    summarise(max_raw = max(n_raw),
+              max_filtered = max(n_filt),
+              max_removed = max(n_removed),
+              median_raw = median(n_raw),
+              median_filt = median(n_filt),
+              median_removed = median(n_removed))
+summary
+```
+```{r}
+sorted <- snp_counts %>%
+    arrange(desc(n_removed))
+head(sorted, 30)
+```
