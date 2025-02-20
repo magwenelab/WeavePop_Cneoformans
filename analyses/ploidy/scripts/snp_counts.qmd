@@ -68,6 +68,8 @@ f <- ggplot(snp_counts, aes(x = n_filt, fill = lineage, color = lineage)) +
 r/f
 ```
 
+Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
+
 ```{r}
 summary <- snp_counts %>%
     summarise(max_raw = max(n_raw),
@@ -78,6 +80,7 @@ summary <- snp_counts %>%
               median_removed = median(n_removed))
 summary   
 ```
+Here are the 30 samples with highest number of likely heterozygous variants.
 ```{r}
 sorted <- snp_counts %>%
     arrange(desc(n_removed))
@@ -134,7 +137,7 @@ f <- ggplot(snp_counts, aes(x = n_filt, fill = VNI_subdivision, color = VNI_subd
     theme(legend.position = "none")
 r/f
 ```
-
+Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
 ```{r}
 summary <- snp_counts %>%
     summarise(max_raw = max(n_raw),
@@ -145,6 +148,7 @@ summary <- snp_counts %>%
               median_removed = median(n_removed))
 summary
 ```
+Here are the 30 samples with highest number of likely heterozygous variants.
 ```{r}
 sorted <- snp_counts %>%
     arrange(desc(n_removed))
