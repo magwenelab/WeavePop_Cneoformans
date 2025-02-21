@@ -1,0 +1,105 @@
+---
+title: "Ploidy detection with read depth"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-21"
+format: 
+    PrettyPDF-pdf:
+        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+code-overflow: wrap
+---
+
+```{r}
+library(tidyverse)
+library(mixtools)
+```
+
+```{r}
+windows <- read_delim(
+    "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881238/depth_by_windows.tsv",
+    delim = "\t",
+    col_names = c("accession", "start", "end", "mean_depth", "norm_mean_depth", "smooth_norm_mean_depth"))
+```
+
+```{r}
+str(windows)
+```
+
+```{r}
+windows_low <- windows %>%
+    filter(mean_depth < 200)%>%
+    filter(accession == "chr09_Bt22")
+```
+
+```{r}
+wait.mix <- normalmixEM(windows_low$mean_depth)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
+
+```{r}
+windows_low <- windows %>%
+    filter(accession == "chr09_Bt22")
+```
+
+```{r}
+wait.mix <- normalmixEM(windows_low$smooth_norm_mean_depth)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
+
+```{r}
+windows <- read_delim(
+    "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409113/depth_by_windows.tsv",
+    delim = "\t",
+    col_names = c("accession", "start", "end", "mean_depth", "norm_mean_depth", "smooth_norm_mean_depth"))
+```
+
+```{r}
+wait.mix <- normalmixEM(windows$smooth_norm_mean_depth)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
+
+```{r}
+windows_low <- windows %>%
+    filter(mean_depth < 200)%>%
+    filter(accession == "CP003831.1")
+```
+
+```{r}
+wait.mix <- normalmixEM(windows_low$mean_depth)
+names(wait.mix)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
+
+```{r}
+windows_low <- windows %>%
+    filter(smooth_norm_mean_depth < 3)
+```
+
+```{r}
+wait.mix <- normalmixEM(windows_low$smooth_norm_mean_depth)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
+
+
+```{r}
+windows <- read_delim(
+    "/FastData/kwilhoit/DiversityPipeline_NorthCarolina/results/samples/mosdepth/PMY3519/good_regions_coverage.tsv",
+    delim = "\t")
+```
+
+```{r}
+windows_low <- windows %>%
+    filter(Smooth_Median <= 4)%>%
+    filter(Accession == "VNI_CP003822.1")
+```
+
+```{r}
+hist(windows_low$Smooth_Median, breaks = 400)
+lines(density(wait.mix$x, bw="nrd0"), col="blue", lwd=2)
+```
+```{r}
+wait.mix <- normalmixEM(windows_low$Smooth_Mean, k=4)
+plot(wait.mix, loglik=FALSE, density = TRUE)
+```
