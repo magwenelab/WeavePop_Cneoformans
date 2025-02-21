@@ -26,348 +26,466 @@ setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 
 [vcfR documentation](https://knausb.github.io/vcfR_documentation/determining_ploidy_1.html)
 
-## Analysis for one sample
+## Import VCF and metadata
 
 ```{r}
-sample <- "SRS417606"
+sample_id <- "SRS417606"
 ```
-If is Desjardins sample:
-```{r, output=FALSE, eval=TRUE}
-vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
+```{r, output=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+# For Desjardins sample:
+
+vcf <- read.vcfR(paste(
+    "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Desjardins/results/01.Samples/snippy/",
+    sample_id, "/snps.raw.vcf", sep = ""))
+metadata <- read_csv("../../../Crypto_Desjardins/config/metadata.csv")
+metadata <- metadata %>%
+    select(sample, strain, lineage)%>%
+    filter(sample == sample_id)
+chrom_names <- read_csv("../../../Crypto_Desjardins/config/chromosomes.csv")
+chrom_names <- chrom_names %>%
+    mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
+    mutate(chromosome = as.factor(chromosome))
+levels(chrom_names$chromosome) <- paste("chr", chrom_names$chromosome, sep="")
+chrom_names <- inner_join(chrom_names, metadata, by = "lineage") 
 ```
-If is Ashton sample:
-```{r,output=FALSE, eval=FALSE}
-vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
+```{r,output=FALSE, eval=FALSE, echo=FALSE}
+# For Ashton sample:
+
+vcf <- read.vcfR(paste(
+    "/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results/01.Samples/snippy/",
+    sample_id, "/snps.raw.vcf", sep = ""))
 ```
-If is PMY sample:
-```{r,output=FALSE, eval=FALSE}
-vcf <- read.vcfR(paste("/FastData/czirion/Crypto_Diversity_Pipeline/Crypto_Ashton/results/01.Samples/snippy/", sample, "/snps.raw.vcf", sep = ""))
+```{r,output=FALSE, eval=FALSE, echo = FALSE}
+# For North Carolina sample:
+
+vcf <- read.vcfR(paste(
+    "/FastData/kwilhoit/DiversityPipeline_NorthCarolina/results/sample/snippy/",
+    sample_id, "/snps.raw.vcf", sep = ""))
 ```
 
-```{r,output=FALSE}
-vcf
+## Extract VCF info
+
+```{r, output=FALSE}
+tidy_vcf <- vcfR2tidy(vcf)
 ```
 
-## Extract all info
-Extract fixed fields
 ```{r}
-chrom_pos_qual <- as.data.frame(vcf@fix[, c("CHROM", "POS", "QUAL", "REF", "ALT")])
-chrom_pos_qual$QUAL <- as.numeric(chrom_pos_qual$QUAL)
-```
-Extract genotype fields
-```{r}
-gt <- extract.gt(vcf, element = 'GT')
-dp <- extract.gt(vcf, element = 'DP', as.numeric = TRUE)
-ad <- extract.gt(vcf, element = 'AD')
-```
-Extract the type of variant from the INFO field
-```{r}
-variant_type <- extract.info(vcf, element = "TYPE", as.numeric=FALSE)
-# variant_AB <- extract.info(vcf, element = "AB", as.numeric=FALSE)
-```
-Combine into a dataframe
-```{r}
-variant_info <- data.frame(
-  CHROM = chrom_pos_qual[, "CHROM"],
-  POS = chrom_pos_qual[, "POS"],
-  QUAL = chrom_pos_qual[, "QUAL"],
-  REF = chrom_pos_qual[, "REF"],
-  ALT = chrom_pos_qual[, "ALT"],
-  GT = gt[, sample],
-  DP = dp[, sample],
-  AD = ad[, sample],
-  TYPE = variant_type
-#   AB= variant_AB
-)
-```
-```{r}
-head(variant_info)
+vars <- tidy_vcf$fix %>%
+    select(ChromKey, CHROM, POS, REF, ALT,
+            QUAL, DP, RO, AO, AB, NUMALT, MQM, MQMR, PAIRED, PAIREDR)
+meta <- tidy_vcf$meta %>%
+    filter(ID %in% c("QUAL", "DP", "RO", "AO",  "AB",  "NUMALT", "MQM", "MQMR", "PAIRED", "PAIREDR"))%>%
+    as.data.frame()
+gt <- tidy_vcf$gt %>%
+    select(Indiv, ChromKey, POS, GT = gt_GT)
+vars <- left_join(vars, gt, by = c("ChromKey", "POS"))
+vars <- left_join(vars, chrom_names, by = c("CHROM" = "accession"))
 ```
 
-## Filter variants by quality and depth
-QUAL=Phred-scaled probability that the site has no variant.  
-DP=Total read depth in the site.
+Indentify in how many variants one of the alleles is the reference allele, and what genotypes they are assigned to. 
+```{r, message=FALSE}
+vars %>%
+    mutate(R = ifelse(RO == 0 , "no_ref_allele", "ref_allele"))%>%
+    group_by(GT, R)%>%
+    summarize(n = n())
+```
+
+## Biallelic sites
+Biallelic sites are the ones where there is only one alternative allele and the reference allele is present.  
 ```{r}
-variant_filtered <- variant_info %>%
+biallelic <-vars %>%
+    filter(NUMALT == 1)%>%
+    filter(RO != 0)%>%
+    mutate(RO = as.numeric(RO),
+            AO = as.numeric(AO),
+            AB = as.numeric (AB))%>%
+    mutate(DPA = RO + AO,
+            DPC = DP - DPA,
+            RB = RO/DPA,
+            TB = RB + AB,
+            RF = RO/DPA,
+            AF = AO/DPA,
+            TF = RF + AF,
+            MJAF = pmax(AF, RF, na.rm=TRUE),
+            MAF = pmin(AF, RF, na.rm=TRUE))%>%
+    select(sample, lineage, strain, chromosome,
+            POS, REF, ALT, QUAL, GT,
+            DP, DPA, DPC,
+            RO, AO,
+            RB, AB, TB, 
+            RF, AF, TF, MAF, MJAF,
+            MQM, MQMR, PAIRED, PAIREDR)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+rfp <- ggplot(biallelic) +
+    geom_histogram(aes(RF), binwidth = 0.01)+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    labs(title = "Reference allele frequency",
+         x = "Frequency",
+         y = "Counts")+
+    theme_classic()
+afp <- ggplot(biallelic) +
+    geom_histogram(aes(AF), binwidth = 0.01)+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+        labs(title ="Alternate allele frequency",
+            x = "Frequency",
+            y = "Counts")+
+    theme_classic()
+
+rfp / afp
+```
+
+Remove the low variant quality, low depth and homozygous genotypes.
+```{r}
+biallelic_filtered <- biallelic %>%
     filter(QUAL >= 100)%>%
-    filter(DP >=10)
-```
-```{r, echo=FALSE}
-cat("Number of discarded variants:", nrow(variant_info) - nrow(variant_filtered), "\n")
-cat("Number of remaining variants:", nrow(variant_filtered), "\n")
-```
-
-## Separate data for each allele into diferent columns
-```{r}
-ad_split <- str_split_fixed(variant_filtered$AD, ",", n = max(str_count(variant_filtered$AD, ",") + 1))
-type_split <- str_split_fixed(variant_filtered$TYPE, ",", n = max(str_count(variant_filtered$TYPE, ",") + 1))
-
-ad_split_df <- as.data.frame(ad_split)
-type_split_df <- as.data.frame(type_split)
-
-colnames(ad_split_df) <- paste0("AD_", seq_len(ncol(ad_split_df)))
-colnames(type_split_df) <- paste0("TYPE_", seq_len(ncol(type_split_df)))
-
-variant_split <- cbind(variant_filtered, ad_split_df, type_split_df)
-
-variant_split <- variant_split %>%
-    rename(AD_R = AD_1,
-            AD_a1 = AD_2,
-            AD_a2 = AD_3,
-            TYPE_a1 = TYPE_1,
-            TYPE_a2 = TYPE_2)
-
-head(variant_split[,6:14])
-```
-
-## Allelic fractions
-DP is not allways the sum of the depth of all alleles (AD_R + AD_a1 + AD_a2) because some reads are counted in the DP but "don't support any allele", so they are not included in AD.
-
-Calculate Total Allele Depth (TAD), get the fraction of depth of each allele. Separate the alleles into 
-allele with major, intermediate and minimal fraction (instead of using the original order).
-```{r}
-variant_fractions <- variant_split %>%
-    mutate(AD_R = as.numeric(AD_R),
-           AD_a1 = as.numeric(AD_a1),
-           AD_a2 = as.numeric(AD_a2)) %>%
-    mutate(TAD = rowSums(across(c(AD_R, AD_a1, AD_a2), ~replace_na(., 0))),
-           AF_R = AD_R / TAD,
-           AF_a1 = AD_a1 / TAD,
-           AF_a2 = AD_a2 / TAD)%>%
-    mutate(AF_aMax = pmax(AF_R, AF_a1, AF_a2, na.rm=TRUE),
-           AF_aMed = apply(cbind(AF_R, AF_a1, AF_a2), 1, median),
-           AF_aMin = pmin(AF_R, AF_a1, AF_a2, na.rm=TRUE))
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 7
-#| fig-align: center
-p_all <- ggplot(variant_fractions) +
-    geom_histogram(aes(AF_aMax), color = "darkgray", fill = "darkgray", bins = 100) +
-    geom_histogram(aes(AF_aMin), color = "blue", fill = "blue", bins = 100) +
-    geom_histogram(aes(AF_aMed), color = "darkgreen", fill = "darkgreen", bins = 100) +
-    xlim(0, 1) +
-    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of all Alleles", y = "Count")
-p_all
-
-```
-
-## Separate Homo and Heterozygotes
-
-Possible genotypes
-```{r}
-unique(variant_fractions$GT)
-```
-
-Name | GT | Description
-|--|--|--|
-homo_alt | "1/1" | The reference allele has 0 or very small depth
-hetero_1alt | "0/1" | Heterozygous with one alternate allele
-hetero_2alt | "0/2" or "1/2" | Heterozygous with two alternate allele
-
-```{r}
-homo_alt <- variant_fractions %>%
-    filter(GT == "1/1")
-hetero_1alt <- variant_fractions %>%
-    filter(GT == "0/1")
-hetero_2alt <- variant_fractions %>%
-    filter(GT %in% c("1/2","0/2"))
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 5
-#| fig-align: center
-homo <- ggplot(homo_alt) +
-    geom_histogram(aes(AF_aMax), color = "darkgray", fill = "darkgray", bins = 100) +
-    geom_histogram(aes(AF_aMin), color = "blue", fill = "blue", bins = 100) +
-    xlim(0, 1) +
-    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of Homozygous Allele", y = "Count")
-homo
-```
-We can see that there are some variants that are not *true* homozygotes, so we will filter by the values of the frequency of alleles instead.
-
-```{r}
-homo_alt <- variant_fractions %>%
-    filter(AF_aMin == 0 & AF_aMax == 1)
-hetero_1alt <- variant_fractions %>%
-    filter(AF_aMin != 0 & is.na(AF_aMed))
-hetero_2alt <- variant_fractions %>%
-    filter(!is.na(AF_aMed))
+    filter(DP >= 10) %>%
+    filter(!GT %in% c( "1/1", "0/0"))
 ```
 
 ```{r, echo=FALSE}
-cat("Number of rows in homo_alt:", nrow(homo_alt), "\n")
-cat("Number of rows in hetero_1alt:", nrow(hetero_1alt), "\n")
-cat("Number of rows in hetero_2alt:", nrow(hetero_2alt), "\n")
+message("Number of good quality biallelic variants: ", nrow(biallelic_filtered))
 ```
-Get median and standard deviation of Allele frequencies
-
-```{r}
-hetero_a1_AF_stats <- hetero_1alt %>%
-    summarise(
-        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
-        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
-        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
-        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
-        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
-        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
-    )
-hetero_a1_AF_stats
-```
-
-We will color by genotype because we have mixed *called* genotypes within the heterozygotes.
+### Reference vs. Alternate Allele Frequencies
+Check if there is a bias toward the reference alleles.
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-p_hetero_1alt <- ggplot(hetero_1alt) +
-    geom_histogram(aes(AF_aMax, fill = GT), bins = 100) +
-    geom_histogram(aes(AF_aMin, fill = GT), bins = 100) +
-    xlim(0, 1) +
+rfp <- ggplot(biallelic_filtered) +
+    geom_histogram(aes(RF), binwidth = 0.01)+
     scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of Alleles in Biallelic Sites", y = "Count")
-p_hetero_1alt
-```
-Filter out the *called* homozygotes because they have a different distribution due to very low depth of the reference allele (the alternative allele is not in all reads).
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    labs(title = "Reference allele frequency",
+         x = "Frequency",
+         y = "Counts")+
+    theme_classic()
+afp <- ggplot(biallelic_filtered) +
+    geom_histogram(aes(AF), binwidth = 0.01)+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+        labs(title ="Alternate allele frequency",
+            x = "Frequency",
+            y = "Counts")+
+    theme_classic()
 
-```{r}
-hetero_1alt <- hetero_1alt %>%
-    filter(GT != "1/1")
+rfp / afp
 ```
+
+### Minor and Major Allele Frequency
+Check the genome-wide allele frequency.
 ```{r}
-hetero_a1_AF_stats <- hetero_1alt %>%
+biallelic_stats <- biallelic_filtered %>%
     summarise(
-        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
-        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
-        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
-        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
-        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
-        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
-    )
+        median_MJAF = median(MJAF, na.rm = TRUE),
+        mean_MJAF = mean(MJAF, na.rm = TRUE),
+        sd_MJAF = sd(MJAF, na.rm = TRUE),
+        median_MAF = median(MAF, na.rm = TRUE),
+        mean_MAF = mean(MAF, na.rm = TRUE),
+        sd_MAF = sd(MAF, na.rm = TRUE))
 ```
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-p_hetero_1alt <- ggplot(hetero_1alt) +
-    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
-    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
-    geom_vline(data = hetero_a1_AF_stats, aes(xintercept = median_AF_aMax), color = "black", linetype = "solid", size = 1) +
-    geom_text(data = hetero_a1_AF_stats, aes(x = median_AF_aMax, y = Inf, label = round(median_AF_aMax, 2)), vjust = 2, hjust = 1.5, size = 7) +
-    geom_vline(data = hetero_a1_AF_stats, aes(xintercept = median_AF_aMin), color = "black", linetype = "solid", size = 1) +
-    geom_text(data = hetero_a1_AF_stats, aes(x = median_AF_aMin, y = Inf, label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 7) +
-    xlim(0, 1) +
+maf <- ggplot(biallelic_filtered) +
+    geom_histogram(aes(MAF, fill = "MAF"), binwidth = 0.01)+
+    geom_histogram(aes(MJAF, fill = "MJAF"), binwidth = 0.01)+
+    geom_vline(data = biallelic_stats, aes(xintercept = median_MJAF), color = "black", linetype = "solid", linewidth = 1) +
+    geom_text(data = biallelic_stats, aes(x = median_MJAF, y = Inf, label = round(median_MJAF, 2)), vjust = 2, hjust = 1.5, size = 7) +
+    geom_vline(data = biallelic_stats, aes(xintercept = median_MAF), color = "black", linetype = "solid", linewidth= 1) +
+    geom_text(data = biallelic_stats, aes(x = median_MAF, y = Inf, label = round(median_MAF, 2)), vjust = 2, hjust = 1.5, size = 7) +
     scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of Alleles in Biallelic Sites", y = "Count")
-p_hetero_1alt
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    scale_fill_manual(values = c("MAF" = "lightblue", "MJAF" = "darkblue"), name = "Allele")+
+    labs(title = "Minor and Major Allele Frequencies",
+         x = "Frequency",
+         y = "Counts")+
+    theme_classic()
+maf
 ```
-
+Check the allele frequencies by chromosome.
 ```{r}
-hetero_a2_AF_stats <- hetero_2alt %>%
+biallelic_stats_chrom <- biallelic_filtered %>%
+    group_by(chromosome)%>%
     summarise(
-        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
-        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
-        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
-        median_AF_aMed = median(AF_aMed, na.rm = TRUE),
-        mean_AF_aMed = mean(AF_aMed, na.rm = TRUE),
-        sd_AF_aMed = sd(AF_aMed, na.rm = TRUE),
-        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
-        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
-        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
-    )
-
+        median_MJAF = median(MJAF, na.rm = TRUE),
+        mean_MJAF = mean(MJAF, na.rm = TRUE),
+        sd_MJAF = sd(MJAF, na.rm = TRUE),
+        median_MAF = median(MAF, na.rm = TRUE),
+        mean_MAF = mean(MAF, na.rm = TRUE),
+        sd_MAF = sd(MAF, na.rm = TRUE))
 ```
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 7
-#| fig-align: center
-p_hetero_2alt <- ggplot(hetero_2alt) +
-    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
-    geom_histogram(aes(AF_aMed), fill = "darkgreen", bins = 100) +
-    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
-    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMax),
-        color = "black", linetype = "solid", size = 0.5) +
-    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMax, y = Inf, label = round (median_AF_aMax, 2)),
-        vjust = 2, hjust = 1.5, size = 4) +
-    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMed),
-        color = "black", linetype = "solid", size = 0.5) +
-    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMed, y = Inf, label = round(median_AF_aMed, 2)),
-        vjust = 2, hjust = 1.5, size = 4) +
-    geom_vline(data = hetero_a2_AF_stats, aes(xintercept = median_AF_aMin),
-        color = "black", linetype = "solid", size = 0.5) +
-    geom_text(data = hetero_a2_AF_stats, aes(x = median_AF_aMin, y = Inf,
-        label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 4) +
-    xlim(0, 1) +
-    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of Alleles in Triallelic Sites", y = "Count")
-p_hetero_2alt
 
-```
-The triallelic variants have very similar distributions as the biallelic ones, so it looks like there are biallelic sites where the reference allele was detected in a very low proportion of reads.
-
-## By chromosome
-```{r}
-hetero_a1_AF_stats_chrom <- hetero_1alt %>%
-    group_by(CHROM)%>%
-    summarise(
-        median_AF_aMax = median(AF_aMax, na.rm = TRUE),
-        mean_AF_aMax = mean(AF_aMax, na.rm = TRUE),
-        sd_AF_aMax = sd(AF_aMax, na.rm = TRUE),
-        median_AF_aMin = median(AF_aMin, na.rm = TRUE),
-        mean_AF_aMin = mean(AF_aMin, na.rm = TRUE),
-        sd_AF_aMin = sd(AF_aMin, na.rm = TRUE)
-    )
-```
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 7
 #| fig-align: center
-p_hetero_1alt <- ggplot(hetero_1alt) +
-    geom_histogram(aes(AF_aMax), fill = "darkblue", bins = 100) +
-    geom_histogram(aes(AF_aMin), fill = "lightblue", bins = 100) +
-    geom_vline(data = hetero_a1_AF_stats_chrom, aes(xintercept = median_AF_aMax), color = "black", linetype = "solid", size = 1) +
-    geom_text(data = hetero_a1_AF_stats_chrom, aes(x = median_AF_aMax, y = Inf, label = round(median_AF_aMax, 2)), vjust = 2, hjust = 1.5, size = 4) +
-    geom_vline(data = hetero_a1_AF_stats_chrom, aes(xintercept = median_AF_aMin), color = "black", linetype = "solid", size = 1) +
-    geom_text(data = hetero_a1_AF_stats_chrom, aes(x = median_AF_aMin, y = Inf, label = round(median_AF_aMin, 2)), vjust = 2, hjust = 1.5, size = 4) +
-    facet_wrap(~CHROM, ncol = 2)+
-    xlim(0, 1) +
+maf <- ggplot(biallelic_filtered) +
+    geom_histogram(aes(MAF, fill = "MAF"), binwidth = 0.01)+
+    geom_histogram(aes(MJAF, fill = "MJAF"), binwidth = 0.01)+
+    facet_wrap(~chromosome, strip.position = "right", ncol = 2)+
+    geom_vline(data = biallelic_stats_chrom, aes(xintercept = median_MJAF), color = "black", linetype = "solid", linewidth = 1) +
+    geom_text(data = biallelic_stats_chrom, aes(x = median_MJAF, y = Inf, label = round(median_MJAF, 2)), vjust = 2, hjust = -0.5, size = 3) +
+    geom_vline(data = biallelic_stats_chrom, aes(xintercept = median_MAF), color = "black", linetype = "solid", linewidth= 1) +
+    geom_text(data = biallelic_stats_chrom, aes(x = median_MAF, y = Inf, label = round(median_MAF, 2)), vjust = 2, hjust = 1.5, size = 3) +
     scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
-                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1)) +
-    labs(x = "Frequency of Alleles in Biallelic Sites per Chromosome", y = "Count")
-p_hetero_1alt
-```
-```{r, echo=FALSE}
-ggsave(paste("../results/figures/hist_", sample,".png",sep=""), p_hetero_1alt, height = 9 , width = 9)
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    scale_fill_manual(values = c("MAF" = "lightblue", "MJAF" = "darkblue"), name = "Allele")+
+    labs(title = "Minor and Major Allele Frequencies per Chromosome",
+         x = "Frequency",
+         y = "Counts")+
+      theme(panel.grid = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2))
+maf
 ```
 
 ```{r}
 #| fig-height: 10
 #| fig-width: 7
 #| fig-align: center
-p_sites <- ggplot(hetero_1alt) +
-    geom_col(aes(x=POS, y = AF_aMin), color = "lightblue") +
-    facet_wrap(~CHROM, ncol = 2)+
+p_sites <- ggplot(biallelic_filtered) +
+    geom_col(aes(x=POS, y=MAF), color = "lightblue") +
+    facet_wrap(~chromosome, strip.position = "right", ncol = 2)+
     scale_y_continuous(breaks = c(0, 0.25, 0.333, 0.5),
-                       labels = c(0, "1/4", "1/3", "1/2"),
-                       limits = c(0, 0.55)
-                       )+
+                       labels = c(0, "1/4", "1/3", "1/2"))+
     theme(panel.background = element_blank(),
         panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_line(color = "black", linetype="solid", linewidth=1)
+        panel.grid.major.y = element_line(color = "black", linetype="solid", linewidth=0.5)
     )
 
 p_sites
 ```
 
-```{r, echo=FALSE}
-ggsave(paste("../results/figures/bars_",sample,".png",sep=""), p_sites, height = 9, width = 9)
+
+```{r}
+multiallelic <-vars %>%
+    filter(NUMALT != 1)
+
+ao_split <- str_split_fixed(multiallelic$AO, ",", n = max(str_count(multiallelic$AO, ",") + 1))
+ab_split <- str_split_fixed(multiallelic$AB, ",", n = max(str_count(multiallelic$AB, ",") + 1))
+p_split <- str_split_fixed(multiallelic$PAIRED, ",", n = max(str_count(multiallelic$PAIRED, ",") + 1))
+m_split <- str_split_fixed(multiallelic$MQM, ",", n = max(str_count(multiallelic$MQM, ",") + 1))
+
+ao_split_df <- as.data.frame(ao_split)
+ab_split_df <- as.data.frame(ab_split)
+p_split_df <- as.data.frame(p_split)
+m_split_df <- as.data.frame(m_split)
+
+colnames(ao_split_df) <- paste0("AO_", seq_len(ncol(ao_split_df)))
+colnames(ab_split_df) <- paste0("AB_", seq_len(ncol(ab_split_df)))
+colnames(p_split_df) <- paste0("PAIRED_", seq_len(ncol(p_split_df)))
+colnames(m_split_df) <- paste0("MQM_", seq_len(ncol(m_split_df)))
+
+multiallelic_split <- cbind(multiallelic, ao_split_df, ab_split_df, p_split_df, m_split_df)
+
+multiallelic_split <- multiallelic_split %>%
+    mutate(RO = as.numeric(RO),
+            across(starts_with("AO_"), as.numeric),
+            across(starts_with("AB_"), as.numeric))%>%
+    mutate(DPA = RO + rowSums(across(starts_with("AO_")), na.rm = TRUE),
+            DPC = DP - DPA,
+            RB = RO/DPA,
+            TB = RB + rowSums(across(starts_with("AB_")), na.rm = TRUE),
+            across(starts_with("AO_"), ~ .x / DPA, .names = "AF_{str_remove(col, 'AO_')}"),
+            RF = RO/DPA,
+            TF = RF + rowSums(across(starts_with("AF_")), na.rm = TRUE))%>%
+    select(chromosome, POS, REF, ALT, QUAL, GT,
+            DP, DPA, DPC, 
+            RO, AO, starts_with("AO_"),
+            RB, AB, starts_with("AB_"), TB, 
+            RF, starts_with("AF_"), TF,
+            MQM, MQMR, PAIRED, PAIREDR)
+```
+
+Indentify in how many variants one of the alleles is the reference allele, and what genotypes they are assigned to. 
+```{r, message=FALSE}
+multiallelic_split %>%
+    mutate(R = ifelse(RO == 0 , "no_ref_allele", "ref_allele"))%>%
+    group_by(GT, R)%>%
+    summarize(n = n())
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(multiallelic_split) +
+    geom_histogram(aes(RF, fill = "R"), binwidth = 0.01)+
+    geom_histogram(aes(AF_1, fill = "A1"), binwidth = 0.01)+
+    geom_histogram(aes(AF_2, fill = "A2"), binwidth = 0.01)+
+    geom_histogram(aes(AF_3, fill = "A3"), binwidth = 0.01)+
+    facet_wrap(~GT, ncol =1, scales = "free_y")+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    labs(title = "Reference allele frequency",
+         x = "Frequency",
+         y = "Counts")
+```
+
+Remove the low variant quality, low depth.
+```{r}
+multiallelic_filtered <- multiallelic_split %>%
+    filter(QUAL >= 100)%>%
+    filter(DP >= 10)
+```
+```{r, message=FALSE}
+multiallelic_split %>%
+    mutate(R = ifelse(RO == 0 , "no_ref_allele", "ref_allele"))%>%
+    group_by(GT, R)%>%
+    summarize(n = n())
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(multiallelic_filtered) +
+    geom_histogram(aes(RF, fill = "R"), binwidth = 0.01)+
+    geom_histogram(aes(AF_1, fill = "A1"), binwidth = 0.01)+
+    geom_histogram(aes(AF_2, fill = "A2"), binwidth = 0.01)+
+    geom_histogram(aes(AF_3, fill = "A3"), binwidth = 0.01)+
+    facet_wrap(~GT, ncol =1, scales = "free_y")+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    labs(title = "Reference allele frequency",
+         x = "Frequency",
+         y = "Counts")
+```
+
+
+Keep only the variants where the reference allele is not present.
+```{r}
+biallelic_no_ref <- multiallelic_split %>%
+    filter(RF == 0)
+```
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(biallelic_no_ref) +
+    geom_histogram(aes(AF_1, fill = "A1"), binwidth = 0.01)+
+    geom_histogram(aes(AF_2, fill = "A2"), binwidth = 0.01)+
+    facet_wrap(~GT, ncol =1, scales = "free_y")+
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    labs(title = "Reference allele frequency",
+         x = "Frequency",
+         y = "Counts")
+```
+
+Analyze only the heterozygous variants "1/2".  
+Calculate the MAF and MJAF
+```{r}
+biallelic_no_ref <- biallelic_no_ref %>%
+    filter(GT == "1/2")%>%
+    mutate(MJAF = pmax(AF_1, AF_2, na.rm=TRUE),
+            MAF = pmin(AF_1, AF_2, na.rm=TRUE))
+```
+
+```{r}
+biallelic_no_ref_stats <- biallelic_no_ref %>%
+    summarise(
+        median_MJAF = median(MJAF, na.rm = TRUE),
+        mean_MJAF = mean(MJAF, na.rm = TRUE),
+        sd_MJAF = sd(MJAF, na.rm = TRUE),
+        median_MAF = median(MAF, na.rm = TRUE),
+        mean_MAF = mean(MAF, na.rm = TRUE),
+        sd_MAF = sd(MAF, na.rm = TRUE))
+```
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(biallelic_no_ref) +
+    geom_histogram(aes(MAF, fill = "MAF"), binwidth = 0.01)+
+    geom_histogram(aes(MJAF, fill = "MJAF"), binwidth = 0.01)+
+    geom_vline(data = biallelic_no_ref_stats, aes(xintercept = median_MJAF), color = "black", linetype = "solid", linewidth = 1) +
+    geom_text(data = biallelic_no_ref_stats, aes(x = median_MJAF, y = Inf, label = round(median_MJAF, 2)), vjust = 2, hjust = 1.5, size = 7) +
+    geom_vline(data = biallelic_no_ref_stats, aes(xintercept = median_MAF), color = "black", linetype = "solid", linewidth= 1) +
+    geom_text(data = biallelic_no_ref_stats, aes(x = median_MAF, y = Inf, label = round(median_MAF, 2)), vjust = 2, hjust = 1.5, size = 7) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    scale_fill_manual(values = c("MAF" = "lightblue", "MJAF" = "darkblue"), name = "Allele")+
+    labs(title = "Major and Minor Allele Frequency",
+         x = "Frequency",
+         y = "Counts")
+```
+
+```{r}
+biallelic_no_ref_stats_chrom <- biallelic_no_ref %>%
+    group_by(chromosome)%>%
+    summarise(
+        median_MJAF = median(MJAF, na.rm = TRUE),
+        mean_MJAF = mean(MJAF, na.rm = TRUE),
+        sd_MJAF = sd(MJAF, na.rm = TRUE),
+        median_MAF = median(MAF, na.rm = TRUE),
+        mean_MAF = mean(MAF, na.rm = TRUE),
+        sd_MAF = sd(MAF, na.rm = TRUE))
+```
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+maf <- ggplot(biallelic_no_ref) +
+    geom_histogram(aes(MAF, fill = "MAF"), binwidth = 0.01)+
+    geom_histogram(aes(MJAF, fill = "MJAF"), binwidth = 0.01)+
+    facet_wrap(~chromosome, strip.position = "right", ncol = 2)+
+    geom_vline(data = biallelic_no_ref_stats_chrom, aes(xintercept = median_MJAF), color = "black", linetype = "solid", linewidth = 1) +
+    geom_text(data = biallelic_no_ref_stats_chrom, aes(x = median_MJAF, y = Inf, label = round(median_MJAF, 2)), vjust = 2, hjust = -0.5, size = 3) +
+    geom_vline(data = biallelic_no_ref_stats_chrom, aes(xintercept = median_MAF), color = "black", linetype = "solid", linewidth= 1) +
+    geom_text(data = biallelic_no_ref_stats_chrom, aes(x = median_MAF, y = Inf, label = round(median_MAF, 2)), vjust = 2, hjust = 1.5, size = 3) +
+    scale_x_continuous(breaks = c(0, 0.25, 0.333, 0.5, 0.666, 0.75, 1),
+                       labels = c(0, "1/4", "1/3", "1/2", "2/3", "3/4", 1),
+                        limits = c(-0.01, 1.01))+
+    scale_fill_manual(values = c("MAF" = "lightblue", "MJAF" = "darkblue"), name = "Allele")+
+    labs(title = "Minor and Major Allele Frequencies per Chromosome",
+         x = "Frequency",
+         y = "Counts")+
+      theme(panel.grid = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2))
+maf
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| fig-height: 10
+#| fig-width: 7
+#| fig-align: center
+p_sites <- ggplot(biallelic_no_ref) +
+    geom_col(aes(x=POS, y=MAF), color = "lightblue") +
+    facet_wrap(~chromosome, strip.position = "right", ncol = 2)+
+    scale_y_continuous(breaks = c(0, 0.25, 0.333, 0.5),
+                       labels = c(0, "1/4", "1/3", "1/2"))+
+    theme(panel.background = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_line(color = "black", linetype="solid", linewidth=0.5)
+    )
+
+p_sites
 ```
