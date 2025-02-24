@@ -72,7 +72,10 @@ done
 ```
 ```{r}
 chromosome_lengths = read.delim(
-    "../../data/processed/chromosome_lengths.tsv", header=FALSE, col.names=c("accession", "length"), sep="\t")
+    "../../data/processed/chromosome_lengths.tsv", 
+    header=FALSE, 
+    col.names=c("accession", "length"), 
+    sep="\t")
 ```
 
 ## Get metrics of chromosomes from called CNVs
@@ -99,7 +102,7 @@ cnv_percent <- cnv_calls %>%
                 n_cnvs = n(),
                 first = min(start),
                 last = max(end),
-                mean_smooth_depth = round(mean(smooth_depth),2)) %>%
+                mean_cnv_depth = round(mean(smooth_depth),2)) %>%
     left_join(chromosome_lengths, by="accession") %>%
     left_join(chromosome_names, by="accession") %>%
     left_join(metadata, by=c("sample", "lineage")) %>%
@@ -107,7 +110,9 @@ cnv_percent <- cnv_calls %>%
             size_covered = last - first,
             percent_size_covered = round((size_covered / length) * 100, 2))%>%
     mutate(chromosome = as.factor(chromosome)) %>%
-    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,total_samples, sample,strain, source, accession, chromosome, percent_cnv_size, percent_size_covered, mean_smooth_depth, n_cnvs)
+    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,
+    total_samples, sample,strain, source, accession, chromosome, 
+    percent_cnv_size, percent_size_covered, mean_cnv_depth, n_cnvs)
 ```
 ```{r, echo=FALSE}
 #| fig-height: 7
@@ -138,7 +143,10 @@ for(lineage in lineages){
         "../../../Crypto_Desjardins/results/03.References/",
         lineage, "/", lineage, "_repeats.bed",
         sep ="")
-    repeats <- read.delim(repeats_path, header=FALSE, col.names=c("accession", "start", "end", "repeat_type"), sep="\t")
+    repeats <- read.delim(repeats_path, 
+        header=FALSE, 
+        col.names=c("accession", "start", "end", "repeat_type"), 
+        sep="\t")
     repeats$lineage <- lineage
     repeats_all <- rbind(repeats_all, repeats)
 }
@@ -203,16 +211,20 @@ Keep, as putative duplications, the chromosomes whose metrics are above any of t
 ```{r}
 duplications <- cnv_and_depth %>%
     filter(norm_chrom_median > depth_threshold | percent_cnv_size > percent_size_threshold)%>%
-    select(dataset, lineage, samples_in_lineage, samples_in_dataset_lineage, total_samples, source, strain, sample, chromosome, norm_chrom_median, mean_smooth_depth, percent_cnv_size, percent_size_covered, n_cnvs)
+    select(dataset, lineage, samples_in_lineage, samples_in_dataset_lineage, 
+        total_samples, source, strain, sample, chromosome, norm_chrom_median,
+        mean_cnv_depth, percent_cnv_size, percent_size_covered, n_cnvs)
 ```
 ```{r}
-head(duplications)
+head(select(duplications, strain, chromosome, 
+    norm_chrom_median, mean_cnv_depth, percent_cnv_size, 
+    percent_size_covered, n_cnvs))
 ```
 
 Write the duplications table to a table to use it in the scripts `duplications_gather_plots.xsh`
 and `duplications_polish.qmd` to polish the results. 
-```{r}
-dir.create("../results/tables/putative", recursive = TRUE, showWarnings = FALSE)
+```{r, output=FALSE}
+dir.create("../results/tables/putative", recursive = TRUE)
 write_tsv(duplications, "../results/tables/duplications_putative.tsv")
 ```
 Plot all metrics of putative duplications.
@@ -221,16 +233,24 @@ Plot all metrics of putative duplications.
 duplications_long <- duplications  %>%
     arrange(percent_cnv_size) %>%
     mutate(chrom_sample = paste(chromosome, sample, sep="_"))
-duplications_long$chrom_sample <- factor(duplications_long$chrom_sample, levels = duplications_long$chrom_sample)
+duplications_long$chrom_sample <- factor(duplications_long$chrom_sample, 
+    levels = duplications_long$chrom_sample)
 duplications_long <- pivot_longer(duplications_long, 
-    cols = c("percent_cnv_size", "percent_size_covered", "norm_chrom_median", "mean_smooth_depth", "n_cnvs"), names_to = "variable", 
+    cols = c("norm_chrom_median", "mean_cnv_depth",
+        "percent_cnv_size", "percent_size_covered", 
+        "n_cnvs"), 
+    names_to = "variable", 
     values_to = "value")
+duplications_long$variable <- factor(duplications_long$variable,
+    levels = c("norm_chrom_median", "mean_cnv_depth",
+        "percent_cnv_size", "percent_size_covered", 
+        "n_cnvs"))
 ```
 ```{r, echo = FALSE}
 #| fig-height: 9
 #| fig-width: 7
 #| fig-align: center
-ggplot(duplications_long, aes(x = chrom_sample, y = value, color = variable))+
+ggplot(duplications_long, aes(x = chrom_sample, y = value))+
         geom_point()+
         facet_grid(scales="free", rows= vars(variable))+
         theme(axis.text.x = element_text(angle = 90, hjust = 1),
@@ -243,7 +263,8 @@ Number of duplicated chromosomes per sample.
 ```{r,message=FALSE}
 dup_sample <- duplications %>%
     group_by(dataset,lineage, sample, strain, source) %>%
-    summarise(n_chroms = n_distinct(chromosome), chromosomes = paste(chromosome, collapse = ", ")) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
     arrange(desc(n_chroms))
 dup_sample
 ```
@@ -252,9 +273,11 @@ Number of samples with duplications in each group of dataset-lineage-chromosome.
 ```{r, message=FALSE}
 dup_dataset_lineage_chromosome <- duplications %>%
     group_by(dataset,lineage, chromosome) %>%
-    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    summarise(n_samples = n_distinct(sample), 
+            samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
     mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
-    select(dataset,lineage, chromosome, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    select(dataset,lineage, chromosome, 
+            n_samples, samples_in_dataset_lineage, percent_samples)%>%
     arrange(chromosome, desc(lineage), desc(n_samples))
 dup_dataset_lineage_chromosome
 ```
@@ -274,7 +297,8 @@ Number of samples with duplications in each group of lineage-datset.
 ```{r, message=FALSE}
 dup_lineage_dataset <- duplications%>%
     group_by(dataset,lineage) %>%
-    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    summarise(n_samples = n_distinct(sample), 
+        samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
     mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
     select(lineage, n_samples, samples_in_dataset_lineage, percent_samples)%>%
     arrange(desc(lineage), desc(n_samples))
