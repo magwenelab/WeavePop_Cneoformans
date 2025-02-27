@@ -2,13 +2,16 @@
 title: "Detect chromosomal duplications"
 author: "Claudia Zirión-Martínez"
 date: "2025-02-13"
-format: 
-    PrettyPDF-pdf:
-        keep-tex: false
+#format: 
+#    PrettyPDF-pdf:
+#        keep-tex: false
 df-print: kable
 editor: visual
 embed-resources: true
-code-overflow: wrap
+format:
+  html:
+    code-overflow: wrap
+    code-fold: true
 ---
 ## Setup
 ```{r, output=FALSE}
@@ -248,7 +251,7 @@ duplications_long$variable <- factor(duplications_long$variable,
 ```
 ```{r, echo = FALSE}
 #| fig-height: 9
-#| fig-width: 7
+#| fig-width: 9
 #| fig-align: center
 ggplot(duplications_long, aes(x = chrom_sample, y = value))+
         geom_point()+
