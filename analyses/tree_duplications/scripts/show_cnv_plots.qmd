@@ -1,0 +1,165 @@
+---
+title: "Show plot of putative duplications"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-13"
+#format: 
+#    PrettyPDF-pdf:
+#        keep-tex: false
+df-print: kable
+editor: visual
+embed-resources: true
+format:
+  html:
+    code-overflow: wrap
+    code-fold: true
+fig-height: 7
+fig-width: 9
+fig-align: center
+---
+
+This is a version of the analysis in `explot_cnvs.qmd` that shows the depth plots for each sample with putative chromosomal duplications.
+
+## Setup
+```{r, output=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggbeeswarm)
+library(ggnewscale)
+library(RColorBrewer)
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/scripts")
+```
+
+## Metadata
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99 .  
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    "../../data/processed/metadata_ashton_desj_all_fungalpop_H99.csv",
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+
+metadata <- metadata %>%
+    select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
+    filter(!strain == "H99") %>%
+    group_by(dataset, lineage)%>%
+    mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
+    ungroup() %>%
+    group_by(lineage)%>%
+    mutate(samples_in_lineage = n_distinct(sample))%>%
+    ungroup()%>%
+    mutate(total_samples = n_distinct(sample))
+
+chromosome_names = read.delim(
+    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/chromosomes.csv",
+    header=TRUE, sep=",")
+chromosome_names <- chromosome_names %>%
+    mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
+    mutate(chromosome = as.factor(chromosome))
+levels(chromosome_names$chromosome) <- paste("chr", chromosome_names$chromosome, sep="")
+
+chromosome_lengths = read.delim(
+    "../../data/processed/chromosome_lengths.tsv", 
+    header=FALSE, 
+    col.names=c("accession", "length"), 
+    sep="\t")
+
+cnv_calls <- read.delim(
+    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/cnv/cnv_calls.tsv", 
+    header=TRUE, sep="\t")
+
+cnv_duplications <- cnv_calls %>%
+    filter(cnv == "duplication") %>%
+    left_join(chromosome_lengths, by="accession") %>%
+    left_join(chromosome_names, by="accession") %>%
+    left_join(metadata, by=c("sample", "lineage"))
+
+cnv_duplications_filtered <- cnv_duplications %>%
+    filter(!(smooth_depth > 10 & repeat_fraction > 0.5))
+
+cnv_duplications_filtered <- cnv_duplications_filtered %>%
+    filter(!(chromosome == "chr01" & start > 337000 & start < 340000))
+
+cnv_percent <- cnv_duplications_filtered %>%
+    group_by(accession, sample) %>%
+    summarise(total_cnv_size = sum(region_size),
+                n_cnvs = n(),
+                first = min(start),
+                last = max(end),
+                mean_cnv_depth = round(mean(smooth_depth),2),
+                median_cnv_depth = round(median(smooth_depth),2),
+                repeat_size = sum(overlap_bp)) %>%
+    left_join(chromosome_lengths, by="accession") %>%
+    left_join(chromosome_names, by="accession") %>%
+    left_join(metadata, by=c("sample", "lineage")) %>%
+    mutate(percent_cnv_size = round((total_cnv_size / length) * 100, 2),
+            size_covered = last - first,
+            percent_size_covered = round((size_covered / length) * 100, 2),
+            percent_cnv_repeat = round((repeat_size / length) * 100, 2))%>%
+    mutate(chromosome = as.factor(chromosome)) %>%
+    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,
+    total_samples, sample,strain, source, accession, chromosome, percent_cnv_repeat,
+    percent_cnv_size, percent_size_covered, mean_cnv_depth, median_cnv_depth, n_cnvs)
+
+depth_by_chrom_good_desjardins <- read.delim(
+    "../../../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv",
+     header=TRUE, sep="\t")
+depth_by_chrom_good_ashton <- read.delim(
+    "../../../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv",
+     header=TRUE, sep="\t")
+depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)
+depth_by_chrom <- depth_by_chrom_good %>%
+    select(sample, accession, norm_chrom_median, norm_chrom_mean)
+
+cnv_and_depth <- left_join(depth_by_chrom, cnv_percent, by = c("sample", "accession" ))
+cnv_and_depth <- cnv_and_depth %>%
+    mutate(percent_cnv_size = ifelse(is.na(percent_cnv_size), 0, percent_cnv_size),
+        percent_size_covered = ifelse(is.na(percent_size_covered), 0, percent_size_covered))
+```
+
+## Filter by Percent of Chromosome in CNV
+
+```{r}
+size_threshold <- 50
+depht_threshold <- 1.55
+```
+```{r}
+cnv_and_depth_filtered <- cnv_and_depth %>%
+    filter(percent_cnv_size >= size_threshold | norm_chrom_median >= 1.55)
+```
+
+# Depth by window plots
+
+```{r}
+image_paths <- cnv_and_depth_filtered %>%
+    mutate(depth_by_windows_path = 
+                paste("../../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_by_windows.png", sep = ""),
+           distribution_path = 
+                paste("../../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_global_distribution.png", sep = ""),
+    )
+```
+```{r, results = "asis"}
+for (sample_id in cnv_and_depth_filtered$sample){
+    dataset_id <- cnv_and_depth_filtered %>% 
+        filter(sample == sample_id) %>% 
+        pull(dataset)%>%
+        unique()%>%
+        as.character()
+    depth_by_windows_path <- image_paths %>%
+        filter(sample == sample_id) %>% 
+        pull(depth_by_windows_path)%>%
+        unique()%>%
+        as.character()
+    distribution_path <- image_paths %>%
+        filter(sample == sample_id) %>% 
+        pull(distribution_path)%>%
+        unique()%>%
+        as.character()    
+    cnv_and_depth_filtered %>% 
+        filter(sample == sample_id)%>%
+        select(sample, chromosome, norm_chrom_median, percent_cnv_size, percent_size_covered, mean_cnv_depth, n_cnvs) %>%
+        knitr::kable()
+    cat(paste0( "\n", "### ", sample_id), "\n")
+    cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
+    cat(paste0("![](", distribution_path, ")", sep =""), "\n")
+}
+```
