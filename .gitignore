@@ -10,5 +10,5 @@ Crypto_Ashton/data/samples/*
 analyses/variants/source/
 *_extensions/
 analyses/ploidy/data/processed
-analyses/ploidy/scripts/_extensions
 analyses/ploidy/scripts/notebooks
+analyses/tree_duplications/scripts/notebooks
