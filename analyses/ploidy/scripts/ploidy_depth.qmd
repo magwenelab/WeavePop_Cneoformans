@@ -10,13 +10,14 @@ editor: visual
 embed-resources: true
 format:
   html:
-    code-overflow: wrap
+    code-overflow: scroll
     code-fold: true
 ---
 
 ```{r, output=FALSE}
 library(tidyverse)
 library(mixtools)
+library(patchwork)
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 ```
 
@@ -53,7 +54,7 @@ windows <- left_join(windows, chrom_names, by = "accession")
 #   filter(norm_mean_depth > 0)
 ```
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 ggplot(windows) +
   geom_histogram(aes(norm_mean_depth), binwidth = 0.01)+
   scale_y_continuous(trans = "log10") +
@@ -75,7 +76,7 @@ max_norm_mean_depth <- 5
 windows_filtered <- windows %>%
     filter(norm_mean_depth < max_norm_mean_depth )
 ```
-```{r}
+```{r, message = FALSE, warning = FALSE}
 ggplot(windows_filtered) +
   geom_histogram(aes(norm_mean_depth), binwidth = 0.01) +
   scale_y_continuous(trans = "log10") +
@@ -86,7 +87,7 @@ ggplot(windows_filtered) +
     y = "Count (Log10 transformation)",
     x = "Normalized mean depth")
 ```
-```{r}
+```{r, message = FALSE, warning = FALSE}
 ggplot(windows_filtered) +
   geom_histogram(aes(norm_mean_depth), binwidth = 0.01) +
   scale_x_continuous(breaks = seq(0, max(windows_filtered$norm_mean_depth), by = 1),
@@ -96,72 +97,54 @@ ggplot(windows_filtered) +
     x = "Normalized mean depth")
 ```
 
-### Fit Gaussian Mixture Models with 2 to 5 components
+### Fit Gaussian Mixture Models to whole genome
 
 ```{r}
-aic_values <- numeric()
-bic_values <- numeric()
-num_data_points <- length(windows_filtered$norm_mean_depth)
+max_iterations <- 10000
 ```
-
 ```{r}
-max_iterations <- 1000
+models_list <- list()
+components <- c("k2", "k3", "k4", "k5")
+for (comp in components) {
+    models_list[[comp]] <- NULL
+  }
 ```
+```{r, error = TRUE}
+for (component in 2:5) {
+    component_name <- paste("k", component, sep = "")
 
-Plot with `plot.mixEM()`
-```{r, eval = FALSE}
-for (components in 2:5) {
+    print(paste("Analyzing with k=", component))
 
-  print(paste("Running EM algorithm with", components, "components."))
-  model <- normalmixEM(windows_filtered$norm_mean_depth, k = as.integer(components), maxit = max_iterations, epsilon = 1e-8, arbmean = TRUE, arbvar = TRUE)
-  plot(model, loglik=FALSE, density = TRUE, breaks = 400, main2 = paste("k = ", components))
-  num_params <- components * 3 - 1  # Number of parameters in the model
-  aic_values[components] <- 2 * num_params - 2 * model$loglik
-  bic_values[components] <- log(num_data_points) * num_params - 2 * model$loglik
-}
-```
-
-### BIC and AIC values
-
-```{r}
-optimal_k_aic <- which.min(aic_values)
-optimal_k_bic <- which.min(bic_values)
-```
-
-```{r}
-cat("Optimal number of components based on AIC:", optimal_k_aic, "\n")
-cat("Optimal number of components based on BIC:", optimal_k_bic, "\n")
-```
-
-## Fit Gaussian Mixture Models to each chromosome with 2 to 5 components
-
-```{r}
-max_iterations <- 100
-```
-```{r, error = TRUE, eval = FALSE}
-for (chrom in levels(windows_filtered$chromosome)){
-  print(paste("Analyzing chromosome", chrom))
-  for (component in 2:5) {
-  component_name <- paste("k", component, sep = "")
-    print(paste("Running EM algorithm with", component, "components for chromosome", chrom))
-    windows_filtered_chromosome <- windows_filtered %>%
-      filter(chromosome == chrom)
     tryCatch({
-    model <- normalmixEM(windows_filtered_chromosome$norm_mean_depth, 
+    models_list[[component_name]] <- normalmixEM(
+          windows_filtered$norm_mean_depth, 
           k = as.integer(component), 
           maxit = max_iterations, 
           epsilon = 1e-8, 
           arbmean = TRUE, arbvar = TRUE)
-    plot(model, loglik=FALSE, density = TRUE, breaks = 400, 
-            main2 = paste(chrom, " k = ", component))
     }, error = function(e) {
-      message(paste("Error in chromosome", chrom, "with", component, "components:", e$message))
+      message(paste("Error with", component, "components:", e$message))
     })
-  }
+    # Calculate BIC
+    num_data_points <- length(windows_filtered$norm_mean_depth)
+    num_params <- component * 3 - 1  # Number of parameters in the model
+    models_list[[component_name]][["bic_value"]] <- log(num_data_points) * num_params - 2 * models_list[[component_name]][["loglik"]]
 }
 ```
 
-### Fit GMM to each chromosome with 2 to 5 components saving and plotting the best result
+```{r}
+bic_values <- sapply(models_list, function(model) model[["bic_value"]])
+optimal_k_bic <-names(which.min(bic_values))
+
+print(paste("Optimal number of components ", optimal_k_bic))
+
+model <- models_list[[optimal_k_bic]]
+plot(model, loglik=FALSE, density = TRUE, breaks = 400, 
+       main2 = optimal_k_bic)
+
+```
+
+### Fit GMM to each chromosome with 2 to 5 components
 ```{r}
 models_list <- list()
 components <- c("k2", "k3", "k4", "k5")
@@ -174,13 +157,10 @@ for (chrom in levels(windows_filtered$chromosome)) {
 ```
 ```{r, error = TRUE}
 for (chrom in levels(windows_filtered$chromosome)){
-
-  print(paste("Analyzing chromosome", chrom))
-
   for (component in 2:5) {
     component_name <- paste("k", component, sep = "")
 
-    print(paste("Running EM algorithm with", component, "components for chromosome", chrom))
+    print(paste("Analyzing", chrom, "with k=", component))
 
     windows_filtered_chromosome <- windows_filtered %>%
       filter(chromosome == chrom)
@@ -195,12 +175,18 @@ for (chrom in levels(windows_filtered$chromosome)){
     }, error = function(e) {
       message(paste("Error in chromosome", chrom, "with", component, "components:", e$message))
     })
-
-    print(paste("Calculating BIC for component", component, "in chromosome", chrom))
+    # Calculate BIC
     num_data_points <- length(windows_filtered_chromosome$norm_mean_depth)
     num_params <- component * 3 - 1  # Number of parameters in the model
     models_list[[chrom]][[component_name]][["bic_value"]] <- log(num_data_points) * num_params - 2 * models_list[[chrom]][[component_name]][["loglik"]]
   }
+}
+```
+
+```{r}
+optimal_models <- list()
+for (chrom in levels(windows_filtered$chromosome)) {
+  optimal_models[[chrom]] <- list()
 }
 ```
 
@@ -211,69 +197,77 @@ for (chrom in names(models_list)) {
 
   print(paste("Optimal number of components for chromosome:", chrom, "=", optimal_k_bic))
 
-  model <- models_list[[chrom]][[optimal_k_bic]]
-  plot(model, loglik=FALSE, density = TRUE, breaks = 400, 
+  optimal_models[[chrom]] <- models_list[[chrom]][[optimal_k_bic]]
+  plot(optimal_models[[chrom]], loglik=FALSE, density = TRUE, breaks = 400, 
        main2 = paste(chrom, optimal_k_bic))
 }
 ```
 
-### Tests
-```{r, eval = FALSE}
-chrom_windows_filtered <- windows_filtered %>%
-  filter(chromosome == "chr10")%>%
-  filter(norm_mean_depth > 0)
-```
-```{r, eval = FALSE}
-ggplot(chrom_windows_filtered) +
-  geom_histogram(aes(norm_mean_depth), binwidth = 0.01) +
-  scale_x_continuous(breaks = seq(0, max(windows$norm_mean_depth), by = 50)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-    labs(title = "Distribution of filtered mean depth(raw counts)",
-    y = "Count",
-    x = "Normalized normalized mean depth")
-```
+### Compare distributions of chromosomes
 
-```{r, eval = FALSE}
-components <- 3
-max_iterations <- 1000
-```
-```{r, eval = FALSE}
-model <- normalmixEM(chrom_windows_filtered$norm_mean_depth, 
-        k = as.integer(components), 
-        maxit = max_iterations, 
-        epsilon = 1e-8, 
-        arbmean = TRUE, arbvar = TRUE)
-```
+```{r}
+list_dfs <- list()
+for (chrom in levels(windows_filtered$chromosome)) {
+  model <- optimal_models[[chrom]]
 
-```{r, eval = FALSE}
-plot(model, loglik=FALSE, density = TRUE, breaks = 400)
-```
+  data <- data.frame()
 
-
-```{r, eval = FALSE}
-model_data <- data.frame(
-  ex = model$x,
-  component = apply(model$posterior, 1, which.max)
-)
-# Create a data frame with the x values and corresponding y values for each distribution
-data <- data.frame()
-
-for (i in 1:length(model$mu)) {
-  x <- seq(0, model$mu[i] + 10*model$sigma[i], length.out = 100)
-  y <- dnorm(x, model$mu[i], model$sigma[i]) * model$lambda[i]
-  temp_data <- data.frame(x = x, y = y, component = as.factor(i))
-  data <- rbind(data, temp_data)
+  for (i in 1:length(model$mu)) {
+    x <- seq(0, model$mu[i] + 10*model$sigma[i], length.out = 100)
+    y <- dnorm(x, model$mu[i], model$sigma[i]) * model$lambda[i]
+    temp_data <- data.frame(x = x, y = y, component = as.factor(i))
+    data <- rbind(data, temp_data)
+  }
+  list_dfs[[chrom]] <- data
 }
 
-# Plot the lines
-ggplot(model_data, aes(x = ex)) +
-  geom_histogram(binwidth = 0.01) +
-  geom_line(data = data, aes(x = x, y = y, color = component)) +
-  labs(title = "Line Plot with Mean, Standard Deviation, and Weight for Each Component",
-       x = "X values",
-       y = "Density",
-       color = "Component") +
-  theme_minimal()
+combined_data <- bind_rows(list_dfs, .id = "chromosome")%>%
+  group_by(chromosome)%>%
+  mutate(k=max(as.numeric(component)))%>%
+  ungroup()
 
 ```
 
+```{r, message = FALSE, warning = FALSE}
+ggplot(windows_filtered) +
+  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
+  geom_density(aes(norm_mean_depth, fill = chromosome, color = chromosome), alpha = 0.1) +
+  theme_classic()+
+  labs(title = "Density of Raw Data",
+    y = "Density",
+    x = "Normalized mean depth")
+```
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 15
+#| fig.width: 7
+r <- ggplot(windows_filtered) +
+  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
+  geom_density(aes(norm_mean_depth, fill = chromosome, color = chromosome), alpha = 0.3) +
+  facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
+  labs(title = "Density of Raw Data",
+    y = "Density",
+    x = "Normalized mean depth")+
+  theme_classic()+
+  theme(legend.position = "none")
+
+```
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 15
+#| fig.width: 7
+m <- ggplot(combined_data) +
+  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
+  geom_line(aes(x = x, y = y, linetype = component, color = chromosome)) +
+  geom_text(aes(x = 3, y = 2, label= paste("k=", k, sep = "")))+
+  scale_x_continuous(limits = c(0,4))+
+  facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
+  labs(title = "Density of Comonents in Mixture Model",
+       x = "X values",
+       y = "Density")+
+  theme_classic()
+```
+
+```{r}
+#| fig.height: 15
+#| fig.width: 7
+r | m
+```
