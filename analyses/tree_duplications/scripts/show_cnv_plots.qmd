@@ -32,12 +32,12 @@ setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/tree_duplications/sc
 ## Metadata
 Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99 .  
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: true
 metadata <- read.delim(
     "../../data/processed/metadata_ashton_desj_all_fungalpop_H99.csv",
     header=TRUE,
     sep=",",
     stringsAsFactor = TRUE)
-
 metadata <- metadata %>%
     select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
     filter(!strain == "H99") %>%
@@ -47,7 +47,8 @@ metadata <- metadata %>%
     group_by(lineage)%>%
     mutate(samples_in_lineage = n_distinct(sample))%>%
     ungroup()%>%
-    mutate(total_samples = n_distinct(sample))
+    mutate(total_samples = n_distinct(sample))%>%
+    droplevels()
 
 chromosome_names = read.delim(
     "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/chromosomes.csv",
@@ -63,43 +64,6 @@ chromosome_lengths = read.delim(
     col.names=c("accession", "length"), 
     sep="\t")
 
-cnv_calls <- read.delim(
-    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/cnv/cnv_calls.tsv", 
-    header=TRUE, sep="\t")
-
-cnv_duplications <- cnv_calls %>%
-    filter(cnv == "duplication") %>%
-    left_join(chromosome_lengths, by="accession") %>%
-    left_join(chromosome_names, by="accession") %>%
-    left_join(metadata, by=c("sample", "lineage"))
-
-cnv_duplications_filtered <- cnv_duplications %>%
-    filter(!(smooth_depth > 10 & repeat_fraction > 0.5))
-
-cnv_duplications_filtered <- cnv_duplications_filtered %>%
-    filter(!(chromosome == "chr01" & start > 337000 & start < 340000))
-
-cnv_percent <- cnv_duplications_filtered %>%
-    group_by(accession, sample) %>%
-    summarise(total_cnv_size = sum(region_size),
-                n_cnvs = n(),
-                first = min(start),
-                last = max(end),
-                mean_cnv_depth = round(mean(smooth_depth),2),
-                median_cnv_depth = round(median(smooth_depth),2),
-                repeat_size = sum(overlap_bp)) %>%
-    left_join(chromosome_lengths, by="accession") %>%
-    left_join(chromosome_names, by="accession") %>%
-    left_join(metadata, by=c("sample", "lineage")) %>%
-    mutate(percent_cnv_size = round((total_cnv_size / length) * 100, 2),
-            size_covered = last - first,
-            percent_size_covered = round((size_covered / length) * 100, 2),
-            percent_cnv_repeat = round((repeat_size / length) * 100, 2))%>%
-    mutate(chromosome = as.factor(chromosome)) %>%
-    select(dataset,lineage, samples_in_lineage, samples_in_dataset_lineage,
-    total_samples, sample,strain, source, accession, chromosome, percent_cnv_repeat,
-    percent_cnv_size, percent_size_covered, mean_cnv_depth, median_cnv_depth, n_cnvs)
-
 depth_by_chrom_good_desjardins <- read.delim(
     "../../../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv",
      header=TRUE, sep="\t")
@@ -110,27 +74,61 @@ depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good
 depth_by_chrom <- depth_by_chrom_good %>%
     select(sample, accession, norm_chrom_median, norm_chrom_mean)
 
-cnv_and_depth <- left_join(depth_by_chrom, cnv_percent, by = c("sample", "accession" ))
-cnv_and_depth <- cnv_and_depth %>%
-    mutate(percent_cnv_size = ifelse(is.na(percent_cnv_size), 0, percent_cnv_size),
-        percent_size_covered = ifelse(is.na(percent_size_covered), 0, percent_size_covered))
+cnv_calls <- read.delim(
+    "../../../Crypto_Desjardins_Ashton/results_joined/02.Dataset/cnv/cnv_calls.tsv", 
+    header=TRUE, sep="\t")
+dup_calls <- filter(cnv_calls, cnv == "duplication") %>%
+    left_join(chromosome_names, by="accession")
+
+dup_calls_filtered <- dup_calls %>%
+    filter(!(smooth_depth > 10 & repeat_fraction > 0.5)) %>%
+    filter(!(chromosome == "chr01" & start > 337000 & start < 340000))
+
+all_metrics <- left_join(depth_by_chrom, dup_calls_filtered, 
+        by = c("sample", "accession"))%>%
+    select(-chromosome, -lineage)%>%
+    left_join(chromosome_lengths, by = "accession") %>%
+    left_join(chromosome_names,by ="accession") %>%
+    left_join(metadata, by = c("sample", "lineage"))
+
+chrom_metrics <- all_metrics %>%
+    group_by(dataset,lineage,
+            samples_in_lineage, samples_in_dataset_lineage, 
+            total_samples,sample, 
+            strain,source,
+            accession,chromosome, length, norm_chrom_mean, norm_chrom_median) %>%
+    summarise(total_cnv_size = sum(region_size),
+                n_cnvs = n(),
+                first = min(start),
+                last = max(end),
+                mean_cnv_depth = round(mean(smooth_depth),2),
+                median_cnv_depth = round(median(smooth_depth),2),
+                repeat_size = sum(overlap_bp)) %>%
+    ungroup()%>%
+    mutate(dup_coverage_percent = round((total_cnv_size / length) * 100, 2),
+            dup_span_size = last - first,
+            dup_span_percent = round((dup_span_size / length) * 100, 2),
+            dup_repeat_percent = round((repeat_size / length) * 100, 2),
+            chromosome = as.factor(chromosome),
+            dup_coverage_percent = ifelse(is.na(dup_coverage_percent), 0, dup_coverage_percent),
+            dup_span_percent = ifelse(is.na(dup_span_percent), 0, dup_span_percent))
 ```
 
 ## Filter by Percent of Chromosome in CNV
 
 ```{r}
 size_threshold <- 50
-depht_threshold <- 1.55
+depth_threshold <- 1.55
 ```
 ```{r}
-cnv_and_depth_filtered <- cnv_and_depth %>%
-    filter(percent_cnv_size >= size_threshold | norm_chrom_median >= 1.55)
+chrom_metrics <- chrom_metrics %>%
+    filter(dup_coverage_percent >= size_threshold | norm_chrom_median >= depth_threshold)
 ```
 
 # Depth by window plots
 
 ```{r}
-image_paths <- cnv_and_depth_filtered %>%
+image_paths <- chrom_metrics %>%
     mutate(depth_by_windows_path = 
                 paste("../../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_by_windows.png", sep = ""),
            distribution_path = 
@@ -138,8 +136,8 @@ image_paths <- cnv_and_depth_filtered %>%
     )
 ```
 ```{r, results = "asis"}
-for (sample_id in cnv_and_depth_filtered$sample){
-    dataset_id <- cnv_and_depth_filtered %>% 
+for (sample_id in unique(chrom_metrics$sample)){
+    dataset_id <- chrom_metrics %>% 
         filter(sample == sample_id) %>% 
         pull(dataset)%>%
         unique()%>%
@@ -154,9 +152,9 @@ for (sample_id in cnv_and_depth_filtered$sample){
         pull(distribution_path)%>%
         unique()%>%
         as.character()    
-    cnv_and_depth_filtered %>% 
+    chrom_metrics %>% 
         filter(sample == sample_id)%>%
-        select(sample, chromosome, norm_chrom_median, percent_cnv_size, percent_size_covered, mean_cnv_depth, n_cnvs) %>%
+        select(sample, chromosome, norm_chrom_median, dup_coverage_percent, dup_span_percent, mean_cnv_depth, n_cnvs) %>%
         knitr::kable()
     cat(paste0( "\n", "### ", sample_id), "\n")
     cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
