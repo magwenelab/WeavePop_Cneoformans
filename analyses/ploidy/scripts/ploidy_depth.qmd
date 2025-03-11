@@ -109,7 +109,7 @@ max_iterations <- 1000
 ```
 
 Plot with `plot.mixEM()`
-```{r}
+```{r, eval = FALSE}
 for (components in 2:5) {
 
   print(paste("Running EM algorithm with", components, "components."))
@@ -162,42 +162,62 @@ for (chrom in levels(windows_filtered$chromosome)){
 ```
 
 ### Fit GMM to each chromosome with 2 to 5 components saving and plotting the best result
+```{r}
+models_list <- list()
+components <- c("k2", "k3", "k4", "k5")
+for (chrom in levels(windows_filtered$chromosome)) {
+  models_list[[chrom]] <- list()
+  for (comp in components) {
+    models_list[[chrom]][[comp]] <- NULL
+  }
+}
+```
 ```{r, error = TRUE}
 for (chrom in levels(windows_filtered$chromosome)){
+
   print(paste("Analyzing chromosome", chrom))
-  aic_values <- numeric()
-  bic_values <- numeric()
-  models_list <- list()
+
   for (component in 2:5) {
-  component_name <- paste("k", component, sep = "")
+    component_name <- paste("k", component, sep = "")
+
     print(paste("Running EM algorithm with", component, "components for chromosome", chrom))
+
     windows_filtered_chromosome <- windows_filtered %>%
       filter(chromosome == chrom)
-    num_data_points <- length(windows_filtered_chromosome$norm_mean_depth)
 
     tryCatch({
-    models_list$component_name <- normalmixEM(windows_filtered_chromosome$norm_mean_depth, 
+    models_list[[chrom]][[component_name]] <- normalmixEM(
+          windows_filtered_chromosome$norm_mean_depth, 
           k = as.integer(component), 
           maxit = max_iterations, 
           epsilon = 1e-8, 
           arbmean = TRUE, arbvar = TRUE)
-
-      num_params <- component * 3 - 1  # Number of parameters in the model
-      bic_values[component] <- log(num_data_points) * num_params - 2 * models_list$component_name$loglik
     }, error = function(e) {
       message(paste("Error in chromosome", chrom, "with", component, "components:", e$message))
     })
+
+    print(paste("Calculating BIC for component", component, "in chromosome", chrom))
+    num_data_points <- length(windows_filtered_chromosome$norm_mean_depth)
+    num_params <- component * 3 - 1  # Number of parameters in the model
+    models_list[[chrom]][[component_name]][["bic_value"]] <- log(num_data_points) * num_params - 2 * models_list[[chrom]][[component_name]][["loglik"]]
   }
-  print(paste("BIC values:", bic_values))
-  optimal_k_bic <- which.min(bic_values)
-  print(paste("K with optimal BIC:", optimal_k_bic))
-  component_name <- paste("k", optimal_k_bic, sep = "")
-  model <- models_list$component_name
-  plot(model, loglik=FALSE, density = TRUE, breaks = 400, 
-            main2 = paste(chrom, " k = ", component))
 }
 ```
 
+```{r}
+for (chrom in names(models_list)) {
+  bic_values <- sapply(models_list[[chrom]], function(model) model[["bic_value"]])
+  optimal_k_bic <-names(which.min(bic_values))
+
+  print(paste("Optimal number of components for chromosome:", chrom, "=", optimal_k_bic))
+
+  model <- models_list[[chrom]][[optimal_k_bic]]
+  plot(model, loglik=FALSE, density = TRUE, breaks = 400, 
+       main2 = paste(chrom, optimal_k_bic))
+}
+```
+
+### Tests
 ```{r, eval = FALSE}
 chrom_windows_filtered <- windows_filtered %>%
   filter(chromosome == "chr10")%>%
