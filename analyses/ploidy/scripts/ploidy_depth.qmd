@@ -40,7 +40,7 @@ params <- list(sample_id = sample_id,
               threshold_norm_depth = threshold_norm_depth,
               threshold_weight = threshold_weight)
 ```
-## Prepare data of normalized depth per window for sample
+## Prepare data of normalized depth per window for sample:
 ```{r, results="asis", echo = FALSE}
 cat(paste("##",params$sample_id, "\n"))
 ```
@@ -110,9 +110,9 @@ repeats <- read_delim(repeats_path, delim = "\t", col_names = c("accession", "st
 ```
 
 ### Filter out high depth windows
-
+Thresold of normalized depth:
 ```{r}
-print(paste("Thresold of normalized depth:", params$threshold_norm_depth))
+print(params$threshold_norm_depth)
 ```
 ```{r}
 windows_filtered <- windows %>%
@@ -133,8 +133,9 @@ ggplot(windows_filtered) +
 
 ### Fit Gaussian Mixture Models to whole genome
 
+Fitting GMM with max_iterations:
 ```{r}
-print(paste("Fitting GMM with max_iterations:", params$max_iterations))
+print(params$max_iterations)
 ```
 ```{r}
 models_list <- list()
@@ -213,7 +214,7 @@ for (chrom in levels(windows_filtered$chromosome)){
           epsilon = 1e-8, 
           arbmean = TRUE, arbvar = TRUE)
     }, error = function(e) {
-      message(paste("Error in chromosome", chrom, "with", component, "components:", e$message))
+      print(paste("Error in chromosome", chrom, "with", component, "components:", e$message))
     })
     # Calculate BIC
     num_data_points <- length(windows_filtered_chromosome$norm_mean_depth)
@@ -256,7 +257,11 @@ for (chrom in levels(windows_filtered$chromosome)) {
   for (i in 1:length(model$mu)) {
     x <- seq(0, model$mu[i] + 10*model$sigma[i], length.out = 100)
     y <- dnorm(x, model$mu[i], model$sigma[i]) * model$lambda[i]
-    temp_data <- data.frame(x = x, y = y, component = as.factor(i), mean = model$mu[i], variance = model$sigma[i], weight = model$lambda[i])
+    temp_data <- data.frame(x = x, y = y, 
+                          component = as.factor(i),
+                          mean = model$mu[i], 
+                          variance = model$sigma[i], 
+                          weight = model$lambda[i])
     data <- rbind(data, temp_data)
   }
   list_dfs[[chrom]] <- data
@@ -324,10 +329,14 @@ ggplot(combined_data) +
 ### Explore the weight and mean of the components
 ```{r}
 components <- combined_data %>%
-  select(chromosome, k, mean, weight, component)%>%
+  select(chromosome, k, component, mean, weight, variance)%>%
   distinct()%>%
-  mutate(mean = round(mean, 2),
-          k = as.factor(k))
+  mutate(mean = round(mean, 4),
+        weight = round(weight, 4),
+        variance = round(variance, 4),
+        k = as.factor(k),
+        sample = params$sample_id) %>%
+  select(sample, everything())
 ```
 
 ```{r}
@@ -344,9 +353,13 @@ ggplot(components)+
     x = "Mean (Normalized depth)")+
   theme_classic()
 ```
-
+Saving file with the parameters of all components of each chromosome:
 ```{r}
-print(paste("Filtering out components with a weight less than:", params$threshold_weight))
+write_tsv(components, paste0("../results/tables/components_", params$sample_id, ".tsv"))
+```
+Filtering out components with a weight less than:
+```{r}
+print(params$threshold_weight)
 ```
 ```{r}
 large_components <- components %>%
