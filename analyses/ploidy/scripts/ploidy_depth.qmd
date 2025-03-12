@@ -144,6 +144,9 @@ for (comp in components) {
   }
 ```
 ```{r, error = TRUE, output = FALSE}
+output_file <- paste("notebooks/logs/ploidy_depth_whole_genome", params$sample_id, ".txt")
+sink(output_file)
+print("--------------Whole Genome Gaussian Mixture Model Analysis --------------")
 for (component in 2:5) {
     component_name <- paste("k", component, sep = "")
 
@@ -164,6 +167,7 @@ for (component in 2:5) {
     num_params <- component * 3 - 1  # Number of parameters in the model
     models_list[[component_name]][["bic_value"]] <- log(num_data_points) * num_params - 2 * models_list[[component_name]][["loglik"]]
 }
+sink()
 ```
 
 ### Whole genome density with optimal k
@@ -190,11 +194,16 @@ for (chrom in levels(windows_filtered$chromosome)) {
 }
 ```
 ```{r, error = TRUE, output = FALSE }
+output_file <- paste("notebooks/logs/ploidy_depth_whole_genome", params$sample_id, ".txt")
+sink(output_file, append=TRUE)
+print("--------------Per Chromosome Gaussian Mixture Model Analysis --------------")
 for (chrom in levels(windows_filtered$chromosome)){
   for (component in 2:5) {
     component_name <- paste("k", component, sep = "")
     windows_filtered_chromosome <- windows_filtered %>%
       filter(chromosome == chrom)
+
+    print(paste("Analyzing", chrom, "with k=", component))
 
     tryCatch({
     models_list[[chrom]][[component_name]] <- normalmixEM(
@@ -212,6 +221,7 @@ for (chrom in levels(windows_filtered$chromosome)){
     models_list[[chrom]][[component_name]][["bic_value"]] <- log(num_data_points) * num_params - 2 * models_list[[chrom]][[component_name]][["loglik"]]
   }
 }
+sink()
 ```
 
 ### Choose optimal number of components with BIC
