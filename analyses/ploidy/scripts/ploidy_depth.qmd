@@ -19,7 +19,6 @@ params:
   threshold_norm_depth: 5
   threshold_weight: 0.2
 ---
-
 ```{r, output=FALSE}
 library(tidyverse)
 library(mixtools)
@@ -41,7 +40,10 @@ params <- list(sample_id = sample_id,
               threshold_norm_depth = threshold_norm_depth,
               threshold_weight = threshold_weight)
 ```
-
+## Prepare data of normalized depth per window for sample
+```{r, results="asis", echo = FALSE}
+cat(paste("##",params$sample_id, "\n"))
+```
 ```{r}
 path <- paste("../../../Crypto_", params$dataset,
     "/results/04.Intermediate_files/01.Samples/depth_quality/",
@@ -49,19 +51,11 @@ path <- paste("../../../Crypto_", params$dataset,
     "/depth_by_windows.tsv",
      sep = "")
 depth_by_windows_path <- paste("../../../Crypto_", 
-  params$dataset, 
-  "/results/01.Samples/plots/",
-  params$sample_id,
-  "/depth_by_windows.png",
-  sep = "")
-metadata_path <- paste("../../../Crypto_",
-  params$dataset,
-  "/results/02.Dataset/metadata.csv",
-  sep = "")
-```
-
-```{r, results="asis"}
-cat(paste("##",params$sample_id, "\n"))
+    params$dataset, 
+    "/results/01.Samples/plots/",
+    params$sample_id,
+    "/depth_by_windows.png",
+    sep = "")
 ```
 
 ```{r, output=FALSE}
@@ -92,15 +86,17 @@ ggplot(windows) +
     theme_classic()
 ```
 
-```{r, eval=FALSE, output=FALSE}
+```{r, eval=FALSE, output=FALSE, echo = FALSE}
+### Remove data from repetitive sequences not running, just ideas
+
+metadata_path <- paste("../../../Crypto_",
+  params$dataset,
+  "/results/02.Dataset/metadata.csv",
+  sep = "")
 metadata <- read_delim(metadata_path)
 lineage <- metadata %>%
   filter(sample == params$sample_id) %>%
   pull(lineage)
-```
-
-```{r, eval = FALSE, echo = FALSE}
-### Remove data from repetitive sequences
 
 repeats_path <- paste(
   "../../../Crypto_", 
@@ -113,7 +109,7 @@ repeats_path <- paste(
 repeats <- read_delim(repeats_path, delim = "\t", col_names = c("accession", "start", "end", "repeat_type"))
 ```
 
-### Filter
+### Filter out high depth windows
 
 ```{r}
 print(paste("Thresold of normalized depth:", params$threshold_norm_depth))
@@ -128,10 +124,12 @@ ggplot(windows_filtered) +
   geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
   geom_density(aes(norm_mean_depth, fill = chromosome, color = chromosome), alpha = 0.1) +
   theme_classic()+
-  labs(title = "Density of Whole Genome Raw Data",
+  labs(title = "Density of Whole Genome",
     y = "Density",
     x = "Normalized mean depth")
 ```
+
+## Analysis of whole genome
 
 ### Fit Gaussian Mixture Models to whole genome
 
@@ -178,7 +176,9 @@ plot(model, loglik=FALSE, density = TRUE, breaks = 400,
        main2 = optimal_k_bic)
 ```
 
-## Fit GMM to each chromosome with 2 to 5 components
+## Analysis per chromosome
+
+### Fit GMM to each chromosome with 2 to 5 components
 ```{r}
 models_list <- list()
 components <- c("k2", "k3", "k4", "k5")
