@@ -12,38 +12,58 @@ format:
   html:
     code-overflow: scroll
     code-fold: true
+params:
+  sample_id: "ERS1142758"
+  dataset: "Ashton"
+  max_iterations: 100
+  threshold_norm_depth: 5
+  threshold_weight: 0.2
 ---
 
 ```{r, output=FALSE}
 library(tidyverse)
 library(mixtools)
 library(patchwork)
+library(ggrepel)
 setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/ploidy/scripts")
 ```
 
-```{r}
-sample <- "ERS1142807"
+```{r, eval=FALSE, echo=FALSE}
+sample_id <- "ERS1142758"
 dataset <- "Ashton"
-path <- paste("../../../Crypto_", dataset,
+max_iterations <- 100
+threshold_norm_depth <- 5
+threshold_weight <- 0.2
+
+params <- list(sample_id = sample_id, 
+              dataset = dataset, 
+              max_iterations = max_iterations, 
+              threshold_norm_depth = threshold_norm_depth,
+              threshold_weight = threshold_weight)
+```
+
+```{r}
+path <- paste("../../../Crypto_", params$dataset,
     "/results/04.Intermediate_files/01.Samples/depth_quality/",
-    sample,
+    params$sample_id,
     "/depth_by_windows.tsv",
      sep = "")
 depth_by_windows_path <- paste("../../../Crypto_", 
-  dataset, 
+  params$dataset, 
   "/results/01.Samples/plots/",
-  sample,
+  params$sample_id,
   "/depth_by_windows.png",
+  sep = "")
+metadata_path <- paste("../../../Crypto_",
+  params$dataset,
+  "/results/02.Dataset/metadata.csv",
   sep = "")
 ```
 
 ```{r, results="asis"}
-cat(paste("##",sample, "\n"))
+cat(paste("##",params$sample_id, "\n"))
 ```
 
-```{r, results="asis"}
-cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
-```
 ```{r, output=FALSE}
 windows <- read_delim(path,
     delim = "\t",
@@ -51,7 +71,7 @@ windows <- read_delim(path,
 ```
 
 ```{r, output = FALSE}
-chrom_names <- read_csv(paste("../../../Crypto_",dataset,"/config/chromosomes.csv", sep =""))
+chrom_names <- read_csv(paste("../../../Crypto_",params$dataset,"/config/chromosomes.csv", sep =""))
 chrom_names <- chrom_names %>%
     mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
     mutate(chromosome = as.factor(chromosome))
@@ -61,25 +81,46 @@ windows <- left_join(windows, chrom_names, by = "accession")
 
 ```{r, message = FALSE, warning = FALSE}
 ggplot(windows) +
-  geom_histogram(aes(norm_mean_depth), binwidth = 0.01)+
+  geom_histogram(aes(norm_mean_depth), binwidth = 0.1, fill = "black")+
   scale_y_continuous(trans = "log10") +
   scale_x_continuous(breaks = seq(0, max(windows$norm_mean_depth), by = 5),
                     limits = c(0,max(windows$norm_mean_depth) )) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Complete distribution of normalized mean depth (Log10)",
     y = "Count (Log10 transformation)",
-    x = "Normalized mean depth")
+    x = "Normalized mean depth")+
+    theme_classic()
+```
+
+```{r, eval=FALSE, output=FALSE}
+metadata <- read_delim(metadata_path)
+lineage <- metadata %>%
+  filter(sample == params$sample_id) %>%
+  pull(lineage)
+```
+
+```{r, eval = FALSE, echo = FALSE}
+### Remove data from repetitive sequences
+
+repeats_path <- paste(
+  "../../../Crypto_", 
+  params$dataset, 
+  "/results/03.References/",
+  lineage, "/",
+  lineage,"_repeats.bed",
+  sep = ""
+)
+repeats <- read_delim(repeats_path, delim = "\t", col_names = c("accession", "start", "end", "repeat_type"))
 ```
 
 ### Filter
 
 ```{r}
-#| code-fold: false
-max_norm_mean_depth <- 5
+print(paste("Thresold of normalized depth:", params$threshold_norm_depth))
 ```
 ```{r}
 windows_filtered <- windows %>%
-    filter(norm_mean_depth < max_norm_mean_depth )
+    filter(norm_mean_depth < params$threshold_norm_depth )
 ```
 
 ```{r, message = FALSE, warning = FALSE}
@@ -95,8 +136,7 @@ ggplot(windows_filtered) +
 ### Fit Gaussian Mixture Models to whole genome
 
 ```{r}
-#| code-fold: false
-max_iterations <- 100
+print(paste("Fitting GMM with max_iterations:", params$max_iterations))
 ```
 ```{r}
 models_list <- list()
@@ -115,7 +155,7 @@ for (component in 2:5) {
     models_list[[component_name]] <- normalmixEM(
           windows_filtered$norm_mean_depth, 
           k = as.integer(component), 
-          maxit = max_iterations, 
+          maxit = params$max_iterations, 
           epsilon = 1e-8, 
           arbmean = TRUE, arbvar = TRUE)
     }, error = function(e) {
@@ -160,7 +200,7 @@ for (chrom in levels(windows_filtered$chromosome)){
     models_list[[chrom]][[component_name]] <- normalmixEM(
           windows_filtered_chromosome$norm_mean_depth, 
           k = as.integer(component), 
-          maxit = max_iterations, 
+          maxit = params$max_iterations, 
           epsilon = 1e-8, 
           arbmean = TRUE, arbvar = TRUE)
     }, error = function(e) {
@@ -206,7 +246,7 @@ for (chrom in levels(windows_filtered$chromosome)) {
   for (i in 1:length(model$mu)) {
     x <- seq(0, model$mu[i] + 10*model$sigma[i], length.out = 100)
     y <- dnorm(x, model$mu[i], model$sigma[i]) * model$lambda[i]
-    temp_data <- data.frame(x = x, y = y, component = as.factor(i), mean = model$mu[i])
+    temp_data <- data.frame(x = x, y = y, component = as.factor(i), mean = model$mu[i], variance = model$sigma[i], weight = model$lambda[i])
     data <- rbind(data, temp_data)
   }
   list_dfs[[chrom]] <- data
@@ -223,6 +263,7 @@ combined_data <- bind_rows(list_dfs, .id = "chromosome")%>%
 r <- ggplot(windows_filtered) +
   geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
   geom_density(aes(norm_mean_depth, fill = chromosome, color = chromosome), alpha = 0.3) +
+  scale_x_continuous(limits = c(0,params$threshold_norm_depth))+
   facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
   labs(title = "Density of Raw Data",
     y = "Density",
@@ -236,10 +277,10 @@ m <- ggplot(combined_data) +
   geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
   geom_line(aes(x = x, y = y, linetype = component, color = chromosome)) +
   geom_text(aes(x = 3, y = 2, label= paste("k=", k, sep = "")))+
-  scale_x_continuous(limits = c(0,4))+
+  scale_x_continuous(limits = c(0,params$threshold_norm_depth))+
   scale_color_discrete(guide = "none")+
   facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
-  labs(title = "Density of Components in Mixture Model",
+  labs(title = "Density of Components\nin Mixture Model",
        x = "Normalized mean depth",
        y = "Density")+
   theme_classic()+
@@ -261,11 +302,63 @@ ggplot(combined_data) +
   geom_text(aes(x = mean + 0.05, y = max(y*3/4), label = round(mean, 2), color = component)) +
   geom_line(aes(x = x, y = y, color = component)) +
   geom_text(aes(x = 3, y = 2, label= paste("k=", k, sep = "")))+
-  scale_x_continuous(limits = c(0,4))+
+  scale_x_continuous(limits = c(0,params$threshold_norm_depth))+
   facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
-  labs(title = "Density of Components in Mixture Model",
+  labs(title = "Density of Components\nin Mixture Model",
        x = "Normalized mean depth",
        y = "Density")+
   theme_classic()+
   theme(legend.position = "bottom")
+```
+
+### Explore the weight and mean of the components
+```{r}
+components <- combined_data %>%
+  select(chromosome, k, mean, weight, component)%>%
+  distinct()%>%
+  mutate(mean = round(mean, 2),
+          k = as.factor(k))
+```
+
+```{r}
+#| fig.height: 10
+#| fig.width: 7
+ggplot(components)+
+  geom_point(aes(x = mean, y = weight, color = k))+
+  geom_line(aes(x = mean, y = weight, color = k))+
+  facet_wrap(~chromosome, ncol = 1, strip.position = "right")+
+  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid")+
+  geom_hline(yintercept = c(0.25, 0.5, 0.75,1), color = "darkgray", linetype = "solid")+
+  labs(title = "Relationship between wights and mean of components",
+    y = "Weight (Proportion of chromosome in the component)",
+    x = "Mean (Normalized depth)")+
+  theme_classic()
+```
+
+```{r}
+print(paste("Filtering out components with a weight less than:", params$threshold_weight))
+```
+```{r}
+large_components <- components %>%
+  filter(weight > params$threshold_weight)
+```
+
+```{r}
+#| fig.height: 7
+#| fig.width: 7
+ggplot(large_components) +
+  geom_point(aes(x = mean, y = weight, color = chromosome)) +
+  geom_text_repel(aes(x = mean, y = weight, color = chromosome, label = chromosome), max.overlaps = Inf) +
+  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Relationship between weights\nand mean of large components",
+       y = "Weight (Proportion of chromosome in the component)",
+       x = "Mean (Normalized depth)") +
+  theme_classic()+
+  theme(legend.position = "none")
+```
+
+### Depth along chromosomes
+```{r, results="asis"}
+cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
 ```
