@@ -83,7 +83,7 @@ dup_calls <- filter(cnv_calls, cnv == "duplication") %>%
     left_join(chromosome_names, by="accession")
 
 dup_calls_filtered <- dup_calls %>%
-    filter(!(smooth_depth > 10 & repeat_fraction > 0.5)) %>%
+    filter(!(norm_depth > 10 & repeat_fraction > 0.5)) %>%
     filter(!(chromosome == "chr01" & start > 337000 & start < 340000))
 
 all_metrics <- left_join(depth_by_chrom, dup_calls_filtered, 
@@ -103,8 +103,8 @@ chrom_metrics <- all_metrics %>%
                 n_cnvs = n(),
                 first = min(start),
                 last = max(end),
-                mean_cnv_depth = round(mean(smooth_depth),2),
-                median_cnv_depth = round(median(smooth_depth),2),
+                mean_cnv_depth = round(mean(norm_depth),2),
+                median_cnv_depth = round(median(norm_depth),2),
                 repeat_size = sum(overlap_bp)) %>%
     ungroup()%>%
     mutate(dup_coverage_percent = round((total_cnv_size / length) * 100, 2),
@@ -244,8 +244,8 @@ ind <- get_pca_ind(res.pca)
 fviz_pca_ind(res.pca,
              col.ind = "cos2", # Color by the quality of representation
              gradient.cols = c("darkorchid4", "gold", "darkorange"),
-             repel = TRUE,
-             label = "none"
+             repel = TRUE
+            #  label = "none"
              )
 ```
 ```{r}
