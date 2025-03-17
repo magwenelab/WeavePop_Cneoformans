@@ -69,7 +69,7 @@ cnv:
   repeats:
     repeats_database: "Crypto_Ashton/config/RepBase.fasta" # Relative path to the RepBase FASTA file.
     repeats_threads: 20 # Number of threads for RepeatModeler and RepeatMasker.
-
+    use_container: False # True to run RepeatModeler and RepeatMasker in a container.
 # ------------------Annotation of SNP effects------------------------------------------------------
 
 snpeff:
