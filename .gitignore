@@ -15,4 +15,4 @@ analyses/tree_duplications/scripts/notebooks
 analyses/tree_duplications/scripts/_extensions
 
 *.quarto*
-*zold*
+analyses_old
