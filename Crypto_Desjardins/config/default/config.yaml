@@ -3,8 +3,10 @@
 # To run the workflow with local execution use the following command:
 # snakemake --profile config/default
 
+configfile: Crypto_Desjardins/config/config.yaml
+
 # Config you can change
-cores: 96
+cores: 80
 keep-going: False
 rerun-incomplete: True
 printshellcmds: True
