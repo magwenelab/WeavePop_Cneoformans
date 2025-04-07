@@ -1,0 +1,519 @@
+---
+title: "Merge Desjardins and Ashton trees"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-10"
+---
+## Setup
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses")
+```
+```{r, output=FALSE}
+library(RRphylo)
+library(manipulate)
+library(ape)
+library(phytools)
+library(ggtree)
+library(tidyverse)
+library(RColorBrewer)
+library(ggnewscale)
+library(patchwork)
+source("scripts/metadata_colors.R")
+```
+
+
+
+Input and output paths
+```{r}
+metadata_ashton_desj_all_weavepop_H99 <- "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+
+desj_tree_path <- "data/raw/CryptoDiversity_Desjardins_Tree.tre"
+desj_tree_out_path <- "data/processed/tree_desjardins.newick"
+desj_tree_out_plot <- "results/trees/tree_desjardins.png"
+
+ashton_tree_path <- "data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
+ashton_metadata_path <- "../Crypto_Ashton/config/metadata_all_ashton_and_vni_desj.csv"
+ashton_tree_out_path <- "data/processed/tree_ashton.newick"
+ashton_tree_unrooted_plot <- "results/trees/tree_ashton_unrooted.png"
+ashton_tree_rooted_plot <- "results/trees/tree_ashton.png"
+ashton_tree_rooted_plot_pdf <- "results/trees/tree_ashton.pdf"
+
+merged_tree_out_path <- "data/processed/tree_merged.newick"
+merged_tree_branchlengths_plot <- "results/trees/tree_merged_branchlengths.png"
+merged_tree_plot <- "results/trees/tree_merged.png"
+merged_tree_small_plot <- "results/trees/tree_merged_small.png"
+```
+## Metadata
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset and H99 (n = 1056).  
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    metadata_ashton_desj_all_weavepop_H99,
+    header=TRUE,
+    sep=",")
+summary <- metadata %>% 
+    group_by(dataset, lineage) %>% 
+    summarize(count = n())
+summary
+```
+Make separate dataframes for each metadata field.
+```{r}
+metadata$vni_subdivision <- factor(metadata$vni_subdivision,
+                            levels = names(sublineage_colors))
+metadata$country_of_origin <- factor(metadata$country_of_origin,
+                                levels = names(country_colors))
+
+sublineage <- metadata %>%
+                filter(lineage == "VNI")%>%
+                select(strain, vni_subdivision)%>%
+                column_to_rownames("strain")%>%
+                droplevels()
+lineage <- metadata %>%
+            select(strain, lineage)%>%
+            column_to_rownames("strain")
+dataset <- metadata %>%
+            select(strain, dataset)%>%
+            column_to_rownames("strain")
+source <- metadata %>%
+            select(strain, source)%>%
+            column_to_rownames("strain")
+country <- metadata %>%
+            select(strain, country_of_origin)%>%
+            column_to_rownames("strain")
+```
+
+## Desjardins tree
+Import the raw Desjardins tree
+```{r, eval=FALSE}
+desj_tree <- read.tree(desj_tree_path)
+```
+
+Reroot the tree at the middle of the branch leading to VNII
+```{r, eval=FALSE}
+VNII_root <- getMRCA(desj_tree, c("C2","C12"))
+edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
+desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
+write.tree(desj_tree, file = desj_tree_out_path)
+```
+```{r, echo=FALSE}
+desj_tree <- read.tree(desj_tree_out_path)
+```
+
+```{r}
+country_desj <- levels(droplevels(country[rownames(country) %in% desj_tree$tip.label, ]))
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+d <- ggtree(desj_tree, layout = "circular", size = 0.1) +  
+            geom_tiplab(aes(label = label),
+                        size = 0.8, align =TRUE, 
+                        linetype = "dashed", linesize = .03)+
+            geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=30)
+
+d1 <- gheatmap(d, lineage, width=.08, colnames=FALSE, offset=0.05) +
+            scale_fill_manual(values = lineage_colors, name="Lineage",
+                                na.translate = FALSE)+
+            guides(fill = guide_legend(order = 1))+
+            new_scale_fill()
+
+d2 <- gheatmap(d1, sublineage, width=.08, colnames=FALSE, offset=0.08) +
+            scale_fill_manual(values = sublineage_colors, 
+                            name="VNI Sublineage", na.translate = FALSE, 
+                            limits = levels(sublineage$vni_subdivision))+
+            guides(fill = guide_legend(order = 2))+
+            new_scale_fill()
+
+d3 <- gheatmap(d2, source, width=.08, colnames=FALSE, offset=0.11) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 3))+
+        new_scale_fill()
+
+d4 <- gheatmap(d3, country, width =.08, colnames=FALSE,offset=0.14)+
+    scale_fill_manual(values=country_colors, 
+                      name="Country", na.translate=TRUE,
+                      limits = country_desj)+
+    guides(fill = guide_legend(order =4))+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=9),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"))
+d4
+```
+
+```{r, echo=FALSE}
+ggsave(desj_tree_out_plot, 
+        d4, height = 6.5, width = 7, units = "in", dpi = 600)
+```
+
+
+## Ashton tree
+Import the raw Ashton tree
+```{r}
+ashton_tree_unrooted <- read.tree(ashton_tree_path)
+```
+
+Rename tips to use strain names in the Desjardins samples (which have run accessions).
+```{r}
+ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
+    if (x %in% metadata$run) {
+        metadata$strain[metadata$run == x]
+    } else {
+        x
+    }
+})
+```
+Get the samples that are present in the tree but absent from the metadata of the final dataset
+```{r}
+tips_missing_from_final_dataset <- setdiff(ashton_tree_unrooted$tip.label, metadata$strain)
+```
+
+Compare the list of strains missing from metadata with the oringinal Ashton metadata
+```{r}
+ashton_metadata <-read.delim(
+    ashton_metadata_path,
+    header=TRUE, sep=",")
+samples_missing_from_dataset <- ashton_metadata %>%
+    filter(strain %in% tips_missing_from_final_dataset)%>%
+    select(sample, strain, lineage, VNI_subdivision)
+samples_missing_from_dataset
+```
+The CNS_1465 strain was not available for download and the rest had bad quality alignments.
+
+Root Ashton tree at the middle of the branch leading to VNIa
+```{r, eval=FALSE}
+VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
+edge_length <- subset(ashton_tree_unrooted$edge.length, 
+    ashton_tree_unrooted$edge[,2] == VNIa_root)
+ashton_tree <- reroot(ashton_tree_unrooted, VNIa_root, edge_length/2)
+write.tree(ashton_tree, file = ashton_tree_out_path)
+```
+
+```{r, echo=FALSE}
+ashton_tree <- read.tree(ashton_tree_out_path)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+pu <- ggtree(ashton_tree_unrooted, layout = "circular", size = 0.1) +
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 2)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))+
+            labs(title = "Unrooted tree of Ashton dataset")+
+            theme(legend.position = "none",
+                plot.margin = margin(0, 0, 0, 0, "cm"),
+                plot.title = element_text(hjust = 0.5))
+
+```
+```{r, echo=FALSE, warning=FALSE}
+ggsave(ashton_tree_unrooted_plot, 
+    pu, height = 10, width = 10, units = "in", dpi = 600)
+```
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+p <- ggtree(ashton_tree, layout = "circular", size =0.1)+
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 2)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))+
+        labs(title = "Rooted tree of Ashton dataset")+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=9),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"),
+                plot.title = element_text(hjust = 0.5))
+```
+
+```{r, echo=FALSE, warning=FALSE}
+ggsave(ashton_tree_rooted_plot, p, height = 10, width = 10, units = "in", dpi = 600)
+```
+```{r, warning=FALSE, echo=FALSE}
+#| fig-height: 3.5
+#| fig-width: 9
+#| fig-align: center
+pu|p
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 10
+#| fig-width: 7
+#| fig-align: center
+pr <- ggtree(ashton_tree, layout = "rectangular", size =0.2)+
+            geom_tippoint(aes(color= sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                              size= 1)+
+            scale_color_manual(values = sublineage_colors, 
+                               name="VNI Sublineage", 
+                               na.translate = FALSE,
+                               limits = levels(sublineage$vni_subdivision))+
+            geom_tiplab(aes(label = label),
+                        size = 0.8, align =TRUE, 
+                        linetype = "dashed", linesize = .001, offset =0.01)+
+            geom_treescale(x=0, y=0, width=0.01, fontsize =5, offset=1)+
+            labs(title = "Rooted tree of Ashton dataset")
+
+m1 <- gheatmap(pr, dataset, width=.02, colnames=FALSE, offset=.015) +
+        scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 1))+
+        new_scale_fill()
+
+m4 <- gheatmap(m1, source, width=.02, colnames=FALSE, offset=.018) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        labs(title = "Ashton tree")+
+        new_scale_fill()
+
+m5 <- gheatmap(m4, country, width =.02, colnames=FALSE,offset=.021)+
+        scale_fill_manual(values=country_colors, 
+                        name="Country", na.translate=FALSE,
+                        limits = levels(country$country_of_origin))+
+        guides(fill = guide_legend(order =5))+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=12),
+                legend.text=element_text(size=10),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"))
+
+m5
+```
+```{r, echo=FALSE, warning=FALSE}
+ggsave(ashton_tree_rooted_plot_pdf, m5, height = 20, width = 18, units = "in", dpi = 900, limitsize = FALSE)
+```
+
+## Merge Desjardins and Ashton trees
+
+Specify clades in Desjardins tree
+```{r, eval=FALSE}
+VNI <- c("Bt92", "Bt79")
+VNI_node <- getMRCA(desj_tree, VNI)
+VNII <- c("C2","C12")
+VNII_node <- getMRCA(desj_tree, VNII)
+VNB <- c("Bt7", "Bt34")
+VNB_node <- getMRCA(desj_tree, VNB)
+```
+
+Get the ages of the nodes from the original Desjardins tree.
+This is to attempt to have a calibrated tree, but the resulting branchlengths are not real.
+```{r, eval=FALSE}
+edge_lengths <- node.depth.edgelength(desj_tree)
+node_labels <- c(desj_tree$tip.label, desj_tree$node.label)
+edge_length_mapping <- data.frame(
+    node = node_labels, 
+    edge_length = edge_lengths, 
+    max_length = max(edge_lengths))
+edge_length_mapping <- edge_length_mapping %>% 
+                        mutate(age = max_length - edge_length) %>%
+                        rownames_to_column("node_id")
+clade_ages <- edge_length_mapping %>% 
+                filter(node_id %in% c(VNI_node, VNII_node, VNB_node))
+nodeages <- c("Bt92-Bt79" = clade_ages$age[clade_ages$node_id == VNI_node],
+             "C2-C12" = clade_ages$age[clade_ages$node_id == VNII_node],
+             "Bt7-Bt34" = clade_ages$age[clade_ages$node_id == VNB_node])
+tip_ages <- edge_length_mapping %>% 
+                filter(node %in% metadata$strain)
+tipages <- tip_ages$age
+names(tipages) <- tip_ages$node
+```
+
+Remove VNI clade from Desjardins tree to use it as backtree
+```{r, eval=FALSE}
+VNI_tips <- tips(desj_tree, VNI_node)
+backtree <- drop.tip(desj_tree, VNI_tips)
+```
+
+Create the reference tables
+```{r, eval=FALSE}
+reference <- data.frame(bind=c("CNS_289-20427_2#4"),
+                   reference=c("Bt7-Bt34"),
+                   poly=c(FALSE))
+```
+
+Merge
+```{r, eval=FALSE}
+merged <- tree.merger(backbone = backtree,
+                        data=reference,
+                        source.tree = ashton_tree,
+                        plot=FALSE,
+                        node.ages = nodeages,
+                        tip.ages = tipages)
+```
+
+```{r, eval=FALSE, echo = FALSE}
+write.tree(merged, file = merged_tree_out_path)
+```
+
+```{r, echo=FALSE}
+merged<- read.tree(merged_tree_out_path)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 4.7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(merged, layout = "circular", size = 0.1) +  
+        geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .03)+
+            geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=30)
+
+m1 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=.025) +
+            scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
+            guides(fill = guide_legend(order = 1))+
+            new_scale_fill()
+
+m2 <- gheatmap(m1, lineage, width=.05, colnames=FALSE, offset=.045) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            guides(fill = guide_legend(order = 2))+
+            new_scale_fill()
+
+m3 <- gheatmap(m2, sublineage, width=.05, colnames=FALSE, offset=.065) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))+
+            guides(fill = guide_legend(order = 4))+
+            new_scale_fill()
+
+m4 <- gheatmap(m3, source, width=.05, colnames=FALSE, offset=0.085) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        labs(title = "Merged tree with branchlengths (not real)")+
+        new_scale_fill()
+
+m5 <- gheatmap(m4, country, width =.05, colnames=FALSE,offset=0.11)+
+    scale_fill_manual(values=country_colors, 
+                      name="Country", na.translate=FALSE,
+                      limits = levels(country$country_of_origin))+
+    guides(fill = guide_legend(order =4))+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=9),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"))
+
+m5
+```
+
+```{r, echo=FALSE}
+ggsave(merged_tree_branchlengths_plot,
+    m5, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 4.7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(merged, layout = "circular", size = 0.1, branch.length = "none") +  
+        geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
+                    linetype = "dashed", linesize = .03)
+
+m1 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=2) +
+            scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
+            guides(fill = guide_legend(order = 1))+
+            new_scale_fill()
+
+m2 <- gheatmap(m1, lineage, width=.05, colnames=FALSE, offset=4) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            guides(fill = guide_legend(order = 2))+
+            new_scale_fill()
+
+m3 <- gheatmap(m2, sublineage, width=.05, colnames=FALSE, offset=6) +
+            scale_fill_manual(values = sublineage_colors, name="VNI Sublineage", na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))+
+            guides(fill = guide_legend(order = 3))+
+            new_scale_fill()
+
+m4 <- gheatmap(m3, source, width=.05, colnames=FALSE, offset=8) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        labs(title = "Merged tree with branchlengths (not real)")+
+        new_scale_fill()
+
+m5 <- gheatmap(m4, country, width =.05, colnames=FALSE,offset=10)+
+    scale_fill_manual(values=country_colors, 
+                      name="Country", na.translate=FALSE,
+                      limits = levels(country$country_of_origin))+
+    guides(fill = guide_legend(order =5))+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_text(size=9),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.3, "cm"),
+                plot.margin = margin(0, 0, 0, 0, "cm"))
+
+m5
+```
+
+```{r, echo=FALSE}
+ggsave(merged_tree_plot, m2, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+## Plot minimal version of the tree
+
+Get one sample of each non-VNI lineage, VNI sublineage, and all VNIa-outlier
+
+```{r}
+VNI <- metadata %>%
+    filter(lineage == "VNI", vni_subdivision != "VNIa-outlier") %>%
+    group_by(vni_subdivision) %>%
+    slice(1) %>%
+    ungroup()
+VNIa_outlier <- metadata %>%
+    filter(vni_subdivision == "VNIa-outlier")
+VNII <- metadata %>%
+    filter(lineage == "VNII") %>%
+    slice(1) %>%
+    ungroup()
+VNBI <- metadata %>%
+    filter(lineage == "VNBI") %>%
+    slice(1) %>%
+    ungroup()
+VNBII <- metadata %>%
+    filter(lineage == "VNBII") %>%
+    slice(1) %>%
+    ungroup()
+tips <- rbind(VNI, VNIa_outlier, VNII, VNBI, VNBII)%>%
+    select(strain)
+```
+Make a small version of the merged tree only with the tips in `tips`
+
+```{r}
+small_tree <- drop.tip(merged, setdiff(merged$tip.label, tips$strain))
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+p <- ggtree(small_tree, layout = "rectangular", size = 1, branch.length = "none")+  
+            geom_tiplab(aes(label = label),
+                            size = 3, align = TRUE, linetype = "dashed",
+                            linesize = .05,
+                            offset = 0.5)+
+            geom_tippoint(aes(color = sublineage[match(label, rownames(sublineage)), "vni_subdivision"]),
+                            size = 3)+
+            scale_color_manual(values = sublineage_colors, 
+                                name="VNI Sublineage", 
+                                na.translate = FALSE,
+                                limits = levels(sublineage$vni_subdivision))
+
+p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 6) +
+            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
+            new_scale_fill()+
+            labs(title = "Minimal cladogram of merged tree with one strain per sublineage")+
+            theme(legend.position = "right",
+                    legend.direction = "vertical",
+                    legend.title = element_text(size=9),
+                    legend.text=element_text(size=7),
+                    legend.key.size = unit(0.3, "cm"),
+                    plot.title = element_text(hjust = 0.5))
+p1 
+```
+```{r, echo=FALSE, warning=FALSE}
+ggsave(merged_tree_small_plot, p1, height = 6, width = 10, units = "in", dpi = 600)
+```

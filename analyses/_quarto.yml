@@ -1,0 +1,23 @@
+project:
+  title: "Crypto WeavePop Analyses"
+  execute-dir: project
+  output-dir: notebooks
+
+df-print: kable
+embed-resources: true
+
+format:
+  html:
+    code-overflow: scroll
+    code-fold: true
+  
+execute:
+  clean: true
+
+fig-align: center
+
+
+# format: 
+#     PrettyPDF-pdf:
+#         keep-tex: false
+

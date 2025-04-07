@@ -13,3 +13,6 @@ analyses/ploidy/scripts/notebooks
 analyses/ploidy/scripts/_extensions
 analyses/tree_duplications/scripts/notebooks
 analyses/tree_duplications/scripts/_extensions
+
+*.quarto*
+*zold*
