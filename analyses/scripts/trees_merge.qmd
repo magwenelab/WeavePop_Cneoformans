@@ -32,6 +32,8 @@ desj_tree_out_path <-
     "data/processed/tree_desjardins.newick"
 desj_tree_out_plot <- 
     "results/trees/tree_desjardins.png"
+desj_tree_out_plot_pdf <- 
+    "results/trees/tree_desjardins.pdf"
 
 ashton_tree_path <- 
     "data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
@@ -42,10 +44,11 @@ ashton_tree_out_path <-
 ashton_tree_unrooted_plot <- 
     "results/trees/tree_ashton_unrooted.png"
 ashton_tree_rooted_plot_pdf <- 
-    "results/trees/tree_ashton.pdf"
+    "results/trees/tree_ashton_rect.pdf"
 ashton_tree_out_plot <- 
     "results/trees/tree_ashton.png"
-
+ashton_tree_out_plot_pdf <- 
+    "results/trees/tree_ashton.pdf"
 
 merged_tree_out_path <- 
     "data/processed/tree_merged.newick"
@@ -53,6 +56,8 @@ merged_tree_branchlengths_plot <-
     "results/trees/tree_merged_branchlengths.png"
 merged_tree_plot <- 
     "results/trees/tree_merged.png"
+merged_tree_plot_pdf <- 
+    "results/trees/tree_merged.pdf"
 merged_tree_small_plot <- 
     "results/trees/tree_merged_small.png"
 ```
@@ -163,8 +168,8 @@ d4
 ```
 
 ```{r, echo=FALSE}
-ggsave(desj_tree_out_plot, 
-        d4, height = 6.5, width = 7, units = "in", dpi = 600)
+ggsave(desj_tree_out_plot, d4, height = 6.5, width = 7, units = "in", dpi = 600)
+ggsave(desj_tree_out_plot_pdf, d4, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
 
 
@@ -334,9 +339,10 @@ m4 <- gheatmap(m3, country, width =.05, colnames=FALSE,offset=0.055)+
 m4
 ```
 ```{r, echo=FALSE, warning=FALSE}
-ggsave(ashton_tree_out_plot, 
-        m4, height = 6.5, width = 7, units = "in", dpi = 600)
+ggsave(ashton_tree_out_plot, m4, height = 6.5, width = 7, units = "in", dpi = 600)
+ggsave(ashton_tree_out_plot_pdf, m4, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
+
 ## Merge Desjardins and Ashton trees
 
 Specify clades in Desjardins tree
@@ -502,6 +508,7 @@ m5
 
 ```{r, echo=FALSE}
 ggsave(merged_tree_plot, m5, height = 10, width = 10, units = "in", dpi = 600)
+ggsave(merged_tree_plot_pdf, m5, height = 10, width = 10, units = "in", dpi = 600)
 ```
 
 ## Plot minimal version of the tree
