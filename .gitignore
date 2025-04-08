@@ -1,18 +1,13 @@
 .snakemake/
 .vscode/
 *test*
-*results*
 *backup*
 *workflow*
-*.log
-logs/
-Crypto_Ashton/data/samples/*
-analyses/variants/source/
-analyses/ploidy/data/processed
-analyses/ploidy/scripts/notebooks
-analyses/ploidy/scripts/_extensions
-analyses/tree_duplications/scripts/notebooks
-analyses/tree_duplications/scripts/_extensions
+Crypto_*/data/
+Crypto_*/results*
+Crypto_*/logs*
 
 *.quarto*
 analyses_old
+analyses/notebooks/scripts/ploidy_depth/logs
+analyses/results/tables/
