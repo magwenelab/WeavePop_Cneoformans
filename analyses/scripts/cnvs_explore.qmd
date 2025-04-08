@@ -16,12 +16,30 @@ fig-height: 7
 fig-width: 9
 fig-align: center
 ---
+## Index
+
+- [Setup](#setup)
+- [Prepare dataset](#prepare-dataset)
+    - [Metadata](#metadata)
+    - [Chromosome names and length](#chromosome-names-and-length)
+    - [Get the chromosome median depth](#get-the-chromosome-median-depth)
+    - [Get metrics of duplications from called CNVs](#get-metrics-of-duplications-from-called-cnvs)
+- [Explore repeats](#explore-repeats)
+- [Explore called duplications](#explore-called-duplications)
+    - [Filter out duplication of Chr2](#filter-out-duplication-of-chr2)
+    - [Provisional filtration of chr01 VNI duplication](#provisional-filtration-of-chr01-vni-duplication)
+- [Join all data and metadata](#join-all-data-and-metadata)
+- [Get metrics per chromosome](#get-metrics-per-chromosome)
+- [Compare metrics of CNVs with chromosome depth](#compare-metrics-of-cnvs-with-chromosome-depth)
+- [Explore putative duplicated chromosomes](#explore-putative-duplicated-chromosomes)
+    - [Explore sample with very large Median Depth of Chromosome](#explore-sample-with-very-large-median-depth-of-chromosome)
 
 ## Setup
 
 ```{r, eval=FALSE, echo=FALSE}
-setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/")
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses/")
 ```
+Libraries
 ```{r, output=FALSE}
 library(tidyverse)
 library(patchwork)
@@ -37,6 +55,10 @@ chrom_lengths_path <- "data/processed/chromosome_lengths.tsv"
 depth_by_chrom_good_desj_path <- "../Crypto_Desjardins/results_clean/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
 depth_by_chrom_good_ashton_path <- "../Crypto_Ashton/results_clean/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
 cnv_calls_path <- "../Crypto_Desjardins_Ashton/results_clean/02.Dataset/cnv/cnv_calls.tsv"
+duplications_path <- "results/tables/duplications_putative.tsv"
+
+repeats_path_prefix <- "../Crypto_Desjardins/results_clean/03.References/"
+
 ```
 
 ## Prepare dataset
@@ -122,6 +144,57 @@ head(dup_calls)
 ```
 
 The **Normalized depth** (`norm_depth`) is the median of the normalized depth of the windows that are part of the CNV region.
+
+
+Get the percentage of each chromosome covered by repeats to know how much of a chromosome might not have reliable CNV calls.
+
+## Explore repeats
+```{r}
+lineages <- unique(metadata$lineage)
+repeats_all <- data.frame()
+for(lineage in lineages){
+    repeats_path <-paste(
+        repeats_path_prefix,
+        lineage, "/", lineage, "_repeats.bed",
+        sep ="")
+    repeats <- read.delim(repeats_path, 
+        header=FALSE, 
+        col.names=c("accession", "start", "end", "repeat_type"), 
+        sep="\t")
+    repeats$lineage <- lineage
+    repeats_all <- rbind(repeats_all, repeats)
+}
+```
+```{r, message=FALSE}
+repeats_percent <- repeats_all %>%
+    mutate(repeat_size_each = end - start)%>%
+    group_by(accession, lineage) %>%
+    summarise(repeat_size = sum(repeat_size_each)) %>%
+    left_join(chromosome_lengths, by="accession") %>%
+    left_join(chromosome_names, by=c("accession","lineage")) %>%
+    mutate(percent_repeat_size = round((repeat_size / length) * 100, 2))%>%
+    mutate(chromosome = as.factor(chromosome))%>%
+    select(lineage, accession, chromosome, percent_repeat_size)
+```
+
+```{r, echo=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+#| fig-align: center
+ggplot(repeats_percent)+
+    geom_col(aes(x=lineage, y=percent_repeat_size, fill = lineage))+
+    facet_grid(~chromosome, scales="free")+
+    labs(title = "Percentage of each chromosome covered by repeats", x="Lineage", y="Percent of chromosome covered by repeats (%)")+
+    theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(color = "lightgray"),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+        legend.position = "none")
+```
+Most chromosomes have repeats in between 5 and 10% of the size. In VNBII it is closer to 15% for some chormosomes.
 
 ## Explore called duplications
 
@@ -609,6 +682,10 @@ ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_medi
             axis.text.x = element_text(angle = 45, hjust = 1),
             panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
             legend.position = "right")
+```
+
+```{r}
+write_tsv(chrom_metrics_filtered, duplications_path)
 ```
 
 ### Explore sample with very large Median Depth of Chromosome
