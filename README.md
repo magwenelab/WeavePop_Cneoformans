@@ -70,6 +70,8 @@ The working directory of all the Quarto documents is `analyses/`.
 They are rendered with the command: `quarto render analyses/scripts/<name>.qmd`.  
 `analyses/scripts/metadata_colors.R` creates color palettes for the metadata to use in the plots.
 
+All the input files used in the analyses come from the input or results of WeavePop in `Crypto_Desjardins`, `Crypto_Ashton` or `Crypto_Desjardins_Ashton` or from the following external data.  
+
 External data:  
 * `data/raw/media-1.csv`: From the original Billmyre paper in [bioRxiv](https://www.biorxiv.org/content/biorxiv/early/2024/08/06/2024.07.28.605507/DC1/embed/media-1.csv?download=true).
 * `data/raw/CryptoDiversity_Desjardins_Tree.tre`: From [CryptoDiversity_Tree_Info](https://github.com/magwenelab/CryptoDiversity_Tree_Info/blob/main/CryptoDiversity_Desjardins_Tree.tre)
@@ -78,16 +80,16 @@ External data:
 
 | Analysis | Script <br /> `scripts/` | Files <br /> `data/processed/` or specified | Description |
 |-----------------|-----------------|-----------------| -----------------|
-| Metadata | `metadata.ipynb` | `metadata_ashton_desj_all_weavepop_complete_info.csv`<br />  `metadata_ashton_desj_all_weavepop_H99.csv`<br />   `metadata_ashton_desj_all_weavepop_complete_info.csv`  | Create new metadata tables to add the VNI subdivision information from the Ashton study to the Desjardins samples. |
+| Metadata | `metadata.ipynb` | `metadata_ashton_desj_vni_weavepop.csv`<br />  `metadata_ashton_desj_all_weavepop_H99.csv`<br />   `metadata_ashton_desj_all_weavepop_complete_info.csv`  | Create new metadata tables to add the VNI subdivision information from the Ashton study to the Desjardins samples. |
 | Tree building | `merge_trees.qmd` | `tree_ashton.newick`<br />  `tree_desjardins.newick`<br />  `tree_merged.newick`<br /> Plots in `results/trees/` | Merge the trees of the Ashton and Desjardins datasets. |
-|SNPs|`snps_compare_old_clean.qmd`| `snp_counts_desjardins_old.csv`<br /> `snp_counts_ashton_old.csv` | Compare number of SNPs before and after using FastP|
-|  | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv`| Compare number of raw and filtered SNPs. |
-| CNVs | `cnvs_explore.qmd` | `chromosome_lengths.tsv`| Explore relationship between CNV metrics and chromosomal depth. |
+| CNVs | `cnvs_explore.qmd` | `chromosome_lengths.tsv` <br /> `results/tables/duplications_putative.tsv` | Explore relationship between CNV metrics and chromosomal depth. And select list of posible chromosomal duplications. |
 || `cnvs_pca.qmd` || PCA of the CNV and Depth metrics. |
-||`duplications_detect.qmd`||
 | Ploidy | `ploidy_heterozygosity.qmd` | | Analyze ploidy with heterozygous SNPs. |
 || `ploidy_depth.qmd` <br /> ` ploidy_depth_datset.qmd` || Analyze ploidy with Mixture Models of Depth Distribution. <br /> Join the results of the previous sample-wise analysis into dataset-wide results and explore it.|
 |Plot duplications in tree |`duplications_plot_tree.qmd`| `results/trees_dups/tree_merged_duplications.png`<br /> `results/trees_dups/tree_merged_duplications_12_13.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated2.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated3.png`| Plot the merged tree with a heatmap of duplicated chromosomes.|
+|SNPs|`snps_compare_old_clean.qmd`| `snp_counts_desjardins_old.csv`<br /> `snp_counts_ashton_old.csv` | Compare number of SNPs before and after using FastP|
+|  | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv`| Compare number of raw and filtered SNPs. |
+
 
 
 
