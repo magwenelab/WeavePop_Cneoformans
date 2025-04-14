@@ -7,7 +7,7 @@
                                              |_|    
     
 Commmit hash of current version:
-5cb5dcfd9c59cd38cd44b5feada45a68fe8876d4
+c886503e20cfd8a1bc11704dae6acc3ea5d145ee
 
 Executed command:
 /home/czirion/miniforge3/envs/snakemake/bin/snakemake --profile Crypto_Desjardins_Ashton/config/default/
