@@ -6,7 +6,7 @@
 configfile: Crypto_Ashton/config/config.yaml
 
 # Config you can change
-cores: 60
+cores: 80
 keep-going: False
 rerun-incomplete: True
 printshellcmds: True

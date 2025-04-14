@@ -1,11 +1,12 @@
 .snakemake/
+.snakemake_old/
 .vscode/
 *test*
 *backup*
 *workflow*
 Crypto_*/data/
 Crypto_*/results*
-Crypto_*/logs*
+Crypto_*/logs/*/
 
 *.quarto*
 analyses_old

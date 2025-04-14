@@ -9,7 +9,7 @@ workflow: "join_datasets" # Options: "analysis", "join_datasets"
 # =============================================================================
 
 project_directory: "Crypto_Desjardins_Ashton/" # Optional: Path of the project directory, relative to FungalPop/. If empty, the working directory is used.
-run_id: "clean" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
+run_id: "" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
 
 # =============================================================================
 #   Parameters for the analysis workflow
@@ -116,5 +116,5 @@ agat:
 # It assumes that if the same lineage is present in the different datasets, 
 # the same reference genome was used.
 
-datasets_paths: "Crypto_Desjardins/results_clean,Crypto_Ashton/results_clean" # Commas separated list of paths to the directories with the results of the analysis workflow.
+datasets_paths: "Crypto_Desjardins/results,Crypto_Ashton/results" # Commas separated list of paths to the directories with the results of the analysis workflow.
 datasets_names: "Desjardins,Ashton" # Commas separated list of names for the datasets, in the same order as the paths.
