@@ -5,67 +5,87 @@ date: "2025-02-13"
 
 fig-height: 7
 fig-width: 9
+
+format: 
+  html:
+    page-layout: full
 ---
+
 ## Index
 
 - [Setup](#setup)
-- [Prepare dataset](#prepare-dataset)
     - [Metadata](#metadata)
     - [Chromosome names and length](#chromosome-names-and-length)
     - [Called CNVs](#called-cnvs)
 - [Explore Called CNVs](#explore-called-cnvs)
-    - [Distribution of Normalized Depth and Smooth Normalized Depth](#distribution-of-normalized-depth-and-smooth-normalized-depth)
-    - [Distribution of Sizes of CNVs](#distribution-of-sizes-of-cnvs)
-    - [Depth vs. Size](#depth-vs-size)
-- [Explore repeats](#explore-repeats)
-- [Explore called duplications dCNVs](#explore-called-duplications-dcnvs)
+    - [Repeats](#repeats)
+        - [Percentage of repeats per lineage per chromosome](#percentage-of-repeats-per-lineage-per-chromosome)
+        - [Distribution of Repeat Fraction](#distribution-of-repeat-fraction)
+    - [Depth](#depth)
+        - [Distribution of Normalized Depth and Smooth Normalized Depth](#distribution-of-normalized-depth-and-smooth-normalized-depth)
+        - [Normalized Depth vs. Smooth Normalized Depth](#normalized-depth-vs-smooth-normalized-depth)
+    - [Size](#size)
+        - [Distribution of Sizes of CNVs](#distribution-of-sizes-of-cnvs)
+        - [Depth vs. Size](#depth-vs-size)
+- [Explore dupCNVs](#explore-duplications)
+    - [Filter out high depth dupCNVs](#filter-high-depth-dupcnvs)
+    - [Depth vs. Repeats per Chromosome](#depth-vs-repeats-per-chromosome)
+    - [Filter out high repeat content CNVs](#filter-out-high-repeat-content-cnvs)
+- [Explore depth of chromosomes](#median-depth-of-chromosomes)
 - [Metrics per chromosome](#metrics-per-chromosome)
-    - [Join metrics from CNVs and depth of chromosome](#join-metrics-from-cnvs-and-depth-of-chromosome)
     - [Summarize the metrics of the called CNVs per chromosome](#summarize-the-metrics-of-the-called-cnvs-per-chromosome)
+    - [Number of dupCNVs](#number-of-dupcnvs)
+    - [Percentage of chromosome Covered by dupCNVs](#percentage-of-chromosome-covered-by-dupcnvs)
+    - [Percentage of chromosome Spanned by dupCNVs](#percentage-of-chromosome-spanned-by-dupcnvs)
     - [Explore relationship between CNV chromosomal metrics](#explore-relationship-between-cnv-chromosomal-metrics)
-    - [Explore metrics of median depth of chromosomes](#explore-metrics-of-median-depth-of-chromosomes)
-- [Compare metrics of dCNVs with chromosome depth](#compare-metrics-of-dcnvs-with-chromosome-depth)
+- [Compare metrics of dupCNVs with chromosome depth](#compare-metrics-of-dcnvs-with-chromosome-depth)
 - [Explore putative duplicated chromosomes](#explore-putative-duplicated-chromosomes)
     - [Explore sample with very large Median Depth of Chromosome](#explore-sample-with-very-large-median-depth-of-chromosome)
 
-## Setup
+## Setup {#setup}
 
 ```{r, eval=FALSE, echo=FALSE}
-setwd("/FastData/czirion/WeavePop_Cneoformans/analyses/")
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
 ```
+
 Libraries
+
 ```{r, output=FALSE}
 library(tidyverse)
 library(patchwork)
 library(ggbeeswarm)
 library(ggnewscale)
 library(RColorBrewer)
+library(hexbin)
+library(ggExtra)
 ```
+
 Paths
+
 ```{r}
 metadata_path <-
     "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
 chromosomes_path <-
-    "../Crypto_Desjardins_Ashton/results_clean/02.Dataset/chromosomes.csv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/chromosomes.csv"
 chrom_lengths_path <-
     "data/processed/chromosome_lengths.tsv"
 depth_by_chrom_good_desj_path <-
-    "../Crypto_Desjardins/results_clean/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+    "../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
 depth_by_chrom_good_ashton_path <-
-    "../Crypto_Ashton/results_clean/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+    "../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
 cnv_calls_path <-
-    "../Crypto_Desjardins_Ashton/results_clean/02.Dataset/cnv/cnv_calls.tsv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_calls.tsv"
 duplications_out_path <-
     "results/tables/duplications_putative.tsv"
 repeats_path_prefix <-
-    "../Crypto_Desjardins/results_clean/03.References/"
+    "../Crypto_Desjardins/results/03.References/"
 ```
 
-## Prepare dataset
+## Prepare dataset {#prepare-dataset}
 
-### Metadata
+### Metadata {#metadata}
 
-Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99.  
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99.\
 Select needed columns, remove H99 and get the number of samples per dataset and lineage, per lineage, and total.
 
 ```{r, message=FALSE, warning=FALSE}
@@ -87,9 +107,10 @@ metadata <- metadata %>%
     droplevels()
 ```
 
-### Chromosome names and length
+### Chromosome names and length {#chromosome-names-and-length}
 
 Get the nice chromosome names from the chromosomes file in WeavePop.
+
 ```{r}
 chromosome_names = read.delim(
     chromosomes_path,
@@ -100,8 +121,8 @@ chromosome_names <- chromosome_names %>%
 levels(chromosome_names$chromosome) <- paste("chr", chromosome_names$chromosome, sep="")
 ```
 
-Get the chromosome lengths. 
-Create the file with bash.
+Get the chromosome lengths. Create the file with bash.
+
 ```{bash, eval=FALSE}
 # /usr/bin/bash
 tail -n +2 ../Crypto_Desjardins/config/chromosomes.csv | \
@@ -110,6 +131,7 @@ do
 seqkit fx2tab ../Crypto_Desjardins/data/references/$line.fasta -l -i -n >> data/processed/chromosome_lengths.tsv
 done
 ```
+
 ```{r}
 chromosome_lengths = read.delim(
     chrom_lengths_path,
@@ -118,29 +140,139 @@ chromosome_lengths = read.delim(
     sep="\t")
 ```
 
-### Called CNVs
+### Called CNVs {#called-cnvs}
 
 Import the file with all called CNVs and add the chromosome names.
+
 ```{r}
 cnv_calls <- read.delim(
     cnv_calls_path, 
     header=TRUE, sep="\t")%>%
     left_join(chromosome_names, by="accession")
 ```
+
 ```{r}
 depth_threshold <- 0.6
 del_threshold <- 1 - depth_threshold
 dup_threshold <- 1 + depth_threshold
 ```
-## Explore Called CNVs
 
-The **Normalized depth** (`norm_depth`) is the median of the normalized mean depth of the windows that are part of the CNV region.
-The **Smooth normalized depth** (`smooth_depth`) is the median of the smooth normalized mean depth of the windows that are part of the CNV region.  
+## Explore Called CNVs {#explore-called-cnvs}
 
-### Distribution of Normalized Depth and Smooth Normalized Depth
+```{r}
+cnv_summary <- cnv_calls %>%
+    group_by(cnv) %>%
+    summarize(
+        count = n(),
+        min_norm_depth = min(norm_depth, na.rm = TRUE),
+        mean_norm_depth = mean(norm_depth, na.rm = TRUE),
+        q25_norm_depth = quantile(norm_depth, probs = 0.25, na.rm = TRUE),
+        median_norm_depth = median(norm_depth, na.rm = TRUE),
+        q75_norm_depth = quantile(norm_depth, probs = 0.75, na.rm = TRUE),
+        max_norm_depth = max(norm_depth, na.rm = TRUE),
+        min_smooth_depth = min(smooth_depth, na.rm = TRUE),
+        mean_smooth_depth = mean(smooth_depth, na.rm = TRUE),
+        q25_smooth_depth = quantile(smooth_depth, probs = 0.25, na.rm = TRUE),
+        median_smooth_depth = median(smooth_depth, na.rm = TRUE),
+        q75_smooth_depth = quantile(smooth_depth, probs = 0.75, na.rm = TRUE),
+        max_smooth_depth = max(smooth_depth, na.rm = TRUE),
+        min_region_size = min(region_size, na.rm = TRUE),
+        mean_region_size = mean(region_size, na.rm = TRUE),
+        q25_region_size = quantile(region_size, probs = 0.25, na.rm = TRUE),
+        median_region_size = median(region_size, na.rm = TRUE),
+        q75_region_size = quantile(region_size, probs = 0.75, na.rm = TRUE),
+        max_region_size = max(region_size, na.rm = TRUE),
+    )
+cnv_summary
+```
+
+There are a lot more deletions than duplications.
+
+### Repeats {#repeats}
+
+#### Percentage of repeats per lineage per chromosome
+
+Get the percentage of each chromosome covered by repeats to know how much of a chromosome might not have reliable CNV calls.
+
+```{r, eval = FALSE}
+lineages <- unique(metadata$lineage)
+repeats_all <- data.frame()
+for(lineage in lineages){
+    repeats_path <-paste(
+        repeats_path_prefix,
+        lineage, "/", lineage, "_repeats.bed",
+        sep ="")
+    repeats <- read.delim(repeats_path, 
+        header=FALSE, 
+        col.names=c("accession", "start", "end", "repeat_type"), 
+        sep="\t")
+    repeats$lineage <- lineage
+    repeats_all <- rbind(repeats_all, repeats)
+}
+```
+
+```{r, message=FALSE, eval = FALSE}
+repeats_percent <- repeats_all %>%
+    mutate(repeat_size_each = end - start)%>%
+    group_by(accession, lineage) %>%
+    summarise(repeat_size = sum(repeat_size_each)) %>%
+    left_join(chromosome_lengths, by="accession") %>%
+    left_join(chromosome_names, by=c("accession","lineage")) %>%
+    mutate(percent_repeat_size = round((repeat_size / length) * 100, 2))%>%
+    mutate(chromosome = as.factor(chromosome))%>%
+    select(lineage, accession, chromosome, percent_repeat_size)
+```
+
+```{r, echo=FALSE, eval = FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent)+
+    geom_col(aes(x=lineage, y=percent_repeat_size, fill = lineage))+
+    facet_grid(~chromosome, scales="free")+
+    labs(title = "Percentage of each chromosome covered by repeats", x="Lineage", y="Percent of chromosome covered by repeats (%)")+
+    theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(color = "lightgray"),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
+        legend.position = "none")
+```
+
+Most chromosomes have repeats in between 5 and 10% of the size. In VNBII it is closer to 15% for some chormosomes.
+
+#### Distribution of Repeat Fraction {#distribution-of-repeat-fraction}
+
 ```{r}
 #| fig.height: 7
-#| fig.width: 7
+#| fig.width: 9
+d <- ggplot(cnv_calls, aes(repeat_fraction, fill = cnv)) +
+            facet_wrap(~cnv, ncol = 1, scales = "free")+
+            geom_histogram(binwidth = 0.01)+
+            scale_x_continuous(labels = scales::comma)+
+            theme_minimal() +
+            theme(legend.position = "none")+
+            labs(title = "Histogram of Repeat Fraction of CNVs",
+                subtitle = paste("Binwidth: 0.01"),
+                y = "Count",
+                x = "Repeat Fraction")
+d 
+```
+
+In deletions, more of them have high repetitive fraction. In duplications, most of them have low repetitive fraction.
+
+### Depth {#depth}
+
+#### Distribution of Normalized Depth and Smooth Normalized Depth {#distribution-of-normalized-depth-and-smooth-normalized-depth}
+
+The **Normalized depth** (`norm_depth`) is the median of the normalized mean depth of the windows that are part of the CNV region.
+
+The **Smooth normalized depth** (`smooth_depth`) is the median of the smooth normalized mean depth of the windows that are part of the CNV region.
+
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 9
 d <- ggplot(cnv_calls, aes(norm_depth, fill = cnv)) +
             facet_wrap(~cnv, ncol = 1)+
             geom_histogram(binwidth = 0.1)+
@@ -162,10 +294,12 @@ s <- ggplot(cnv_calls, aes(smooth_depth, fill = cnv)) +
 
 d | s
 ```
+
 There are CNVs with extremely high normalized depth. I will truncate the normalized depth to 5.
-```{r}
+
+```{r, message = FALSE, warning = FALSE}
 #| fig.height: 7
-#| fig.width: 7
+#| fig.width: 9
 d <- ggplot(cnv_calls, aes(norm_depth, fill = cnv)) +
             facet_wrap(~cnv, ncol = 1)+
             geom_histogram(binwidth = 0.01)+
@@ -195,11 +329,55 @@ s <- ggplot(cnv_calls, aes(smooth_depth, fill = cnv)) +
 
 d | s
 ```
-### Distribution of Sizes of CNVs
 
-```{r}
+Most deletions have depth (normalized and smooth) close to 0. Most duplications have depth (normalized and smooth) close to the depth threshold with which CNVs were called.
+
+#### Normalized Depth vs. Smooth Normalized Depth
+
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 11
+#| fig.width: 9
+p <- ggplot(cnv_calls, aes(x = norm_depth, y = smooth_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma) +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Normalized Depth vs Smooth Normalized Depth",
+        subtitle = "Panels by interval of Repeat Fraction",
+         x = "Normalized Depth",
+         y = "Smooth Normalized Depth")
+
+o <- ggplot(cnv_calls, aes(x = norm_depth, y = smooth_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_x_continuous(labels = scales::comma, limits = c(0,5)) +
+    scale_y_continuous(labels = scales::comma, limits = c(0,5)) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Normalized Depth vs Smooth Normalized Depth (Truncated axes)",
+         subtitle = "Panels by interval of Repeat Fraction",
+         x = "Normalized Depth",
+         y = "Smooth Normalized Depth")
+p / o
+```
+
+Since the CNVs are called using the smooth_depth, but it does not always coincide with the norm_depth, there are called CNVs in between the depth threshold used in the CNV calling. Most CNVs are in the diagonal where smooth depth is the same as normalized depth.
+
+There are many duplications with extremely high depth that are in the same high interval of repetitive fraction.
+
+There are more deletion in the high repetitive fraction interval. There are more duplications in the low repetitive fraction interval.
+
+### Size {#size}
+
+#### Distribution of Sizes of CNVs {#distribution-of-sizes-of-cnvs}
+
+```{r, message = FALSE, warning = FALSE}
 #| fig.height: 7
-#| fig.width: 7
+#| fig.width: 9
 d <- ggplot(cnv_calls, aes(region_size, fill = cnv)) +
             facet_wrap(~cnv, ncol = 1)+
             geom_histogram(binwidth = 1000)+
@@ -215,216 +393,112 @@ d <- ggplot(cnv_calls, aes(region_size, fill = cnv)) +
 d 
 ```
 
-### Depth vs. Size
+Only duplication are larger than \~150kb.
 
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-d <- ggplot(cnv_calls, aes(x = region_size, y = norm_depth, color = cnv)) +
-        facet_wrap(~cnv, ncol = 1)+
-        geom_point()+
-        scale_x_continuous(labels = scales::comma)+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "none")+
-        labs(title = "Normalized Depth vs CNV Size",
-            y = "Normalized Depth (truncated)",
-            x = "CNV Size")
-s <- ggplot(cnv_calls, aes(x = region_size, y = smooth_depth, color = cnv)) +
-        geom_point()+
-        scale_x_continuous(labels = scales::comma)+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "none")+
-        labs(title = "Smooth Normalized Depth vs CNV Size",
-            y = "Smooth Normalized Depth (truncated)",
-            x = "CNV Size")
-d | s
-```
+#### Depth vs. Size
 
-Many small CNVs have very high smooth depth
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls, aes(x = region_size, y = smooth_depth, color = repeat_fraction)) +
-        geom_point()+
-        ylim(0,5)+
-        scale_x_continuous(labels = scales::comma)+
-        scale_color_distiller(limits =c(0,1))+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs Size",
-        y = "Smooth Normalized Depth",
-        x = "Size")
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 11
+#| fig.width: 9
+p <- ggplot(cnv_calls, aes(x = region_size, y = smooth_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma) +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Smooth Normalized Depth vs CNV Size",
+         subtitle = "Panels by interval of Repeat Fraction",
+         x = "CNV Size",
+         y = "Smooth Normalized Depth")
+
+o <- ggplot(cnv_calls, aes(x = region_size, y = smooth_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma, limits = c(0,5)) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Smooth Normalized Depth vs CNV Size (Truncated Y axis)",
+         subtitle = "Panels by interval of Repeat Fraction",
+         x = "CNV Size",
+         y = "Smooth Normalized Depth")
+p / o
 ```
 
-```{r}
-repeat_threshold <- 0.2
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(filter(cnv_calls, repeat_fraction < repeat_threshold), aes(x = region_size, y = smooth_depth, color = repeat_fraction)) +
-        geom_point()+
-        ylim(0,5)+
-        scale_x_continuous(labels = scales::comma)+
-        scale_color_distiller(limits =c(0,1))+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs Size (filtering out highly repetititve)",
-        y = "Smooth Normalized Depth",
-        x = "Size")
-```
-The small CNVs are the ones that usually have very high normalized depths, even when they are not very repetititve.
+There are many small CNVs in a high repetitive fraction interval that have extremely high depth.
 
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls, aes(x = repeat_fraction, y = norm_depth), alpha = 0.1) +
-        geom_quasirandom()+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Normalized Depth vs Repeat Fraction (truncated y axis)",
-        y = "Normalized Depth",
-        x = "Repeat Fraction")
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls, aes(y = smooth_depth, x = norm_depth, color = repeat_fraction)) +
-        geom_point()+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs. Normalized Depth",
-        x = "Normalized Depth",
-        y = "Smooth Normalized Depth")
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls, aes(y = smooth_depth, x = norm_depth, color = repeat_fraction)) +
-        geom_point()+
-        xlim(0,5)+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs. Normalized Depth (truncated X and Y axis)",
-        x = "Normalized Depth",
-        y = "Smooth Normalized Depth")
-```
-The 
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 11
+#| fig.width: 9
+p <- ggplot(cnv_calls, aes(x = region_size, y = norm_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma) +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Normalized Depth vs CNV Size",
+        subtitle = "Panels by interval of Repeat Fraction",
+         x = "CNV Size",
+         y = "Normalized Depth")
 
-Remove CNVs that have a repeat fraction above a threshold
-```{r, fold-code=FALSE}
-repeat_fraction_threshold = 0.3
-```
-```{r}
-cnv_calls_no_repetitive <- cnv_calls %>%
-    filter(repeat_fraction < repeat_fraction_threshold)
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls_no_repetitive, aes(y = smooth_depth, x = norm_depth, color = repeat_fraction)) +
-        geom_point()+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs. Normalized Depth",
-        x = "Normalized Depth",
-        y = "Smooth Normalized Depth")
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls_no_repetitive, aes(y = smooth_depth, x = norm_depth, color = repeat_fraction)) +
-        geom_point()+
-        xlim(0,5)+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Smooth Normalized Depth vs. Normalized Depth (truncated X and Y axis)",
-        x = "Normalized Depth",
-        y = "Smooth Normalized Depth")
+o <- ggplot(cnv_calls, aes(x = region_size, y = norm_depth)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+    geom_hex(bins = 50) +
+    facet_wrap(~cut(repeat_fraction, breaks = 4), nrow = 2) +
+    scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma, limits = c(0,5)) +
+    theme_minimal() +
+    labs(title = "Hexbin Plot of Normalized Depth vs CNV Size (Truncated Y axis)",
+        subtitle = "Panels by interval of Repeat Fraction",
+         x = "CNV Size",
+         y = "Normalized Depth")
+p / o
 ```
 
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_calls_no_repetitive, aes(y = smooth_depth, x = norm_depth, color = region_size)) +
-        geom_point()+
-        scale_color_viridis_c(trans = "log10", name = "Region Size\n(log scale)", labels = scales::comma) +
-        xlim(0,5)+
-        ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "right")+
-        labs(title = "Smooth Normalized Depth vs. Normalized Depth (truncated X and Y axis)",
-        x = "Normalized Depth",
-        y = "Smooth Normalized Depth")
-```
-In the larger CNVs the Normalized Depth and Smooth Normalized Depth are more similar.
+Mostly, the CNVs with very high smooth_depth are small.
 
-## Explore distribution of CNV groups
+The CNVs whose norm_depth is in between the depth thresholds are small. (These are the ones that the norm_depth and smooth_depth don't coincide).
+
+Some dupCNVs are large and have very high depth (the ones that are neither in the vertical cluster of small CNVs and high depth or the horizontal cluster of large CNVs and depth around 2):
 
 ```{r}
-cnv_groups <- cnv_calls_no_repetitive %>%
-    group_by(lineage, chromosome, start, end, region_size) %>%
-    summarize(max_norm_depth = max(norm_depth),
-              norm_depth = median(norm_depth),
-              smooth_depth = median(smooth_depth),
-              n = n())
+filter(cnv_calls, region_size > 50000, smooth_depth > 2.5)%>%
+  select(sample, lineage, chromosome, norm_depth, smooth_depth, region_size, repeat_fraction)
 ```
 
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(cnv_groups, aes(x = region_size, y = norm_depth, size = n)) +
-        geom_point()+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Normalized Depth vs CNV Size",
-        y = "Normalized Depth",
-        x = "CNV Size")
-```
+The CNVs with the highest Normalized Depth (smooth or not), are highly repetitive.
 
-```{r}
-ggplot(cnv_groups, aes(x = region_size, y = max_norm_depth, size = n)) +
-        geom_point()+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Normalized Depth vs CNV Size",
-        y = "Normalized Depth",
-        x = "CNV Size")
-```
+There are many delCNVs completely repetitive. The majority of the dupCNVs are not repetitive.
 
-## Explore called duplications dCNVs
+## Explore dupCNVs {#explore-duplications}
+
+Keep only the CNVs labeled as duplications (dupCNVs)
 
 ```{r}
 dup_calls <- filter(cnv_calls, cnv == "duplication")
-head(dup_calls)
 ```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(dup_calls, aes(x = chromosome, y = norm_depth, color = repeat_fraction)) +
-        geom_quasirandom()+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Distribution of Normalized Depth of dCNVs",
-        y = "Normalized Depth",
-        x = "Chromosome")
-```
-To filter out the dCNVs that have very large Normalized Depth. Here I 
-make groups of CNVs that start at the same position in the same chromosome.
+
+### Filter out high depth dupCNVs {#filter-high-depth-dupcnvs}
+
+To filter out the dupCNVs that have very large Normalized Depth. Here I make groups of CNVs that start at the same position in the same chromosome.
+
 ```{r, output= FALSE}
 dup_summary <- dup_calls %>%
     group_by(lineage, chromosome, start, end, region_size) %>%
     summarize(max_depth = max(norm_depth),
               median_depth = median(norm_depth),
-              n = n())
+              n = n(),
+              median_repeat = median(repeat_fraction))
 ```
 
-Joined CNVs with max depth larger than 5:
+The dupCNVs groups with max depth larger than 5:
+
 ```{r}
 summary_large_dups <- dup_summary %>%
                         filter((max_depth > 5))%>%
@@ -432,85 +506,88 @@ summary_large_dups <- dup_summary %>%
 head(summary_large_dups)
 ```
 
-Filter out duplications that are part of the groups in the previous table.  
-This way of filtering removes 
-individual CNVs that not necesarily have depth grater than 5 but other samples in the lineage have a high depth CNV in the same region.
+Filter out duplications that are part of the groups in the previous table.\
+This way of filtering removes individual CNVs that not necessarily have depth grater than 5 but other samples in the lineage have a high depth CNV in the same region.
+
 ```{r}
 dup_calls_filtered <- dup_calls %>%
     filter(!paste(start, end, chromosome, lineage) %in% 
            paste(summary_large_dups$start, summary_large_dups$end, summary_large_dups$chromosome, summary_large_dups$lineage))
 ```
 
+### Depth vs. Repeats per Chromosome
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 #| fig.height: 7
-#| fig.width: 7
-ggplot(dup_calls_filtered, aes(x = chromosome, y = norm_depth, color = repeat_fraction)) +
-        geom_quasirandom()+
+#| fig.width: 9
+n <- ggplot(dup_calls_filtered, aes(x = chromosome, y = norm_depth, color = chromosome)) +
+       geom_quasirandom()+
+       facet_wrap(~cut(repeat_fraction, breaks = 4), ncol = 1) +
         theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Distribution of Normalized Depth of dCNVs",
+        ylim(0,5)+
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90))+
+        labs(title = "Distribution of Normalized Depth of dupCNVs",
+        subtitle = "Panels by interval of Repeat Fraction",
         y = "Normalized Depth",
         x = "Chromosome")
-```
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-ggplot(dup_calls_filtered, aes(x = chromosome, y = smooth_depth, color = repeat_fraction)) +
-    geom_quasirandom() +
-    theme_minimal() +
-    theme(legend.position = "bottom") +
-    scale_y_continuous(breaks = seq(0, max(dup_calls_filtered$smooth_depth, na.rm = TRUE), by = 0.5)) +
-    labs(title = "Distribution of Smooth Normalized Depth of dCNVs",
-         y = "Smooth Normalized Depth",
-         x = "Chromosome")
-```
-
-```{r}
-n <- ggplot(dup_calls_filtered)+
-    geom_histogram(aes(norm_depth), binwidth = 0.01)+
-    scale_x_continuous(limits = c(0, 5), breaks = seq(0, 5, by = 0.5)) +
-    theme_minimal() +
-    labs(title = "Histogram of Normalized Depth of CNVs",
-        y = "Count",
-        x = "Noramlized Depth of CNVs")
-s <- ggplot(dup_calls_filtered)+
-    geom_histogram(aes(smooth_depth), binwidth = 0.01)+
-    scale_x_continuous(limits = c(0, 5), breaks = seq(0, 5, by = 0.5)) +
-    theme_minimal() +
-    labs(title = "Histogram of Normalized Smooth Depth of CNVs",
-        y = "Count",
-        x = "Normalized Smooth Depth of CNVs")
-n / s
-```
-
-```{r}
-#| fig.height: 7
-#| fig.width: 7
-n <- ggplot(dup_calls_filtered, aes(x = region_size, y = norm_depth, color = repeat_fraction)) +
-        geom_point()+
-        ylim(0,5)+
+s <- ggplot(dup_calls_filtered, aes(x = chromosome, y = smooth_depth, color = chromosome)) +
+       geom_quasirandom()+
+       facet_wrap(~cut(repeat_fraction, breaks = 4), ncol = 1) +
         theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Distribution of Normalized Depth of dCNVs",
-        y = "Normalized Depth",
-        x = "CNV Size")+
-    scale_x_continuous(labels = scales::comma)
-
-s <- ggplot(dup_calls_filtered, aes(x = region_size, y = smooth_depth, color = repeat_fraction)) +
-        geom_point()+
         ylim(0,5)+
-        theme_minimal() +
-        theme(legend.position = "bottom")+
-        labs(title = "Distribution of Normalized Depth of dCNVs",
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90))+
+        labs(title = "Distribution of Smooth Normalized Depth of dupCNVs",
+        subtitle = "Panels by interval of Repeat Fraction",
         y = "Smooth Normalized Depth",
-        x = "CNV Size")+
-    scale_x_continuous(labels = scales::comma)
-
+        x = "Chromosome")
 n | s
+
 ```
 
-### Median depth of chromosomes 
+### Filter out high repeat content CNVs
+
+```{r}
+repeat_threshold = 0.25
+```
+
+```{r}
+summary_repetitive_dups <- dup_summary %>%
+                            filter((median_repeat > 0.25))%>%
+                            arrange(desc(n))
+```
+
+```{r}
+dup_calls_filtered <- dup_calls_filtered %>%
+    filter(!paste(start, end, chromosome, lineage) %in% 
+           paste(summary_repetitive_dups$start, summary_repetitive_dups$end, summary_repetitive_dups$chromosome, summary_repetitive_dups$lineage))
+```
+
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 9
+n <- ggplot(dup_calls_filtered, aes(x = chromosome, y = norm_depth, color = chromosome)) +
+       geom_quasirandom()+
+        theme_minimal() +
+        ylim(0,5)+
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90))+
+        labs(title = "Distribution of Normalized Depth of dupCNVs",
+        y = "Normalized Depth",
+        x = "Chromosome")
+s <- ggplot(dup_calls_filtered, aes(x = chromosome, y = smooth_depth, color = chromosome)) +
+       geom_quasirandom()+
+        theme_minimal() +
+        ylim(0,5)+
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90))+
+        labs(title = "Distribution of Smooth Normalized Depth of dupCNVs",
+        y = "Smooth Normalized Depth",
+        x = "Chromosome")
+n | s
+
+```
+
+## Explore depth of chromosomes {#median-depth-of-chromosomes}
+
+The **Normalized median depth of chromosomes** (`norm_chrom_median`) is the normalized median of the depth of the positions in the whole chromosome. (First the median was calculated and then normalized). The **Normalized mean depth of chromosomes** (`norm_chrom_mean`) is the normalized mean of the depth of the positions in the whole chromosome. (First the mean was calculated and then normalized).
 
 ```{r}
 depth_by_chrom_good_desjardins <- read.delim(
@@ -524,12 +601,67 @@ depth_by_chrom <- depth_by_chrom_good %>%
     select(sample, accession, norm_chrom_median, norm_chrom_mean)
 head(depth_by_chrom)
 ```
-## Metrics per chromosome
 
-### Join metrics from CNVs and depth of chromosome
+```{r, message = FALSE, warning = FALSE}
+med <- ggplot(depth_by_chrom)+
+        geom_histogram(aes(norm_chrom_median), binwidth = 0.01)+
+        scale_x_continuous(breaks = seq(0,max(depth_by_chrom$norm_chrom_median), by = 0.1)) +
+        theme_minimal() +
+        labs(title = "Histogram of Normalized median depth of chromosomes",
+                y = "Count",
+                x = "Normalized median depth of chromosomes")
+mea <- ggplot(depth_by_chrom)+
+        geom_histogram(aes(norm_chrom_mean), binwidth = 0.01)+
+        scale_x_continuous(breaks = seq(0,max(depth_by_chrom$norm_chrom_median), by = 0.1)) +
+        theme_minimal() +
+        labs(title = "Histogram of Normalized mean depth of chromosomes",
+                y = "Count",
+                x = "Normalized mean depth of chromosomes")
 
-The dataframe `all_metrics` contains a row per individual called duplication with the information about the CNV and the chromosome of the sample. 
-For the chromosome-sample without any called duplication, the columns related to CNVs have NAs.
+med / mea
+
+```
+
+```{r, message = FALSE, warning = FALSE}
+med <- ggplot(filter(depth_by_chrom, norm_chrom_median > 1.2 ))+
+        geom_histogram(aes(norm_chrom_median), binwidth = 0.01)+
+        scale_x_continuous(breaks = seq(0,max(depth_by_chrom$norm_chrom_median), by = 0.1)) +
+        scale_y_continuous(
+           breaks = seq(0, max(table(round(depth_by_chrom$norm_chrom_median ))) , 1)
+         )+
+        theme_minimal() +
+        theme(panel.grid.minor = element_blank())+
+        labs(title = "Histogram of Normalized median depth of chromosomes",
+                subtitle = "Only values above 1.2",
+                y = "Count",
+                x = "Normalized median depth of chromosomes")
+mea <- ggplot(filter(depth_by_chrom, norm_chrom_mean > 1.2 ))+
+        geom_histogram(aes(norm_chrom_mean), binwidth = 0.01)+
+        scale_x_continuous(breaks = seq(0,max(depth_by_chrom$norm_chrom_mean), by = 0.1)) +
+        #scale_y_continuous(breaks = seq(0, max(table(round(depth_by_chrom$norm_chrom_mean ))) , 1))+
+        theme_minimal() +
+        theme(panel.grid.minor = element_blank())+
+        labs(title = "Histogram of Normalized mean depth of chromosomes",
+                subtitle = "Only values above 1.2",
+                y = "Count",
+                x = "Normalized mean depth of chromosomes")
+med / mea
+```
+
+Chromosomes with very high median depth:
+
+```{r}
+left_join(depth_by_chrom, chromosome_names, by = "accession")%>%
+  left_join(metadata, by = c("sample", "lineage"))%>%
+  select(lineage, sample, strain, chromosome, norm_chrom_median, norm_chrom_mean)%>%
+  filter(norm_chrom_median > 2.2)%>%
+  arrange(norm_chrom_median)
+```
+
+## Metrics per chromosome (dupCNVs and chromosome depth) {#metrics-per-chromosome}
+
+The dataframe `all_metrics` contains a row per individual called duplication with the information about the CNV and the chromosome of the sample. For the chromosome-sample without any called duplication, the columns related to CNVs have NAs.
+
 ```{r}
 all_metrics <- left_join(depth_by_chrom, dup_calls_filtered,
         by = c("sample", "accession"))%>%
@@ -540,7 +672,8 @@ all_metrics <- left_join(depth_by_chrom, dup_calls_filtered,
 head(all_metrics)
 ```
 
-### Summarize the metrics of the called CNVs per chromosome
+### Summarize the metrics of the called CNVs per chromosome {#summarize-the-metrics-of-the-called-cnvs-per-chromosome}
+
 And keep the rest of the chromosome metrics.
 
 ```{r, message=FALSE}
@@ -550,7 +683,7 @@ chrom_metrics <- all_metrics %>%
             samples_in_lineage, samples_in_dataset_lineage, 
             total_samples,dataset) %>%
     summarise(total_cnv_size = sum(region_size),
-                n_cnvs = n(), #fix this
+                n_cnvs = sum(!is.na(cnv)), #fix this
                 first = min(start),
                 last = max(end),
                 mean_cnv_depth = round(mean(norm_depth),2),
@@ -572,24 +705,97 @@ cat("The total number of chromosomes in all samples in the dataset is:", nrow(ch
 cat("The total number of chromosomes in all samples with called duplications is:", nrow(chrom_metrics %>% filter(!is.na(total_cnv_size))))
 ```
 
-### Explore relationship between CNV chromosomal metrics
-```{r}
-ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
-        geom_point(aes(color = n_cnvs)) +
-        scale_x_continuous(labels = scales::comma) +
-        scale_color_distiller(palette = "GnBu", direction = -1, trans = "log2", name = "Number\n of CNVs") +
-        theme_minimal() +
-        theme(legend.position = "right")+
-        labs(title = "Percent of Chromosome Covered by CNVs vs Spanned by CNVs",
-            y = "Percent of Chromosome Spanned by CNVs",
-            x = "Percent of Chromosome Covered by CNVs")
+### Number of dupCNVs
+
+```{r, message = FALSE, warning = FALSE}
+ggplot(filter(chrom_metrics, n_cnvs > 0))+
+    geom_histogram(aes(n_cnvs), binwidth = 1)+
+    scale_x_continuous() +
+    theme_minimal() +
+    labs(title = "Histogram of number of dupCNVs per chromosome",
+            y = "Count",
+            x = "Number of dupCNVs")
 ```
-```{r}
-#| fig.height: 9
+
+### Percentage of chromosome Covered by dupCNVs
+
+```{r, message = FALSE, warning = FALSE}
+p <- ggplot(filter(chrom_metrics, n_cnvs > 0))+
+        geom_quasirandom(aes(x = chromosome, y = dup_coverage_percent))+
+        theme_minimal() +
+        labs(title = "Percent of Chromosome Covered by dupCNVs per Chromosome",
+                subtitle = "Only chromosomes with at least 1 dupCNV",
+                y = "Percent of Chromosome Covered by dupCNVs",
+                x = "Chromosome")
+ggMarginal(p, type = "histogram")
+```
+
+```{r, message = FALSE, warning = FALSE}
+p <- ggplot(filter(chrom_metrics, dup_coverage_percent > 10))+
+        geom_quasirandom(aes(x = chromosome, y = dup_coverage_percent))+
+        theme_minimal() +
+        labs(title = "Percent of Chromosome Covered by dupCNVs per Chromosome",
+                subtitle = "Only chromosomes with at least 10% covered",
+                x = "Chromosome",
+                y = "Percent of Chromosome Covered by dupCNVs")
+ggMarginal(p, type = "histogram")
+
+### Percentage of chromosome Spanned by dupCNVs
+p <- ggplot(filter(chrom_metrics, n_cnvs > 0))+
+        geom_quasirandom(aes(x = chromosome, y = dup_span_percent))+
+        theme_minimal() +
+        labs(title = "Percent of Chromosome Spanned by dupCNVs per Chromosome",
+                subtitle = "Only chromosomes with at least 1 dupCNV",
+                y = "Percent of Chromosome Spanned by dupCNVs",
+                x = "Chromosome")
+ggMarginal(p, type = "histogram")
+```
+
+```{r, message = FALSE, warning = FALSE}
+p <- ggplot(filter(chrom_metrics, dup_coverage_percent > 10))+
+        geom_quasirandom(aes(x = chromosome, y = dup_span_percent))+
+        theme_minimal() +
+        labs(title = "Percent of Chromosome Spanned by dupCNVs per Chromosome",
+                subtitle = "Only chromosomes with at least 10% spanned",
+                y = "Percent of Chromosome Spanned by dupCNVs",
+                x = "Chromosome")
+ggMarginal(p, type = "histogram")
+```
+
+### Explore relationship between CNV chromosomal metrics {#explore-relationship-between-cnv-chromosomal-metrics}
+
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 7
 #| fig.width: 7
+ggplot(filter(chrom_metrics, n_cnvs > 0), aes(x = dup_coverage_percent, y = dup_span_percent)) +
+        geom_hex(bins=50) +
+        scale_x_continuous(labels = scales::comma) +
+        geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+        scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "Percent of Chromosome Spanned by dupCNVs vs Covered by dupCNVs",
+            y = "Percent of Chromosome Spanned by dupCNVs",
+            x = "Percent of Chromosome Covered by dupCNVs")
+```
+
+```{r, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 7
+ggplot(filter(chrom_metrics, n_cnvs > 0), aes(x = dup_coverage_percent, y = n_cnvs)) +
+        geom_hex(bins=50) +
+        scale_x_continuous(labels = scales::comma) +
+        scale_fill_viridis_c(name = "Count\nLog10", direction = -1, trans = "log10") +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "Number of CNVs vs Percent of Chromosome Covered by dupCNVs ",
+            y = "Number of CNVs",
+            x = "Percent of Chromosome Covered by dupCNVs")
+```
+
+```{r, message = FALSE, warning = FALSE}
 ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
         geom_point(aes(color = n_cnvs)) +
-        facet_wrap(~chromosome, ncol = 3)+
         scale_x_continuous(labels = scales::comma) +
         scale_color_distiller(palette = "GnBu", direction = -1, trans = "log2", name = "Number\n of CNVs") +
         theme_minimal() +
@@ -598,11 +804,23 @@ ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
             y = "Percent of Chromosome Spanned by CNVs",
             x = "Percent of Chromosome Covered by CNVs")
 ```
-```{r}
+```{r, message = FALSE, warning = FALSE}
 ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
-        geom_point(aes(color = dup_repeat_percent)) +
+        geom_point(aes(color = norm_chrom_median)) +
         scale_x_continuous(labels = scales::comma) +
-        scale_color_distiller(palette = "YlOrRd", direction = 1, trans = "log2", name = "Percent of CNV\nOverlaped by Repeats") +
+        scale_color_viridis_c(name = "Normalized Median\nDepth of Chromosome", direction = -1) +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "Percent of Chromosome Covered by CNVs vs Spanned by CNVs",
+            y = "Percent of Chromosome Spanned by CNVs",
+            x = "Percent of Chromosome Covered by CNVs")
+```
+```{r, message = FALSE, warning = FALSE}
+ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
+        geom_point(aes(color = norm_chrom_mean)) +
+        facet_wrap(~cut(norm_chrom_median, breaks = 6), nrow = 2) +
+        scale_x_continuous(labels = scales::comma) +
+        scale_color_viridis_c(name = "Normalized Mean\nDepth of Chromosome", direction = -1) +
         theme_minimal() +
         theme(legend.position = "right")+
         labs(title = "Percent of Chromosome Covered by CNVs vs Spanned by CNVs",
@@ -610,91 +828,19 @@ ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = dup_span_percent)) +
             x = "Percent of Chromosome Covered by CNVs")
 ```
 
-```{r}
-ggplot(chrom_metrics)+
-    geom_histogram(aes(dup_coverage_percent), binwidth = 1)+
-    scale_x_continuous(breaks = seq(0,100, by = 5)) +
-    theme_minimal() +
-    labs(title = "Histogram of Percent of Chromosome Covered by CNVs",
-            y = "Count",
-            x = "Percent of Chromosome Covered by CNVs")
-```
-```{r}
-ggplot(filter(chrom_metrics, dup_coverage_percent > 0))+
-    geom_histogram(aes(dup_coverage_percent), binwidth = 1)+
-    scale_x_continuous(breaks = seq(0,100, by = 5)) +
-    theme_minimal() +
-    labs(title = "Histogram of Percent of Chromosome Covered by CNVs",
-            subtitle = "Only values above 0%",
-            y = "Count",
-            x = "Percent of Chromosome Covered by CNVs")
-```
-```{r}
-ggplot(filter(chrom_metrics, dup_coverage_percent > 15))+
-    geom_boxplot(aes(x = chromosome, y = dup_coverage_percent))+
-    geom_quasirandom(aes(x = chromosome, y = dup_coverage_percent))+
-    theme_minimal() +
-    labs(title = "Boxplot of Percent of Chromosome Covered by CNVs per Chromosome",
-            subtitle = "Only values above 15%",
-            y = "Count",
-            x = "Percent of Chromosome Covered by CNVs")
-```
+## Compare metrics of dupCNVs with chromosome depth {#compare-metrics-of-dcnvs-with-chromosome-depth}
 
-```{r}
-ggplot(filter(chrom_metrics, dup_span_percent > 0))+
-    geom_histogram(aes(dup_span_percent), binwidth = 1)+
-    scale_x_continuous(breaks = seq(0,100, by = 5)) +
-    theme_minimal() +
-    labs(title = "Histogram of Percent of Chromosome Spanned by CNVs",
-            subtitle = "Only values above 0%",
-            y = "Count",
-            x = "Percent of Chromosome Spanned by CNVs")
-```
+The **Normalized depth** (`norm_depth`) is the median of the normalized depth of the windows that are part of each dupCNV region.
 
-### Explore metrics of median depth of chromosomes
-```{r}
-ggplot(chrom_metrics)+
-    geom_histogram(aes(norm_chrom_median), binwidth = 0.01)+
-    scale_x_continuous(breaks = seq(0,max(chrom_metrics$norm_chrom_median), by = 0.1)) +
-    theme_minimal() +
-    labs(title = "Histogram of Normalized median depth of chromosomes",
-            y = "Count",
-            x = "Normalized median depth of chromosomes")
-```
-```{r}
-ggplot(filter(chrom_metrics, norm_chrom_median > 1))+
-    geom_histogram(aes(norm_chrom_median), binwidth = 0.01)+
-    scale_x_continuous(breaks = seq(0,max(chrom_metrics$norm_chrom_median), by = 0.1)) +
-    theme_minimal() +
-    labs(title = "Histogram of Normalized median depth of chromosomes",
-            subtitle = "Only values above 1",
-            y = "Count",
-            x = "Normalized median depth of chromosomes")
-```
-```{r}
-ggplot(filter(chrom_metrics, norm_chrom_median > 1.2))+
-    geom_histogram(aes(norm_chrom_median), binwidth = 0.01)+
-    scale_x_continuous(breaks = seq(0,max(chrom_metrics$norm_chrom_median), by = 0.1)) +
-    theme_minimal() +
-    labs(title = "Histogram of Normalized median depth of chromosomes",
-            subtitle = "Only values above 1.2",
-            y = "Count",
-            x = "Normalized median depth of chromosomes")
-```
+The **Median depth of dupCNV** (`median_cnv_depth`) is the median of the Normalized depth of all dupCNVs in the chromosome. There are values bellow the threshold of depth to call a Duplication CNV because that threshold was applied to the smoothed values and this are the raw values.
 
-## Compare metrics of dCNVs with chromosome depth
+The **Normalized median depth of chromosomes** (`norm_chrom_median`) is the normalized median of the depth of the positions in the whole chromosome. (First the median was calculated and then normalized).
 
-The **Normalized depth** (`norm_depth`) is the median of the normalized depth of the windows that are part of each CNV region.  
+The **Percent of Chromosome Covered by dupCNVs** (`dup_coverage_percent`) is the percentage of the full length of the chromosome that is part of called dupCNVs.
 
-The **Median depth of CNV** (`median_cnv_depth`) is the median of the Normalized depth of all CNVs in the chromosome. There are values bellow the threshold of depth to call a Duplication CNV because that threshold was applied to the smoothed values and this are the raw values.  
+The **Percent of Chromosome Spanned by dupCNVs** (`dup_span_percent`) is the percentage of the full length of the chromosome that is in between the leftmost and rightmost dupCNVs.
 
-The **Normalized median depth of chromosomes** (`norm_chrom_median`) is the normalized median of the depth of the positions in the whole chromosome. (First the median was calculated and then normalized).  
-
-The **Percent of Chromosome Covered by CNVs** (`dup_coverage_percent`) is the percentage of the full length of the chromosome that is part of called CNVs.  
-
-The **Percent of Chromosome Spanned by CNVs** (`dup_span_percent`) is the percentage of the full length of the chromosome that is in between the leftmost and rightmost CNVs.  
-
-```{r}
+```{r, message = FALSE, warning = FALSE}
 color_range <- paste("2.6 -", max(chrom_metrics$median_cnv_depth, na.rm = TRUE))
 colors <- c("#FDE725", "#1F9E89", "#440154")
 names(colors) <-c("0 - 1.6", "1.6 - 2.6", color_range)
@@ -705,93 +851,69 @@ ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
                             labels = c("0 - 1.6", "1.6 - 2.6", color_range))),
                             alpha = 0.5) +
         scale_color_manual(values = colors, 
-                            name = "Median CNV Depth") +
+                            name = "Median dupCNV Depth") +
         theme_minimal() +
         theme(legend.position = "right") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
+        labs(title = "Percent of Chromosome Covered by dupCNVs vs. Depth of Chromosome",
              y = "Normalized Median Depth of Chromosome",
-             x = "Percent of Chromosome Covered by CNVs")
+             x = "Percent of Chromosome Covered by dupCNVs")
 ```
-```{r}
-ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
-        facet_wrap(~chromosome, ncol = 4)+
+
+
+```{r, message = FALSE, warning = FALSE}
+color_range <- paste("2.6 -", max(chrom_metrics$mean_cnv_depth, na.rm = TRUE))
+colors <- c("#FDE725", "#1F9E89", "#440154")
+names(colors) <-c("0 - 1.6", "1.6 - 2.6", color_range)
+ggplot(chrom_metrics, aes(x = dup_coverage_percent, y = norm_chrom_mean)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
-        geom_point(aes(color = cut(median_cnv_depth, 
+        geom_point(aes(color = cut(mean_cnv_depth, 
                             breaks = c(-Inf, 1.6, 2.6, Inf), 
                             labels = c("0 - 1.6", "1.6 - 2.6", color_range))),
                             alpha = 0.5) +
         scale_color_manual(values = colors, 
-                            name = "Median CNV Depth") +
+                            name = "Mean dupCNV Depth") +
         theme_minimal() +
         theme(legend.position = "right") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
-             y = "Normalized Median Depth of Chromosome",
-             x = "Percent of Chromosome Covered by CNVs")
-
+        labs(title = "Percent of Chromosome Covered by dupCNVs vs. Depth of Chromosome",
+             y = "Normalized Mean Depth of Chromosome",
+             x = "Percent of Chromosome Covered by dupCNVs")
 ```
 
-## Explore repeats
-Get the percentage of each chromosome covered by repeats to know how much of a chromosome might not have reliable CNV calls.
+```{r, message = FALSE, warning = FALSE}
+color_range <- paste("2.6 -", max(chrom_metrics$mean_cnv_depth, na.rm = TRUE))
+colors <- c("#FDE725", "#1F9E89", "#440154")
+names(colors) <-c("0 - 1.6", "1.6 - 2.6", color_range)
+ggplot(chrom_metrics, aes(x = norm_chrom_median, y = norm_chrom_mean)) +
+        geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
+        geom_point(aes(color = cut(mean_cnv_depth, 
+                            breaks = c(-Inf, 1.6, 2.6, Inf), 
+                            labels = c("0 - 1.6", "1.6 - 2.6", color_range))),
+                            alpha = 0.5) +
+        scale_color_manual(values = colors, 
+                            name = "Mean dupCNV Depth") +
+        theme_minimal() +
+        theme(legend.position = "right") +
+        labs(title = "Normalized Mean Depth vs. Normalized Median Depth of Chromosome",
+             y = "Normalized Mean Depth of Chromosome",
+             x = "Normalized Median Depth of Chromosome")
+```
+
+
+## Explore putative duplicated chromosomes {#explore-putative-duplicated-chromosomes}
+
+Filter by percent of chromosome in dupCNV or chromosome depth
 
 ```{r}
-lineages <- unique(metadata$lineage)
-repeats_all <- data.frame()
-for(lineage in lineages){
-    repeats_path <-paste(
-        repeats_path_prefix,
-        lineage, "/", lineage, "_repeats.bed",
-        sep ="")
-    repeats <- read.delim(repeats_path, 
-        header=FALSE, 
-        col.names=c("accession", "start", "end", "repeat_type"), 
-        sep="\t")
-    repeats$lineage <- lineage
-    repeats_all <- rbind(repeats_all, repeats)
-}
-```
-```{r, message=FALSE}
-repeats_percent <- repeats_all %>%
-    mutate(repeat_size_each = end - start)%>%
-    group_by(accession, lineage) %>%
-    summarise(repeat_size = sum(repeat_size_each)) %>%
-    left_join(chromosome_lengths, by="accession") %>%
-    left_join(chromosome_names, by=c("accession","lineage")) %>%
-    mutate(percent_repeat_size = round((repeat_size / length) * 100, 2))%>%
-    mutate(chromosome = as.factor(chromosome))%>%
-    select(lineage, accession, chromosome, percent_repeat_size)
-```
-
-```{r, echo=FALSE}
-#| fig-height: 5
-#| fig-width: 9
-ggplot(repeats_percent)+
-    geom_col(aes(x=lineage, y=percent_repeat_size, fill = lineage))+
-    facet_grid(~chromosome, scales="free")+
-    labs(title = "Percentage of each chromosome covered by repeats", x="Lineage", y="Percent of chromosome covered by repeats (%)")+
-    theme(panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(color = "lightgray"),
-        panel.grid.minor.y = element_blank(),
-        panel.background = element_rect(fill = "white"),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
-        legend.position = "none")
-```
-Most chromosomes have repeats in between 5 and 10% of the size. In VNBII it is closer to 15% for some chormosomes.
-
-## Explore putative duplicated chromosomes
-Filter by percent of chromosome in CNV or chromosome depth
-```{r}
-#| code-fold: false
 size_threshold <- 50
-depht_threshold <- 1.55
+depth_threshold <- 1.55
 ```
 
 ```{r}
 chrom_metrics_filtered <- chrom_metrics %>%
     filter(dup_coverage_percent >= size_threshold | norm_chrom_median >= 1.55)
 ```
-```{r}
+
+```{r, message = FALSE, warning = FALSE}
 ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
         geom_point(aes(color = cut(median_cnv_depth, 
@@ -799,78 +921,21 @@ ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_medi
                             labels = c("0 - 1.6", "1.6 - 2.6", color_range))),
                             alpha = 0.5) +
         scale_color_manual(values = colors, 
-                            name = "Median CNV Depth") +
+                            name = "Median dupCNV Depth") +
         theme_minimal() +
         theme(legend.position = "right") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
+        labs(title = "Percent of Chromosome Covered by dupCNVs vs. Depth of Chromosome",
              y = "Normalized Median Depth of Chromosome",
-             x = "Percent of Chromosome Covered by CNVs")
-```
-```{r}
-ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
-        facet_wrap(~chromosome, ncol = 3)+
-
-        geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
-        geom_point(aes(color = cut(median_cnv_depth, 
-                            breaks = c(-Inf, 1.6, 2.6, Inf), 
-                            labels = c("0 - 1.6", "1.6 - 2.6", color_range))),
-                            alpha = 0.5) +
-        scale_color_manual(values = colors, 
-                            name = "Median CNV Depth") +
-        theme_minimal() +
-        theme(legend.position = "right") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
-             y = "Normalized Median Depth of Chromosome",
-             x = "Percent of Chromosome Covered by CNVs")
+             x = "Percent of Chromosome Covered by dupCNVs")
 ```
 
-```{r}
 
-ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
-        geom_point(aes(color = n_cnvs)) +
-        facet_wrap(~chromosome, ncol = 3)+
-        scale_x_continuous(labels = scales::comma) +
-        scale_color_distiller(palette = "GnBu", direction = -1, trans = "log2", name = "Number\n of CNVs") +
-        theme_minimal() +
-        geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
-            y = "Normalized Median Depth of Chromosome",
-            x = "Percent of Chromosome Covered by CNVs")+
-        theme(panel.grid.major.x = element_blank(),
-            panel.grid.minor.x = element_blank(),
-            panel.grid.major.y = element_line(color = "lightgray"),
-            panel.grid.minor.y = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            axis.text.x = element_text(angle = 45, hjust = 1),
-            panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
-            legend.position = "right")
-```
-```{r}
-ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, y = norm_chrom_median)) +
-        geom_point(aes(color = dup_span_percent)) +
-        facet_wrap(~chromosome, ncol = 3)+
-        scale_x_continuous(labels = scales::comma) +
-        scale_color_distiller(palette = "BuPu", direction = 1, name = "Percent Spanned\nby CNVs") +
-        geom_hline(yintercept = c(1, 2), color = "black", linetype = "dashed") +
-        labs(title = "Percent of Chromosome Covered by CNVs vs. Depth of Chromosome",
-            y = "Normalized Median Depth of Chromosome",
-            x = "Percent of Chromosome Covered by CNVs")+
-        theme_minimal()+
-        theme(panel.grid.major.x = element_blank(),
-            panel.grid.minor.x = element_blank(),
-            panel.grid.major.y = element_line(color = "lightgray"),
-            panel.grid.minor.y = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            axis.text.x = element_text(angle = 45, hjust = 1),
-            panel.border = element_rect(colour = "lightgray", fill=NA, linewidth = 2),
-            legend.position = "right")
-```
 
 ```{r}
 write_tsv(chrom_metrics_filtered, duplications_out_path)
 ```
 
-### Explore sample with very large Median Depth of Chromosome
+### Explore sample with very large Median Depth of Chromosome {#explore-sample-with-very-large-median-depth-of-chromosome}
 
 ```{r}
 chrom_metrics_filtered %>%
