@@ -21,10 +21,10 @@ library(ggnewscale)
 Paths
 ```{r}
 windows_path <- 
-    "../Crypto_Ashton/results_clean/04.Intermediate_files/01.Samples/depth_quality/ERS542302/depth_by_windows.tsv"
+    "../Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542302/depth_by_windows.tsv"
 cnv_path <- 
-    "../Crypto_Ashton/results_clean/01.Samples/cnv/ERS542302/cnv_calls.tsv"
-repeats_path <- "../Crypto_Ashton/results_clean/03.References/VNI/VNI_repeats.bed"
+    "../Crypto_Ashton/results/01.Samples/cnv/ERS542302/cnv_calls.tsv"
+repeats_path <- "../Crypto_Ashton/results/03.References/VNI/VNI_repeats.bed"
 ```
 
 ## Depth metrics of windows and CNV regions
@@ -98,10 +98,10 @@ ggplot() +
 Paths
 ```{r}
 windows_path <- 
-    "../Crypto_Ashton/results_clean/04.Intermediate_files/01.Samples/depth_quality/ERS542554/depth_by_windows.tsv"
+    "../Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542554/depth_by_windows.tsv"
 cnv_path <- 
-    "../Crypto_Ashton/results_clean/01.Samples/cnv/ERS542554/cnv_calls.tsv"
-repeats_path <- "../Crypto_Ashton/results_clean/03.References/VNI/VNI_repeats.bed"
+    "../Crypto_Ashton/results/01.Samples/cnv/ERS542554/cnv_calls.tsv"
+repeats_path <- "../Crypto_Ashton/results/03.References/VNI/VNI_repeats.bed"
 ```
 
 ```{r, message=FALSE, output = FALSE}
