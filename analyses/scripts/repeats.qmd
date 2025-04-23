@@ -1,0 +1,181 @@
+
+---
+title: "Repetitive sequences"
+author: "Claudia Zirión-Martínez"
+date: "2025-04-18"
+
+fig-height: 7
+fig-width: 9
+
+format: 
+  html:
+    page-layout: full
+---
+
+## Setup {#setup}
+
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+
+Libraries
+
+```{r libraries, output=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggrepel)
+```
+
+Paths
+
+```{r paths}
+metadata_path <-
+    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+chromosomes_path <-
+    "../Crypto_Desjardins/results/04.Intermediate_files/03.References/chromosome_lengths.tsv"
+repeats_path_prefix <-
+    "../Crypto_Desjardins/results/03.References/"
+```
+
+## Prepare dataset {#prepare-dataset}
+
+### Metadata {#metadata}
+
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99.  
+Select needed columns, remove H99 and get the number of samples per dataset and lineage, per lineage, and total.
+
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    metadata_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+```
+
+### Chromosome names and length {#chromosome-names-and-length}
+
+Get the nice chromosome names from the chromosomes file in WeavePop.
+
+```{r}
+chromosomes = read.delim(
+    chromosomes_path,
+    header=TRUE, sep=",") %>%
+    mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
+    mutate(chromosome = as.factor(chromosome))
+levels(chromosomes$chromosome) <- paste("chr", chromosomes$chromosome, sep="")
+```
+
+
+### Repeats {#repeats}
+
+#### Percentage of repeats per lineage per chromosome
+
+Get the percentage of each chromosome covered by repeats to know how much of a chromosome might not have reliable CNV calls.
+
+```{r}
+lineages <- unique(metadata$lineage)
+repeats_all <- data.frame()
+for(lineage in lineages){
+    repeats_path <-paste(
+        repeats_path_prefix,
+        lineage, "/", lineage, "_repeats.bed",
+        sep ="")
+    repeats <- read.delim(repeats_path, 
+        header=FALSE, 
+        col.names=c("accession", "start", "end", "repeat_type"), 
+        sep="\t")
+    repeats$lineage <- lineage
+    repeats_all <- rbind(repeats_all, repeats)
+}
+```
+
+```{r, message=FALSE, warning=FALSE}
+repeats_percent <- repeats_all %>%
+    mutate(repeat_size_each = end - start)%>%
+    group_by(accession, lineage) %>%
+    summarise(repeat_size = sum(repeat_size_each)) %>%
+    left_join(chromosomes, by=c("accession","lineage")) %>%
+    mutate(percent_repeat_size = round((repeat_size / length) * 100, 2))%>%
+    mutate(chromosome = as.factor(chromosome))%>%
+    select(lineage, accession, chromosome,length,percent_repeat_size, repeat_size)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent, aes(x=lineage, y=percent_repeat_size, fill = lineage))+
+    geom_col()+
+    facet_wrap(~chromosome, nrow =1)+
+    labs(title = "Percentage of each chromosome covered by repeats",
+         x="Lineage", 
+         y="Percent of chromosome covered by repeats (%)",
+        fill = "Lineage")+
+    theme_minimal()+
+    theme(legend.position = "right",
+          axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent, aes(x=length, y=percent_repeat_size, color = chromosome))+
+    geom_smooth(method = "lm", se = TRUE, color = "blue", linetype = "dashed") +
+    geom_point()+
+    geom_text_repel(aes(label = chromosome), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    facet_wrap(~lineage, nrow =1)+
+    labs(title = "Percentage of each chromosome covered by repeats",
+         x="Length of Chromosome (bp)", 
+         y="Percent of chromosome covered by repeats (%)",
+         color = "Chromosome")+
+    theme_minimal()+
+    theme(legend.position = "right")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent, aes(x=length, y=repeat_size, color = chromosome))+
+    geom_smooth(method = "lm", se = TRUE, color = "blue", linetype = "dashed") +
+    geom_point()+
+    geom_text_repel(aes(label = chromosome), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    facet_wrap(~lineage, nrow =1)+
+    labs(title = "Total size of repetitive sequences (bp) vs. length",
+         x="Length of Chromosome (bp)", 
+         y="Total size of repetitive sequences (bp)",
+         color = "Chromosome")+
+    theme_minimal()+
+    theme(legend.position = "right")
+```
+
+Most chromosomes have repeats in between 5 and 10% of the size. In VNBII it is closer to 15% for some chormosomes.
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent, aes(x=length, y=percent_repeat_size, color = lineage))+
+    geom_smooth(method = "lm", se = TRUE, color = "blue", linetype = "dashed") +
+    geom_point()+
+    geom_text_repel(aes(label = chromosome), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(title = "Percentage of each chromosome covered by repeats",
+         x="Length of Chromosome (bp)", 
+         y="Percent of chromosome covered by repeats (%)",
+         color = "Lineage")+
+    theme_minimal()+
+    theme(legend.position = "right")
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 9
+ggplot(repeats_percent, aes(x=length, y=repeat_size, color = lineage))+
+    geom_smooth(method = "lm", se = TRUE, color = "blue", linetype = "dashed") +
+    geom_point()+
+    geom_text_repel(aes(label = chromosome), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(title = "Total size of repetitive sequences (bp) vs. length",
+         x="Length of Chromosome (bp)", 
+         y="Total size of repetitive sequences (bp)",
+         color = "Lineage")+
+    theme_minimal()+
+    theme(legend.position = "right")
+```
