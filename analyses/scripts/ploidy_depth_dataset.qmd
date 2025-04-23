@@ -7,7 +7,7 @@ date: "2025-03-13"
 ## Setup
 
 ```{r, echo = FALSE, eval = FALSE}
-setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/")
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses/")
 ```
 ```{r, output=FALSE}
 library(tidyverse)
@@ -18,8 +18,10 @@ library(ggnewscale)
 ```
 Paths
 ```{r}
-duplications_path <- "results/tables/duplications_putative.tsv"
-components_path_prefix <- "results/tables/components_"
+duplications_path <- 
+    "results/tables/duplications_putative.tsv"
+components_path_prefix <- 
+    "results/tables/components_"
 ```
 ```{r, output=FALSE}
 duplications <- read_delim(duplications_path,
@@ -66,7 +68,8 @@ ploidy <- list(haploid = haploid,
 #| fig.height: 11
 #| fig.width: 7
 ggplot(large_components)+
-    geom_vline(xintercept = seq(0,max(large_components$mean), by = 1), color = "black", linetype = "solid") +    scale_x_continuous(breaks = ploidy$haploid,
+    geom_vline(xintercept = seq(0,max(large_components$mean), by = 1), color = "black", linetype = "solid") + 
+    scale_x_continuous(breaks = ploidy$haploid,
                        labels = names(ploidy$haploid))+
     geom_point(aes(x = mean, y = sample, color = weight))+
     scale_color_viridis_c(direction = -1)+
