@@ -6,7 +6,7 @@ mkdir -p analyses/notebooks/scripts/ploidy_depth/logs
 for set in "Desjardins" "Ashton"
 do
     grep $set analyses/results/tables/duplications_putative.tsv |\
-    cut -f 8 |\
+    cut -f 5 |\
     while read line
     do
         quarto render analyses/scripts/ploidy_depth.qmd  -P sample_id:\"${line}\" -P dataset:\"${set}\" -P max_iterations:10 -P threshold_weight:0.2 -P threshold_norm_depth:5

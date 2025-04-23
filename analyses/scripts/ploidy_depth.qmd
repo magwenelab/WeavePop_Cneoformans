@@ -4,7 +4,7 @@ author: "Claudia Zirión-Martínez"
 date: "2025-02-21"
 
 params:
-  sample_id: "ERS1142758"
+  sample_id: "ERS542397"
   dataset: "Ashton"
   max_iterations: 100
   threshold_norm_depth: 5
@@ -13,8 +13,8 @@ params:
 
 ## Setup
 ```{r, echo=FALSE, eval=FALSE}
-setwd("/FastData/czirion/Crypto_Diversity_Pipeline/analyses/")
-sample_id <- "ERS1142758"
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses/")
+sample_id <- "ERS542397"
 dataset <- "Ashton"
 max_iterations <- 100
 threshold_norm_depth <- 5
@@ -26,6 +26,7 @@ params <- list(sample_id = sample_id,
               threshold_norm_depth = threshold_norm_depth,
               threshold_weight = threshold_weight)
 ```
+Libraries
 ```{r, output=FALSE}
 library(tidyverse)
 library(mixtools)
@@ -34,26 +35,29 @@ library(ggrepel)
 ```
 Paths
 ```{r}
-path <- paste("../Crypto_", params$dataset,
-    "/results_clean/04.Intermediate_files/01.Samples/depth_quality/",
+path <- 
+  paste("../Crypto_", params$dataset,
+    "/results/04.Intermediate_files/01.Samples/depth_quality/",
     params$sample_id,
     "/depth_by_windows.tsv",
      sep = "")
-depth_by_windows_path <- paste("../../Crypto_", 
+depth_by_windows_path <- 
+  paste("../../Crypto_", 
     params$dataset, 
-    "/results_clean/01.Samples/plots/",
+    "/results/01.Samples/plots/",
     params$sample_id,
     "/depth_by_windows.png",
     sep = "")
-
-chrom_names_path <- paste("../Crypto_",
-                          params$dataset,
-                          "/config/chromosomes.csv", sep ="")
-
-log_wg_path <- paste("notebooks/scripts/ploidy_depth/logs/whole_genome_", params$sample_id, ".txt")
-log_chrom_path <- paste("notebooks/scripts/ploidy_depth/logs/chromosomes_", params$sample_id, ".txt")
-
-components_path <- paste0("results/tables/components_", params$sample_id, ".tsv")
+chrom_names_path <- 
+  paste("../Crypto_",
+  params$dataset,
+  "/config/chromosomes.csv", sep ="")
+log_wg_path <- 
+  paste("notebooks/scripts/ploidy_depth/logs/whole_genome_", params$sample_id, ".txt")
+log_chrom_path <- 
+  paste("notebooks/scripts/ploidy_depth/logs/chromosomes_", params$sample_id, ".txt")
+components_path <- 
+  paste0("results/tables/components_", params$sample_id, ".tsv")
 ```
 
 ## Prepare data of normalized depth per window for sample:
@@ -344,20 +348,91 @@ large_components <- components %>%
 ```
 
 ```{r}
+haploid <- c(0,1,2,3,4)
+names(haploid) <- c("0","1/1","2/1","3/1","4/1")
+diploid <- c(0,1/2,2/2,3/2,4/2)
+names(diploid) <- c("0","1/2","2/2","3/2","4/2")
+triploid <- c(0,1/3,2/3,3/3,4/3,5/3,6/3)
+names(triploid) <- c("0","1/3","2/3","3/3","4/3","5/3","6/3")
+tetraploid <- c(0,1/4,2/4,3/4,4/4,5/4,6/4,7/4,8/4)
+names(tetraploid) <- c("0","1/4","2/4","3/4","4/4","5/4","6/4","7/4","8/4")
+
+ploidy <- list(haploid = haploid, 
+                diploid = diploid,
+                triploid = triploid,
+                tetraploid = tetraploid)
+
+```
+
+```{r}
 #| fig.height: 7
 #| fig.width: 7
 ggplot(large_components) +
   geom_point(aes(x = mean, y = weight, color = chromosome)) +
   geom_text_repel(aes(x = mean, y = weight, color = chromosome, label = chromosome), max.overlaps = Inf) +
-  geom_vline(xintercept = c(0.5, 1, 1.5, 2), color = "darkgray", linetype = "solid") +
+  geom_vline(xintercept = seq(0,max(large_components$mean), by = 1),
+          color = "black", linetype = "solid") +
+  scale_x_continuous(breaks = ploidy$haploid,
+                       labels = names(ploidy$haploid))+
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Relationship between weights\nand mean of large components",
+      subtitle = "Haploid reference values",
        y = "Weight (Proportion of chromosome in the component)",
        x = "Mean (Normalized depth)") +
   theme_classic()+
   theme(legend.position = "none")
 ```
-
+```{r}
+#| fig.height: 7
+#| fig.width: 7
+ggplot(large_components) +
+  geom_point(aes(x = mean, y = weight, color = chromosome)) +
+  geom_text_repel(aes(x = mean, y = weight, color = chromosome, label = chromosome), max.overlaps = Inf) +
+  geom_vline(xintercept = seq(0,max(large_components$mean), by = 1/2),
+            color = "black",
+            linetype = "solid") + 
+  scale_x_continuous(breaks = ploidy$diploid,
+                       labels = names(ploidy$diploid))+
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Relationship between weights\nand mean of large components",
+        subtitle = "Diploid reference values",
+       y = "Weight (Proportion of chromosome in the component)",
+       x = "Mean (Normalized depth)") +
+  theme_classic()+
+  theme(legend.position = "none")
+```
+```{r}
+#| fig.height: 7
+#| fig.width: 7
+ggplot(large_components) +
+  geom_point(aes(x = mean, y = weight, color = chromosome)) +
+  geom_text_repel(aes(x = mean, y = weight, color = chromosome, label = chromosome), max.overlaps = Inf) +
+  geom_vline(xintercept = seq(0,max(large_components$mean), by = 1/3), color = "black", linetype = "solid") +    scale_x_continuous(breaks = ploidy$triploid,
+                       labels = names(ploidy$triploid))+
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Relationship between weights\nand mean of large components",
+        subtitle = "Triploid reference values",
+       y = "Weight (Proportion of chromosome in the component)",
+       x = "Mean (Normalized depth)") +
+  theme_classic()+
+  theme(legend.position = "none")
+```
+```{r}
+#| fig.height: 7
+#| fig.width: 7
+ggplot(large_components) +
+  geom_point(aes(x = mean, y = weight, color = chromosome)) +
+  geom_text_repel(aes(x = mean, y = weight, color = chromosome, label = chromosome), max.overlaps = Inf) +
+  geom_vline(xintercept = seq(0,max(large_components$mean), by = 1/4), color = "black", linetype = "solid") +    scale_x_continuous(breaks = ploidy$tetraploid,
+                       labels = names(ploidy$tetraploid))+  
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Relationship between weights\nand mean of large components",
+      subtitle = "Tetraploid reference values",
+       y = "Weight (Proportion of chromosome in the component)",
+       x = "Mean (Normalized depth)") +
+  theme_classic()+
+  theme(legend.position = "none")
+```
 ### Depth along chromosomes
 ```{r, results="asis"}
 cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
