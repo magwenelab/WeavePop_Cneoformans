@@ -5,21 +5,24 @@ date: "2025-02-14"
 ---
 
 ## Setup
+```{r, echo=FALSE, eval=FALSE}
+setwd("/mnt/FastData/czirion/WeavePop_Cneoformans/analyses/")
+```
+Libraries
 ```{r, output=FALSE}
 library(tidyverse)
 library(ggbeeswarm)
 ```
-
-```{r}
-setwd("/mnt/FastData/czirion/Crypto_Diversity_Pipeline/analyses/")
-```
 Paths
 ```{r}
-desj_counts_path <- "data/processed/snp_counts_desjardins.csv"
-desj_counts_old_path <- "data/processed/snp_counts_desjardins_old.csv"
-
-asht_counts_path <- "data/processed/snp_counts_ashton.csv"
-asht_counts_old_path <- "data/processed/snp_counts_ashton_old.csv"
+desj_counts_path <- 
+    "data/processed/snp_counts_desjardins.csv"
+desj_counts_old_path <- 
+    "data/processed/snp_counts_desjardins_old.csv"
+asht_counts_path <- 
+    "data/processed/snp_counts_ashton.csv"
+asht_counts_old_path <- 
+    "data/processed/snp_counts_ashton_old.csv"
 ```
 
 ## Evaluate the number of raw and filtered SNPs before and after cleaning the reads with FastP

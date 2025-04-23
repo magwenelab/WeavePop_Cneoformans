@@ -5,16 +5,21 @@ date: "2025-02-14"
 ---
 
 ## Setup
+Libraries
 ```{r, output=FALSE}
 library(tidyverse)
 library(patchwork)
 ```
 Paths
 ```{r}
-desj_metadata <- "../Crypto_Desjardins/config/metadata.csv"
-desj_counts <- "data/processed/snp_counts_desjardins.csv"
-ashton_metadata <- "../Crypto_Ashton/results_clean/02.Dataset/metadata.csv"
-ashton_counts <- "data/processed/snp_counts_ashton.csv"
+desj_metadata <- 
+    "../Crypto_Desjardins/config/metadata.csv"
+desj_counts <- 
+    "data/processed/snp_counts_desjardins.csv"
+ashton_metadata <- 
+    "../Crypto_Ashton/results_clean/02.Dataset/metadata.csv"
+ashton_counts <- 
+    "data/processed/snp_counts_ashton.csv"
 ```
 
 ## Desjardins
@@ -27,7 +32,7 @@ Snippy filter are:
 **DP >= 10**  
 **A0/DP >= 0**  
 ```{bash, eval=FALSE}
-cd /FastData/czirion/Crypto_Diversity_Pipeline/
+cd /FastData/czirion/WeavePop_Cneoformans/
 tail -n +2 Crypto_Desjardins/config/metadata.csv | cut -d',' -f2 | while read line
 do 
     raw=$(grep -v "#" Crypto_Desjardins/results_clean/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
@@ -96,7 +101,7 @@ Snippy filter are:
 **DP >= 10**  
 **A0/DP >= 0**  
 ```{bash, eval=FALSE}
-cd /FastData/czirion/Crypto_Diversity_Pipeline/
+cd /FastData/czirion/WeavePop_Cneoformans/
 tail -n +2 Crypto_Ashton/results_clean/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
     raw=$(grep -v "#" Crypto_Ashton/results_clean/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
