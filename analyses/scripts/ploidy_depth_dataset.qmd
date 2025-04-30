@@ -19,7 +19,7 @@ library(ggnewscale)
 Paths
 ```{r}
 duplications_path <- 
-    "results/tables/duplications_putative.tsv"
+    "results/tables/ploidy_from_plots.tsv"
 components_path_prefix <- 
     "results/tables/components_"
 ```
@@ -27,6 +27,9 @@ components_path_prefix <-
 duplications <- read_delim(duplications_path,
                             delim = "\t")
 samples <- unique(duplications$sample)
+duplications <- select(duplications, sample, ploidy)%>%
+    distinct()
+duplications$ploidy <- factor(duplications$ploidy, levels = c("haploid", "diploid", "triploid", "tetraploid"))
 ```
 
 ```{r, output=FALSE}
@@ -35,7 +38,15 @@ for (sample in samples){
 path <- paste(components_path_prefix, sample, ".tsv", sep = "")
 components_list[[sample]] <- read_delim(path, delim = "\t")
 }
-components <- bind_rows(components_list)
+```
+
+```{r}
+components <- bind_rows(components_list)%>%
+    left_join(duplications, by = "sample")%>%
+    arrange(ploidy) 
+```
+```{r}
+components$sample <- factor(components$sample, levels = unique(components$sample))
 ```
 
 ### Filter out components with small weight
@@ -72,6 +83,7 @@ ggplot(large_components)+
     scale_x_continuous(breaks = ploidy$haploid,
                        labels = names(ploidy$haploid))+
     geom_point(aes(x = mean, y = sample, color = weight))+
+    # facet_wrap(~ploidy, ncol = 1, scales = "free_y")+
     scale_color_viridis_c(direction = -1)+
     theme_classic()+
     theme(panel.grid.major = element_line(color = "gray", linetype = "dashed"))+
@@ -86,6 +98,7 @@ ggplot(large_components)+
     geom_vline(xintercept = seq(0,max(large_components$mean), by = 1/2), color = "black", linetype = "solid") +    scale_x_continuous(breaks = ploidy$diploid,
                        labels = names(ploidy$diploid))+
     geom_point(aes(x = mean, y = sample, color = weight))+
+    facet_wrap(~ploidy, scales = "free_y")+
     scale_color_viridis_c(direction = -1)+
     theme_classic()+
     theme(panel.grid.major = element_line(color = "gray", linetype = "dashed"))+
@@ -99,6 +112,7 @@ ggplot(large_components)+
     geom_vline(xintercept = seq(0,max(large_components$mean), by = 1/3), color = "black", linetype = "solid") +    scale_x_continuous(breaks = ploidy$triploid,
                        labels = names(ploidy$triploid))+
     geom_point(aes(x = mean, y = sample, color = weight))+
+    facet_wrap(~ploidy, scales = "free_y")+
     scale_color_viridis_c(direction = -1)+
     theme_classic()+
     theme(panel.grid.major = element_line(color = "gray", linetype = "dashed"))+
@@ -113,6 +127,7 @@ ggplot(large_components)+
     scale_x_continuous(breaks = ploidy$tetraploid,
                        labels = names(ploidy$tetraploid))+
     geom_point(aes(x = mean, y = sample, color = weight))+
+    facet_wrap(~ploidy, scales = "free_y")+
     scale_color_viridis_c(direction = -1)+
     theme_classic()+
     theme(panel.grid.major = element_line(color = "gray", linetype = "dashed"))+
