@@ -1,0 +1,408 @@
+---
+title: "Duplications"
+author: "Claudia Zirión-Martínez"
+date: "2025-04-15"
+
+fig-height: 7
+fig-width: 9
+
+format: 
+  html:
+    page-layout: full
+---
+
+## Setup
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+
+Libraries
+```{r libraries, output=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(patchwork)
+```
+
+Paths 
+```{r paths}
+metadata_path <-
+    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+chromosomes_path <-
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/chromosomes.csv"
+chrom_lengths_path <-
+    "data/processed/chromosome_lengths.tsv"
+depth_by_chrom_good_desj_path <-
+    "../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+depth_by_chrom_good_ashton_path <-
+    "../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+cnv_calls_path <-
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_calls.tsv"
+duplications_path <- "results/tables/duplications_putative.tsv"
+```
+
+## Index
+- [Prepare dataset](#prepare-dataset)
+    - [Metadata](#metadata)
+    - [Chromosome names and length](#chromosome-names-and-length)
+- [Called CNVs](#called-cnvs)
+    - [Filter duplications](#filter-duplications)
+        - [Filter by CNVlabel](#filter-by-cnvlabel)
+        - [Filter out high depth dupCNVs](#filter-high-depth-dupcnvs)
+        - [Filter out high repeat content CNVs](#filter-high-repeat-content-cnvs)
+- [Depth of chromosomes](#median-depth-of-chromosomes)
+- [Metrics per chromosome (dupCNVs and chromosome depth)](#metrics-per-chromosome)
+    - [Summarize the metrics of the called CNVs per chromosome](#summarize-the-metrics-of-the-called-cnvs-per-chromosome)
+- [Filter to get whole-chromosome duplications](#filter-to-get-whole-chromosome-duplications)
+    - [Categorize duplications to separate full from partial duplications](#categorize-duplications-to-separate-full-from-partial-duplications)
+
+## Prepare dataset {#prepare-dataset}
+
+### Metadata {#metadata}
+
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99.\
+Select needed columns, remove H99 and get the number of samples per dataset and lineage, per lineage, and total.
+
+```{r metadata, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    metadata_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+metadata <- metadata %>%
+    select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
+    filter(!strain == "H99") %>%
+    group_by(dataset, lineage)%>%
+    mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
+    ungroup() %>%
+    group_by(lineage)%>%
+    mutate(samples_in_lineage = n_distinct(sample))%>%
+    ungroup()%>%
+    mutate(total_samples = n_distinct(sample))%>%
+    droplevels()
+```
+
+### Chromosome names and length {#chromosome-names-and-length}
+
+Get the nice chromosome names from the chromosomes file in WeavePop.
+
+```{r chromosomes}
+chromosome_names = read.delim(
+    chromosomes_path,
+    header=TRUE, sep=",")
+chromosome_names <- chromosome_names %>%
+    mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
+    mutate(chromosome = as.factor(chromosome))
+levels(chromosome_names$chromosome) <- paste("chr", chromosome_names$chromosome, sep="")
+```
+
+Get the chromosome lengths. Create the file with bash.
+
+```{bash get chromosome lengths, eval=FALSE}
+# /usr/bin/bash
+tail -n +2 ../Crypto_Desjardins/config/chromosomes.csv | \
+    cut -d',' -f1 | sort | uniq | while read line 
+do
+seqkit fx2tab ../Crypto_Desjardins/data/references/$line.fasta -l -i -n >> data/processed/chromosome_lengths.tsv
+done
+```
+
+```{r chromosome lengths}
+chromosome_lengths = read.delim(
+    chrom_lengths_path,
+    header=FALSE, 
+    col.names=c("accession", "length"), 
+    sep="\t")
+```
+
+## Called CNVs {#called-cnvs}
+
+Import the file with all called CNVs and add the chromosome names.
+
+```{r read cnv calls}
+cnv_calls <- read.delim(
+    cnv_calls_path, 
+    header=TRUE, sep="\t")%>%
+    left_join(chromosome_names, by="accession")
+```
+
+### Filter duplications
+
+#### Filter by CNVlabel
+Keep only the CNVs labeled as duplications (dupCNVs)
+
+```{r filter duplications}
+dup_calls <- filter(cnv_calls, cnv == "duplication")
+```
+
+#### Filter out high depth dupCNVs {#filter-high-depth-dupcnvs}
+
+To filter out the dupCNVs that have very large Normalized Depth. Here I make groups of CNVs that start at the same position in the same chromosome.
+
+```{r create groups, output= FALSE}
+dup_summary <- dup_calls %>%
+    group_by(lineage, chromosome, start, end, region_size) %>%
+    summarize(max_depth = max(norm_depth),
+              median_depth = median(norm_depth),
+              n = n(),
+              median_repeat = median(repeat_fraction))
+```
+
+The dupCNVs groups with max depth larger than 5:
+
+```{r get large duplications}
+summary_large_dups <- dup_summary %>%
+                        filter((max_depth > 5))%>%
+                        arrange(desc(n))
+head(summary_large_dups)
+```
+
+Filter out duplications that are part of the groups in the previous table.  
+This way of filtering removes individual CNVs that not necessarily have depth grater than 5 but other samples in the lineage have a high depth CNV in the same region.
+
+```{r filter large duplications}
+dup_calls_filtered <- dup_calls %>%
+    filter(!paste(start, end, chromosome, lineage) %in% 
+           paste(summary_large_dups$start, summary_large_dups$end, summary_large_dups$chromosome, summary_large_dups$lineage))
+```
+
+#### Filter out high repeat content CNVs
+
+```{r repeat threshold}
+#| code-fold: false
+repeat_threshold = 0.25
+```
+
+```{r get highly repetitive}
+summary_repetitive_dups <- dup_summary %>%
+                            filter((median_repeat > 0.25))%>%
+                            arrange(desc(n))
+```
+
+```{r filter by repeats}
+dup_calls_filtered <- dup_calls_filtered %>%
+    filter(!paste(start, end, chromosome, lineage) %in% 
+           paste(summary_repetitive_dups$start, summary_repetitive_dups$end, summary_repetitive_dups$chromosome, summary_repetitive_dups$lineage))
+```
+
+
+## Depth of chormosomes {#median-depth-of-chromosomes}
+
+The **Normalized median depth of chromosomes** (`norm_chrom_median`) is the normalized median of the depth of the positions in the whole chromosome. (First the median was calculated and then normalized). The **Normalized mean depth of chromosomes** (`norm_chrom_mean`) is the normalized mean of the depth of the positions in the whole chromosome. (First the mean was calculated and then normalized).
+
+```{r read depth of chromosomes}
+depth_by_chrom_good_desjardins <- read.delim(
+    depth_by_chrom_good_desj_path,
+     header=TRUE, sep="\t")
+depth_by_chrom_good_ashton <- read.delim(
+    depth_by_chrom_good_ashton_path,
+     header=TRUE, sep="\t")
+depth_by_chrom_good <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)
+depth_by_chrom <- depth_by_chrom_good %>%
+    select(sample, accession, norm_chrom_median, norm_chrom_mean)
+head(depth_by_chrom)
+```
+
+## Metrics per chromosome (dupCNVs and chromosome depth) {#metrics-per-chromosome}
+
+The dataframe `all_metrics` contains a row per individual called duplication with the information about the CNV and the chromosome of the sample. For the chromosome-sample without any called duplication, the columns related to CNVs have NAs.
+
+```{r join all info}
+all_metrics <- left_join(depth_by_chrom, dup_calls_filtered,
+        by = c("sample", "accession"))%>%
+    select(-chromosome, -lineage)%>%
+    left_join(chromosome_lengths, by = "accession") %>%
+    left_join(chromosome_names,by ="accession") %>%
+    left_join(metadata, by = c("sample", "lineage"))
+head(all_metrics)
+```
+
+Summarize the information into chromosome information. The `chrom_metrics` dataframe has one row per chromosome with metrics about the depth of the chromosome and summarized metrics of the CNVs of the chromosomes.
+
+```{r get chromosome metrics, message=FALSE}
+chrom_metrics <- all_metrics %>%
+    group_by(sample, strain, chromosome, norm_chrom_mean, norm_chrom_median, length,
+            accession,  source, lineage,
+            samples_in_lineage, samples_in_dataset_lineage, 
+            total_samples,dataset) %>%
+    summarise(total_cnv_size = sum(region_size),
+                n_cnvs = sum(!is.na(cnv)), #fix this
+                first = min(start),
+                last = max(end),
+                mean_cnv_depth = round(mean(norm_depth),2),
+                median_cnv_depth = round(median(norm_depth),2),
+                repeat_size = sum(overlap_bp)) %>%
+            ungroup()%>%
+    mutate(dup_coverage_percent = round((total_cnv_size / length) * 100, 2),
+            dup_span_size = last - first,
+            dup_span_percent = round((dup_span_size / length) * 100, 2),
+            dup_repeat_percent = round((repeat_size / length) * 100, 2),
+            chromosome = as.factor(chromosome),
+            dup_coverage_percent = ifelse(is.na(dup_coverage_percent), 0, dup_coverage_percent),
+            dup_span_percent = ifelse(is.na(dup_span_percent), 0, dup_span_percent))
+head(chrom_metrics)
+```
+
+```{r print number of chromosomes, echo = FALSE}
+cat("The total number of chromosomes in all samples in the dataset is:", nrow(chrom_metrics))
+cat("The total number of chromosomes in all samples with called duplications is:", nrow(chrom_metrics %>% filter(!is.na(total_cnv_size))))
+```
+
+## Filter to get whole-chromosome duplications
+
+Filter by percent of chromosome in dupCNV or chromosome depth
+
+```{r thresholds}
+#| code-fold: false
+size_threshold <- 50
+depth_threshold <- 1.55
+```
+
+```{r filter chromosomes}
+chrom_metrics_filtered <- chrom_metrics %>%
+    filter(dup_coverage_percent >= size_threshold | norm_chrom_median >= depth_threshold)
+```
+
+```{r plot span vs cov, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 9
+ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, color = norm_chrom_median, y = dup_span_percent, size= n_cnvs )) +
+        geom_point() +
+        scale_x_continuous(labels = scales::comma, limits = c(0,100)) +
+        scale_y_continuous(labels = scales::comma, limits = c(0,100)) +
+        scale_size_continuous(name = "Number of CNVs", limits = c(1,max(chrom_metrics_filtered$n_cnvs, na.rm = TRUE)) )+
+        geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+        scale_color_viridis_c(name = "Normalized Median\nDepth of Chromosome", direction = -1) +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "Percent of Chromosome Spanned by dupCNVs vs Covered by dupCNVs",
+            y = "Percent of Chromosome Spanned by dupCNVs",
+            x = "Percent of Chromosome Covered by dupCNVs")
+```
+
+### Categorize duplications to separate full from partial duplications 
+```{r create diff span cov}
+chrom_metrics_filtered <- chrom_metrics_filtered %>%
+    mutate(diff_span_cov = abs(dup_span_percent - dup_coverage_percent))
+```
+
+```{r category thresholds}
+#| code-fold: false
+difference_threshold = 12
+coverage_threshold = 83
+```
+```{r plot category thresholds, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 9
+ggplot(chrom_metrics_filtered, aes(x = diff_span_cov, y = dup_coverage_percent, color = norm_chrom_median, size = n_cnvs)) +
+        geom_point() +
+        geom_text_repel(aes(label = sample), size = 3, max.overlaps = 2) +
+        geom_vline(xintercept = difference_threshold, linetype = "dashed", color = "red") +
+        geom_hline(yintercept = coverage_threshold, linetype = "dashed", color = "red") +
+        scale_x_continuous(labels = scales::comma, breaks = seq(0, max(chrom_metrics_filtered$diff_span_cov, na.rm = TRUE), by = 5)) +
+        scale_y_continuous(labels = scales::comma, breaks = seq(0, max(chrom_metrics_filtered$dup_coverage_percent, na.rm = TRUE), by = 5)) +
+        scale_size_continuous(name = "Number of\nCNVs")+
+        scale_color_viridis_c(name = "Normalized Median\nDepth of Chromosome", direction = -1) +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "",
+            y = "Percent of Chromosome\nCovered by Duplications",
+            x = "Difference Span-Coverage")
+
+```
+
+```{r create categories}
+chrom_metrics_filtered <- chrom_metrics_filtered %>%
+    mutate(category = case_when(
+        diff_span_cov <= difference_threshold & dup_coverage_percent >= coverage_threshold ~ "span_cov_same_large",
+        diff_span_cov <= difference_threshold & dup_coverage_percent < coverage_threshold ~ "span_cov_same_small",
+        diff_span_cov > difference_threshold & dup_coverage_percent >= coverage_threshold ~ "span_cov_diff_large",
+        diff_span_cov > difference_threshold & dup_coverage_percent < coverage_threshold ~ "span_cov_diff_small"
+    ))
+```    
+
+```{r show number in each category}
+chrom_metrics_filtered %>%
+    group_by(category)%>%
+    summarize(n =n())
+```
+```{r show categories in plot, message = FALSE, warning = FALSE}
+#| fig.height: 7
+#| fig.width: 9
+ggplot(chrom_metrics_filtered, aes(x = dup_coverage_percent, color = category, y = dup_span_percent, size= n_cnvs )) +
+        geom_abline(slope = 1, intercept = 0, linetype = "solid", color = "lightgray") +
+        geom_point(alpha = 0.8) +
+        geom_text_repel(aes(label = sample), size = 3, max.overlaps = 5) +
+        scale_x_continuous(labels = scales::comma, limits = c(0,100)) +
+        scale_y_continuous(labels = scales::comma, limits = c(0,100)) +
+        scale_size_continuous(name = "Number of CNVs", limits = c(1,max(chrom_metrics_filtered$n_cnvs, na.rm = TRUE)) )+
+        scale_color_viridis_d(name = "Category", direction = -1, option = "plasma") +
+        theme_minimal() +
+        theme(legend.position = "right")+
+        labs(title = "Percent of Chromosome Spanned by dupCNVs vs Covered by dupCNVs",
+            y = "Percent of Chromosome Spanned by dupCNVs",
+            x = "Percent of Chromosome Covered by dupCNVs")
+```
+
+```{r separate categories}
+span_cov_same_large <- filter(chrom_metrics_filtered, category == "span_cov_same_large")
+span_cov_same_small <- filter(chrom_metrics_filtered, category == "span_cov_same_small")
+span_cov_diff_large <- filter(chrom_metrics_filtered, category == "span_cov_diff_large")
+span_cov_diff_small <- filter(chrom_metrics_filtered, category == "span_cov_diff_small")
+```
+
+```{r make functions to print plots}
+image_paths_func <- function(df){
+    image_paths <- df %>%
+        mutate(depth_by_windows_path = 
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_by_windows.png", sep = ""),
+            distribution_path = 
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_chrom_distribution.png", sep = ""))
+
+    return(image_paths)
+}
+
+print_plots <- function(df){
+    for (sample_id in unique(df$sample)){
+        dataset_id <- df %>% 
+            filter(sample == sample_id) %>% 
+            pull(dataset)%>%
+            unique()%>%
+            as.character()
+        depth_by_windows_path <- image_paths %>%
+            filter(sample == sample_id) %>% 
+            pull(depth_by_windows_path)%>%
+            unique()%>%
+            as.character()
+        distribution_path <- image_paths %>%
+            filter(sample == sample_id) %>% 
+            pull(distribution_path)%>%
+            unique()%>%
+            as.character()    
+        metrics <- df %>% 
+            filter(sample == sample_id)%>%
+            select(sample, chromosome, norm_chrom_median, diff_span_cov, dup_coverage_percent, dup_span_percent, mean_cnv_depth, n_cnvs)%>%
+
+            as.data.frame()
+
+        
+        cat(paste0( "\n", "### ", sample_id), "\n")
+        print(knitr::kable(metrics, row.names = FALSE), row.names = FALSE)
+        cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
+    #    cat(paste0("![](", distribution_path, ")", sep =""), "\n")
+    }
+}
+
+```
+
+
+```{r print plots, results = "asis", eval = FALSE}
+for (category in unique(chrom_metrics_filtered$category)){
+    cat(paste0( "\n", "## ", category), "\n")
+    cat("<details>")
+    cat(paste0( "\n", "<summary>", "Plots", "</summary>"), "\n")
+    cat()
+    image_paths = image_paths_func(get(category))
+    print_plots(get(category))
+    cat("</details>")
+}
+```
