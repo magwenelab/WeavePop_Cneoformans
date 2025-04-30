@@ -11,4 +11,5 @@ Crypto_*/logs/*/
 *.quarto*
 analyses_old
 analyses/notebooks/scripts/ploidy_depth/logs
+analyses/notebooks/scripts/ploidy_depth
 analyses/results/tables/
