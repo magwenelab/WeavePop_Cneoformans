@@ -1,0 +1,243 @@
+---
+title: "CNV and Depth Metrics of Chromosomes"
+author: "Claudia Zirión-Martínez"
+date: "2025-05-01"
+
+fig-height: 7
+fig-width: 9
+
+format: 
+  html:
+    page-layout: full
+---
+
+
+## Setup {#setup}
+
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+
+Libraries
+
+```{r libraries, output=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggbeeswarm)
+library(ggnewscale)
+library(RColorBrewer)
+library(hexbin)
+library(ggExtra)
+library(ggrepel)
+```
+
+Paths
+
+```{r paths}
+metadata_path <-
+    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+chromosomes_path <-
+    "../Crypto_Desjardins/results/04.Intermediate_files/03.References/chromosome_lengths.tsv"
+depth_by_chrom_good_desj_path <-
+    "../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+depth_by_chrom_good_ashton_path <-
+    "../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
+cnv_calls_path <-
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv_0.6/cnv_calls.tsv"
+chrom_metrics_out_path <-
+    "results/tables/chrom_metrics.tsv"
+chrom_metrics_filtered_out_path <-
+    "results/tables/chrom_metrics_filtered.tsv"
+```
+
+## Prepare dataset {#prepare-dataset}
+
+### Metadata {#metadata}
+
+Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset (n = 1055) and H99.  
+Select needed columns, remove H99 and get the number of samples per dataset and lineage, per lineage, and total.
+
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    metadata_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+metadata <- metadata %>%
+    select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
+    filter(!strain == "H99") %>%
+    group_by(dataset, lineage)%>%
+    mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
+    ungroup() %>%
+    group_by(lineage)%>%
+    mutate(samples_in_lineage = n_distinct(sample))%>%
+    ungroup()%>%
+    mutate(total_samples = n_distinct(sample))%>%
+    droplevels()
+```
+
+### Chromosome names and length {#chromosome-names-and-length}
+
+Get the nice chromosome names and length from the chromosomes file in WeavePop.
+
+```{r}
+chromosomes = read.delim(
+    chromosomes_path,
+    header=TRUE, sep=",") %>%
+    mutate(chromosome = str_pad(chromosome, 2, pad = "0"))%>%
+    mutate(chromosome = as.factor(chromosome))
+levels(chromosomes$chromosome) <- paste("chr", chromosomes$chromosome, sep="")
+
+chromosomes <- chromosomes %>%
+    arrange(lineage, length)
+```
+
+Lineage VNII is the only one in which chromosome names coincide with the length (chr01 largest, chr14 smallest).
+
+### Called CNVs {#called-cnvs}
+
+Import the file with all called CNVs and add to it the chromosome information.  
+
+```{r}
+cnv_calls <- read.delim(
+    cnv_calls_path, 
+    header=TRUE, sep="\t")%>%
+    left_join(chromosomes, by="accession")
+```
+
+Create the single-copy regions
+```{r}
+regions <- cnv_calls %>%
+    select(sample, lineage, accession, chromosome, cnv, start, end, length) %>%
+    arrange(sample, chromosome, start) %>%
+    group_by(sample, chromosome) %>%
+    mutate(
+        next_start = lead(start),
+        new_start = end + 1,
+        new_end = next_start - 1
+    ) %>%
+    filter(new_start <= length) %>%
+    select(sample,lineage, accession, chromosome, start = new_start, end = new_end, length) %>%
+    mutate(cnv = "single_copy",
+            end = if_else(is.na(end), length, end),
+            region_size = end - start)%>%
+    mutate(prev_start = lag(start),
+    )
+
+    bind_rows(cnv_calls)%>%
+    arrange(sample, chromosome, start)
+```
+
+```{r}
+regions_by_chromosome <- regions %>%
+    group_by(sample, lineage, 
+            accession, chromosome, length,
+            cnv)%>%
+    summarise(n_regions = sum(!is.na(cnv)), 
+                total_regions_size = sum(region_size),
+                sd_regions_size = ifelse(n() == 1, 0, sd(region_size)), # Tentative
+                max_regions_size = max(region_size),
+                min_regions_size = min(region_size),
+                first = min(start),
+                last = max(end),
+                mean_region_depth = round(mean(norm_depth),2),
+                median_region_depth = round(median(norm_depth),2)) %>%
+    ungroup()%>%
+    mutate(coverage_percent = (total_regions_size / length) * 100,
+            span_size = ifelse(is.na(last - first), 0, last - first),
+            span_percent = (span_size / length) * 100)
+```
+
+```{r}
+x <- regions_by_chromosome %>%
+    group_by(sample, accession)%>%
+    summarize(coverage = sum(coverage_percent))%>%
+    filter(sample == "SRS404735")
+
+y <- filter(regions_by_chromosome,sample == "SRS404735")%>%
+    select(sample, accession, length, cnv, n_regions, total_regions_size, coverage_percent)
+
+c <- regions %>%
+    filter(sample == "SRS404735")
+
+cnv <- cnv_calls %>%
+    filter(sample == "SRS404735")
+
+
+
+```
+
+## Chromosome depth
+
+```{r}
+depth_by_chrom_good_desjardins <- read.delim(
+    depth_by_chrom_good_desj_path,
+     header=TRUE, sep="\t")
+depth_by_chrom_good_ashton <- read.delim(
+    depth_by_chrom_good_ashton_path,
+     header=TRUE, sep="\t")
+depth_by_chrom <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)%>%
+    select(sample, accession, norm_chrom_mean, norm_chrom_median)%>%
+    left_join(chromosomes, by = "accession")
+
+head(depth_by_chrom)
+```
+
+
+## Combine all information
+
+The following dataframes contain a row per individual called duplication with the information about the CNV and the chromosome of the sample. 
+For the chromosome-sample without any called duplication, the columns related to CNVs have NAs.  
+`all_metrics` is created with all dupCNVs. `all_metrics_filtered` with the dupCNVs filtered by depth and repeat fraction.
+
+```{r}
+all_metrics <- left_join(depth_by_chrom, regions,
+        by = c("sample", "lineage", "accession", "chromosome",  "length"))%>%
+    left_join(metadata, by = c("sample", "lineage"))
+head(all_metrics)
+```
+
+### Summarize the metrics of the called CNVs per chromosome {#summarize-the-metrics-of-the-called-cnvs-per-chromosome}
+
+And keep the rest of the chromosome metrics.
+
+```{r, message=FALSE}
+chrom_metrics <- all_metrics %>%
+    group_by(sample, strain, lineage, 
+            accession, chromosome, length,
+            source, vni_subdivision, dataset,
+            samples_in_lineage, samples_in_dataset_lineage, 
+            total_samples, 
+            norm_chrom_mean, norm_chrom_median)%>%
+    summarise(total_cnv_size = sum(region_size, na.rm = TRUE),
+                n_cnvs = sum(!is.na(cnv)), 
+                first = min(start),
+                last = max(end),
+                mean_cnv_depth = round(mean(norm_depth),2),
+                median_cnv_depth = round(median(norm_depth),2),
+                repeat_size = sum(overlap_bp)) %>%
+            ungroup()%>%
+    mutate(dup_coverage_percent = round((total_cnv_size / length) * 100, 2),
+            dup_span_size = ifelse(is.na(last - first), 0, last - first),
+            dup_span_percent = round((dup_span_size / length) * 100, 2),
+            dup_repeat_percent = round((repeat_size / length) * 100, 2),
+            chromosome = as.factor(chromosome),
+            dup_coverage_percent = ifelse(is.na(dup_coverage_percent), 0, dup_coverage_percent),
+            dup_span_percent = ifelse(is.na(dup_span_percent), 0, dup_span_percent))
+head(chrom_metrics)
+```
+
+```{r, echo = FALSE}
+cat("The total number of chromosomes in all samples in the dataset is:", nrow(chrom_metrics))
+cat("The total number of chromosomes in all samples with called duplications is:", nrow(chrom_metrics %>% filter(n_cnvs > 0)))
+cat("The total number of chromosomes in all samples with filtered called duplications is:", nrow(chrom_metrics_filtered %>% filter(n_cnvs > 0)))
+```
+
+## Write tables
+
+Create file with `chrom_metrics` without any filtering of original CNVs.  
+Create file with `chrom_metrics_filtered` with filters in the original CNVs.  
+```{r}
+write_tsv(chrom_metrics, chrom_metrics_out_path)
+write_tsv(chrom_metrics_filtered, chrom_metrics_filtered_out_path)
+```
