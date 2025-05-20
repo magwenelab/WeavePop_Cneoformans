@@ -30,6 +30,8 @@ library(hexbin)
 library(ggExtra)
 library(ggrepel)
 library(truncnorm)
+library(ggpattern)
+library(svglite)
 ```
 
 Paths
@@ -37,15 +39,12 @@ Paths
 ```{r paths}
 metadata_path <-
     "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
-depth_by_chrom_good_desj_path <-
-    "../Crypto_Desjardins/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
-depth_by_chrom_good_ashton_path <-
-    "../Crypto_Ashton/results/04.Intermediate_files/02.Dataset/depth_quality/depth_by_chrom_good.tsv"
 cnv_chroms_path <-
     "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
 chrom_metrics_out_path <-
     "results/tables/chrom_metrics.tsv"
 ploidy_path <- "results/tables/ploidy_from_plots.tsv"
+
 ```
 
 ## Prepare dataset {#prepare-dataset}
@@ -80,7 +79,7 @@ ploidy <- read.delim(
                 header = TRUE,
                 sep = "\t",
                 stringsAsFactors = FALSE)%>%
-          select(sample, strain, lineage,
+          select(sample, lineage,
                  accession, chromosome, ploidy, type, gappy, 
                  distribution_pattern, fraction_duplications,
                  steps, smile, uniform)%>%
@@ -89,20 +88,8 @@ ploidy <- read.delim(
 ploidy$ploidy <- factor(ploidy$ploidy, levels = c("haploid", "diploid", "triploid", "tetraploid"))
 ploidy$type <- factor(ploidy$type, levels = c("full", "large", "partial"))
 ```
-## Chromosome depth
 
-```{r}
-depth_by_chrom_good_desjardins <- read.delim(
-    depth_by_chrom_good_desj_path,
-     header=TRUE, sep="\t")
-depth_by_chrom_good_ashton <- read.delim(
-    depth_by_chrom_good_ashton_path,
-     header=TRUE, sep="\t")
-depth_by_chrom <- rbind(depth_by_chrom_good_desjardins, depth_by_chrom_good_ashton)%>%
-    select(sample, accession, norm_chrom_mean, norm_chrom_median)
-```
-
-## CNV Regions per Chromosome
+## CNV Regions and Depth per Chromosome
 
 ```{r}
 cnv_chroms <- read.delim(
@@ -125,7 +112,7 @@ cnv_chroms <- cnv_chroms %>%
             n_regions_100kb = (n_regions / length) * 100000)
 ```
 Pivot table to get only one line per chromosome.  
-Join with depth per chromopsome and with ploidy informations. 
+Join with depth per chromosome and with ploidy informations. 
 ```{r}
 chrom_metrics <- cnv_chroms %>%
     pivot_wider(names_from = cnv,
@@ -134,8 +121,8 @@ chrom_metrics <- cnv_chroms %>%
                             "percent_largest_region", "n_regions_100kb",
                             "std_regions_size","norm_depth_mean","norm_depth_median",   
                             "smooth_depth_mean","smooth_depth_median")) %>%
-    left_join(depth_by_chrom, by = c("sample", "accession"))%>%
-    left_join(ploidy, by = c("sample", "accession", "lineage", "chromosome"))
+    left_join(ploidy, by = c("sample", "accession", "lineage", "chromosome"))%>%
+    left_join(metadata, by = c("sample", "lineage"))
 ```
 
 
@@ -191,7 +178,7 @@ p <- ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_point()+
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "vertical")+
         labs(y = "Normalized Chromosome Median",
@@ -228,14 +215,14 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_point(alpha = 0.1)+
-        geom_point(aes(color = type, shape = ploidy))+
-        scale_color_brewer(name = "Type", palette = "Set1") +
-        scale_x_continuous(limits = c(0,100))+
+        geom_point(aes(color = ploidy, shape = type))+
+        scale_color_brewer(name = "Ploidy", palette = "Set1") +
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
             x = "Percent of Chromosome Covered by Duplications",
-            shape = "Ploidy")
+            shape = "Type")
 ```
 
 ### Percent covered by deletion
@@ -243,9 +230,9 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_median))+
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
-        geom_point(aes(color = coverage_percent_deletion))+
+        geom_point(aes(color = coverage_percent_deletion, shape = type))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -255,7 +242,7 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = coverage_percent_deletion))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -273,9 +260,9 @@ ggplot(chrom_metrics, aes(y = norm_chrom_median, x = coverage_percent_deletion))
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_median))+
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
-        geom_point(aes(color = n_regions_100kb_duplication))+
+        geom_point(aes(color = n_regions_100kb_duplication,shape = type))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -285,7 +272,7 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = n_regions_100kb_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -303,9 +290,9 @@ ggplot(chrom_metrics, aes(y = norm_chrom_median, x = n_regions_100kb_duplication
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
-        geom_point(aes(color = span_percent_duplication)) +
+        geom_point(aes(color = span_percent_duplication,shape = type)) +
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -315,7 +302,7 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = span_percent_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -333,9 +320,9 @@ ggplot(chrom_metrics, aes(y = norm_chrom_median, x = span_percent_duplication))+
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
-        geom_point(aes(color = diff_span_cov_duplication)) +
+        geom_point(aes(color = diff_span_cov_duplication,shape = type)) +
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -345,7 +332,7 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = diff_span_cov_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -369,11 +356,12 @@ ggplot(filter(chrom_metrics, smooth_depth_median_duplication < 4),
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_point(aes(color = cut(norm_depth_median_duplication, 
                             breaks = c(-Inf, 1.5, 2, 2.3, 2.6, Inf), 
-                            labels = names(colors))),
+                            labels = names(colors)),
+                            shape = type),
                             alpha = 1) +
         scale_color_manual(values = colors, 
                             name = "Median Depth of dupCNV\nWindows in Chromosome")+
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
@@ -386,7 +374,7 @@ ggplot(filter(chrom_metrics, smooth_depth_median_duplication < 4),
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_depth_median_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -402,7 +390,7 @@ ggplot(chrom_metrics, aes(y = norm_chrom_median, x = norm_depth_median_duplicati
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_depth_median_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         scale_y_continuous(limits = c(0,5))+
         theme_minimal() +
         theme(legend.position = "bottom")
@@ -428,11 +416,12 @@ ggplot(filter(chrom_metrics, smooth_depth_median_duplication < 4),
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
         geom_point(aes(color = cut(smooth_depth_median_duplication, 
                             breaks = c(-Inf, 1.5, 2, 2.3, 2.6, Inf), 
-                            labels = names(colors))),
+                            labels = names(colors)),
+                            shape = type),
                             alpha = 1) +
         scale_color_manual(values = colors, 
                             name = "Smooth Median Depth of dupCNV\nWindows in Chromosome")+
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
@@ -445,7 +434,7 @@ ggplot(filter(chrom_metrics, smooth_depth_median_duplication < 4),
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = smooth_depth_median_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -460,7 +449,7 @@ ggplot(chrom_metrics, aes(y = norm_chrom_median, x = smooth_depth_median_duplica
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = smooth_depth_median_duplication))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         scale_y_continuous(limits = c(0,5))+
         theme_minimal() +
         theme(legend.position = "bottom")
@@ -487,10 +476,11 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
         # scale_color_viridis_c(direction = -1)+
         geom_point(aes(color = cut(percent_largest_region_single_copy, 
                            breaks = c(0,5,10,15,20,100), 
-                            labels = names(colors)))) + 
+                            labels = names(colors)),
+                            shape = type)) + 
         scale_color_manual(values = colors, 
                             name = "Largest Single-Copy Region")+
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "vertical")
 
@@ -502,7 +492,7 @@ ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = norm_chrom_media
 ggplot(chrom_metrics, aes(x = coverage_percent_duplication, y = percent_largest_region_single_copy))+
         geom_point(aes(color = norm_chrom_median))+
         scale_color_viridis_c(direction = -1) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom")
 ```
@@ -521,14 +511,13 @@ ggplot(filter(chrom_metrics, coverage_percent_duplication >= 20 | norm_chrom_med
                 aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
-        geom_point(alpha = 0.5, aes(color = lineage))+
+        geom_point(alpha = 0.5, aes(color = lineage,shape = type))+
         geom_text_repel(aes(label = sample), size = 3, max.overlaps = 10) +
-        scale_x_continuous(limits = c(0,100))+
+        scale_x_continuous(limits = c(0,100), breaks = seq(0,100, by = 10))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
-            x = "Percent of Chromosome Covered by Duplications",
-            shape = "Ploidy")
+            x = "Percent of Chromosome Covered by Duplications")
 ```
 Names, lower left
 ```{r, message = FALSE, warning = FALSE}
@@ -536,15 +525,14 @@ ggplot(filter(chrom_metrics, coverage_percent_duplication >= 20 | norm_chrom_med
                 aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
-        geom_point(alpha = 0.5, aes(color = lineage))+
+        geom_point(alpha = 0.5, aes(color = lineage,shape = type))+
         geom_text_repel(aes(label = paste(sample, chromosome)), size = 3, max.overlaps = 10) +
-        scale_x_continuous(limits = c(0,50))+
-        scale_y_continuous(limits = c(1.5, 2.25))+
+        scale_x_continuous(limits = c(0,50),breaks = seq(0,50, by = 5))+
+        scale_y_continuous(limits = c(1, 1.6))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
-            x = "Percent of Chromosome Covered by Duplications",
-            shape = "Ploidy")
+            x = "Percent of Chromosome Covered by Duplications")
 ```
 Names, middle right
 ```{r, message = FALSE, warning = FALSE}
@@ -552,15 +540,14 @@ ggplot(filter(chrom_metrics, coverage_percent_duplication >= 20 | norm_chrom_med
                 aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
-        geom_point(alpha = 0.5, aes(color = lineage))+
+        geom_point(alpha = 0.5, aes(color = lineage,shape = type))+
         geom_text_repel(aes(label = paste(sample, chromosome)), size = 3, max.overlaps = 10) +
-        scale_x_continuous(limits = c(50,100))+
-        scale_y_continuous(limits = c(1.5,2))+
+        scale_x_continuous(limits = c(50,100),breaks = seq(50,100, by = 5))+
+        scale_y_continuous(limits = c(1.4,2))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
-            x = "Percent of Chromosome Covered by Duplications",
-            shape = "Ploidy")
+            x = "Percent of Chromosome Covered by Duplications")
 ```
 Names, upper right
 ```{r, message = FALSE, warning = FALSE}
@@ -568,14 +555,145 @@ ggplot(filter(chrom_metrics, coverage_percent_duplication >= 20 | norm_chrom_med
                 aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
         geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
         geom_line(data = trend, aes(x= p_dup, y = median_depth), color = "gray")+ # Line of simulated data
-        geom_point(alpha = 0.5, aes(color = lineage))+
+        geom_point(alpha = 0.5, aes(color = lineage,shape = type))+
         geom_text_repel(aes(label = paste(sample, chromosome)), size = 3, max.overlaps = 20) +
-        scale_x_continuous(limits = c(60,100))+
-        scale_y_continuous(limits = c(2,2.75))+
+        scale_x_continuous(limits = c(50,100),breaks = seq(50,100, by = 5))+
+        scale_y_continuous(limits = c(2,2.6))+
         theme_minimal() +
         theme(legend.position = "bottom", legend.direction = "horizontal")+
         labs(y = "Normalized Chromosome Median",
-            x = "Percent of Chromosome Covered by Duplications",
-            shape = "Ploidy")
+            x = "Percent of Chromosome Covered by Duplications")
 ```
 
+
+## Filter out partial duplications
+```{r}
+#| code-fold: false
+coverage_threshold <- 80
+```
+```{r}
+duplications_full <- filter(chrom_metrics, coverage_percent_duplication >= coverage_threshold)
+```
+
+## Summary tables
+
+<p style="text-align:center;">**Number of samples with duplications in each lineage**</p>
+
+```{r, message=FALSE}
+dup_lineage <- duplications_full %>%
+    group_by(lineage) %>%
+    summarise(aneuploid = n_distinct(sample), samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(euploid = samples_in_lineage - aneuploid)%>%
+    pivot_longer(cols = c(aneuploid, euploid), names_to = "type", values_to = "n_samples")%>%
+    mutate(percent = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    mutate(dup_samples = ifelse(type == "aneuploid", n_samples, ""))
+dup_lineage$type <- factor(dup_lineage$type, levels = c("euploid","aneuploid"))
+                
+dup_lineage %>%
+        filter(type == "aneuploid")%>%
+        select(lineage, n_samples, percent, samples_in_lineage)
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each lineage-source**</p>
+
+```{r, message=FALSE}
+
+metadata_source_lineage <- metadata %>%
+        group_by(lineage,source,samples_in_lineage) %>%
+        summarize(n_lin_source = n_distinct(sample))
+
+
+dup_lineage_source <- duplications_full %>%
+        group_by(lineage,source) %>%
+        summarise(aneuploid = n_distinct(sample))%>%
+        right_join(metadata_source_lineage, by = c("lineage", "source"))%>%
+        replace_na(list(aneuploid = 0))%>%
+        arrange(lineage, source)%>%
+        mutate(euploid = n_lin_source - aneuploid)%>%
+        select(lineage, source, aneuploid, euploid, n_lin_source, samples_in_lineage)%>%
+        pivot_longer(cols = c(aneuploid, euploid), names_to = "type", values_to = "n_samples")%>%
+        mutate(percent_samples = round((n_samples / samples_in_lineage) * 100, 1),
+                percent_source = round((n_lin_source / samples_in_lineage)*100,1),
+                dup_samples = ifelse(type == "aneuploid" & source == "Clinical", n_samples, ""),
+                type = str_to_title(type),
+                category = paste(source, type, sep = " "))
+
+dup_lineage_source$type <- factor(dup_lineage_source$type, levels = c("Euploid","Aneuploid"))
+dup_lineage_source$source <- factor(dup_lineage_source$source, levels = c("Environmental","Clinical"))
+dup_lineage_source$category <- factor(dup_lineage_source$category, levels =c("Environmental Euploid", "Environmental Aneuploid","Clinical Euploid","Clinical Aneuploid"))
+
+source <- dup_lineage_source%>%
+        select(lineage, source, n_lin_source, percent_source)%>%
+        distinct
+                
+dup_lineage_source  %>%
+        filter(type == "Aneuploid")%>%
+        select(lineage, source, n_samples, percent_samples, n_lin_source)
+```
+
+
+<p style="text-align:center;">**Number of duplicated chromosomes per sample**</p>
+
+```{r,message=FALSE}
+dup_sample <- duplications_full %>%
+    group_by(dataset,lineage, sample, strain, source) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms))
+dup_sample
+```
+  
+
+<p style="text-align:center;">**Number of samples with duplications in each group of dataset-lineage-chromosome**</p>
+
+```{r, message=FALSE}
+dup_dataset_lineage_chromosome <- duplications_full %>%
+    group_by(dataset,lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), 
+        samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(dataset,lineage, chromosome, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_dataset_lineage_chromosome
+```
+  
+
+<p style="text-align:center;">**Number of samples with duplications in each group of lineage-chromosome**</p>
+
+```{r,message=FALSE}
+dup_lineage_chromosome <- duplications_full%>%
+    group_by(lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), 
+        samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    select(lineage, chromosome, n_samples, samples_in_lineage,percent_samples)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_lineage_chromosome 
+```
+ 
+
+<p style="text-align:center;">**Number of samples with duplications in each group of lineage-dataset**</p>
+
+```{r, message=FALSE}
+dup_lineage_dataset <- duplications_full%>%
+    group_by(dataset,lineage) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent_samples = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(lineage, n_samples, samples_in_dataset_lineage, percent_samples)%>%
+    arrange(desc(lineage), desc(n_samples))
+dup_lineage_dataset
+
+```
+  
+
+<p style="text-align:center;">**Number of samples with duplications in each chromosome**</p>
+
+```{r, message=FALSE}
+dup_chromosome <- duplications_full %>%
+    group_by(chromosome) %>%
+    summarise(n_samples = n_distinct(sample), total_samples = first(total_samples))%>%
+    mutate(percent_samples = round((n_samples / total_samples) * 100, 1))%>%
+    select(chromosome, n_samples,total_samples, percent_samples)%>%
+    arrange(chromosome, desc(n_samples))
+dup_chromosome 
+```
