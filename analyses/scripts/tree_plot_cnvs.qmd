@@ -16,6 +16,7 @@ library(ggtreeExtra)
 library(ape)
 library(ggnewscale)
 library(RColorBrewer)
+library(svglite)
 source("scripts/metadata_colors.R")
 ```
 Paths 
@@ -24,7 +25,7 @@ Paths
 metadata_path <- 
     "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
 duplications_path <- 
-    "results/tables/duplications_putative.tsv" # Change it to final list of duplications when decided
+    "results/tables/duplications.tsv"
 merged_tree_path <- 
     "data/processed/tree_merged.newick"
 tree_merged_duplications_path <- 
@@ -37,6 +38,8 @@ tree_merged_duplications_only_duplicated2 <-
     "results/trees_dups/tree_merged_duplications_only_duplicated2.png"
 tree_merged_duplications_only_duplicated3 <- 
     "results/trees_dups/tree_merged_duplications_only_duplicated3.png"
+tree_merged_duplications_only_duplicated4 <- 
+    "results/trees_dups/tree_merged_duplications_only_duplicated4.svg"
 ```
 ## Metadata
 Load the necessary data
@@ -326,4 +329,63 @@ p3
 
 ```{r, echo=FALSE, eval=FALSE}
 ggsave(tree_merged_duplications_only_duplicated3, p3, height = 7, width = 9, units = "in", dpi = 900)
+```
+
+#### Lineage, duplications
+
+VNII = 94
+VNBI = 55
+VNBII = 52
+VNI = 57
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 7
+#| fig-width: 9
+#| fig-align: center
+
+d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNI", "VNBI", "VNBII", "VNII"))
+
+p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none")+ 
+            geom_hilight(data=d, aes(node=node, fill=lineage), alpha = 0.5)+
+            scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+            new_scale_fill()
+
+p4 <- gheatmap(p, dup_chroms, width=0.5, colnames = TRUE,  colnames_position = "top",offset=0.0) +
+    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()+
+    theme(legend.position = "bottom",
+        legend.direction = "horizontal")
+p4
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+#| fig-height: 7
+#| fig-width: 9
+#| fig-align: center
+
+tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
+d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNI", "VNBI", "VNBII", "VNII"))
+
+p <- ggtree(tree2, aes(color = group), layout = "rectangular", 
+                size = 1.5, branch.length = "none")+ 
+            scale_color_manual(values = c("black","#1B9E77", "#D95F02", "#7570B3", "#E7298A" ), name = "Lineage")+
+            new_scale_color()
+
+p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
+            colnames_position = "top", 
+            offset=0.0,
+            font.size = 6) +
+    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()+
+    theme(legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.title = element_text(size=20),
+        legend.text=element_text(size=15),
+        legend.key.size = unit(1, "cm"))
+p4
+```
+```{r, echo=FALSE}
+ggsave(tree_merged_duplications_only_duplicated4, p4, height = 8, width = 13, units = "in", dpi = 900)
 ```
