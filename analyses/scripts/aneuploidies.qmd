@@ -23,12 +23,8 @@ Libraries
 ```{r libraries, output=FALSE}
 library(tidyverse)
 library(patchwork)
-library(ggbeeswarm)
 library(ggnewscale)
 library(RColorBrewer)
-library(hexbin)
-library(ggExtra)
-library(ggrepel)
 library(svglite)
 ```
 
