@@ -135,8 +135,10 @@ chrom_metrics <- chrom_metrics %>%
 ```{r, warning=FALSE, message=FALSE}
 chrom_metrics %>% 
     filter(cnv == "duplication")%>%
-    group_by(category)%>%
+    group_by(category, total_samples)%>%
     summarize(n_samples = n_distinct(sample))%>%
+    mutate(percent = round((n_samples / total_samples)*100,2))%>%
+    select(category, n_samples, percent, total_samples)%>%
     arrange(category)
 ```
 
@@ -145,8 +147,10 @@ chrom_metrics %>%
 ```{r, warning=FALSE, message=FALSE}
 chrom_metrics %>% 
     filter(cnv == "deletion")%>%
-    group_by(category)%>%
+    group_by(category, total_samples)%>%
     summarize(n_samples = n_distinct(sample))%>%
+    mutate(percent = round((n_samples / total_samples)*100, 2))%>%
+    select(category, n_samples, percent, total_samples)%>%
     arrange(category)
 ```
 
