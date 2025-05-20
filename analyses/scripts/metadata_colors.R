@@ -11,7 +11,7 @@ library(colorspace)
 # Assuming the fill aesthetic is used with the values in lineage_names.
 
 # Chromosomes
-chrom_colors <- c(colorRampPalette(brewer.pal(8, "Dark2"))(14))
+chrom_colors <- c(colorRampPalette(brewer.pal(12, "Paired"))(14))
 names(chrom_colors) <- c("chr01", "chr02", "chr03","chr04","chr05",
                          "chr06", "chr07", "chr08","chr09", "chr10",
                          "chr11", "chr12","chr13", "chr14")
@@ -67,20 +67,21 @@ country_colors <- unlist(Map(function(region, color, dark_color) {
 names(country_colors) <- unlist(continent, use.names = FALSE)
 
 ## Display colors
-# display_colors <- function(color_vector, title) {
-#     barplot(rep(1, length(color_vector)), col = color_vector, border = NA, 
-#                     names.arg = names(color_vector), las = 2, main = title)
-# }
+display_colors <- function(color_vector, title) {
+    barplot(rep(1, length(color_vector)), col = color_vector, border = NA, 
+                    names.arg = names(color_vector), las = 2, main = title)
+}
 
 # # Set up the plotting area
-# par(mfrow = c(3, 2), mar = c(5, 4, 2, 1))
-# # Display colors for each metadata field
-# display_colors(dataset_colors, "Dataset Colors")
-# display_colors(lineage_colors, "Lineage Colors")
-# display_colors(sublineage_colors, "Sublineage Colors")
-# display_colors(source_colors, "Source Colors")
-# display_colors(mat_colors, "Mating Type Colors")
-# display_colors(country_colors, "Country Colors")
+par(mfrow = c(3, 2), mar = c(5, 4, 2, 1))
+# Display colors for each metadata field
+display_colors(dataset_colors, "Dataset Colors")
+display_colors(lineage_colors, "Lineage Colors")
+display_colors(sublineage_colors, "Sublineage Colors")
+display_colors(source_colors, "Source Colors")
+display_colors(mat_colors, "Mating Type Colors")
+display_colors(country_colors, "Country Colors")
+display_colors(chrom_colors, "Country Colors")
 
 # #Reset plotting area
 # par(mfrow = c(1, 1), mar = c(5, 4, 2, 1))
