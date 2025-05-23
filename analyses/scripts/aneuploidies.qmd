@@ -39,6 +39,8 @@ cnv_chroms_path <-
     "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
 
 duplications_path <- "results/tables/duplications.tsv"
+duplications_partial_path <- "results/tables/duplications_partial.tsv"
+
 n_lineage_source_path <- "results/figs/barplot_lineage_source.svg"
 ```
 
@@ -104,7 +106,7 @@ the chormosome covered by CNVs.
 ```{r}
 #| code-fold: false
 zero_threshold <- 0
-small_threshold <- 15
+small_threshold <- 20
 full_threshold <- 80
 ```
 
@@ -350,3 +352,202 @@ dup_sample <- duplications_full %>%
     arrange(desc(n_chroms), chromosomes)
 dup_sample
 ```
+
+
+## Multiple summaries of partial duplications
+
+Keep only partial duplications
+```{r}
+duplication_partial <- chrom_metrics %>%
+     filter(cnv == "duplication",
+            category == "partial")%>%
+    select(-c(cnv, category))
+```
+Save table with full duplications to file
+```{r}
+write.table(duplication_partial, file = duplications_partial_path,  sep = "\t", quote = FALSE, row.names = FALSE)
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each lineage**</p>
+
+```{r, message=FALSE}
+dup_lineage <- duplication_partial %>%
+    group_by(lineage) %>%
+    summarise(aneuploid = n_distinct(sample), samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(euploid = samples_in_lineage - aneuploid)%>%
+    pivot_longer(cols = c(aneuploid, euploid), names_to = "type", values_to = "n_samples")%>%
+    mutate(percent = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    mutate(dup_samples = ifelse(type == "aneuploid", n_samples, ""))
+dup_lineage$type <- factor(dup_lineage$type, levels = c("euploid","aneuploid"))
+                
+dup_lineage %>%
+        filter(type == "aneuploid")%>%
+        select(lineage, n_samples, percent, samples_in_lineage)
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each VNI sublineage**</p>
+
+```{r, message=FALSE}
+dup_sublineage <- duplication_partial%>%
+    filter(lineage == "VNI")%>%
+    group_by(vni_subdivision, samples_in_sublineage) %>%
+    summarise(n_samples = n_distinct(sample))%>%
+    mutate(percent = round((n_samples / samples_in_sublineage) * 100, 1))%>%
+    select(vni_subdivision, n_samples, percent, samples_in_sublineage)%>%
+    arrange(vni_subdivision)%>%
+    mutate(n_samples = as.character(n_samples))
+dup_sublineage
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each group of chromosome-VNI sublineage**</p>
+
+```{r, message=FALSE}
+dup_sublin_chrom <- duplication_partial%>%
+    filter(lineage == "VNI")%>%
+    group_by(chromosome, vni_subdivision) %>%
+    summarise(n_samples = n_distinct(sample))%>%
+    select(vni_subdivision, chromosome, n_samples)%>%
+    arrange(chromosome, vni_subdivision)%>%
+    mutate(n_samples = as.character(n_samples))
+dup_sublin_chrom
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each group of lineage-source**</p>
+
+```{r, message=FALSE}
+
+metadata_source_lineage <- metadata %>%
+        group_by(lineage,source,samples_in_lineage) %>%
+        summarize(samples_in_lineage_source = n_distinct(sample))
+
+
+dup_lineage_source <- duplication_partial %>%
+        group_by(lineage,source) %>%
+        summarise(aneuploid = n_distinct(sample))%>%
+        right_join(metadata_source_lineage, by = c("lineage", "source"))%>%
+        replace_na(list(aneuploid = 0))%>%
+        arrange(lineage, source)%>%
+        mutate(euploid = samples_in_lineage_source - aneuploid)%>%
+        select(lineage, source, aneuploid, euploid, samples_in_lineage_source, samples_in_lineage)%>%
+        pivot_longer(cols = c(aneuploid, euploid), names_to = "type", values_to = "n_samples")%>%
+        mutate(percent = round((n_samples / samples_in_lineage) * 100, 1),
+                percent_source = round((samples_in_lineage_source / samples_in_lineage)*100,1),
+                dup_samples = ifelse(type == "aneuploid" & source == "Clinical", n_samples, ""),
+                type = str_to_title(type),
+                category = paste(source, type, sep = " "))
+
+dup_lineage_source$type <- factor(dup_lineage_source$type, levels = c("Euploid","Aneuploid"))
+dup_lineage_source$source <- factor(dup_lineage_source$source, levels = c("Environmental","Clinical"))
+dup_lineage_source$category <- factor(dup_lineage_source$category, levels =c("Environmental Euploid", "Environmental Aneuploid","Clinical Euploid","Clinical Aneuploid"))
+
+source <- dup_lineage_source%>%
+        select(lineage, source, samples_in_lineage_source, percent_source)%>%
+        distinct
+                
+dup_lineage_source  %>%
+        filter(type == "Aneuploid")%>%
+        select(lineage, source, n_samples, percent, samples_in_lineage_source)
+```
+
+```{r}
+category_colors <- brewer.pal(11, "BrBG")[c(4, 2, 8 ,10)]
+names(category_colors) <- c("Environmental Euploid", "Environmental Aneuploid","Clinical Euploid","Clinical Aneuploid")
+```
+
+```{r relative bar plot partial source colors}
+#| fig-height: 5
+#| fig-width: 13
+p <- ggplot() +
+        geom_col(data = dup_lineage_source, aes(x = lineage, y = percent, fill = category), color = NA, position = "stack")+
+        geom_text(data = dup_lineage_source, aes(x = lineage, y = percent +2, label = dup_samples), position = "identity", size = 8)+
+        scale_fill_manual(values = category_colors)+
+        geom_text(data = dup_lineage_source, aes(x = lineage, y = 108, label = paste("n = ", samples_in_lineage)), size = 8)+
+        # geom_text(data = source, aes(x = lineage, y = percent_source - percent_source * 0.2 , label = samples_in_lineage_source, color = source), position = "stack", size = 4, vjust = 3)+
+        # geom_text(data = source, aes(x = lineage, y = percent_source, label = samples_in_lineage_source), vjust = 1)+
+        scale_y_continuous(limits = c(0,110), breaks = seq(0,100, by = 10))+
+        coord_flip()+
+        theme_minimal()+
+        labs(x = "Lineage",
+                y = "Percent",
+                fill = "Type",
+                color = "Source")+
+        theme(legend.position = "bottom",
+                legend.direction = "vertical",
+                legend.title = element_text(size=20),
+                legend.text=element_text(size=15),
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                axis.text = element_text(size = 20, color = "black"),
+                axis.title = element_text(size = 25, color = "black")
+)
+p
+```
+
+```{r}
+ggsave(n_lineage_source_path, p, height = 5.3, width = 14, units = "in", dpi = 900)
+```
+<p style="text-align:center;">**Number of samples with duplications in each group of lineage-dataset**</p>
+
+```{r, message=FALSE}
+dup_lineage_dataset <- duplication_partial%>%
+    group_by(dataset,lineage) %>%
+    summarise(n_samples = n_distinct(sample), samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(lineage, n_samples, percent, samples_in_dataset_lineage)%>%
+    arrange(desc(lineage), desc(n_samples))
+dup_lineage_dataset
+
+```
+<p style="text-align:center;">**Number of samples with duplications in each chromosome**</p>
+
+```{r, message=FALSE}
+dup_chromosome <- duplication_partial %>%
+    group_by(chromosome) %>%
+    summarise(n_samples = n_distinct(sample), total_samples = first(total_samples))%>%
+    mutate(percent = round((n_samples / total_samples) * 100, 1))%>%
+    select(chromosome, n_samples, percent ,total_samples)%>%
+    arrange(chromosome, desc(n_samples))
+dup_chromosome 
+```
+<p style="text-align:center;">**Number of samples with duplications in each group of lineage-chromosome**</p>
+
+```{r,message=FALSE}
+dup_lineage_chromosome <- duplication_partial%>%
+    group_by(lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), 
+        samples_in_lineage = first(samples_in_lineage))%>%
+    mutate(percent = round((n_samples / samples_in_lineage) * 100, 1))%>%
+    select(lineage, chromosome, n_samples,percent , samples_in_lineage)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_lineage_chromosome 
+```
+```{r by chromosome bar partial plot}
+ggplot(dup_lineage_chromosome)+
+        geom_col(aes(x = chromosome, y = n_samples, fill = lineage), position = "stack")+
+        scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+        coord_flip()
+```
+
+<p style="text-align:center;">**Number of samples with duplications in each group of dataset-lineage-chromosome**</p>
+
+```{r, message=FALSE}
+dup_dataset_lineage_chromosome <- duplication_partial %>%
+    group_by(dataset,lineage, chromosome) %>%
+    summarise(n_samples = n_distinct(sample), 
+        samples_in_dataset_lineage = first(samples_in_dataset_lineage))%>%
+    mutate(percent = round((n_samples / samples_in_dataset_lineage) * 100, 1))%>%
+    select(dataset,lineage, chromosome, n_samples, percent, samples_in_dataset_lineage)%>%
+    arrange(chromosome, desc(lineage), desc(n_samples))
+dup_dataset_lineage_chromosome
+```
+<p style="text-align:center;">**Number of duplicated chromosomes per sample**</p>
+
+```{r,message=FALSE}
+dup_sample <- duplication_partial %>%
+    group_by(sample, strain,lineage,dataset ) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms), chromosomes)
+dup_sample
+```
+
