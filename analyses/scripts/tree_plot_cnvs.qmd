@@ -29,17 +29,10 @@ duplications_path <-
 merged_tree_path <- 
     "data/processed/tree_merged.newick"
 tree_merged_duplications_path <- 
-    "results/trees_dups/tree_merged_duplications.png"
-tree_merged_duplications_12_13_path <- 
-    "results/trees_dups/tree_merged_duplications_12_13.png"
+    "results/trees_dups/tree_merged_duplications.svg"
 tree_merged_duplications_only_duplicated <-  
-    "results/trees_dups/tree_merged_duplications_only_duplicated.png"
-tree_merged_duplications_only_duplicated2 <- 
-    "results/trees_dups/tree_merged_duplications_only_duplicated2.png"
-tree_merged_duplications_only_duplicated3 <- 
-    "results/trees_dups/tree_merged_duplications_only_duplicated3.png"
-tree_merged_duplications_only_duplicated4 <- 
-    "results/trees_dups/tree_merged_duplications_only_duplicated4.svg"
+    "results/trees_dups/tree_merged_duplications_only_duplicated.svg"
+
 ```
 ## Metadata
 Load the necessary data
@@ -122,12 +115,16 @@ tree <- drop.tip(tree, setdiff(tree$tip.label, metadata$strain))
 ## Plots
 
 ```{r}
+chrom_colors <- brewer.pal(7, "Paired")
+names(chrom_colors) <- c("chr01", "chr04",
+                         "chr06", "chr09", 
+                         "chr12","chr13", "chr14")
 chrom_dup_colors <- c(chrom_colors, "Euploid" = "grey93")
 ```
 
 ### Tree of all samples with duplications of all chromosomes
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 7
 #| fig-align: center
@@ -170,8 +167,8 @@ m5 <- gheatmap(m4, dup_chroms, width=.32, colnames = FALSE, offset=11,) +
 m5
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-ggsave(tree_merged_duplications_path, p5, height = 7, width = 7, units = "in", dpi = 900)
+```{r}
+ggsave(tree_merged_duplications_path, m5, height = 7, width = 7, units = "in", dpi = 900)
 ```
 
 ### Tree of all samples with duplications of chromosomes 12 and 13
@@ -182,7 +179,7 @@ Subset the duplications_full data frame to only include strains with duplication
 dup_chroms_12_13 <- dup_chroms %>%
     select(chr12, chr13)
 ```
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
@@ -198,10 +195,6 @@ p5 <- gheatmap(m4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
 p5
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-ggsave(tree_merged_duplications_12_13_path, p5, height = 7, width = 7, units = "in", dpi = 900)
-```
-
 ### Tree with only the samples that have duplications and the references
 
 ```{r}
@@ -213,7 +206,7 @@ sublineage <- sublineage %>%
 ```
 
 #### Dataset, lineage, sublineage, source, duplications
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 9
 #| fig-align: center
@@ -254,13 +247,9 @@ p5 <- gheatmap(p4, dup_chroms, width=0.7, colnames = FALSE, offset=14) +
 p5
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-ggsave(tree_merged_duplications_only_duplicated, p5, height = 7, width = 9, units = "in", dpi = 900)
-```
-
 #### Lineage, sublineage, duplications
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 9
 #| fig-align: center
@@ -290,13 +279,9 @@ p3 <- gheatmap(p2, dup_chroms, width=0.7, colnames = FALSE, offset=12) +
 p3
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-ggsave(tree_merged_duplications_only_duplicated2, p3, height = 7, width = 9, units = "in", dpi = 900)
-```
-
 #### Lineage, duplications, sublineage
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 9
 #| fig-align: center
@@ -327,10 +312,6 @@ p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=19.5) +
 p3
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-ggsave(tree_merged_duplications_only_duplicated3, p3, height = 7, width = 9, units = "in", dpi = 900)
-```
-
 #### Lineage, duplications
 
 VNII = 94
@@ -338,7 +319,7 @@ VNBI = 55
 VNBII = 52
 VNI = 57
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 9
 #| fig-align: center
@@ -359,7 +340,7 @@ p4 <- gheatmap(p, dup_chroms, width=0.5, colnames = TRUE,  colnames_position = "
 p4
 ```
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 9
 #| fig-align: center
@@ -386,6 +367,68 @@ p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,
         legend.key.size = unit(1, "cm"))
 p4
 ```
-```{r, echo=FALSE}
-ggsave(tree_merged_duplications_only_duplicated4, p4, height = 8, width = 13, units = "in", dpi = 900)
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 9
+#| fig-align: center
+
+tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
+d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNII", "VNBI", "VNBII", "VNI"))
+
+p <- ggtree(tree2, layout = "rectangular", 
+                size = 1.5, 
+                color = "gray40",
+                branch.length = "none")+
+        geom_cladelab(node=94, label="VNII", offset = 10.3, fontsize = 5)+
+        geom_cladelab(node=55, label="VNBI", offset = 10.3, fontsize = 5)+
+        geom_cladelab(node=52, label="VNBII", offset = 10.3, fontsize = 5)+
+        geom_cladelab(node=57, label="VNI", offset = 10.3, fontsize = 5)
+
+p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
+            colnames_position = "top", 
+            offset=0,
+            font.size = 6) +
+    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()+
+    theme(legend.position = "none",
+        legend.direction = "horizontal",
+        legend.title = element_text(size=20),
+        legend.text=element_text(size=15),
+        legend.key.size = unit(1, "cm"))
+p4
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 9
+#| fig-align: center
+
+tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
+d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNII", "VNBI", "VNBII", "VNI"))
+
+p <- ggtree(tree2, layout = "rectangular", 
+                size = 1.5, 
+                color = "gray40",
+                branch.length = "none")+
+            geom_text(aes(label = d$lineage[match(node, d$node)]), 
+                        size = 6, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)
+
+p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
+            colnames_position = "top", 
+            offset=0,
+            font.size = 6) +
+    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+    guides(fill = guide_legend(order = 2))+
+    new_scale_fill()+
+    labs(title = "Duplicated chromosomes")+
+    theme(legend.position = "none",
+            plot.title = element_text(size = 25))
+
+p4
+```
+
+```{r}
+ggsave(tree_merged_duplications_only_duplicated, p4, height = 8, width = 13, units = "in", dpi = 900)
 ```
