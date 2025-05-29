@@ -4,29 +4,31 @@ author: "Claudia Zirión-Martínez"
 date: "2025-02-14"
 ---
 
+```{r, eval = FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
 ## Setup
 Libraries
 ```{r, output=FALSE}
 library(tidyverse)
 library(patchwork)
+library(ggbeeswarm)
+library(ggrepel)
 ```
 Paths
 ```{r}
-desj_metadata <- 
-    "../Crypto_Desjardins/config/metadata.csv"
+metadata_path <-
+    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
 desj_counts <- 
     "data/processed/snp_counts_desjardins.csv"
-ashton_metadata <- 
-    "../Crypto_Ashton/results_clean/02.Dataset/metadata.csv"
 ashton_counts <- 
     "data/processed/snp_counts_ashton.csv"
 ```
 
-## Desjardins
+## Count SNPs of each sample in Desjardins and Ashton datasets
 
-### Number of raw and filtered variants
-Using bash count the number of variants called by Freebayes and filter by Snippy.  
-Snippy filter are:   
+Using bash, count the number of variants called by Freebayes and filtered by Snippy.  
+Snippy filters are:   
 **GT == 1/1**  
 **QUAL >= 100**   
 **DP >= 10**  
@@ -35,126 +37,142 @@ Snippy filter are:
 cd /FastData/czirion/WeavePop_Cneoformans/
 tail -n +2 Crypto_Desjardins/config/metadata.csv | cut -d',' -f2 | while read line
 do 
-    raw=$(grep -v "#" Crypto_Desjardins/results_clean/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
-    filt=$(grep -v "#" Crypto_Desjardins/results_clean/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
-    echo $line,$raw,$filt >> analyses/data/processed/snp_counts_desjardins.csv
+    raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_desjardins.csv
 done 
-```
-
-### Metadata
-```{r, output=FALSE}
-metadata <- read_csv(desj_metadata)
-metadata <- metadata %>%
-    select(sample, strain, lineage)
-```
-### Variant counts
-```{r, message=FALSE}
-snp_counts <- read_csv(desj_counts, col_names = c("sample", "n_raw", "n_filt"))
-
-snp_counts <- snp_counts %>%
-        mutate(n_removed = n_raw - n_filt, percent_filt = (n_filt / n_raw)*100)%>%
-        left_join(metadata, by = "sample")
-           
-```
-```{r, echo=FALSE}
-#| fig-height: 7
-#| fig-width: 7
-#| fig-align: center
-r <- ggplot(snp_counts, aes(x = n_raw, fill = lineage, color = lineage)) +
-    geom_histogram(bins = 387) +
-    theme_minimal() +
-    labs(title = "Histograms of Raw and Filtered SNP Counts by Lineage", x = "Number of Raw SNPs", y = "Count", fill = "Lineage", color = "Lineage")
-f <- ggplot(snp_counts, aes(x = n_filt, fill = lineage, color = lineage)) +
-    geom_histogram(bins = 387) +
-    theme_minimal() +
-    labs(x = "Number of Filtered SNPs", y = "Count", fill = "Lineage", color = "Lineage") +
-    theme(legend.position = "none")
-r/f
-```
-
-Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
-
-```{r}
-summary <- snp_counts %>%
-    summarise(max_raw = max(n_raw),
-              max_filtered = max(n_filt),
-              max_removed = max(n_removed),
-              median_raw = median(n_raw),
-              median_filt = median(n_filt),
-              median_removed = median(n_removed))
-summary   
-```
-Here are the 30 samples with highest number of likely heterozygous variants.
-```{r}
-sorted <- snp_counts %>%
-    arrange(desc(n_removed))
-head(sorted, 30)
-```
-
-
-## Ashton
-### Number of raw and filtered variants
-Using bash count the number of variants called by Freebayes and filter by Snippy.  
-Snippy filter are:   
-**GT == 1/1**  
-**QUAL >= 100**   
-**DP >= 10**  
-**A0/DP >= 0**  
-```{bash, eval=FALSE}
 cd /FastData/czirion/WeavePop_Cneoformans/
-tail -n +2 Crypto_Ashton/results_clean/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
+tail -n +2 Crypto_Ashton/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
-    raw=$(grep -v "#" Crypto_Ashton/results_clean/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
-    filt=$(grep -v "#" Crypto_Ashton/results_clean/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
-    echo $line,$raw,$filt >> analyses/data/processed/snp_counts_ashton.csv
+    raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_ashton.csv
 done 
 ```
-### Metadata
+
+## Metadata
 ```{r, output=FALSE}
-metadata <- read_csv(ashton_metadata)
+metadata <- read_csv(metadata_path)
 metadata <- metadata %>%
     select(sample, strain, lineage, vni_subdivision)
 ```
-### Variant counts
-```{r, output=FALSE}
-snp_counts <- read_csv(ashton_counts, col_names = c("sample", "n_raw", "n_filt"))
-```
-```{r}
+
+## Variant counts
+```{r, message=FALSE, warning=FALSE}
+snp_counts_desj <- read_csv(desj_counts, col_names = c("sample", "n_raw", "n_surv"))
+snp_counts_asht <- read_csv(ashton_counts, col_names = c("sample", "n_raw", "n_surv"))
+
+snp_counts <- bind_rows(snp_counts_desj, snp_counts_asht)
 
 snp_counts <- snp_counts %>%
-        mutate(n_removed = n_raw - n_filt, percent_filt = (n_filt / n_raw)*100)%>%
-        left_join(metadata, by = "sample")
+        mutate(n_removed = n_raw - n_surv, percent_surv = (n_surv / n_raw)*100)%>%
+        left_join(metadata, by = "sample") 
 ```
 
-```{r, echo=FALSE}
-#| fig-height: 7
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-r <- ggplot(snp_counts, aes(x = n_raw, fill = vni_subdivision, color = vni_subdivision)) +
-    geom_histogram(bins = 387) +
+ggplot(snp_counts, aes(y = n_raw, x = lineage)) +
+    geom_quasirandom() +
     theme_minimal() +
-    labs(title = "Histograms of Raw and Filtered SNP Counts by Sublineage", x = "Number of Raw SNPs", y = "Count", fill = "Sublineage", color = "Sublineage")
-f <- ggplot(snp_counts, aes(x = n_filt, fill = vni_subdivision, color = vni_subdivision)) +
-    geom_histogram(bins = 387) +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = "Raw SNPs", y = "Number of SNPs", x = "Lineage")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_surv, x = lineage)) +
+    geom_quasirandom() +
     theme_minimal() +
-    labs(x = "Number of Filtered SNPs", y = "Count", fill = "Sublineage", color = "Sublineage") +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Number SNPs", x = "Lineage", title = "Surviving SNPs")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_removed, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(y = "Number SNPs", x = "Lineage", title = "Removed SNPs")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_removed, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma, limits = c(0,30000)) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(y = "Number SNPs (Truncated)", x = "Lineage", title = "Removed SNPs (Truncated y axis)") +
     theme(legend.position = "none")
-r/f
 ```
+
+### VNI sublineage
+
+```{r, message=FALSE, warning=FALSE}
+snp_counts_vni <- filter(snp_counts, lineage == "VNI")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_raw, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = "Raw", y = "Number of SNPs", x = "Sublineage")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_surv, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Number SNPs", x = "Sublineage", title = "Surviving")
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_removed, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 2, show.legend = FALSE) +
+    labs(y = "Number SNPs", x = "Sublineage", title = "Removed")
+```
+
+
+## Identify samples with high heterozigosity
 Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
-```{r}
-summary <- snp_counts %>%
-    summarise(max_raw = max(n_raw),
-              max_filtered = max(n_filt),
-              max_removed = max(n_removed),
-              median_raw = median(n_raw),
-              median_filt = median(n_filt),
-              median_removed = median(n_removed))
-summary
+
+Here are the 20 samples with highest number of likely heterozygous variants.
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    arrange(desc(n_removed))%>%
+    head(20)
 ```
-Here are the 30 samples with highest number of likely heterozygous variants.
-```{r}
-sorted <- snp_counts %>%
-    arrange(desc(n_removed))
-head(sorted, 30)
+
+### Strains with the least number of surviving SNPs
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    arrange(n_surv)%>%
+    head(20)
+```
+
+
+## Number of SNPs in reference strains
+
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    filter(strain %in% c("Bt89", "Bt22"))
 ```
