@@ -24,6 +24,8 @@ Paths
 ```{r}
 metadata_path <- 
     "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+ploidy_path <- 
+    "results/tables/ploidy_from_plots.tsv"
 duplications_path <- 
     "results/tables/duplications.tsv"
 merged_tree_path <- 
@@ -32,14 +34,15 @@ tree_merged_duplications_path <-
     "results/trees_dups/tree_merged_duplications.svg"
 tree_merged_duplications_only_duplicated <-  
     "results/trees_dups/tree_merged_duplications_only_duplicated.svg"
-
 ```
+
 ## Metadata
 Load the necessary data
 ```{r}
 metadata <- read.csv(
     metadata_path,
-    header = TRUE)
+    header = TRUE)%>%
+    select(strain, everything())
 ```
 
 Get one dataframe for each variable to be plotted as a separate metadata column in the tree
@@ -48,6 +51,8 @@ metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
                             "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", 
                             "VNIc", "VNIa-outlier"))
+metadata$country_of_origin <- factor(metadata$country_of_origin,
+                                levels = names(country_colors))
 
 sublineage <- metadata %>%
                 filter(lineage == "VNI")%>%
@@ -63,6 +68,19 @@ dataset <- metadata %>%
 source <- metadata %>%
             select(strain, source)%>%
             column_to_rownames("strain")
+country <- metadata %>%
+            select(strain, country_of_origin)%>%
+            column_to_rownames("strain")     
+```
+```{r} 
+ploidy <- read.delim(
+    ploidy_path,
+    header=TRUE,
+    sep="\t")%>%
+    select(strain, ploidy)%>%
+    filter(ploidy != "haploid")%>%
+    distinct()%>%
+    column_to_rownames("strain")
 ```
 
 ## Duplications
@@ -101,15 +119,62 @@ dup_chroms <- euploid_strain %>%
     bind_rows(dup_chroms)
 ```
 
-
 ## Tree
 ```{r}
 tree <- read.tree(merged_tree_path)
 ```
-Remove tips that are not in metadata$strain
 
+Remove tips that are not in metadata$strain
 ```{r}
 tree <- drop.tip(tree, setdiff(tree$tip.label, metadata$strain))
+```
+
+## Tree info
+
+Get the node number of the Most Recent Common Ancestor of each lineage
+```{r}
+VNI_node <- getMRCA(tree, c("Tu241-1","UI_31647-2"))
+VNII_node <- getMRCA(tree, c("C2","C12"))
+VNBI_node <- getMRCA(tree, c("Tu229-1","Ftc267-2"))
+VNBII_node <- getMRCA(tree, c("MW-RSA3321","MW-RSA3179"))
+
+nodes_lineages <- data.frame(
+    lineage = c("VNI", "VNII", "VNBI", "VNBII"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node)
+)
+```
+
+```{r}
+VNIa4_node <- getMRCA(tree, c("04CN-30-008","UI_31647-2"))
+VNIa5_node <- getMRCA(tree, c("BMD852","14936_1#45"))
+VNIa93_node <- getMRCA(tree, c("04CN-65-080","04CN-65-002"))
+VNIa32_node <- getMRCA(tree, c("BMD942","BMD2801"))
+VNIaX_node <- getMRCA(tree, c("Bt48","04CN-63-007"))
+VNIaY_node <- getMRCA(tree, c("04CN-65-073","Bt138"))
+VNIb_node <- getMRCA(tree, c("04CN-65-096","MW-RSA722"))
+VNIc_node <- getMRCA(tree, c("Bt20","Bt11"))
+
+nodes_vnisublineages <- data.frame(
+    sublineage = c(
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", "VNIa-X", "VNIa-Y",
+                "VNIb", "VNIc"),
+    mrca = c(
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node, VNIaX_node, VNIaY_node,
+            VNIb_node, VNIc_node))
+```
+
+```{r}
+nodes_sublineages <- data.frame(
+    sublineage = c("VNI", "VNII", "VNBI", "VNBII",
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", "VNIa-X", "VNIa-Y",
+                "VNIb", "VNIc"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node,
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node, VNIaX_node, VNIaY_node,
+            VNIb_node, VNIc_node))
 ```
 
 ## Plots
@@ -122,313 +187,294 @@ names(chrom_colors) <- c("chr01", "chr04",
 chrom_dup_colors <- c(chrom_colors, "Euploid" = "grey93")
 ```
 
-### Tree of all samples with duplications of all chromosomes
+### Country, source, duplications in one ring per chromosome
 
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 7
 #| fig-align: center
-m <- ggtree(tree, layout = "circular", size = 0.1, branch.length = "none") +  
-        geom_tiplab(aes(label = label), size = 0.5, align =TRUE, 
-                    linetype = "dashed", linesize = .03)
+m <- ggtree(tree, 
+        ladderize = TRUE,
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_tiplab(color = "black", size = 0.5, offset = 0.01)+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.8)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)+
+    geom_tippoint(aes(color = country_of_origin),
+                size = 0.3)+
+    scale_color_manual(name = "Country", values = country_colors,
+                        limits = levels(country$country_of_origin))+
+    guides(color = guide_legend(override.aes = list(size = 5), order = 1, ncol = 2))
 
-m1 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=2) +
-            scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
-            guides(fill = guide_legend(order = 1))+
-            new_scale_fill()
+m1 <- gheatmap(m, source, width=.05, colnames=FALSE, offset=3) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 2))+
+        new_scale_fill()
+m2 <- gheatmap(m1, dup_chroms, width=.32, colnames = FALSE, offset=6) +
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
+    guides(fill = guide_legend(order = 5))+
+        geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                angle = "auto", offset = 20)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m2
+```
 
-m2 <- gheatmap(m1, lineage, width=.05, colnames=FALSE, offset=4) +
-            scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
-            guides(fill = guide_legend(order = 2))+
-            new_scale_fill()
+### Country, source, duplications in one ring per chromosome and ploidy
 
-m3 <- gheatmap(m2, sublineage, width=.05, colnames=FALSE, offset=6) +
-            scale_fill_manual(values = sublineage_colors,
-                name="VNI Sublineage",
-                na.translate = FALSE,
-                limits = levels(sublineage$vni_subdivision))+
-            guides(fill = guide_legend(order = 3))+
-            new_scale_fill()
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m2 <- gheatmap(m1, dup_chroms, width=.32, colnames = FALSE, offset=5,) +
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
+    guides(fill = guide_legend(order = 3))+
+    new_scale_fill()
+m3 <- gheatmap(m2, ploidy, width=.05, colnames=FALSE, offset=17) +
+        scale_fill_brewer(palette = "Set1", 
+             name="Ploidy", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        new_scale_fill()+
+        geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                angle = "auto", offset = 25)+
+        theme(legend.position = "bottom",
+        legend.direction = "vertical")
+m3
+```
 
-m4 <- gheatmap(m3, source, width=.05, colnames=FALSE, offset=8) +
+```{r}
+ggsave(tree_merged_duplications_path, m3, height = 15, width = 15, units = "in", dpi = 900)
+```
+
+### Country, source and duplications in one ring
+```{r}
+aneuploid <- duplications_full %>%
+    group_by(strain)%>%
+    summarise(chromosome = str_c(chromosome, collapse="_")) %>%
+    column_to_rownames("strain")
+
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+md <- gheatmap(m1, aneuploid, width=.05, colnames = FALSE, offset=5.5) +
+    scale_fill_brewer(name = "Duplicated\nchromosomes", palette = "Paired", na.value = "gray90")+
+    guides(fill = guide_legend(order = 5))+
+    geom_cladelab(data = nodes_vnisublineages, 
+            mapping = aes(node = mrca, label = sublineage),
+            align = TRUE, face = "bold",
+            angle = "auto", offset = 7)
+md
+```
+
+### Country, source and duplications in one ring and ploidy
+
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m3 <- gheatmap(m1, aneuploid, width=.05, colnames = FALSE, offset=5.5) +
+    scale_fill_brewer(name = "Duplicated\nchromosomes", palette = "Paired", na.value = "gray90")+
+    guides(fill = guide_legend(order = 5))+
+    new_scale_fill()
+
+m4 <- gheatmap(m3, ploidy, width=.05, colnames=FALSE, offset=8) +
+        scale_fill_brewer(palette = "Set1", 
+             name="Ploidy", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        new_scale_fill()+
+        geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                angle = "auto", offset = 10)+
+        theme(legend.position = "bottom",
+        legend.direction = "vertical")
+m4
+```
+```{r}
+ggsave(tree_merged_duplications_path, m2, height = 15, width = 15, units = "in", dpi = 900)
+```
+### Dataset, country, source, duplications in one ring per chromosome
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(tree, 
+        ladderize = TRUE,
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_tiplab(color = "black", size = 0.5, offset = 0.01)+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.8)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)+
+    geom_tippoint(aes(color = dataset), size = 0.3)+
+    scale_color_manual(name = "Dataset", values = dataset_colors)+
+    guides(color = guide_legend(override.aes = list(size = 5), order = 1))
+
+m1 <- gheatmap(m, country, width=.05, colnames=FALSE, offset=3) +
+        scale_fill_manual(values = country_colors, name="Country",
+            na.translate = FALSE, limits = levels(country$country_of_origin))+
+        guides(fill = guide_legend(order = 2, ncol = 2))+
+        new_scale_fill()
+
+m2 <- gheatmap(m1, source, width=.05, colnames=FALSE, offset=4) +
         scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
         guides(fill = guide_legend(order = 4))+
         new_scale_fill()
-
-m5 <- gheatmap(m4, dup_chroms, width=.32, colnames = FALSE, offset=11,) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
+m3 <- gheatmap(m2, dup_chroms, width=.32, colnames = FALSE, offset=7) +
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
     guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "right",
-        legend.direction = "vertical",
-        legend.title = element_text(size=9),
-        legend.text=element_text(size=7),
-        legend.key.size = unit(0.3, "cm"),
-        plot.margin = margin(0, 0, 0, 0, "cm"))
-m5
+        geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                angle = "auto", offset = 21)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
 ```
-
-```{r}
-ggsave(tree_merged_duplications_path, m5, height = 7, width = 7, units = "in", dpi = 900)
-```
-
-### Tree of all samples with duplications of chromosomes 12 and 13
-
-Subset the duplications_full data frame to only include strains with duplications of chromosomes 12 and 13
-
-```{r}
-dup_chroms_12_13 <- dup_chroms %>%
-    select(chr12, chr13)
-```
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 7
-#| fig-align: center
-p5 <- gheatmap(m4, dup_chroms_12_13, width=.1, colnames = FALSE, offset=11,) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "right",
-        legend.direction = "vertical",
-        legend.title = element_text(size=9),
-        legend.text=element_text(size=7),
-        legend.key.size = unit(0.3, "cm"),
-        plot.margin = margin(0, 0, 0, 0, "cm"))
-p5
-```
-
 ### Tree with only the samples that have duplications and the references
 
 ```{r}
-keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt81")
+keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt89")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
 sublineage <- sublineage %>%
                 filter(rownames(.) %in% keep_strains)%>%
                 droplevels()
 ```
+## Tree info
 
-#### Dataset, lineage, sublineage, source, duplications
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
-    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
-                    linetype = "dashed", linesize = 0.1, offset = 1)
+Get the node number of the Most Recent Common Ancestor of each lineage
+```{r}
+VNI_node <- getMRCA(tree_dups, c("Bt139","H99"))
+VNII_node <- getMRCA(tree_dups, c("8-1","C12"))
+VNBI_node <- getMRCA(tree_dups, c("Bt22","NRHc5045.ENR.CLIN.ISO"))
+VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt89"))
 
-p1 <- gheatmap(p, dataset, width=0.1, colnames=FALSE, offset=8) +
-    scale_fill_manual(values = dataset_colors, name="Dataset", na.translate = FALSE)+
-    guides(fill = guide_legend(order = 1))+
-    new_scale_fill()
-
-p2 <- gheatmap(p1, lineage, width=0.1, colnames=FALSE, offset=9.5) +
-    scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()
-
-p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=11) +
-    scale_fill_manual(values = sublineage_colors,
-        name="VNI Sublineage", na.translate = FALSE,
-        limits = levels(sublineage$vni_subdivision))+
-    guides(fill = guide_legend(order = 3))+
-    new_scale_fill()
-
-p4 <- gheatmap(p3, source, width=0.1, colnames=FALSE, offset=12.5) +
-        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
-        guides(fill = guide_legend(order = 4))+
-        new_scale_fill()
-
-p5 <- gheatmap(p4, dup_chroms, width=0.7, colnames = FALSE, offset=14) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "right",
-        legend.direction = "vertical",
-        legend.title = element_text(size=9),
-        legend.text=element_text(size=7),
-        legend.key.size = unit(0.3, "cm"))
-p5
-```
-
-#### Lineage, sublineage, duplications
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
-    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
-                    linetype = "dashed", linesize = 0.1, offset = 1)
-p1 <- gheatmap(p, lineage, width=0.1, colnames=FALSE, offset=8) +
-    scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()
-
-p2 <- gheatmap(p1, sublineage, width=0.1, colnames=FALSE, offset=10) +
-    scale_fill_manual(values = sublineage_colors,
-        name="VNI Sublineage", na.translate = FALSE,
-        limits = levels(sublineage$vni_subdivision))+
-    guides(fill = guide_legend(order = 3))+
-    new_scale_fill()
-
-p3 <- gheatmap(p2, dup_chroms, width=0.7, colnames = FALSE, offset=12) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "right",
-        legend.direction = "vertical",
-        legend.title = element_text(size=9),
-        legend.text=element_text(size=7),
-        legend.key.size = unit(0.3, "cm"))
-p3
-```
-
-#### Lineage, duplications, sublineage
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none") + 
-    geom_tiplab(aes(label = label), size = 3, align =TRUE, 
-                    linetype = "dashed", linesize = 0.1, offset = 1)
-
-p1 <- gheatmap(p, lineage, width=0.1, colnames=FALSE, offset=8) +
-    scale_fill_manual(values = lineage_colors, name="Lineage", na.translate = FALSE)+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()
-
-p2 <- gheatmap(p1, dup_chroms, width=0.7, colnames = FALSE, offset=10) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()
-
-p3 <- gheatmap(p2, sublineage, width=0.1, colnames=FALSE, offset=19.5) +
-    scale_fill_manual(values = sublineage_colors,
-        name="VNI Sublineage", na.translate = FALSE,
-        limits = levels(sublineage$vni_subdivision))+
-    guides(fill = guide_legend(order = 3))+
-    theme(legend.position = "right",
-        legend.direction = "vertical",
-        legend.title = element_text(size=9),
-        legend.text=element_text(size=7),
-        legend.key.size = unit(0.3, "cm"))
-p3
-```
-
-#### Lineage, duplications
-
-VNII = 94
-VNBI = 55
-VNBII = 52
-VNI = 57
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-
-d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNI", "VNBI", "VNBII", "VNII"))
-
-p <- ggtree(tree_dups, layout = "rectangular", size = 0.5, branch.length = "none")+ 
-            geom_hilight(data=d, aes(node=node, fill=lineage), alpha = 0.5)+
-            scale_fill_brewer(name = "Lineage", palette = "Dark2")+
-            new_scale_fill()
-
-p4 <- gheatmap(p, dup_chroms, width=0.5, colnames = TRUE,  colnames_position = "top",offset=0.0) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()+
-    theme(legend.position = "bottom",
-        legend.direction = "horizontal")
-p4
-```
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-
-tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
-d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNI", "VNBI", "VNBII", "VNII"))
-
-p <- ggtree(tree2, aes(color = group), layout = "rectangular", 
-                size = 1.5, branch.length = "none")+ 
-            scale_color_manual(values = c("black","#1B9E77", "#D95F02", "#7570B3", "#E7298A" ), name = "Lineage")+
-            new_scale_color()
-
-p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
-            colnames_position = "top", 
-            offset=0.0,
-            font.size = 6) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()+
-    theme(legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.title = element_text(size=20),
-        legend.text=element_text(size=15),
-        legend.key.size = unit(1, "cm"))
-p4
-```
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-
-tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
-d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNII", "VNBI", "VNBII", "VNI"))
-
-p <- ggtree(tree2, layout = "rectangular", 
-                size = 1.5, 
-                color = "gray40",
-                branch.length = "none")+
-        geom_cladelab(node=94, label="VNII", offset = 10.3, fontsize = 5)+
-        geom_cladelab(node=55, label="VNBI", offset = 10.3, fontsize = 5)+
-        geom_cladelab(node=52, label="VNBII", offset = 10.3, fontsize = 5)+
-        geom_cladelab(node=57, label="VNI", offset = 10.3, fontsize = 5)
-
-p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
-            colnames_position = "top", 
-            offset=0,
-            font.size = 6) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()+
-    theme(legend.position = "none",
-        legend.direction = "horizontal",
-        legend.title = element_text(size=20),
-        legend.text=element_text(size=15),
-        legend.key.size = unit(1, "cm"))
-p4
-```
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 9
-#| fig-align: center
-
-tree2<- groupClade(tree_dups, c(94, 55, 52, 57))
-d <- data.frame(node=c(94, 55, 52, 57), lineage=c("VNII", "VNBI", "VNBII", "VNI"))
-
-p <- ggtree(tree2, layout = "rectangular", 
-                size = 1.5, 
-                color = "gray40",
-                branch.length = "none")+
-            geom_text(aes(label = d$lineage[match(node, d$node)]), 
-                        size = 6, , fontface = "bold",
-                        hjust = 1.25, vjust = -0.5)
-
-p4 <- gheatmap(p, dup_chroms, width=0.8, colnames = TRUE,  
-            colnames_position = "top", 
-            offset=0,
-            font.size = 6) +
-    scale_fill_manual(values = chrom_dup_colors, name="Duplicated\nchromosomes", na.translate = FALSE )+
-    guides(fill = guide_legend(order = 2))+
-    new_scale_fill()+
-    labs(title = "Duplicated chromosomes")+
-    theme(legend.position = "none",
-            plot.title = element_text(size = 25))
-
-p4
+nodes_lineages <- data.frame(
+    lineage = c("VNI", "VNII", "VNBI", "VNBII"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node)
+)
 ```
 
 ```{r}
-ggsave(tree_merged_duplications_only_duplicated, p4, height = 8, width = 13, units = "in", dpi = 900)
+VNIa4_node <- getMRCA(tree_dups, c("20427_3#26","20427_4#13"))
+VNIa5_node <- getMRCA(tree_dups, c("Bt139","Bt141"))
+VNIa93_node <- getMRCA(tree_dups, c("04CN-64-024","04CN-64-011"))
+VNIa32_node <- getMRCA(tree_dups, c("04CN-65-072","In2632"))
+VNIb_node <- getMRCA(tree_dups, c("H99","MW-RSA6134"))
+VNIc_node <- getMRCA(tree_dups, c("LP-RSA3042","PMHc1031A.ENR.INI.LP"))
+
+nodes_vnisublineages <- data.frame(
+    sublineage = c(
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", 
+                "VNIb", "VNIc"),
+    mrca = c(
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node,
+            VNIb_node, VNIc_node))
 ```
+
+```{r}
+nodes_sublineages <- data.frame(
+    sublineage = c("VNI", "VNII", "VNBI",# "VNBII",
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", "VNIa-X", "VNIa-Y",
+                "VNIb", "VNIc"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, #VNBII_node,
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node, VNIaX_node, VNIaY_node,
+            VNIb_node, VNIc_node))
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(tree_dups, 
+        ladderize = TRUE,
+        layout = "rectangular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_tiplab(color = "black", size = 4, offset = 0.1)+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.8)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)+
+    geom_tippoint(aes(color = dataset), size = 3)+
+    scale_color_manual(name = "Dataset", values = dataset_colors)+
+    guides(color = guide_legend(override.aes = list(size = 5), order = 1))
+
+m1 <- gheatmap(m, country, width=.03, colnames=FALSE, offset=2) +
+        scale_fill_manual(values = country_colors, name="Country",
+            na.translate = FALSE, limits = levels(country$country_of_origin))+
+        guides(fill = guide_legend(order = 2, ncol = 2))+
+        new_scale_fill()
+
+m2 <- gheatmap(m1, source, width=.03, colnames=FALSE, offset=2.5) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 4))+
+        new_scale_fill()
+m3 <- gheatmap(m2, dup_chroms, width=.25, colnames = FALSE, offset=3) +
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
+    guides(fill = guide_legend(order = 5))+
+        geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                angle = 0, offset = 6)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+#### Dataset, lineage, sublineage, source, duplications
+
+
+#### Lineage, sublineage, duplications
+
+
+#### Lineage, duplications, sublineage
+
+
+#### Lineage, duplications
+
+```{r}
+ggsave(tree_merged_duplications_only_duplicated, m3, height = 8, width = 13, units = "in", dpi = 900)
+```
+

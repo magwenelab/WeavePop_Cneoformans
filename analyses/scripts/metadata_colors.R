@@ -36,7 +36,7 @@ names(lineage_colors) <- lineage_names
 
 # Datasets
 dataset_names <- c("Ashton", "Desjardins", "Reference")
-dataset_colors <- c(brewer.pal(9, "Set1")[c(1, 2)], "white")
+dataset_colors <- c(brewer.pal(3, "BuPu")[c(1, 3)], "white")
 names(dataset_colors) <- dataset_names
 
 # Source
@@ -50,8 +50,12 @@ names(source_colors) <- source_names
 
 # Mating type
 mat_names <- c("α","a", NA)
-mat_colors <- c("black", "gray50", "gray90")
+# mat_colors <- c("black", "gray50", "gray90")
+mat_colors <- c(brewer.pal(9, "Greens")[c(9,3)], "gray90")
 names(mat_colors) <- mat_names
+
+mat_shapes <- c(16,17,0)
+names(mat_shapes) <- mat_names
 
 # Countries
 continent <- list(
