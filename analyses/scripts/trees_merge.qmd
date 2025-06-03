@@ -67,7 +67,10 @@ Use the metadata table that has all the samples included in the final Crypto_Des
 metadata <- read.delim(
     metadata_ashton_desj_all_weavepop_H99,
     header=TRUE,
-    sep=",")
+    sep=",") %>%
+    select(strain, everything())
+
+metadata$mating_type <-ifelse(metadata$mating_type == "", NA, metadata$mating_type)
 summary <- metadata %>% 
     group_by(dataset, lineage) %>% 
     summarize(count = n())
@@ -97,6 +100,9 @@ source <- metadata %>%
 country <- metadata %>%
             select(strain, country_of_origin)%>%
             column_to_rownames("strain")
+mating_type <- metadata %>%
+            select(strain, mating_type)%>%
+            column_to_rownames("strain")     
 ```
 
 ## Desjardins tree
@@ -167,7 +173,7 @@ d4 <- gheatmap(d3, country, width =.08, colnames=FALSE,offset=0.14)+
 d4
 ```
 
-```{r, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 ggsave(desj_tree_out_plot, d4, height = 6.5, width = 7, units = "in", dpi = 600)
 ggsave(desj_tree_out_plot_pdf, d4, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
@@ -295,7 +301,7 @@ m5 <- gheatmap(m4, country, width =.02, colnames=FALSE,offset=.021)+
                 legend.key.size = unit(0.3, "cm"),
                 plot.margin = margin(0, 0, 0, 0, "cm"))
 ```
-```{r, echo=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 ggsave(ashton_tree_rooted_plot_pdf, m5, height = 20, width = 18, units = "in", dpi = 900, limitsize = FALSE)
 ```
 ```{r, message=FALSE, warning=FALSE}
@@ -338,7 +344,7 @@ m4 <- gheatmap(m3, country, width =.05, colnames=FALSE,offset=0.055)+
 
 m4
 ```
-```{r, echo=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 ggsave(ashton_tree_out_plot, m4, height = 6.5, width = 7, units = "in", dpi = 600)
 ggsave(ashton_tree_out_plot_pdf, m4, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
@@ -456,7 +462,7 @@ m5 <- gheatmap(m4, country, width =.05, colnames=FALSE,offset=0.11)+
 m5
 ```
 
-```{r, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 ggsave(merged_tree_branchlengths_plot,
     m5, height = 10, width = 10, units = "in", dpi = 600)
 ```
@@ -506,9 +512,191 @@ m5 <- gheatmap(m4, country, width =.05, colnames=FALSE,offset=10)+
 m5
 ```
 
-```{r, echo=FALSE}
-ggsave(merged_tree_plot, m5, height = 10, width = 10, units = "in", dpi = 600)
-ggsave(merged_tree_plot_pdf, m5, height = 10, width = 10, units = "in", dpi = 600)
+## Other versions
+
+### Get lineage and sublineage nodes
+
+```{r}
+VNI_node <- getMRCA(merged, c("Tu241-1","UI_31647-2"))
+VNII_node <- getMRCA(merged, c("C2","C12"))
+VNBI_node <- getMRCA(merged, c("Tu229-1","Ftc267-2"))
+VNBII_node <- getMRCA(merged, c("MW-RSA3321","MW-RSA3179"))
+
+nodes_lineages <- data.frame(
+    lineage = c("VNI", "VNII", "VNBI", "VNBII"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node)
+)
+```
+
+```{r}
+VNIa4_node <- getMRCA(merged, c("04CN-30-008","UI_31647-2"))
+VNIa5_node <- getMRCA(merged, c("BMD852","14936_1#45"))
+VNIa93_node <- getMRCA(merged, c("04CN-65-080","04CN-65-002"))
+VNIa32_node <- getMRCA(merged, c("BMD942","BMD2801"))
+VNIaX_node <- getMRCA(merged, c("Bt48","04CN-63-007"))
+VNIaY_node <- getMRCA(merged, c("04CN-65-073","Bt138"))
+VNIb_node <- getMRCA(merged, c("04CN-65-096","MW-RSA722"))
+VNIc_node <- getMRCA(merged, c("Bt20","Bt11"))
+
+nodes_vnisublineages <- data.frame(
+    sublineage = c(
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", "VNIa-X", "VNIa-Y",
+                "VNIb", "VNIc"),
+    mrca = c(
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node, VNIaX_node, VNIaY_node,
+            VNIb_node, VNIc_node))
+```
+
+```{r}
+nodes_sublineages <- data.frame(
+    sublineage = c("VNI", "VNII", "VNBI", "VNBII",
+                "VNIa-4", "VNIa-5", "VNIa-93",
+                "VNIa-32", "VNIa-X", "VNIa-Y",
+                "VNIb", "VNIc"),
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node,
+            VNIa4_node, VNIa5_node, VNIa93_node,
+            VNIa32_node, VNIaX_node, VNIaY_node,
+            VNIb_node, VNIc_node))
+```
+
+Group tree by sublineage
+```{r}
+merged <- groupClade(merged, setNames(nodes_sublineages$mrca, nodes_sublineages$sublineage))
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m4 <- ggtree(merged, aes(color = group), 
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.2) %<+%  metadata +
+    scale_color_manual(
+        name = "Sublineage",
+        values = sublineage_colors)+
+    guides(color = guide_legend(override.aes = list(linewidth = 3)))+
+    new_scale_color()+
+    geom_tiplab(aes(color = source), size = 0.5, offset = 0.01)+
+    scale_color_manual(name = "Source", values = source_colors)+
+    guides(color = guide_legend(override.aes = list(size = 3)))+
+    new_scale_color()+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_tippoint(aes(color = country_of_origin, shape = mating_type), size = 0.1)+
+    scale_color_manual(name = "Country", values = country_colors)+
+    scale_shape_manual(name = "Mating type", values = c(15,17,16))+
+    guides(color = guide_legend(override.aes = list(size = 2),
+            shape = guide_legend(override.aes = list(linewidth = 3))))+
+    theme(legend.position = "bottom",
+            legend.direction = "vertical")
+m4
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(merged, 
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_tiplab(color = "black", size = 0.5, offset = 0.01)+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.8)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)+
+    geom_cladelab(data = nodes_vnisublineages, 
+        mapping = aes(node = mrca, label = sublineage),
+        align = TRUE, face = "bold",
+        angle = "auto", offset = 6)+
+    geom_tippoint(aes(shape = source, color = mating_type),
+                size = 0.3)+
+    scale_color_manual(name = "MAT", values = mat_colors, na.value = "gray90")+
+    scale_shape_manual(name = "Source", values = source_shapes, na.value = 3)+
+    guides(shape = guide_legend(override.aes = list(linewidth = 10), order = 1),
+            color = guide_legend(override.aes = list(size = 5), order = 2))
+
+m
+```
+```{r, message=FALSE, warning=FALSE}
+m1 <- gheatmap(m, country, width =.05, colnames=FALSE,offset=3)+
+    scale_fill_manual(values=country_colors, 
+                      name="Country", na.translate=FALSE,
+                      limits = levels(country$country_of_origin))+
+    guides(fill = guide_legend(order = 3))+
+    new_scale_fill()
+
+m1
+```
+```{r, message=FALSE, warning=FALSE}
+m2 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=3) +
+        scale_fill_manual(values = dataset_colors, 
+            name="Dataset", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 3))+
+        new_scale_fill()
+m2
+```
+
+```{r, message=FALSE, warning=FALSE}
+ggsave(merged_tree_plot, m1, height = 10, width = 10, units = "in", dpi = 600)
+ggsave(merged_tree_plot_pdf, m1, height = 10, width = 10, units = "in", dpi = 600)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(merged, 
+        layout = "rectangular", 
+        branch.length = "none",
+        size = 0.2) %<+%  metadata +
+    geom_tiplab(color = "black", size = 0.5, offset = 0.01)+
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.1)+
+        scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_cladelab(data = nodes_vnisublineages, 
+        mapping = aes(node = mrca, label = sublineage),
+        align = TRUE, face = "bold",
+        angle = 0 , offset = 6)+
+    geom_tippoint(aes(shape = source, color = mating_type),
+                size = 0.3)+
+    scale_color_manual(name = "MAT", values = mat_colors)+
+    scale_shape_manual(name = "Source", values = source_shapes)+
+    guides(shape = guide_legend(override.aes = list(linewidth = 10), order = 1),
+            color = guide_legend(override.aes = list(size = 5), order = 2))
+
+m
+```
+```{r, message=FALSE, warning=FALSE}
+m1 <- gheatmap(m, country, width =.05, colnames=FALSE,offset=3)+
+    scale_fill_manual(values=country_colors, 
+                      name="Country", na.translate=FALSE,
+                      limits = levels(country$country_of_origin))+
+    guides(fill = guide_legend(order = 3))+
+    new_scale_fill()
+
+m1
+```
+```{r, message=FALSE, warning=FALSE}
+m1 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=3) +
+        scale_fill_manual(values = dataset_colors, 
+            name="Dataset", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 3))+
+        new_scale_fill()
+m1
 ```
 
 ## Plot minimal version of the tree
@@ -572,6 +760,6 @@ p1 <- gheatmap(p, lineage, width = .05, colnames = FALSE, offset = 6) +
                     plot.title = element_text(hjust = 0.5))
 p1 
 ```
-```{r, echo=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 ggsave(merged_tree_small_plot, p1, height = 6, width = 10, units = "in", dpi = 600)
 ```

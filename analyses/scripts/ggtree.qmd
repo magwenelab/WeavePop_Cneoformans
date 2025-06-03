@@ -107,7 +107,7 @@ VNIa5_node <- getMRCA(tree, c("BMD852","04CN-64-014"))
 VNIa93_node <- getMRCA(tree, c("04CN-65-080","04CN-65-002"))
 VNIa32_node <- getMRCA(tree, c("BMD942","BMD2801"))
 VNIaX_node <- getMRCA(tree, c("Bt48","04CN-63-007"))
-VNIaY_node <- getMRCA(tree, c("Bt6","Bt138"))
+VNIaY_node <- getMRCA(tree, c("04CN-65-073","Bt138"))
 VNIb_node <- getMRCA(tree, c("04CN-65-096","MW-RSA722"))
 VNIc_node <- getMRCA(tree, c("Bt20","Bt11"))
 
@@ -191,6 +191,17 @@ ggtree(tree, layout = "circular") %<+%  metadata +
     new_scale_color() +
     geom_tippoint(aes(color = source), size = 2)+
     scale_color_manual(name = "Source", values = source_colors)
+```
+
+```{r}
+ggtree(tree, layout = "circular", size = 1, branch.length = "none") %<+%  metadata +
+    geom_hilight(data=nodes_sublineages, aes(node=mrca, fill=sublineage), alpha = 0.5)+
+        scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+        new_scale_fill()+
+    geom_cladelab(data = nodes_sublineages, 
+        mapping = aes(node = mrca, label = sublineage),
+        align = TRUE, face = "bold",
+        angle = "auto")
 ```
 
 ## Add data as heatmap
