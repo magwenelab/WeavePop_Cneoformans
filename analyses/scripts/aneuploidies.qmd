@@ -41,7 +41,8 @@ cnv_chroms_path <-
 duplications_path <- "results/tables/duplications.tsv"
 duplications_partial_path <- "results/tables/duplications_partial.tsv"
 
-n_lineage_source_path <- "results/figs/barplot_lineage_source.svg"
+barplot_full_dups_path <- "results/figs/barplot_full_dups.svg"
+barplot_partial_dups_path <- "results/figs/barplot_partial_dups.svg"
 ```
 
 ## Prepare dataset {#prepare-dataset}
@@ -286,7 +287,7 @@ p
 ```
 
 ```{r}
-ggsave(n_lineage_source_path, p, height = 5.3, width = 14, units = "in", dpi = 900)
+ggsave(barplot_full_dups_path, p, height = 5.3, width = 14, units = "in", dpi = 900)
 ```
 <p style="text-align:center;">**Number of samples with duplications in each group of lineage-dataset**</p>
 
@@ -490,7 +491,7 @@ p
 ```
 
 ```{r}
-ggsave(n_lineage_source_path, p, height = 5.3, width = 14, units = "in", dpi = 900)
+ggsave(barplot_partial_dups_path, p, height = 5.3, width = 14, units = "in", dpi = 900)
 ```
 <p style="text-align:center;">**Number of samples with duplications in each group of lineage-dataset**</p>
 
