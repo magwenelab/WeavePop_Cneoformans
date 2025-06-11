@@ -1,0 +1,22 @@
+sample,strain,lineage,source,vni_subdivision,vnia_subdivision,lab_id,species_id_from_mash_anlaysis,study,hiv_status,sra_accession,country_of_origin,continent_of_origin,year_of_origin,mean_depth_of_mapping_with_mq_>_30_across_whole_genome,proportion_of_genome_covered_by_at_least_5_reads_which_mapped_with_mq_>_30
+ERS2541256,04CN-03-031,AD_hybrid,Clinical,,,04CN-03-031,Cryptococcus neoformans var. grubii H99/Cryptococcus neoformans var. neoformans JEC21 hybrid,Ashton,positive,ERR2624093,Vietnam,Asia,2013.0,45.69373327,0.975470422
+ERS2541050,04CN-64-092,AD_hybrid,Clinical,,,04CN-64-092,Cryptococcus neoformans var. grubii H99/Cryptococcus neoformans var. neoformans JEC21 hybrid,Ashton,positive,ERR2624285,Uganda,Africa,2014.0,32.87123645,0.969851772
+ERS2541321,04CN-65-019,AD_hybrid,Clinical,,,04CN-65-019,Cryptococcus neoformans var. grubii H99/Cryptococcus neoformans var. neoformans JEC21 hybrid,Ashton,positive,ERR2624434,Uganda,Africa,2013.0,78.89386159,0.978026827
+ERS2540925,04CN-65-129,AD_hybrid,Clinical,,,04CN-65-129,Cryptococcus neoformans var. grubii H99/Cryptococcus neoformans var. neoformans JEC21 hybrid,Ashton,positive,ERR2624242,Uganda,Africa,2014.0,32.82144092,0.97489428
+ERS2540931,04CN-65-133,AD_hybrid,Clinical,,,04CN-65-133,Cryptococcus neoformans var. grubii H99/Cryptococcus neoformans var. neoformans JEC21 hybrid,Ashton,positive,ERR2624415,Uganda,Africa,2014.0,44.42821647,0.982899809
+ERS2541170,04CN-03-074,VNII,Clinical,,,04CN-03-074,Cryptococcus neoformans var. grubii H99,Ashton,positive,ERR2624467,Vietnam,Asia,2014.0,43.47226493,0.965881774
+ERS2541130,04CN-03-088,VNII,Clinical,,,04CN-03-088,Cryptococcus neoformans var. grubii H99,Ashton,positive,ERR2624180,Vietnam,Asia,2014.0,45.05761537,0.96687954
+ERS2541042,04CN-65-031,VNII,Clinical,,,04CN-65-031,Cryptococcus neoformans var. grubii H99,Ashton,positive,ERR2624151,Uganda,Africa,2013.0,31.24886406,0.963734106
+ERS2540950,04CN-65-106,VNII,Clinical,,,04CN-65-106,Cryptococcus neoformans var. grubii H99,Ashton,positive,ERR2624139,Uganda,Africa,,43.27427447,0.965696978
+ERS2541339,BMD_2014,gattii,Clinical,,,BMD_2014,Cryptococcus gattii WM276,Ashton,negative,ERR2624500,Vietnam,Asia,,20.7316071,0.58784567
+ERS2541338,BMD_1516,gattii,Clinical,,,BMD_1516,Cryptococcus gattii WM276,Ashton,negative,ERR2624397,Vietnam,Asia,2008.0,25.31709781,0.601970558
+ERS2541337,BMD_1385,gattii,Clinical,,,BMD_1385,Cryptococcus gattii WM276,Ashton,negative,ERR2624309,Vietnam,Asia,2007.0,27.80429785,0.608817664
+ERS2541119,19CN-03-220-PAL,gattii,Clinical,,,19CN-03-220-PAL,Cryptococcus gattii WM276,Ashton,negative,ERR2624419,Vietnam,Asia,,26.17033509,0.596043511
+ERS2541245,19CN-03-220-CSF,gattii,Clinical,,,19CN-03-220-CSF,Cryptococcus gattii WM276,Ashton,negative,ERR2624247,Vietnam,Asia,,22.22753836,0.591819373
+ERS2540953,04CN-65-104,gattii,Clinical,,,04CN-65-104,Cryptococcus gattii WM276,Ashton,positive,ERR2624451,Uganda,Africa,2014.0,18.44473433,0.596167378
+ERS2541325,04CN-65-051,gattii,Clinical,,,04CN-65-051,Cryptococcus gattii WM276,Ashton,positive,ERR2624462,Uganda,Africa,2013.0,44.91401078,0.616337518
+ERS2541070,04CN-63-021,gattii,Clinical,,,04CN-63-021,Cryptococcus gattii WM276,Ashton,positive,ERR2624263,Uganda,Africa,2014.0,30.48923464,0.60226604
+ERS2540975,04CN-63-020,gattii,Clinical,,,04CN-63-020,Cryptococcus gattii WM276,Ashton,positive,ERR2624413,Uganda,Africa,2014.0,31.9762664,0.604924369
+ERS2540936,04CN-63-006,gattii,Clinical,,,04CN-63-006,Cryptococcus gattii WM276,Ashton,positive,ERR2624156,Uganda,Africa,2014.0,30.81148305,0.611245304
+ERS2541082,BMD1964,gattii,Clinical,,,BMD1964,Cryptococcus gattii WM276,Ashton,negative,ERR2624244,Vietnam,Asia,2009.0,35.46455473,0.601434489
+ERS2541145,BMD2233,gattii,Clinical,,,BMD2233,Cryptococcus gattii WM276,Ashton,negative,ERR2624259,Vietnam,Asia,2010.0,27.24636369,0.600598861
