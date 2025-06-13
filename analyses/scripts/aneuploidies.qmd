@@ -40,6 +40,8 @@ cnv_chroms_path <-
     "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv"
 
 # Output
+chrom_metrics_path <- "results/tables/chromosome_cnv_categories.tsv"
+
 duplications_path <- "results/tables/duplications.tsv"
 duplications_partial_path <- "results/tables/duplications_partial.tsv"
 
@@ -133,6 +135,11 @@ chrom_metrics <- chrom_metrics %>%
     select(sample, lineage, accession, chromosome, length, 
             cnv, category, coverage_percent)%>%
     left_join(metadata, by = c("sample", "lineage"))
+```
+
+Save chromosome metrics
+```{r}
+write.table(chrom_metrics, file = chrom_metrics_path, sep = "\t",  quote = FALSE, row.names = FALSE)
 ```
 
 ## Summary of samples with CNVs in each category 
@@ -337,6 +344,17 @@ dup_lineage_chromosome <- duplications_full%>%
     select(lineage, chromosome, n_samples,percent , samples_in_lineage)%>%
     arrange(chromosome, desc(lineage), desc(n_samples))
 dup_lineage_chromosome 
+```
+```{r}
+dup_lineage_chromosome %>%
+    select(lineage, chromosome, percent)%>%
+    pivot_wider(names_from = chromosome, values_from = percent, values_fill = 0)
+```
+```{r by chromosome bar plot percent}
+ggplot(dup_lineage_chromosome)+
+        geom_col(aes(x = chromosome, y = percent, fill = lineage), position = "stack")+
+        scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+        coord_flip()
 ```
 
 ```{r}
@@ -555,6 +573,17 @@ dup_lineage_chromosome
 ```{r by chromosome bar partial plot}
 ggplot(dup_lineage_chromosome)+
         geom_col(aes(x = chromosome, y = n_samples, fill = lineage), position = "stack")+
+        scale_fill_brewer(name = "Lineage", palette = "Dark2")+
+        coord_flip()
+```
+```{r}
+dup_lineage_chromosome %>%
+    select(lineage, chromosome, percent)%>%
+    pivot_wider(names_from = chromosome, values_from = percent, values_fill = 0)
+```
+```{r by chromosome bar plot percent partials}
+ggplot(dup_lineage_chromosome)+
+        geom_col(aes(x = chromosome, y = percent, fill = lineage), position = "stack")+
         scale_fill_brewer(name = "Lineage", palette = "Dark2")+
         coord_flip()
 ```
