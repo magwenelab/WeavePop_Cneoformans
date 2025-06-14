@@ -208,10 +208,10 @@ names(type_size_colors) <- rev(levels(sample_metrics$type_size))
 
 ## Join chromosome metrics with metadata and save table
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 chrom_metrics <- left_join(chrom_metrics, metadata)
 ```
-```{r}
+```{r, message=FALSE, warning=FALSE}
 write.table(chrom_metrics, file = chrom_metrics_path, sep = "\t",  quote = FALSE, row.names = FALSE)
 ```
 
