@@ -24,8 +24,6 @@ Paths
 ```{r}
 metadata_path <- 
     "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
-duplications_path <- 
-    "results/tables/duplications.tsv"
 chrom_metrics_path <-
     "results/tables/chromosome_cnv_categories.tsv"
 merged_tree_path <- 
@@ -42,6 +40,10 @@ tree_merged_duplications_path5 <-
     "results/trees_dups/tree_duplications_full5.png"
 tree_merged_duplications_path6 <- 
     "results/trees_dups/tree_duplications_full6.png"
+tree_merged_duplications_path7 <- 
+    "results/trees_dups/tree_duplications_full7.png"
+tree_merged_duplications_path8 <- 
+    "results/trees_dups/tree_duplications_full8.png"
 tree_merged_duplications_small1 <-  
     "results/trees_dups/tree_duplications_small1.png"
 tree_merged_duplications_small2 <-  
@@ -107,49 +109,6 @@ continent <- metadata %>%
 
 ```
 
-## Duplications
-```{r}
-duplications <- read.delim(
-    duplications_path,
-    sep = "\t", header = TRUE, stringsAsFactors = TRUE)
-```
-
-```{r}
-duplications_full <- duplications %>%
-    select(strain, chromosome) %>%
-    distinct()
-```
-
-Make matrix of duplicated chromosomes
-```{r}
-dup_chroms <- duplications_full %>%
-    select(strain, chromosome)%>%
-    mutate(duplicated_full = 1)%>%
-    arrange(chromosome)%>%
-    pivot_wider(names_from = chromosome, values_from = duplicated_full, values_fill = 0)%>%
-    column_to_rownames("strain")%>%
-    mutate(across(everything(), ~ ifelse(. == 1, cur_column(),"Euploid")))
-
-euploid_strain <- metadata %>%
-    filter(!strain %in% duplications_full$strain)%>%
-    select(strain)
-
-for (chrom in colnames(dup_chroms)){
-    euploid_strain[chrom] <- "Euploid"
-}
-
-dup_chroms <- euploid_strain %>%
-    column_to_rownames("strain") %>%
-    bind_rows(dup_chroms)
-```
-
-```{r}
-n_dups <- duplications_full %>% 
-    group_by(chromosome)%>%
-    summarize(n = n ())
-n_dups
-```
-
 ## CNV categories and metrics per chromosome
 
 ```{r}
@@ -158,7 +117,11 @@ chrom_metrics <- read.delim(
     header = TRUE,
     sep = "\t"
 )
-chrom_metrics$category <- factor(chrom_metrics$category, levels = c("absent", "small", "partial", "full"))
+chrom_metrics$chrom_category_aneuploidy <- factor(chrom_metrics$chrom_category_aneuploidy, 
+                levels = c("Full", "Partial", "Euploid"))
+
+chrom_metrics$chrom_category_size <- factor(chrom_metrics$chrom_category_size, 
+                levels = c("Large", "Medium", "Small", "Absent"))
 ```
 Make matrix of coverage percent per chromosome for duplications and deletions
 ```{r}
@@ -167,27 +130,41 @@ dup_coverage <- chrom_metrics %>%
     select(strain, chromosome, coverage_percent)%>%
     pivot_wider(names_from = chromosome, values_from = coverage_percent)%>%
     column_to_rownames("strain") 
-
-del_coverage <- chrom_metrics %>%
-    filter(cnv == "deletion")%>%
-    select(strain, chromosome, coverage_percent)%>%
-    pivot_wider(names_from = chromosome, values_from = coverage_percent)%>%
-    column_to_rownames("strain") 
 ```
-Make matrix of category per chromosome for duplications and deletions
+Make matrix of aneuploidy category per chromosome for duplications 
 ```{r}
-dup_category <- chrom_metrics %>%
+dup_category_aneuploidy <- chrom_metrics %>%
     filter(cnv == "duplication")%>%
-    select(strain, chromosome, category)%>%
-    pivot_wider(names_from = chromosome, values_from = category)%>%
-    column_to_rownames("strain") 
-
-del_category <- chrom_metrics %>%
-    filter(cnv == "deletion")%>%
-    select(strain, chromosome, category)%>%
-    pivot_wider(names_from = chromosome, values_from = category)%>%
+    select(strain, chromosome, chrom_category_aneuploidy)%>%
+    pivot_wider(names_from = chromosome, values_from = chrom_category_aneuploidy)%>%
     column_to_rownames("strain") 
 ```
+Make matrix of size category per chromosome for duplications
+```{r}
+dup_category_size <- chrom_metrics %>%
+    filter(cnv == "duplication")%>%
+    select(strain, chromosome, chrom_category_size)%>%
+    pivot_wider(names_from = chromosome, values_from = chrom_category_size)%>%
+    column_to_rownames("strain") 
+```
+## Matrix of fully duplicated chromosomes
+
+```{r}
+dup_chroms <- chrom_metrics %>%
+    filter(cnv == "duplication")%>%
+    select(strain, chromosome, chrom_category_aneuploidy)%>%
+    mutate(chrom_category_aneuploidy = as.character(chrom_category_aneuploidy))%>%
+    mutate(chromosome_2 = ifelse(chrom_category_aneuploidy == "Partial", "Euploid",
+                             ifelse(chrom_category_aneuploidy == "Full", chromosome, "Euploid")))%>%
+    group_by(chromosome)%>%
+    filter(!all(chromosome_2 == "Euploid"))%>%
+    ungroup()%>%
+    select(strain, chromosome, chromosome_2)%>%
+    pivot_wider(names_from = chromosome,
+                values_from = chromosome_2)%>%
+    column_to_rownames("strain")
+```
+
 ## Full tree plots
 
 ### Tree
@@ -252,7 +229,7 @@ names(vnisublineage_shading) <- nodes_vnisublineages$sublineage
 vniasublineage_shading <- nodes_vniasublineages$shading
 names(vniasublineage_shading) <- nodes_vniasublineages$sublineage
 ```
-Color palette
+Color palettes
 ```{r}
 chrom_colors <- brewer.pal(7, "Dark2")
 names(chrom_colors) <- c("chr01", "chr04",
@@ -261,10 +238,64 @@ names(chrom_colors) <- c("chr01", "chr04",
 chrom_dup_colors <- c(chrom_colors, "Euploid" = "grey93")
 
 countries_final <- levels(droplevels(country[rownames(country) %in% tree$tip.label, ]))
+```
+```{r, message=FALSE, warning=FALSE}
+category_size_colors <-c("#8E0152","#2171B5", "#DEEBF7","#F7FBFF" )
+names(category_size_colors) <- levels(chrom_metrics$chrom_category_size)
 
+category_aneuploidy_colors <-c("#8E0152","#2171B5", "#DEEBF7" )
+names(category_aneuploidy_colors) <- levels(chrom_metrics$chrom_category_aneuploidy)
+```
+### Dataset, country, source
+
+#### Fully duplicated chromsomes
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(tree, 
+        ladderize = TRUE,
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_hilight(data=nodes_sublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.3)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)
+
+m1 <- gheatmap(m, continent, width=.05, colnames=FALSE) +
+        scale_fill_manual(values = continent_colors, name="Continent",
+            na.translate = FALSE, limits = names(continent_colors))+
+        guides(fill = guide_legend(order = 1, ncol = 2))+
+        new_scale_fill()
+
+m2 <- gheatmap(m1, source, width=.05, colnames=FALSE, offset=2.3) +
+        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
+        guides(fill = guide_legend(order = 2))+
+        new_scale_fill()
+m3 <- gheatmap(m2, dup_chroms, width=.32, colnames = FALSE, offset=4.7) +
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
+    guides(fill = guide_legend(order = 3, ncol = 2))+
+    geom_cladelab(data = nodes_sublineages, 
+                mapping = aes(node = mrca, label = sublineage, color = sublineage),
+                align = TRUE, face = "bold",
+                fontsize = 3,
+                angle = "auto", offset = 18)+
+    scale_color_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(color = FALSE)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
 ```
 
-#### Country, source, duplications in one ring per chromosome
+### Country, source, tiplabels, hilight and cladelab
+
+#### Full duplications
 
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
@@ -310,11 +341,9 @@ a2 <- gheatmap(a1, dup_chroms, width=.32, colnames = FALSE, offset=6) +
 a2
 ```
 
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_path1, a2, height = 8, width = 6.5, units = "in", dpi = 1000)
-```
+### Continent, source, lineage and sublineage labels
 
-#### Country, source, duplications in one ring per chromosome, lineage and sublineage labels
+#### Full duplications
 
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
@@ -349,11 +378,66 @@ m3 <- gheatmap(m2, dup_chroms, width=.32, colnames = FALSE, offset=4.7) +
     legend.direction = "vertical")
 m3
 ```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_path1, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+```
 
+#### Coverage percent of duplications
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m2, dup_coverage, width=.8, colnames = FALSE, offset=4.7) +
+    scale_fill_viridis_c(name = "% Coverage\nDuplicated", 
+                        direction = -1, na.value = "white", 
+                        option = "mako", limits = c(0,100))+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
 ```{r, message=FALSE, warning=FALSE}
 ggsave(tree_merged_duplications_path2, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
 ```
-#### Country, source, duplications in one ring per chromosome, lineage and sublineage labels, tiplabels
+
+#### Aneuploidy category of duplications
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m2, dup_category_aneuploidy, colnames = FALSE, offset=4.7) +
+    scale_fill_manual(name = "Category",values = category_aneuploidy_colors,
+         na.value = "white", limits = levels(chrom_metrics$chrom_category_aneuploidy))+
+    guides(fill = guide_legend(order = 3))+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_path3, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+```
+
+#### Size category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m2, dup_category_size, width=.8, colnames = FALSE, offset=4.7) +
+    scale_fill_manual(name = "Category",values = category_size_colors,
+         na.value = "white", limits = levels(chrom_metrics$chrom_category_size))+
+    guides(fill = guide_legend(order = 3))+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_path4, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+```
+
+### Continent, source, lineage and sublineage labels, tiplabels
+
+#### Full duplications
 
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
@@ -389,134 +473,20 @@ m3 <- gheatmap(m2, dup_chroms, width=.32, colnames = FALSE, offset=8) +
     legend.direction = "vertical")
 m3
 ```
-
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_path3, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+ggsave(tree_merged_duplications_path5, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
 ```
 
-#### Country, source, lineage and sublineage labels, tiplabs, coverage percent of duplications
+#### Coverage percent of duplications
 
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 6.5
 #| fig-align: center
 m3 <- gheatmap(m2, dup_coverage, width=.8, colnames = FALSE, offset=8) +
-    scale_fill_viridis_c(name = "Dup Coverage", direction = -1, na.value = "white", option = "mako")+
-    # scale_fill_brewer(name = "Dup Coverage", palette = "Blues", na.value = "white") +
-    theme(legend.position = "bottom",
-    legend.direction = "vertical")
-m3
-```
-
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_path3, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
-```
-#### Country, source, lineage and sublineage labels, tiplabs, category of duplications
-
-```{r, message=FALSE, warning=FALSE}
-category_colors <-c("#F7FBFF", "#DEEBF7","#2171B5", "#8E0152")
-names(category_colors) <- levels(chrom_metrics$category)
-```
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 6.5
-#| fig-align: center
-m3 <- gheatmap(m2, dup_category, width=.8, colnames = FALSE, offset=8) +
-    scale_fill_manual(name = "Category",values = category_colors,
-         na.value = "white", limits = levels(chrom_metrics$category))+
-    # scale_fill_brewer(name = "Category",palette = "PuBuGn",
-    #         na.value = "white", limits = levels(chrom_metrics$category))+
-    guides(fill = guide_legend(order = 3, ncol = 2))+
-    theme(legend.position = "bottom",
-    legend.direction = "vertical")
-m3
-```
-
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_path4, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
-```
-
-#### Country, source and duplications in one ring
-```{r}
-aneuploid <- duplications_full %>%
-    group_by(strain)%>%
-    summarise(chromosome = str_c(chromosome, collapse="_")) %>%
-    right_join(select(metadata, strain), by = "strain")%>%
-    mutate(chromosome = ifelse(is.na(chromosome), "Euploid", chromosome))%>%
-    column_to_rownames("strain")
-```
-
-```{r}
-dup_colors <- brewer.pal(8, "Dark2")
-names(dup_colors) <- c("chr01", "chr04_chr13",
-                         "chr06", "chr09", 
-                         "chr12","chr13", "chr14",
-                         "chr14_chr13")
-dup_colors <- c(dup_colors, "Euploid" = "grey93")
-```
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 7
-#| fig-align: center
-md <- gheatmap(a1, aneuploid, width=.05, colnames = FALSE, offset=5.8) +
-    scale_fill_manual(name = "Duplicated\nchromosomes", 
-                        values = dup_colors)+
-    guides(fill = guide_legend(order = 3))+
-    geom_cladelab(data = nodes_vnisublineages, 
-            mapping = aes(node = mrca, label = sublineage),
-            align = TRUE, face = "bold",
-            fontsize = 3,
-            angle = "auto", offset = 9)+
-    theme(legend.position = "bottom",
-    legend.direction = "vertical")
-md
-```
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_path5, md, height = 8, width = 6.5, units = "in", dpi = 1000)
-```
-
-
-#### Dataset, country, source, duplications in one ring per chromosome no tiplab
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 7
-#| fig-width: 7
-#| fig-align: center
-m <- ggtree(tree, 
-        ladderize = TRUE,
-        layout = "circular", 
-        branch.length = "none",
-        size = 0.1) %<+%  metadata +
-    geom_hilight(data=nodes_sublineages, 
-        aes(node=mrca, fill=sublineage), alpha = 0.3)+
-        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
-    guides(fill = FALSE)+
-    new_scale_fill()+
-    geom_tree(size = 0.1)
-
-m1 <- gheatmap(m, continent, width=.05, colnames=FALSE) +
-        scale_fill_manual(values = continent_colors, name="Continent",
-            na.translate = FALSE, limits = names(continent_colors))+
-        guides(fill = guide_legend(order = 1, ncol = 2))+
-        new_scale_fill()
-
-m2 <- gheatmap(m1, source, width=.05, colnames=FALSE, offset=2.3) +
-        scale_fill_manual(values = source_colors, name="Source", na.translate = FALSE)+
-        guides(fill = guide_legend(order = 2))+
-        new_scale_fill()
-m3 <- gheatmap(m2, dup_chroms, width=.32, colnames = FALSE, offset=4.7) +
-    scale_fill_manual(values = chrom_dup_colors, 
-                    name="Duplicated\nchromosomes", 
-                    na.translate = FALSE )+
-    guides(fill = guide_legend(order = 3, ncol = 2))+
-    geom_cladelab(data = nodes_sublineages, 
-                mapping = aes(node = mrca, label = sublineage, color = sublineage),
-                align = TRUE, face = "bold",
-                fontsize = 3,
-                angle = "auto", offset = 18)+
-    scale_color_manual(name = "Sublineage", values = sublineage_shading)+
-    guides(color = FALSE)+
+    scale_fill_viridis_c(name = "% Coverage\nDuplicated", 
+                        direction = -1, na.value = "white", 
+                        option = "mako", limits = c(0,100))+
     theme(legend.position = "bottom",
     legend.direction = "vertical")
 m3
@@ -524,12 +494,48 @@ m3
 ```{r, message=FALSE, warning=FALSE}
 ggsave(tree_merged_duplications_path6, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
 ```
+#### Aneuploidy category of duplications
 
-## Small tree plots of partial and full duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m2, dup_category_aneuploidy, colnames = FALSE, offset=8) +
+    scale_fill_manual(name = "Category",values = category_aneuploidy_colors,
+         na.value = "white", limits = levels(chrom_metrics$chrom_category_aneuploidy))+
+    guides(fill = guide_legend(order = 3))+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_path7, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+```
+
+#### Size category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m2, dup_category_size, width=.8, colnames = FALSE, offset=8) +
+    scale_fill_manual(name = "Category",values = category_size_colors,
+         na.value = "white", limits = levels(chrom_metrics$chrom_category_size))+
+    guides(fill = guide_legend(order = 3))+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_path8, m3, height = 8, width = 6.5, units = "in", dpi = 1000)
+```
+
+## Small tree plots
+
+### Reduce tree
 
 ```{r}
 keep_strains <- chrom_metrics %>%
-    filter(cnv == "duplication", category %in% c("partial", "full"))%>%
+    filter(cnv == "duplication", chrom_category_aneuploidy %in% c("Partial", "Full"))%>%
     pull(strain)
 keep_strains <- c(keep_strains, "H99", "Bt22", "Bt89")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
@@ -544,8 +550,8 @@ Get the node number of the Most Recent Common Ancestor of each lineage
 ```{r}
 VNI_node <- getMRCA(tree_dups, c("Bt139","H99"))
 VNII_node <- getMRCA(tree_dups, c("8-1","C12"))
-VNBI_node <- getMRCA(tree_dups, c("Bt22","NRHc5045.ENR.CLIN.ISO"))
-VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt89"))
+VNBI_node <- getMRCA(tree_dups, c("PMHc1001.ENR","NRHc5045.ENR.CLIN.ISO"))
+VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt34"))
 
 VNIa4_node <- getMRCA(tree_dups, c("20427_3#26","20427_4#13"))
 VNIa5_node <- getMRCA(tree_dups, c("Bt139","Bt141"))
@@ -591,7 +597,8 @@ names(vniasublineage_shading) <- nodes_vniasublineages$sublineage
 ```{r}
 countries_final <- levels(droplevels(country[rownames(country) %in% tree_dups$tip.label, ]))
 ```
-#### Dataset, country, duplications
+
+### Dataset, country, duplications, hilight and cladelabs, tiplabels
 
 ```{r, message=FALSE, warning=FALSE}
 m <- ggtree(tree_dups, 
@@ -620,22 +627,21 @@ m1 <- gheatmap(m, country, width=.03, colnames=FALSE, offset=2.3) +
         guides(fill = guide_legend(order = 2, ncol = 2))+
         new_scale_fill()
 ```
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small1, m1, height = 5, width = 6.5, units = "in", dpi = 900)
-```
+#### Full duplications
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 6.5
 #| fig-align: center
-m3 <- gheatmap(m1, dup_category, width=.25, colnames = TRUE,
+m3 <- gheatmap(m1, dup_chroms, width=.25, colnames = TRUE,
                 colnames_position = "top",
                 colnames_angle = 45,
                 colnames_offset_y = 0.5,
                 font.size = 1.5, offset=2.8) +
-    ylim(0,80)+
-    scale_fill_manual(name = "Category",values = category_colors,
-         na.value = "white", limits = levels(chrom_metrics$category))+
-    guides(fill = guide_legend(order = 5, ncol = 2))+
+    ylim(0,70)+
+    scale_fill_manual(values = chrom_dup_colors, 
+                    name="Duplicated\nchromosomes", 
+                    na.translate = FALSE )+
+    guides(fill = guide_legend(order = 5))+
     geom_cladelab(data = nodes_vnisublineages, 
                 mapping = aes(node = mrca, label = sublineage),
                 align = TRUE, face = "bold",
@@ -645,177 +651,83 @@ m3 <- gheatmap(m1, dup_category, width=.25, colnames = TRUE,
     legend.direction = "vertical")
 m3
 ```
-
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small2, m3, height = 5, width = 6.5, units = "in", dpi = 900)
-```
-
-```{r, message=FALSE, warning=FALSE}
-m <- ggtree(tree_dups, 
-        ladderize = TRUE,
-        layout = "rectangular", 
-        branch.length = "none",
-        size = 0.2) %<+%  metadata +
-    geom_tiplab(color = "black", size = 1.5, offset = 0.01)+
-    geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
-                        size = 2, fontface = "bold",
-                        hjust = 1.1, vjust = -0.5)
-
-```
+#### Coverage percent of duplications
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 6.5
 #| fig-align: center
-m3 <- gheatmap(m, dup_category, width=.25, colnames = TRUE,
+m3 <- gheatmap(m1, dup_coverage, width=.25, colnames = TRUE,
                 colnames_position = "top",
-                colnames_angle = 90,
-                colnames_offset_y = 1,
-                font.size = 1.5, offset=2.3) +
+                colnames_angle = 45,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=2.8) +
     ylim(0,70)+
-    scale_fill_manual(name = "Category",values = category_colors,
-         na.value = "white", limits = levels(chrom_metrics$category))+
-    guides(fill = guide_legend(order = 5, ncol = 2))+
-    theme(legend.position = "bottom",
-    legend.direction = "vertical")
-m3
-```
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small3, m3, height = 5, width = 6.5, units = "in", dpi = 900)
-```
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 6.5
-#| fig-align: center
-m3 <- gheatmap(m, dup_coverage, width=.25, colnames = TRUE,
-                colnames_position = "top",
-                colnames_angle = 90,
-                colnames_offset_y = 1,
-                font.size = 1.5, offset=2.3) +
-    ylim(0,70)+
-    scale_fill_viridis_c(name = "Dup Coverage", direction = -1, na.value = "white")+
-    theme(legend.position = "bottom",
-    legend.direction = "vertical")
-m3
-```
-
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small4, m3, height = 5, width = 6.5, units = "in", dpi = 900)
-```
-
-## Small tree plots of full duplications
-
-```{r}
-keep_strains <- c(levels(duplications_full$strain), "H99", "Bt22", "Bt89")
-tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
-sublineage <- sublineage %>%
-                filter(rownames(.) %in% keep_strains)%>%
-                droplevels()
-```
-
-### Lineage nodes
-
-Get the node number of the Most Recent Common Ancestor of each lineage
-```{r}
-VNI_node <- getMRCA(tree_dups, c("Bt139","H99"))
-VNII_node <- getMRCA(tree_dups, c("8-1","C12"))
-VNBI_node <- getMRCA(tree_dups, c("Bt22","NRHc5045.ENR.CLIN.ISO"))
-VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt89"))
-
-VNIa4_node <- getMRCA(tree_dups, c("20427_3#26","20427_4#13"))
-VNIa5_node <- getMRCA(tree_dups, c("Bt139","Bt141"))
-VNIa93_node <- getMRCA(tree_dups, c("04CN-64-024","04CN-64-011"))
-VNIa32_node <- getMRCA(tree_dups, c("04CN-65-072","In2632"))
-
-VNIa_node <- getMRCA(tree_dups, c("20427_3#26", "Bt139"))
-VNIb_node <- getMRCA(tree_dups, c("H99","MW-RSA6134"))
-VNIc_node <- getMRCA(tree_dups, c("LP-RSA3042","PMHc1031A.ENR.INI.LP"))
-```
-```{r}
-nodes_lineages <- data.frame(
-    lineage = c("VNI", "VNII", "VNBI", "VNBII"),
-    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node))
-
-nodes_sublineages <- data.frame(
-    sublineage = c("VNII", "VNBII", "VNBI", "VNIb","VNIc", "VNIa"),
-    mrca = c(VNII_node, VNBII_node, VNBI_node, VNIb_node, VNIc_node, VNIa_node),
-    shading = c("gray70", "gray90","gray70", "gray90","gray70", "gray90"))
-
-nodes_vnisublineages <- data.frame(
-    sublineage = c("VNIb","VNIc", "VNIa"),
-    mrca = c(VNIb_node, VNIc_node, VNIa_node),
-    shading = c("gray90", "gray70","gray90"))
-
-nodes_vniasublineages <- data.frame(
-    sublineage = c("VNIb", "VNIc", "VNIa-4", "VNIa-32", "VNIa-93", "VNIa-5"),
-    mrca = c(VNIb_node, VNIc_node, VNIa4_node, VNIa32_node, VNIa93_node, VNIa5_node),
-    shading = c("gray70", "gray90","gray70", "gray90","gray70", "gray90"))
-```
-
-```{r}
-sublineage_shading <- nodes_sublineages$shading
-names(sublineage_shading) <- nodes_sublineages$sublineage
-
-vnisublineage_shading <- nodes_vnisublineages$shading
-names(vnisublineage_shading) <- nodes_vnisublineages$sublineage
-
-vniasublineage_shading <- nodes_vniasublineages$shading
-names(vniasublineage_shading) <- nodes_vniasublineages$sublineage
-```
-
-```{r}
-countries_final <- levels(droplevels(country[rownames(country) %in% tree_dups$tip.label, ]))
-```
-#### Dataset, country, duplications
-
-```{r, message=FALSE, warning=FALSE}
-#| fig-height: 5
-#| fig-width: 6.5
-#| fig-align: center
-m <- ggtree(tree_dups, 
-        ladderize = TRUE,
-        layout = "rectangular", 
-        branch.length = "none",
-        size = 0.1) %<+%  metadata +
-    geom_tiplab(color = "black", size = 1.5, offset = 0.1)+
-    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
-                        size = 2, , fontface = "bold",
-                        hjust = 1.25, vjust = -0.5)+
-    geom_hilight(data=nodes_vnisublineages, 
-        aes(node=mrca, fill=sublineage), alpha = 0.8)+
-        scale_fill_manual(name = "Sublineage", values = vnisublineage_shading)+
-    guides(fill = FALSE)+
-    new_scale_fill()+
-    geom_tree(size = 0.1)+
-    geom_tippoint(aes(color = dataset), shape = 18,
-                size = 1.5)+
-    scale_color_manual(name = "Dataset", values = dataset_colors)+
-    guides(color = guide_legend(override.aes = list(size = 5), order = 1))
-
-m1 <- gheatmap(m, country, width=.03, colnames=FALSE, offset=2.3) +
-        scale_fill_manual(values = country_colors, name="Country",
-            na.translate = FALSE, limits = countries_final)+
-        guides(fill = guide_legend(order = 2, ncol = 2))+
-        new_scale_fill()
-
-m3 <- gheatmap(m1, dup_chroms, width=.25, colnames = FALSE, offset=2.8) +
-    scale_fill_manual(values = chrom_dup_colors, 
-                    name="Duplicated\nchromosomes", 
-                    na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5, ncol = 2))+
-        geom_cladelab(data = nodes_vnisublineages, 
+    scale_fill_viridis_c(name = "% Coverage\nDuplicated", 
+                        direction = -1, na.value = "white", 
+                        option = "mako", limits = c(0,100))+
+    guides(fill = guide_legend(order = 5))+
+    geom_cladelab(data = nodes_vnisublineages, 
                 mapping = aes(node = mrca, label = sublineage),
                 align = TRUE, face = "bold",
                 fontsize = 3,
-                angle = 0, offset = 5.8)+
+                angle = 0, offset = 7)+
     theme(legend.position = "bottom",
     legend.direction = "vertical")
 m3
 ```
-
+#### Aneuploidy category of duplications
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small5, m3, height = 5, width = 6.5, units = "in", dpi = 900)
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m1, dup_category_aneuploidy, width=.25, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 45,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=2.8) +
+    ylim(0,70)+
+    scale_fill_manual(name = "Category",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    guides(fill = guide_legend(order = 5))+
+    geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                fontsize = 3,
+                angle = 0, offset = 7)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
 ```
-#### Lineage-sublineage, duplications
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small1, m3, height = 5, width = 6.5, units = "in", dpi = 900)
+```
+
+#### Size category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m1, dup_category_size, width=.25, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 45,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=2.8) +
+    ylim(0,70)+
+    scale_fill_manual(name = "Category",values = category_size_colors,
+         na.value = "white", limits = names(category_size_colors))+
+    guides(fill = guide_legend(order = 5))+
+    geom_cladelab(data = nodes_vnisublineages, 
+                mapping = aes(node = mrca, label = sublineage),
+                align = TRUE, face = "bold",
+                fontsize = 3,
+                angle = 0, offset = 7)+
+    theme(legend.position = "bottom",
+    legend.direction = "vertical")
+m3
+```
+### Lineage-sublineage in nodelabels
+
+#### Full duplications
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 6.5
@@ -828,138 +740,175 @@ m <- ggtree(tree_dups,
     geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
                         size = 2, , fontface = "bold",
                         hjust = 1.25, vjust = -0.5)
-
 m3 <- gheatmap(m, dup_chroms, width=.25, 
                 colnames = TRUE, colnames_position = "top",
-                colnames_angle = 45,
-                colnames_offset_y = 0.5,
+                colnames_angle = 0,
+                colnames_offset_y = 2,
                 font.size = 2,
                 offset=0.1) +
     scale_fill_manual(values = chrom_dup_colors, 
                     name="Duplicated\nchromosomes", 
                     na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "right",
-    legend.direction = "vertical")
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
 m3
 ```
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small6, m3, height = 5, width = 6.5, units = "in", dpi = 900)
-```
-#### Lineage-sublineage, duplications (one colors)
 
-```{r}
-chrom_colors <- rep("deepskyblue4",7)
-names(chrom_colors) <- c("chr01", "chr04",
-                         "chr06", "chr09", 
-                         "chr12","chr13", "chr14")
-
-chrom_dup_colors <- c(chrom_colors, "Euploid" = "grey93")
-
-```
-##### Strain labels
+#### Coverage percent of duplications
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 6.5
 #| fig-align: center
+m3 <- gheatmap(m, dup_coverage, width=.7, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 0,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=0.1) +
+    scale_fill_viridis_c(name = "% Coverage\nDuplicated", 
+                        direction = -1, na.value = "white", 
+                        option = "mako", limits = c(0,100))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
+```
+#### Aneuploidy category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 0,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=0.1) +
+    scale_fill_manual(name = "",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small1, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+```
+#### Size category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_size, width=.7, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 0,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, offset=0.1) +
+    scale_fill_manual(name = "Category",values = category_size_colors,
+         na.value = "white", limits = names(category_size_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
+```
+
+### Lineage and sublineage in nodelables, tiplabels
+
+#### Full duplications
+```{r, message=FALSE, warning=FALSE}
 m <- ggtree(tree_dups, 
         ladderize = TRUE,
         layout = "rectangular", 
         branch.length = "none",
         size = 0.2) %<+%  metadata +
-    geom_tiplab(color = "black", size = 2, offset = 0.01)+
+    geom_tiplab(color = "black", size = 1.5, offset = 0.01)+
     geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
                         size = 2, fontface = "bold",
                         hjust = 1.1, vjust = -0.5)
-
-m3 <- gheatmap(m, dup_chroms, width=.5, 
+m3 <- gheatmap(m, dup_chroms, width=.25, 
                 colnames = TRUE, colnames_position = "top",
                 colnames_angle = 0,
-                colnames_offset_y = 0.5,
+                colnames_offset_y = 2,
                 font.size = 2,
-                offset=3) +
+                offset=2) +
     scale_fill_manual(values = chrom_dup_colors, 
                     name="Duplicated\nchromosomes", 
                     na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "none",
-    legend.direction = "vertical")
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
 m3
 ```
+
+
+#### Coverage percent of duplications
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small7, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_coverage, width=.7, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 0,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, 
+                offset=2.5) +
+    # ylim(0,70)+
+    scale_fill_viridis_c(name = "% Coverage\nDuplicated", 
+                        direction = -1, na.value = "white", 
+                        option = "mako", limits = c(0,100))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
 ```
-##### No strain labels
+#### Aneuploidy category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 0,
+                colnames_offset_y = 0.5,
+                font.size = 1.5, 
+                offset=2.5)+
+    scale_fill_manual(name = "",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
+```
 
-```{r}
-# 1. Create a dummy matrix with NA values
-dummy <- dup_chroms
-dummy[,] <- NA
-
-# 2. Set colnames to your n values (make sure order matches)
-chrom_order <- colnames(dup_chroms)
-n_labels <- n_dups$n[match(chrom_order, n_dups$chromosome)]
-unique_labels <- paste0(chrom_order, "\n", n_labels)
-colnames(dummy) <- unique_labels
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small2, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 6.5
 #| fig-align: center
-m <- ggtree(tree_dups, 
-        ladderize = TRUE,
-        layout = "rectangular", 
-        branch.length = "none",
-        size = 0.2) %<+%  metadata +
-    geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
-                        size = 2.4, fontface = "bold",
-                        hjust = 1.1, vjust = -0.5)+
-    ylim(0,41)
-
-m2 <-   gheatmap(
-    p = m, 
-    data = dummy, 
-    width = 0.6, 
-    colnames = TRUE, 
-    colnames_position = "bottom", 
-    colnames_angle = 0, 
-    colnames_offset_y = 0.5, 
-    font.size = 2.5, 
-    offset = 0,
-    color = NA
-  ) +
-  scale_fill_manual(values = c("transparent"), na.value = "transparent", guide = "none")
-
-m3 <- gheatmap(m2, dup_chroms, width=.6, 
-                colnames = TRUE, colnames_position = "top",
+m3 <- gheatmap(m, dup_category_aneuploidy, width=0.2, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 90,
+                colnames_offset_y = 1,
+                font.size = 1.5, 
+                offset=2.5)+
+    ylim(0,66)+
+    scale_fill_manual(name = "",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small3, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+```
+#### Size category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_size, width=.7, colnames = TRUE,
+                colnames_position = "top",
                 colnames_angle = 0,
                 colnames_offset_y = 0.5,
-                font.size = 2.5,
-                offset=0) +
-    scale_fill_manual(values = chrom_dup_colors, 
-                    name="Duplicated\nchromosomes", 
-                    na.translate = FALSE )+
-    guides(fill = guide_legend(order = 5))+
-    theme(legend.position = "none",
-    legend.direction = "vertical")
-
+                font.size = 1.5,
+                offset=2.5)+
+    scale_fill_manual(name = "Category",values = category_size_colors,
+         na.value = "white", limits = names(category_size_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal")
 m3
 ```
-
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small8, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
-```
-
-#### Lineage-sublineage, duplications in one bar
-
-```{r, message=FALSE, warning=FALSE}
-m3<- gheatmap(m, aneuploid, width=.05, colnames = FALSE, offset=0.5) +
-        scale_fill_brewer(palette = "Dark2",
-                    name="Duplicated\nchromosomes", 
-                    na.translate = FALSE )
-m3
-```
-```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small9, m3, height = 5, width = 6.5, units = "in", dpi = 900)
-```
-
