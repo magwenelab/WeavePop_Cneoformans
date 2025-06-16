@@ -334,7 +334,8 @@ p <- ggplot(dup_lin_source) +
         labs(x = "Lineage",
                 y = "Percent",
                 fill = "Type",
-                color = "Source")+
+                color = "Source",
+                title = "a)")+
         theme(legend.position = "bottom",
                 legend.direction = "vertical",
                 legend.title = element_blank(),

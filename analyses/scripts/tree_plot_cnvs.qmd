@@ -736,9 +736,9 @@ m <- ggtree(tree_dups,
         ladderize = TRUE,
         layout = "rectangular", 
         branch.length = "none",
-        size = 0.1) %<+%  metadata +
+        size = 0.4) %<+%  metadata +
     geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
-                        size = 2, , fontface = "bold",
+                        size = 3, , fontface = "bold",
                         hjust = 1.25, vjust = -0.5)
 m3 <- gheatmap(m, dup_chroms, width=.25, 
                 colnames = TRUE, colnames_position = "top",
@@ -778,9 +778,11 @@ m3
 #| fig-align: center
 m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
                 colnames_position = "top",
-                colnames_angle = 0,
-                colnames_offset_y = 0.5,
-                font.size = 1.5, offset=0.1) +
+                colnames_angle = 90,
+                colnames_offset_y = 4,
+                font.size = 3, offset=0.1) +
+    ylim(0,70)+
+    labs(title = "b)")+
     scale_fill_manual(name = "",values = category_aneuploidy_colors,
          na.value = "white", limits = names(category_aneuploidy_colors))+
     theme(legend.position = "bottom",
