@@ -45,9 +45,8 @@ chrom_metrics_path <- "results/tables/chromosome_cnv_categories.tsv"
 duplications_path <- "results/tables/duplications.tsv"
 duplications_partial_path <- "results/tables/duplications_partial.tsv"
 
-barplot_full_dups_path <- "results/figs/barplot_full_dups.png"
-barplot_partial_dups_path <- "results/figs/barplot_partial_dups.png"
-barplot_all_dups_path <- "results/figs/barplot_all_dups.png"
+barplot_aneup_category_dups_path <- "results/figs/barplot_aneup_category_dups.png"
+barplot_size_category_dups_path <- "results/figs/barplot_size_category_dups.png"
 
 ```
 
@@ -180,7 +179,7 @@ sample_metrics <- chrom_metrics %>%
              category_aneuploidy = ifelse(any(chrom_category_aneuploidy == "Full"), "Full", 
                                             ifelse(any(chrom_category_aneuploidy == "Partial"), "Partial", "Euploid")))%>%
     left_join(metadata, by = c("sample", "lineage"))%>%
-    mutate(type_size = paste(source, category_size),
+    mutate(source_size = paste(source, category_size),
             source_aneuploidy = paste(source, category_aneuploidy))
 
 sample_metrics$category_size <- factor(sample_metrics$category_size, 
@@ -189,7 +188,7 @@ sample_metrics$category_size <- factor(sample_metrics$category_size,
 sample_metrics$category_aneuploidy <- factor(sample_metrics$category_aneuploidy, 
                                 levels = levels(chrom_metrics$chrom_category_aneuploidy))
 
-sample_metrics$type_size <- factor(sample_metrics$type_size, levels = c(
+sample_metrics$source_size <- factor(sample_metrics$source_size, levels = c(
     "Environmental Absent", "Environmental Small" , "Environmental Medium", "Environmental Large",
     "Clinical Absent", "Clinical Small", "Clinical Medium",  "Clinical Large"))
 
@@ -202,8 +201,8 @@ sample_metrics$source_aneuploidy <- factor(sample_metrics$source_aneuploidy, lev
 ```{r,message=FALSE}
 source_aneuploidy_colors <- brewer.pal(11, "BrBG")[c(11,8,7,1,2,5)]
 names(source_aneuploidy_colors) <- rev(levels(sample_metrics$source_aneuploidy))
-type_size_colors <- brewer.pal(11, "BrBG")[c(11,10,8,7,1,2,4,5)]
-names(type_size_colors) <- rev(levels(sample_metrics$type_size))
+source_size_colors <- brewer.pal(11, "BrBG")[c(11,10,8,7,1,2,4,5)]
+names(source_size_colors) <- rev(levels(sample_metrics$source_size))
 ```
 
 ## Join chromosome metrics with metadata and save table
@@ -214,6 +213,8 @@ chrom_metrics <- left_join(chrom_metrics, metadata)
 ```{r, message=FALSE, warning=FALSE}
 write.table(chrom_metrics, file = chrom_metrics_path, sep = "\t",  quote = FALSE, row.names = FALSE)
 ```
+
+## Summaries of samples in each category
 
 ### Create function to make summaries
 ```{r, message=FALSE, warning=FALSE}
@@ -291,8 +292,8 @@ get_summary <- function(df, variable1, variable2=NULL, variable3=NULL, cnv_type,
 
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df = sample_metrics,
-            variable1= "lineage", 
-            variable2= "category_aneuploidy",
+            variable1= "category_aneuploidy",
+            variable2= "lineage", 
             cnv_type= "duplication", 
             total_n = "samples_in_lineage")
 ```
@@ -346,13 +347,17 @@ p <- ggplot(dup_lin_source) +
 )
 p
 ```
+```{r,message=FALSE}
+ggsave(barplot_aneup_category_dups_path, p, height = 4, width = 6.5, units = "in", dpi = 900)
+```
+
 <details><summary> **Number of samples with duplications per group of dataset-lineage**</summary>
 
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df = sample_metrics, 
-            variable1= "lineage", 
+            variable1= "category_aneuploidy", 
             variable2= "dataset",
-            variable3= "category_aneuploidy",
+            variable3= "lineage",
             cnv_type= "duplication", 
             total_n = "samples_in_dataset_lineage")
 ```
@@ -363,8 +368,8 @@ get_summary(df = sample_metrics,
 
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df =  filter(sample_metrics, lineage == "VNI"),
-            variable1= "vni_subdivision", 
-            variable2= "category_aneuploidy",
+            variable1= "category_aneuploidy", 
+            variable2= "vni_subdivision", 
             cnv_type= "duplication", 
             total_n = "samples_in_sublineage")
 ```
@@ -375,8 +380,8 @@ get_summary(df =  filter(sample_metrics, lineage == "VNI"),
 
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df = filter(chrom_metrics, chrom_category_aneuploidy %in% c("Full", "Partial")),
-            variable1= "chromosome", 
-            variable2= "chrom_category_aneuploidy",
+            variable1= "chrom_category_aneuploidy",
+            variable2= "chromosome", 
             cnv_type= "duplication", 
             total_n = "total_samples")
 ```
@@ -387,11 +392,181 @@ get_summary(df = filter(chrom_metrics, chrom_category_aneuploidy %in% c("Full", 
 
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df = filter(chrom_metrics, chrom_category_aneuploidy %in% c("Full", "Partial")),
-            variable1= "chromosome", 
-            variable2= "lineage", 
-            variable3= "chrom_category_aneuploidy",
+            variable1= "chrom_category_aneuploidy",
+            variable2= "chromosome",  
+            variable3= "lineage",
             cnv_type= "duplication", 
             total_n = "samples_in_lineage")
+```
+
+</details>
+
+<details><summary> **Number and identity of fully duplicated chromosomes per samples**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+chrom_metrics %>%
+    filter(cnv == "duplication", chrom_category_aneuploidy == "Full")%>%
+    group_by(sample, strain, source, lineage, dataset) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms), chromosomes)%>%
+    select(sample, strain, lineage, dataset, source, n_chroms, chromosomes)
+```
+
+</details>
+
+<details><summary> **Number and identity of partially duplicated chromosomes per samples**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+chrom_metrics %>%
+    filter(cnv == "duplication", chrom_category_aneuploidy == "Partial")%>%
+    group_by(sample, strain, source, lineage, dataset) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms), chromosomes)%>%
+    select(sample, strain, lineage, dataset, source, n_chroms, chromosomes)
+```
+
+</details>
+
+## Summaries of duplications by "size" category
+<details><summary> **Number of samples with duplications per lineage**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+get_summary(df = sample_metrics,
+            variable1= "category_size", 
+            variable2= "lineage",
+            cnv_type= "duplication", 
+            total_n = "samples_in_lineage")
+```
+</details>
+
+<details><summary> **Number of samples with duplications in each group of lineage-source**</summary>
+
+
+```{r, message=FALSE, warning=FALSE}
+dup_lin_source <- get_summary(df = sample_metrics,
+            variable1= "source_size", 
+            variable2= "lineage",
+            cnv_type= "duplication", 
+            total_n = "samples_in_lineage")
+dup_lin_source
+```
+</details>
+
+```{r,message=FALSE}
+#| fig-height: 4
+#| fig-width: 6.5
+p <- ggplot(dup_lin_source) +
+        geom_col(aes(x = lineage, y = percent, fill = source_size),
+                    color = NA, position = "stack", show.legend = TRUE)+
+        scale_fill_manual(
+            values = source_size_colors,
+            limits = names(source_size_colors),
+            drop = FALSE
+        )+
+        guides(fill = guide_legend(ncol = 2))+
+        geom_text(data = n_lineage, 
+                    aes(x = lineage, y = 108, label = paste("n = ", samples_in_lineage)),
+                    size = 4)+
+        scale_y_continuous(limits = c(0,110),
+                            breaks = seq(0,100, by = 10))+
+        coord_flip()+
+        theme_minimal()+
+        labs(x = "Lineage",
+                y = "Percent",
+                fill = "Type",
+                color = "Source")+
+        theme(legend.position = "bottom",
+                legend.direction = "vertical",
+                legend.title = element_blank(),
+                legend.text=element_text(size=10),
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                axis.text = element_text(size = 10, color = "black"),
+                axis.title = element_text(size = 12, color = "black"),
+                plot.background = element_rect(fill = "white", color = "white")
+)
+p
+```
+
+```{r,message=FALSE}
+ggsave(barplot_size_category_dups_path, p, height = 4, width = 6.5, units = "in", dpi = 900)
+```
+<details><summary> **Number of samples with duplications per group of dataset-lineage**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+get_summary(df = sample_metrics, 
+            variable1= "category_size", 
+            variable2= "lineage",
+            variable3= "dataset",
+            cnv_type= "duplication", 
+            total_n = "samples_in_dataset_lineage")
+```
+
+</details>
+
+<details><summary> **Number of samples with duplications per VNI sublineage**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+get_summary(df =  filter(sample_metrics, lineage == "VNI"),
+            variable1= "category_size",
+            variable2= "vni_subdivision", 
+            cnv_type= "duplication", 
+            total_n = "samples_in_sublineage")
+```
+
+</details>
+
+<details><summary> **Number of samples with duplications in each chromosome**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+get_summary(df = filter(chrom_metrics, chrom_category_size %in% c("Full", "Partial")),
+            variable1= "chrom_category_size", 
+            variable2= "chromosome",
+            cnv_type= "duplication", 
+            total_n = "total_samples")
+```
+
+</details>
+
+<details><summary> **Number of samples with duplications in each group of chromosome-lineage**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+get_summary(df = filter(chrom_metrics, chrom_category_size %in% c("Full", "Partial")),
+            variable1= "chrom_category_size",
+            variable2= "chromosome", 
+            variable3= "lineage",
+            cnv_type= "duplication", 
+            total_n = "samples_in_lineage")
+```
+
+</details>
+
+<details><summary> **Number and identity of chromosomes with large duplications per samples**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+chrom_metrics %>%
+    filter(cnv == "duplication", chrom_category_size == "Large")%>%
+    group_by(sample, strain, source, lineage, dataset) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms), chromosomes)%>%
+    select(sample, strain, lineage, dataset, source, n_chroms, chromosomes)
+```
+
+</details>
+
+<details><summary> **Number and identity of chromosomes with medium duplications per samples**</summary>
+
+```{r, message=FALSE, warning=FALSE}
+chrom_metrics %>%
+    filter(cnv == "duplication", chrom_category_size == "Medium")%>%
+    group_by(sample, strain, source, lineage, dataset) %>%
+    summarise(n_chroms = n_distinct(chromosome), 
+            chromosomes = paste(chromosome, collapse = ", ")) %>%
+    arrange(desc(n_chroms), chromosomes)%>%
+    select(sample, strain, lineage, dataset, source, n_chroms, chromosomes)
 ```
 
 </details>
