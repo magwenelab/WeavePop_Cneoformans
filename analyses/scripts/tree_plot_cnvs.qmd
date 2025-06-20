@@ -470,7 +470,9 @@ VNIc_node <- getMRCA(tree_dups, c("LP-RSA3042","PMHc1031A.ENR.INI.LP"))
 ```{r}
 nodes_lineages <- data.frame(
     lineage = c("VNI", "VNII", "VNBI", "VNBII"),
-    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node))
+    mrca = c(VNI_node, VNII_node, VNBI_node, VNBII_node),
+        labels = c("","","",""))
+
 
 nodes_sublineages <- data.frame(
     sublineage = c("VNII", "VNBII", "VNBI", "VNIb","VNIc", "VNIa"),
@@ -571,7 +573,7 @@ m <- ggtree(tree_dups,
         layout = "rectangular", 
         branch.length = "none",
         size = 0.4) %<+%  metadata +
-    geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
                         size = 3, , fontface = "bold",
                         hjust = 1.25, vjust = -0.5)
 ```
@@ -614,7 +616,7 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=0.7, colnames = TRUE,
     labs(title = "b)")+
     scale_fill_manual(name = "",values = category_aneuploidy_colors,
          na.value = "white", limits = names(category_aneuploidy_colors))+
-    geom_cladelab(data = nodes_sublineages, 
+    geom_cladelab(data = nodes_lineages, 
                 mapping = aes(node = mrca, label = labels),
                 align = TRUE, face = "bold",
                 fontsize = 3,
@@ -657,7 +659,7 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small2, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small4, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
@@ -672,7 +674,7 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=0.7, colnames = TRUE,
     labs(title = "b)")+
     scale_fill_manual(name = "",values = category_aneuploidy_colors2,
          na.value = "white", limits = names(category_aneuploidy_colors2))+
-    geom_cladelab(data = nodes_sublineages, 
+    geom_cladelab(data = nodes_lineages, 
                 mapping = aes(node = mrca, label = labels),
                 align = TRUE, face = "bold",
                 fontsize = 3,
@@ -685,7 +687,7 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=0.7, colnames = TRUE,
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small4, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small5, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 ### Lineage and sublineage in nodelables, tiplabels
 
@@ -696,7 +698,7 @@ m <- ggtree(tree_dups,
         branch.length = "none",
         size = 0.2) %<+%  metadata +
     geom_tiplab(color = "black", size = 1.5, offset = 0.01)+
-    geom_text(aes(label = nodes_sublineages$sublineage[match(node, nodes_sublineages$mrca)]), 
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
                         size = 2, fontface = "bold",
                         hjust = 1.1, vjust = -0.5)
 
@@ -728,7 +730,7 @@ m3 <- gheatmap(m, dup_coverage, width=.7, colnames = TRUE,
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small5, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small6, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 
 #### Aneuploidy category of duplications
@@ -757,7 +759,7 @@ m3
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small6, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small7, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 
 #### Size category of duplications
@@ -785,5 +787,5 @@ m3 <- gheatmap(m, dup_category_size, width=.7, colnames = TRUE,
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small7, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small8, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
