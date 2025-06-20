@@ -537,7 +537,6 @@ ggsave(tree_merged_duplications_path8, m3, height = 8, width = 6.5, units = "in"
 keep_strains <- chrom_metrics %>%
     filter(cnv == "duplication", chrom_category_aneuploidy %in% c("Partial", "Full"))%>%
     pull(strain)
-keep_strains <- c(keep_strains, "H99", "Bt22", "Bt89")
 tree_dups <- drop.tip(tree, setdiff(tree$tip.label, keep_strains))
 sublineage <- sublineage %>%
                 filter(rownames(.) %in% keep_strains)%>%
@@ -548,7 +547,7 @@ sublineage <- sublineage %>%
 
 Get the node number of the Most Recent Common Ancestor of each lineage
 ```{r}
-VNI_node <- getMRCA(tree_dups, c("Bt139","H99"))
+VNI_node <- getMRCA(tree_dups, c("Bt139","AD4-92a"))
 VNII_node <- getMRCA(tree_dups, c("8-1","C12"))
 VNBI_node <- getMRCA(tree_dups, c("PMHc1001.ENR","NRHc5045.ENR.CLIN.ISO"))
 VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt34"))
@@ -559,7 +558,7 @@ VNIa93_node <- getMRCA(tree_dups, c("04CN-64-024","04CN-64-011"))
 VNIa32_node <- getMRCA(tree_dups, c("04CN-65-072","In2632"))
 
 VNIa_node <- getMRCA(tree_dups, c("20427_3#26", "Bt139"))
-VNIb_node <- getMRCA(tree_dups, c("H99","MW-RSA6134"))
+VNIb_node <- getMRCA(tree_dups, c("AD4-92a","MW-RSA6134"))
 VNIc_node <- getMRCA(tree_dups, c("LP-RSA3042","PMHc1031A.ENR.INI.LP"))
 ```
 ```{r}
@@ -570,7 +569,8 @@ nodes_lineages <- data.frame(
 nodes_sublineages <- data.frame(
     sublineage = c("VNII", "VNBII", "VNBI", "VNIb","VNIc", "VNIa"),
     mrca = c(VNII_node, VNBII_node, VNBI_node, VNIb_node, VNIc_node, VNIa_node),
-    shading = c("gray70", "gray90","gray70", "gray90","gray70", "gray90"))
+    shading = c("gray70", "gray90","gray70", "gray90","gray70", "gray90"),
+    labels = c("","","","","",""))
 
 nodes_vnisublineages <- data.frame(
     sublineage = c("VNIb","VNIc", "VNIa"),
@@ -771,6 +771,7 @@ m3 <- gheatmap(m, dup_coverage, width=.7, colnames = TRUE,
     legend.direction = "horizontal")
 m3
 ```
+
 #### Aneuploidy category of duplications
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
@@ -780,8 +781,8 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
                 colnames_position = "top",
                 colnames_angle = 90,
                 colnames_offset_y = 4,
-                font.size = 3, offset=0.1) +
-    ylim(0,70)+
+                font.size = 3, offset=0) +
+    ylim(0,66)+
     labs(title = "b)")+
     scale_fill_manual(name = "",values = category_aneuploidy_colors,
          na.value = "white", limits = names(category_aneuploidy_colors))+
@@ -789,8 +790,58 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=1, colnames = TRUE,
     legend.direction = "horizontal")
 m3
 ```
+#### Aneuploidy category of duplications
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small1, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_aneuploidy, width=0.7, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 90,
+                colnames_offset_y = 4,
+                font.size = 3, offset=0) +
+    ylim(0,66)+
+    labs(title = "b)")+
+    scale_fill_manual(name = "",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    theme(legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title= element_blank(),
+    legend.margin=margin(t = -0.5, r = 1, b = 0.3, unit='cm'),
+    legend.justification = "right")
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small2, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+```
+
+#### Aneuploidy category of duplications
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 6.5
+#| fig-align: center
+m3 <- gheatmap(m, dup_category_aneuploidy, width=0.7, colnames = TRUE,
+                colnames_position = "top",
+                colnames_angle = 90,
+                colnames_offset_y = 4,
+                font.size = 3, offset=0) +
+    ylim(0,66)+
+    labs(title = "b)")+
+    scale_fill_manual(name = "",values = category_aneuploidy_colors,
+         na.value = "white", limits = names(category_aneuploidy_colors))+
+    geom_cladelab(data = nodes_sublineages, 
+                mapping = aes(node = mrca, label = labels),
+                align = TRUE, face = "bold",
+                fontsize = 3,
+                angle = 0, offset = 10)+
+                    theme(legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title= element_blank(),
+    legend.margin=margin(t = -0.5, r = 1, b = 0.3, unit='cm'),
+    legend.justification = "right")
+m3
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(tree_merged_duplications_small3, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 #### Size category of duplications
 ```{r, message=FALSE, warning=FALSE}
@@ -875,7 +926,7 @@ m3
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small2, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small4, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 ```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
@@ -895,7 +946,7 @@ m3 <- gheatmap(m, dup_category_aneuploidy, width=0.2, colnames = TRUE,
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(tree_merged_duplications_small3, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
+ggsave(tree_merged_duplications_small5, m3, height = 4.5, width = 6.5, units = "in", dpi = 900)
 ```
 #### Size category of duplications
 ```{r, message=FALSE, warning=FALSE}
