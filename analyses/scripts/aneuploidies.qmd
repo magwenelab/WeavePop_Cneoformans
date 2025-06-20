@@ -397,7 +397,7 @@ p <- ggplot(dup_lin_source) +
 p
 ```
 ```{r,message=FALSE}
-ggsave(barplot_aneup_category_dups_path2, p, height = 3, width = 6.5, units = "in", dpi = 900)
+ggsave(barplot_aneup_category_dups_path2, p, height = 2, width = 6.5, units = "in", dpi = 900)
 ```
 
 <details><summary> **Number of samples with duplications per group of dataset-lineage**</summary>
