@@ -45,7 +45,8 @@ chrom_metrics_path <- "results/tables/chromosome_cnv_categories.tsv"
 duplications_path <- "results/tables/duplications.tsv"
 duplications_partial_path <- "results/tables/duplications_partial.tsv"
 
-barplot_aneup_category_dups_path <- "results/figs/barplot_aneup_category_dups.png"
+barplot_aneup_category_dups_path1 <- "results/figs/barplot_aneup_category_dups1.png"
+barplot_aneup_category_dups_path2 <- "results/figs/barplot_aneup_category_dups2.png"
 barplot_size_category_dups_path <- "results/figs/barplot_size_category_dups.png"
 
 ```
@@ -339,17 +340,64 @@ p <- ggplot(dup_lin_source) +
         theme(legend.position = "bottom",
                 legend.direction = "vertical",
                 legend.title = element_blank(),
-                legend.text=element_text(size=10),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.5, unit = "cm"),
+                legend.margin=margin(t= 0.1, b = 0.1, unit = "cm"),
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 axis.text = element_text(size = 10, color = "black"),
-                axis.title = element_text(size = 12, color = "black"),
-                plot.background = element_rect(fill = "white", color = "white")
-)
+                axis.title.y = element_blank(),
+                axis.title.x = element_text(size = 12, color = "black"),
+                plot.background = element_rect(fill = "white", color = "white"),
+                plot.title = element_text(hjust = -0.07, vjust=1))
+
 p
 ```
 ```{r,message=FALSE}
-ggsave(barplot_aneup_category_dups_path, p, height = 4, width = 6.5, units = "in", dpi = 900)
+ggsave(barplot_aneup_category_dups_path1, p, height = 3, width = 6.5, units = "in", dpi = 900)
+```
+```{r,message=FALSE}
+#| fig-height: 4
+#| fig-width: 6.5
+p <- ggplot(dup_lin_source) +
+        geom_col(aes(x = lineage, y = percent, fill = source_aneuploidy),
+                    color = NA, position = "stack", show.legend = TRUE)+
+        scale_fill_manual(
+            values = source_aneuploidy_colors,
+            limits = names(source_aneuploidy_colors),
+            drop = FALSE
+        )+
+        guides(fill = guide_legend(ncol = 1))+
+        geom_text(data = n_lineage, 
+                    aes(x = lineage, y = 108, label = paste("n = ", samples_in_lineage)),
+                    size = 3.5)+
+        scale_y_continuous(limits = c(0,110),
+                            breaks = seq(0,100, by = 10))+
+        coord_flip()+
+        theme_minimal()+
+        labs(x = "Lineage",
+                y = "Percent",
+                fill = "Type",
+                color = "Source",
+                title = "a)")+
+        theme(legend.position = "right",
+                legend.direction = "vertical",
+                legend.title = element_blank(),
+                legend.text=element_text(size=7),
+                legend.key.size = unit(0.4, unit = "cm"),
+                legend.margin=margin(t= 0.1, b = 0.1, unit = "cm"),
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                axis.text = element_text(size = 10, color = "black"),
+                axis.title.y = element_blank(),
+                axis.title.x = element_text(size = 12, color = "black"),
+                plot.background = element_rect(fill = "white", color = "white"),
+                plot.title = element_text(hjust = -0.09, vjust=1))
+
+p
+```
+```{r,message=FALSE}
+ggsave(barplot_aneup_category_dups_path2, p, height = 3, width = 6.5, units = "in", dpi = 900)
 ```
 
 <details><summary> **Number of samples with duplications per group of dataset-lineage**</summary>
