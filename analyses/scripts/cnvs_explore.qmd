@@ -75,7 +75,7 @@ cnv_calls_path <-
     "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv_0.6/cnv_calls.tsv"
 chrom_metrics_out_path <-
     "results/tables/chrom_metrics.tsv"
-chrom_metrics_filtered_out_path <- 
+chrom_metrics_filtered_out_path <-
     "results/tables/chrom_metrics_filtered.tsv"
 ```
 
