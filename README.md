@@ -85,20 +85,9 @@ External data:
 |-----------------|-----------------|-----------------| -----------------|
 | Metadata | `metadata.ipynb` | `metadata_ashton_desj_vni_weavepop.csv`<br />  `metadata_ashton_desj_all_weavepop_H99.csv`<br />   `metadata_ashton_desj_all_weavepop_complete_info.csv`  | Create new metadata tables to add the VNI subdivision information from the Ashton study to the Desjardins samples. |
 | Tree building | `merge_trees.qmd` | `tree_ashton.newick`<br />  `tree_desjardins.newick`<br />  `tree_merged.newick`<br /> Plots in `results/trees/` | Merge the trees of the Ashton and Desjardins datasets. |
-| CNVs | `cnvs_explore.qmd` | `chromosome_lengths.tsv` <br /> `results/tables/duplications_putative.tsv` | Explore relationship between CNV metrics and chromosomal depth. And select list of posible chromosomal duplications. |
-|| `cnvs_pca.qmd` || PCA of the CNV and Depth metrics. |
-| Ploidy | `ploidy_heterozygosity.qmd` | | Analyze ploidy with heterozygous SNPs. |
-|| `ploidy_depth.qmd` <br /> ` ploidy_depth_datset.qmd` || Analyze ploidy with Mixture Models of Depth Distribution. <br /> Join the results of the previous sample-wise analysis into dataset-wide results and explore it.|
-|Plot duplications in tree |`duplications_plot_tree.qmd`| `results/trees_dups/tree_merged_duplications.png`<br /> `results/trees_dups/tree_merged_duplications_12_13.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated2.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated3.png`| Plot the merged tree with a heatmap of duplicated chromosomes.|
-|SNPs|`snps_compare_old_clean.qmd`| `snp_counts_desjardins_old.csv`<br /> `snp_counts_ashton_old.csv` | Compare number of SNPs before and after using FastP|
-|  | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv`| Compare number of raw and filtered SNPs. |
-
-
-
-
-
-
-
+| Discover aneuploidies | `aneuploidies.qmd` | `Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv` | Categorize chromosomes by coverage of CNVs |
+| Plot duplications in tree |`duplications_plot_tree.qmd`| `results/trees_dups/tree_merged_duplications.png`<br /> `results/trees_dups/tree_merged_duplications_12_13.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated2.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated3.png`| Plot the merged tree with a heatmap of duplicated chromosomes.|
+|Count SNPs  | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv`| Compare number of raw and filtered SNPs. |
 
 ## Published database versions
 
