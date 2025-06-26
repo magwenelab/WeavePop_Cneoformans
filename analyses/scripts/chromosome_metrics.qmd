@@ -38,9 +38,9 @@ Paths
 
 ```{r paths}
 metadata_path <-
-    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
+    "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
 cnv_chroms_path <-
-    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
+    "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv"
 chrom_metrics_out_path <-
     "results/tables/chrom_metrics.tsv"
 ploidy_path <- "results/tables/ploidy_from_plots.tsv"
@@ -123,6 +123,49 @@ chrom_metrics <- cnv_chroms %>%
                             "smooth_depth_mean","smooth_depth_median")) %>%
     left_join(ploidy, by = c("sample", "accession", "lineage", "chromosome"))%>%
     left_join(metadata, by = c("sample", "lineage"))
+```
+
+### Distribution
+
+```{r}
+ggplot(chrom_metrics)+
+        geom_quasirandom(aes(x = chromosome, y = coverage_percent_duplication))
+```
+```{r}
+ggplot(filter(chrom_metrics, coverage_percent_duplication > 0))+
+        geom_quasirandom(aes(x = chromosome, y = coverage_percent_duplication), alpha = 0.5)+
+        ylim(0,10)
+```
+```{r}
+ggplot(filter(chrom_metrics, coverage_percent_duplication > 0), aes(x = lineage, y = coverage_percent_duplication))+
+        geom_quasirandom()+
+        geom_boxplot()
+```
+```{r}
+ggplot(filter(chrom_metrics, coverage_percent_duplication > 0),
+         aes(x = lineage, y = coverage_percent_duplication))+
+        geom_quasirandom(alpha = 0.5)+
+        ylim(0,10)
+```
+```{r}
+ggplot(chrom_metrics)+
+        geom_quasirandom(aes(x = chromosome, y = total_size_regions_duplication))
+```
+```{r}
+ggplot(filter(chrom_metrics, total_size_regions_duplication > 0))+
+        geom_quasirandom(aes(x = chromosome, y = total_size_regions_duplication), alpha = 0.5)+
+        ylim(0,100000)
+```
+```{r}
+ggplot(filter(chrom_metrics, total_size_regions_duplication > 0), aes(x = lineage, y = total_size_regions_duplication))+
+        geom_quasirandom()+
+        geom_boxplot()
+```
+```{r}
+ggplot(filter(chrom_metrics, total_size_regions_duplication > 0),
+         aes(x = lineage, y = total_size_regions_duplication))+
+        geom_quasirandom(alpha = 0.5)+
+        ylim(0,100000)
 ```
 
 
