@@ -24,9 +24,16 @@ Use WeavePop-CLI to get the annotation of the mRNA features of the cAMP genes an
 ```{bash, eval=FALSE}
 #| code-fold: false
 conda activate shiny
-python query_database/weavepop_cli.py annotation --db Crypto_Desjardins_Ashton/results/02.Dataset/database.db --gene_name PDE1,PKA1,PKA2,CAC1,PKR1 --feature_type mRNA > analyses/data/processed/variants/camp_annotation.tsv
-python query_database/weavepop_cli.py variants --db Crypto_Desjardins_Ashton/results/02.Dataset/database.db --gene_name PDE1,PKA1,PKA2,CAC1,PKR1 > analyses/
-data/processed/variants/camp_variants.tsv
+python query_database/weavepop_cli.py annotation \
+    --db Crypto_Desjardins_Ashton/results/02.Dataset/database.db \
+    --gene_name PDE1,PKA1,PKA2,CAC1,PKR1 \
+    --feature_type mRNA \
+    > analyses/data/processed/variants/camp_annotation.tsv
+
+python query_database/weavepop_cli.py variants \
+    --db Crypto_Desjardins_Ashton/results/02.Dataset/database.db \
+    --gene_name PDE1,PKA1,PKA2,CAC1,PKR1 \
+    > analyses/data/processed/variants/camp_variants.tsv
 ```
 
 ## Setup {#setup}
@@ -56,65 +63,6 @@ cnv_chroms_path <-
     "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
 annotation_path <- "data/processed/variants/camp_annotation.tsv"
 variants_path <- "data/processed/variants/camp_variants.tsv"
-```
-
-## Explore the annotation
-
-```{r}
-annotation <- read.delim(
-    annotation_path,
-    header=TRUE,
-    sep="\t",
-    stringsAsFactor = TRUE)
-```
-
-Number of isoforms per lineage per gene
-
-```{r}
-annotation %>% 
-    group_by(lineage, gene_name)%>%
-    summarize(n_isoforms = n_distinct(feature_id))%>%
-    pivot_wider(names_from = gene_name, values_from = n_isoforms)
-```
-
-Isoforms identical to VNI
-```{r}
-annotation %>% 
-    select(lineage, gene_name, feature_id, identical_to_main_ref, start_stop_mutations)%>%
-    arrange(lineage, gene_name)
-```
-The VNII reference has a `missing_start_codon` in CAC1 and a `missing_stop_codon` in PDE1 mR2.
-
-## Explore the number of variants
-```{r}
-variants <- read.delim(
-    variants_path,
-    header=TRUE,
-    sep="\t",
-    stringsAsFactor = TRUE)
-
-variants$impact <- factor(variants$impact, levels = c("HIGH", "MODERATE", "LOW", "MODIFIER"))
-variants$lineage <- factor(variants$lineage, levels = c("VNI", "VNII", "VNBI", "VNBII"))
-```
-```{r, message = FALSE, warning = FALSE}
-variants %>%
-    group_by(lineage, impact, gene_name)%>%
-    summarize(n_vars = n_distinct(var_id))%>%
-    pivot_wider(names_from = gene_name, values_from = n_vars)%>%
-    arrange(impact, lineage)
-```
-```{r, message = FALSE, warning = FALSE}
-variants %>%
-    group_by(lineage, impact, gene_name)%>%
-    summarize(n_samples = n_distinct(sample))%>%
-    pivot_wider(names_from = gene_name, values_from = n_samples, values_fill = 0)%>%
-    arrange(impact, lineage)
-```
-```{r, message = FALSE, warning = FALSE}
-variants %>%
-    group_by(lineage, var_id)%>%
-    summarize(n_samples = n_distinct(sample))%>%
-    arrange(desc(n_samples))
 ```
 ## Prepare dataset {#prepare-dataset}
 
@@ -146,4 +94,91 @@ metadata <- metadata %>%
     ungroup()%>%
     mutate(total_samples = n_distinct(sample))%>%
     droplevels()
+```
+
+### Variants
+```{r}
+variants <- read.delim(
+    variants_path,
+    header=TRUE,
+    sep="\t",
+    stringsAsFactor = TRUE)
+
+variants$impact <- factor(variants$impact, levels = c("HIGH", "MODERATE", "LOW", "MODIFIER"))
+variants$lineage <- factor(variants$lineage, levels = c("VNI", "VNII", "VNBI", "VNBII"))
+
+variants <- left_join(variants, metadata, by = c("sample", "strain", "lineage"))
+```
+
+### Annotation
+```{r}
+annotation <- read.delim(
+    annotation_path,
+    header=TRUE,
+    sep="\t",
+    stringsAsFactor = TRUE)
+annotation$lineage <- factor(annotation$lineage, levels = c("VNI", "VNII", "VNBI", "VNBII"))
+```
+
+
+## Explore the annotation
+
+Number of isoforms per lineage per gene
+
+```{r, message = FALSE, warning = FALSE}
+annotation %>% 
+    group_by(lineage, gene_name)%>%
+    summarize(n_isoforms = n_distinct(feature_id))%>%
+    pivot_wider(names_from = gene_name, values_from = n_isoforms)
+```
+
+Isoforms identical to VNI
+```{r, message = FALSE, warning = FALSE}
+annotation %>% 
+    select(lineage, gene_name, feature_id, identical_to_main_ref, start_stop_mutations)%>%
+    arrange(lineage, gene_name)
+```
+The VNII reference has a `missing_start_codon` in CAC1 and a `missing_stop_codon` in PDE1 mR2.
+
+## Explore the number of variants per gene and number of samples with variants per gene
+
+```{r, message = FALSE, warning = FALSE}
+gene_lin_impact <- variants %>%
+    group_by(lineage, impact, gene_name, samples_in_lineage)%>%
+    arrange(gene_name,impact,lineage)%>%
+    summarize(n_samples = n_distinct(sample),
+                n_vars = n_distinct(var_id))%>%
+    mutate(percent_samples = (n_samples / samples_in_lineage) *100)
+```
+
+```{r}
+ggplot(gene_lin_impact)+
+    geom_tile(aes(x = gene_name, y = lineage, fill = percent_samples))+
+    geom_text(aes(x = gene_name, y = lineage, label = n_samples))+
+    facet_wrap(~impact)+
+    scale_fill_viridis_c(direction = -1)+
+    theme_minimal()
+```
+```{r}
+ggplot(gene_lin_impact)+
+    geom_col(aes(x = gene_name, y = percent_samples, fill = lineage), position = "dodge")+
+    facet_wrap(~impact)+
+    theme_minimal()
+```
+
+## Explore the number of samples with each variant
+
+```{r, message = FALSE, warning = FALSE}
+vars_gene_lin_impact <- variants %>%
+    group_by(lineage, impact, gene_name, var_id, samples_in_lineage)%>%
+    arrange(gene_name,impact,lineage)%>%
+    summarize(n_samples = n_distinct(sample))%>%
+    mutate(percent_samples = round((n_samples / samples_in_lineage) *100, 1))
+```
+
+```{r, message = FALSE, warning = FALSE}
+vars_gene_lin_impact_percent <- vars_gene_lin_impact %>%
+    group_by(lineage, gene_name, impact, percent_samples)%>%
+    summarize(n_vars = n_distinct(var_id))%>%
+    arrange(desc(percent_samples))
 ```
