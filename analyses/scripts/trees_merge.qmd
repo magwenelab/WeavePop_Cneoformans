@@ -24,9 +24,7 @@ source("scripts/metadata_colors.R")
 Paths
 ```{r}
 metadata_ashton_desj_all_weavepop_H99 <- 
-    "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
-ploidy_path <- 
-    "results/tables/ploidy_from_plots.tsv"
+    "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
 desj_tree_path <- 
     "data/raw/CryptoDiversity_Desjardins_Tree.tre"
 desj_tree_out_path <- 
@@ -63,7 +61,9 @@ merged_tree_small_plot <-
     "results/trees/tree_merged_small.png"
 ```
 ## Metadata
-Use the metadata table that has all the samples included in the final Crypto_Desjardins_Ashton dataset and H99 (n = 1056).  
+Use the metadata table that has all (even the ones that will be excluded) 
+the samples of Ashton and Desjardins and H99 (n = 1064).  
+
 ```{r, message=FALSE, warning=FALSE}
 metadata <- read.delim(
     metadata_ashton_desj_all_weavepop_H99,
@@ -103,18 +103,16 @@ country <- metadata %>%
             column_to_rownames("strain")
 mating_type <- metadata %>%
             select(strain, mating_type)%>%
-            column_to_rownames("strain")    
-```
-```{r} 
-ploidy <- read.delim(
-    ploidy_path,
-    header=TRUE,
-    sep="\t")%>%
+            column_to_rownames("strain")   
+ploidy <- metadata %>%
     select(strain, ploidy)%>%
-    filter(ploidy != "haploid")%>%
-    distinct()%>%
     column_to_rownames("strain")
+quality <- metadata %>%
+    select(strain, quality_warning)%>%
+    column_to_rownames("strain")
+
 ```
+
 
 ## Desjardins tree
 Import the raw Desjardins tree
@@ -141,7 +139,7 @@ Keep only the names of the countries in the Desjardins dataset to have a proper 
 country_desj <- levels(droplevels(country[rownames(country) %in% desj_tree$tip.label, ]))
 ```
 
-### Get lineage nodes
+Get lineage nodes for plot
 ```{r}
 VNI_node <- getMRCA(desj_tree, c("Tu241-1","Bt164"))
 VNII_node <- getMRCA(desj_tree, c("C2","C12"))
@@ -202,25 +200,27 @@ d <- ggtree(desj_tree,
 
 
 dc <- gheatmap(d, country, width =.08, colnames=FALSE, offset=0.07)+
-    scale_fill_manual(values=country_colors, 
+        scale_fill_manual(values=country_colors, 
                       name="Country", na.translate=TRUE,
                       limits = country_desj)+ 
+        guides(fill = guide_legend(order = 3, ncol = 2))+
     geom_cladelab(data = nodes_vnisublineages, 
             mapping = aes(node = mrca, label = sublineage),
             fontsize = 3,
             align = TRUE, face = "bold",
-            angle = "auto", offset = 0.11)
+            angle = "auto", offset = 0.11)+
+    theme(legend.position = "bottom",
+            legend.direction = "vertical")
 
 dc
 ```
+Save Desjardins tree plot to file.
 ```{r, message=FALSE, warning=FALSE}
 ggsave(desj_tree_out_plot, dc, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
-
 ```{r, message=FALSE, warning=FALSE}
 ggsave(desj_tree_out_plot_pdf, dc, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
-
 
 ## Ashton tree
 Import the raw Ashton tree
@@ -238,7 +238,7 @@ ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, functio
     }
 })
 ```
-Get the samples that are present in the tree but absent from the metadata of the final dataset
+Get the samples that are present in the tree but absent from the metadata of the full dataset
 ```{r}
 tips_missing_from_final_dataset <- setdiff(ashton_tree_unrooted$tip.label, metadata$strain)
 ```
@@ -250,7 +250,7 @@ ashton_metadata <-read.delim(
     header=TRUE, sep=",")
 samples_missing_from_dataset <- ashton_metadata %>%
     filter(strain %in% tips_missing_from_final_dataset)%>%
-    select(sample, strain, lineage, VNI_subdivision)
+    select(sample, strain, lineage, vni_subdivision)
 samples_missing_from_dataset
 ```
 The CNS_1465 strain was not available for download and the rest had bad quality alignments.
@@ -459,7 +459,7 @@ write.tree(merged, file = merged_tree_out_path)
 merged<- read.tree(merged_tree_out_path)
 ```
 
-### Get lineage and sublineage nodes
+Get lineage and sublineage nodes for plot
 
 ```{r}
 VNI_node <- getMRCA(merged, c("Tu241-1","UI_31647-2"))
@@ -525,8 +525,7 @@ m4 <- ggtree(merged, aes(color = group),
         values = sublineage_colors)+
     guides(color = guide_legend(override.aes = list(linewidth = 3)))+
     new_scale_color()+
-    geom_tiplab(aes(color = source), size = 0.5, offset = 0.01)+
-    scale_color_manual(name = "Source", values = source_colors)+
+    geom_tiplab( size = 0.5, offset = 0.01)+
     guides(color = guide_legend(override.aes = list(size = 3)))+
     new_scale_color()+
     geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
@@ -535,8 +534,8 @@ m4 <- ggtree(merged, aes(color = group),
     geom_tippoint(aes(color = country_of_origin, shape = mating_type), size = 0.1)+
     scale_color_manual(name = "Country", values = country_colors)+
     scale_shape_manual(name = "Mating type", values = c(15,17,16))+
-    guides(color = guide_legend(override.aes = list(size = 2),
-            shape = guide_legend(override.aes = list(linewidth = 3))))+
+    guides(color = guide_legend(override.aes = list(size = 2), ncol = 2),
+            shape = guide_legend(override.aes = list(linewidth = 3)))+
     theme(legend.position = "bottom",
             legend.direction = "vertical")
 m4
@@ -596,12 +595,22 @@ m2 <- gheatmap(m, dataset, width=.05, colnames=FALSE, offset=3) +
         scale_fill_manual(values = dataset_colors, 
             name="Dataset", na.translate = FALSE)+
         guides(fill = guide_legend(order = 3))+
+        new_scale_fill()
+
+m3 <- gheatmap(m2, ploidy, width=.05, colnames=FALSE, offset=5) +
+        scale_fill_brewer(name = "Ploidy", palette = "Dark2")+
+        guides(fill = guide_legend(order = 4))+
+        new_scale_fill()
+        
+m4 <- gheatmap(m3, quality, width=.05, colnames=FALSE, offset=7) +
+        scale_fill_brewer(name = "Filtered", palette = "Set1") +
+        guides(fill = guide_legend(order = 5))+
         new_scale_fill()+
     geom_cladelab(data = nodes_vnisublineages, 
             mapping = aes(node = mrca, label = sublineage),
             align = TRUE, face = "bold",
-            angle = "auto", offset = 6)
-m2
+            angle = "auto", offset = 9)
+m4
 ```
 Mating type
 ```{r mat, message=FALSE, warning=FALSE}
@@ -630,24 +639,10 @@ m3 <- gheatmap(m, source, width=.05, colnames=FALSE, offset=3) +
 m3
 ```
 
-Ploidy
-```{r ploidy, message=FALSE, warning=FALSE}
-m3 <- gheatmap(m, ploidy, width=.05, colnames=FALSE, offset=3) +
-        scale_fill_brewer(palette = "Set1", 
-             name="Ploidy", na.translate = FALSE)+
-        guides(fill = guide_legend(order = 3))+
-        new_scale_fill()+
-    geom_cladelab(data = nodes_vnisublineages, 
-            mapping = aes(node = mrca, label = sublineage),
-            align = TRUE, face = "bold",
-            angle = "auto", offset = 6)
-m3
-```
 ```{r, message=FALSE, warning=FALSE}
-ggsave(merged_tree_plot, m2, height = 10, width = 10, units = "in", dpi = 600)
+ggsave(merged_tree_plot, m4, height = 10, width = 10, units = "in", dpi = 600)
 ggsave(merged_tree_plot_pdf, m1, height = 10, width = 10, units = "in", dpi = 600)
 ```
-
 
 ## Plot minimal version of the tree
 
