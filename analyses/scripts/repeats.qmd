@@ -32,7 +32,7 @@ Paths
 metadata_path <-
     "data/processed/metadata_ashton_desj_all_weavepop_H99.csv"
 chromosomes_path <-
-    "../Crypto_Desjardins/results/04.Intermediate_files/03.References/chromosome_lengths.tsv"
+    "../Crypto_Desjardins/results/02.Dataset/chromosomes.csv"
 repeats_path_prefix <-
     "../Crypto_Desjardins/results/03.References/"
 ```
