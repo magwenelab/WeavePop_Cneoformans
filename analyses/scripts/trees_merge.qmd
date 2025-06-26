@@ -495,7 +495,7 @@ nodes_sublineages <- data.frame(
 
 ### Plot complete merged tree
 Base
-```{r base, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 7
 #| fig-width: 7
 #| fig-align: center
@@ -525,7 +525,7 @@ mc <- m + geom_cladelab(data = nodes_vnisublineages,
             angle = "auto", offset = 3)
 ```
 With country , MAT, and source
-```{r country, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 m1 <- gheatmap(m, country, width =.05, colnames=FALSE,offset=3)+
     scale_fill_manual(values=country_colors, 
                       name="Country", na.translate=FALSE,
@@ -556,7 +556,7 @@ ggsave(merged_tree_plot_pdf, m3, height = 10, width = 10, units = "in", dpi = 60
 ```
 
 Show samples removed by ploidy and quality
-```{r dataset, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 mp <- gheatmap(m, ploidy, width=.05, colnames=FALSE, offset=3) +
         scale_fill_brewer(name = "Ploidy", palette = "Dark2", na.value = "gray90")+
         guides(fill = guide_legend(order = 4))+
@@ -573,7 +573,7 @@ mq <- gheatmap(mp, quality, width=.05, colnames=FALSE, offset=5) +
 mq
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ggsave(merged_tree_removed_plot_png, mq, height = 10, width = 10, units = "in", dpi = 600)
 ```
 
