@@ -1,0 +1,197 @@
+---
+title: "Explore Depth Profile of all Samples"
+author: "Claudia Zirión-Martínez"
+date: "2025-06-27"
+
+fig-height: 7
+fig-width: 9
+
+format: 
+  html:
+    page-layout: full
+---
+
+
+## Setup {#setup}
+
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+
+Libraries
+
+```{r libraries, output=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggbeeswarm)
+library(ggnewscale)
+library(RColorBrewer)
+```
+
+Paths
+
+```{r paths}
+metadata_path <-
+    "../Crypto_Desjardins_Ashton/results_all/02.Dataset/metadata.csv"
+cnv_chroms_path <-
+    "../Crypto_Desjardins_Ashton/results_all/02.Dataset/cnv/cnv_chromosomes.tsv"
+ploidy_path <- "results/tables/ploidy_from_plots_new.tsv"
+```
+
+### Metadata
+
+```{r, message=FALSE, warning=FALSE}
+metadata <- read.delim(
+    metadata_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
+```
+
+### Depth and CNVs
+
+```{r, message=FALSE, warning=FALSE}
+cnv_chroms <- read.delim(
+    cnv_chroms_path,
+    header = TRUE,
+    sep = "\t")%>%
+    select(sample, chromosome,cnv, norm_chrom_median, coverage_percent)%>%
+    pivot_wider(
+        names_from = cnv,
+        values_from = coverage_percent)%>%
+    select(sample, chromosome,norm_chrom_median,
+        coverage_percent_duplication = duplication)
+
+```
+
+```{r}
+ggplot(cnv_chroms, aes(x = coverage_percent_duplication, y = norm_chrom_median)) +
+        geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
+        geom_point()+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
+        theme_minimal() +
+        theme(legend.position = "bottom", legend.direction = "vertical")+
+        labs(y = "Normalized Chromosome Median",
+            x = "Percent of Chromosome Covered by Duplications")
+```
+
+## Explore the metrics and plots of the samples with chromosomes above thresholds
+
+```{r}
+coverage_threshold <- 20
+depth_threshold <- 1.3
+```
+
+```{r}
+cnv_chroms_subset <- filter(cnv_chroms, 
+    coverage_percent_duplication >= coverage_threshold | 
+    norm_chrom_median >= depth_threshold)%>%
+    left_join(metadata, by = "sample")%>%
+    arrange(desc(sample))
+```
+
+```{r}
+image_paths_func <- function(df){
+    image_paths <- df %>%
+        mutate(depth_by_windows_path = 
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_by_windows.png", sep = ""),
+            distribution_path = 
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_boxplot.png", sep = ""))
+
+    return(image_paths)
+}
+
+print_plots <- function(df){
+    for (sample_id in unique(df$sample)){
+        dataset_id <- df %>% 
+            filter(sample == sample_id) %>% 
+            pull(dataset)%>%
+            unique()%>%
+            as.character()
+        depth_by_windows_path <- image_paths %>%
+            filter(sample == sample_id) %>% 
+            pull(depth_by_windows_path)%>%
+            unique()%>%
+            as.character()
+        distribution_path <- image_paths %>%
+            filter(sample == sample_id) %>% 
+            pull(distribution_path)%>%
+            unique()%>%
+            as.character()    
+        metrics <- df %>% 
+            filter(sample == sample_id)%>%
+            select(sample, chromosome, norm_chrom_median, coverage_percent_duplication)%>%
+            as.data.frame()
+
+
+        cat(paste0( "\n", "### ", sample_id), "\n")
+        print(knitr::kable(metrics, row.names = FALSE), row.names = FALSE)
+        # cat("<details>")
+        # cat(paste0( "\n", "<summary>", "Plots", "</summary>"), "\n")
+        cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
+        cat(paste0("![](", distribution_path, ")", sep =""), "\n")
+        # cat("</details>")
+    }
+}
+```
+
+<details>
+<summary> Plots </summary>
+```{r, results="asis"}
+image_paths = image_paths_func(cnv_chroms_subset)
+print_plots(cnv_chroms_subset)
+``` 
+</details>
+
+### Define ploidy
+
+```{r}
+diploid <- c(
+    "SRS885171",
+    "SRS881180",
+    "SRS881178",
+    "SRS417659",
+    "SRS417657",
+    "SRS409113",
+    "SRS404479",
+    "SRS404447",
+    "ERS542587",
+    "ERS542586",
+    "ERS542498",
+    "ERS542490",
+    "ERS542397",
+    "ERS2541388",
+    "ERS2541329",
+    "ERS2541312",
+    "ERS2541291",
+    "ERS2541154",
+    "ERS2541138",
+    "ERS2541044",
+    "ERS2541028",
+    "ERS2541018",
+    "ERS2540996",
+    "ERS2540971",
+    "ERS2540924",
+    "ERS1142865",
+    "ERS1142845",
+    "ERS1142807",
+    "ERS1142758",
+    "ERS1142710"
+
+)
+new_diploid <- c(
+    "ERS542306",
+    "ERS2541279",
+    "ERS2541183",
+    "ERS2541062",
+    "ERS2541039",
+    "ERS1142889",
+    "ERS1142866",
+    "ERS1142791"
+
+
+
+
+
+    )
+```
