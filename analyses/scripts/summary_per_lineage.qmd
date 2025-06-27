@@ -1,0 +1,321 @@
+---
+title: "Metrics of Desjardins-Ashton results"
+author: "Claudia Zirión-Martínez"
+date: "2025-02-14"
+---
+
+```{r, eval = FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+## Setup
+Libraries
+```{r, output=FALSE}
+library(tidyverse)
+library(patchwork)
+library(ggbeeswarm)
+library(ggrepel)
+```
+Paths
+```{r}
+metadata_path <-
+    "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
+desj_counts <- 
+    "data/processed/snp_counts_desjardins.csv"
+ashton_counts <- 
+    "data/processed/snp_counts_ashton.csv"
+mapping_stats_desj <- 
+    "../Crypto_Desjardins/results/02.Dataset_filtered/depth_quality/mapping_stats.tsv"
+mapping_stats_asht <- 
+    "../Crypto_Ashton/results/02.Dataset_filtered/depth_quality/mapping_stats.tsv"
+variants_path <- 
+    "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/snpeff/variants.tsv"
+cnv_path <- 
+    "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv"
+summary_out_path <- 
+    "results/tables/per_lineage_summary_stats.tsv"
+```
+
+## Metadata
+```{r, output=FALSE}
+metadata <- read_csv(metadata_path)
+metadata <- metadata %>%
+    select(sample, strain, lineage, vni_subdivision)%>%
+    filter(strain != "H99")
+```
+
+## Count SNPs of each sample
+<details><summary> **Plots and tables**</summary>
+
+Using bash, count the number of variants called by Freebayes and filtered by Snippy.  
+Snippy filters are:   
+**GT == 1/1**  
+**QUAL >= 100**   
+**DP >= 10**  
+**A0/DP >= 0**  
+```{bash, eval=FALSE}
+cd /FastData/czirion/WeavePop_Cneoformans/
+tail -n +2 Crypto_Desjardins/config/metadata.csv | cut -d',' -f2 | while read line
+do 
+    raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_desjardins.csv
+done 
+cd /FastData/czirion/WeavePop_Cneoformans/
+tail -n +2 Crypto_Ashton/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
+do 
+    raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_ashton.csv
+done 
+```
+
+### Variant counts
+```{r, message=FALSE, warning=FALSE}
+snp_counts_desj <- read_csv(desj_counts, col_names = c("sample", "n_raw", "n_surv"))
+snp_counts_asht <- read_csv(ashton_counts, col_names = c("sample", "n_raw", "n_surv"))
+
+snp_counts <- bind_rows(snp_counts_desj, snp_counts_asht)
+
+snp_counts <- snp_counts %>%
+        mutate(n_removed = n_raw - n_surv, percent_surv = (n_surv / n_raw)*100)%>%
+        right_join(metadata, by = "sample") 
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_raw, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = "Raw SNPs", y = "Number of SNPs", x = "Lineage")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_surv, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Number SNPs", x = "Lineage", title = "Surviving SNPs")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_removed, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(y = "Number SNPs", x = "Lineage", title = "Removed SNPs")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts, aes(y = n_removed, x = lineage)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma, limits = c(0,30000)) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 5, show.legend = FALSE) +
+    labs(y = "Number SNPs (Truncated)", x = "Lineage", title = "Removed SNPs (Truncated y axis)") +
+    theme(legend.position = "none")
+```
+
+### VNI sublineage
+
+```{r, message=FALSE, warning=FALSE}
+snp_counts_vni <- filter(snp_counts, lineage == "VNI")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_raw, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = "Raw", y = "Number of SNPs", x = "Sublineage")
+```
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_surv, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Number SNPs", x = "Sublineage", title = "Surviving")
+```
+
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 5
+#| fig-width: 7
+#| fig-align: center
+ggplot(snp_counts_vni, aes(y = n_removed, x = vni_subdivision)) +
+    geom_quasirandom() +
+    theme_minimal() +
+    scale_y_continuous(labels = scales::comma) +
+    geom_text_repel(aes(label = strain), size = 3, max.overlaps = 2, show.legend = FALSE) +
+    labs(y = "Number SNPs", x = "Sublineage", title = "Removed")
+```
+
+
+### Identify samples with high heterozigosity
+Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
+
+Here are the 20 samples with highest number of likely heterozygous variants.
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    arrange(desc(n_removed))%>%
+    head(20)
+```
+
+#### Strains with the least number of surviving SNPs
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    arrange(n_surv)%>%
+    head(20)
+```
+</details>
+
+### Number of SNPs in reference strains
+
+```{r, message=FALSE, warning=FALSE}
+ref_snps <- snp_counts %>%
+    filter(strain %in% c("Bt89", "Bt22"))%>%
+    select(-vni_subdivision)
+ref_snps
+```
+
+### Number of SNPs per lineage
+
+```{r, message=FALSE, warning=FALSE}
+snp_counts %>%
+    group_by(lineage, vni_subdivision)%>%
+    summarize(mean_raw = mean(n_raw),
+                mean_surv = mean(n_surv),
+                mean_removed = mean(n_removed),
+                mean_percent_surv = mean(percent_surv))
+```
+```{r, message=FALSE, warning=FALSE}
+snp_summary <- snp_counts %>%
+    group_by(lineage)%>%
+    summarize(mean_raw = mean(n_raw),
+                sd_raw = sd(n_raw),
+                mean_surv = mean(n_surv),
+                sd_surv = sd(n_surv),
+                mean_removed = mean(n_removed),
+                sd_removed = sd(n_removed),
+                mean_percent_surv = mean(percent_surv))
+snp_summary           
+```
+
+## Number of variants per lineage
+
+```{r, message=FALSE, warning=FALSE}
+variants <- read_delim(variants_path, delim = "\t", col_names = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+variants_summary <- variants %>%
+    group_by(lineage)%>%
+    summarize(n_variants = n_distinct(var_id))
+variants_summary
+```
+
+## MAPQ
+
+```{r, message=FALSE, warning=FALSE}
+mapq_desj <- read_delim(mapping_stats_desj, delim = "\t", col_names = TRUE)
+mapq_asht <- read_delim(mapping_stats_asht, delim = "\t", col_names = TRUE)
+mapq <- bind_rows(mapq_desj, mapq_asht) %>%
+    right_join(metadata, by = "sample")
+```
+
+```{r, message=FALSE, warning=FALSE}
+mapq_summary <- mapq %>%
+    select(-sample, -strain)%>%
+    group_by(lineage)%>%
+    summarize(across(everything(), list(mean = mean), na.rm = TRUE))%>%
+    ungroup()%>%
+    select(lineage, 
+        percent_mapped_mean,
+        percent_paired_mean,
+        percent_properly_paired_mean,
+        percent_low_mapq_mean,
+        percent_inter_mapq_mean,
+        percent_high_mapq_mean,
+        coverage_good_mean,
+        coverage_raw_mean
+        )
+mapq_summary
+```
+
+## CNVs summary
+
+```{r, message=FALSE, warning=FALSE}
+cnv <- read_delim(cnv_path, delim = "\t", col_names = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+cnv_sample <- cnv %>%
+    filter(cnv != "single_copy")%>%
+    group_by(lineage,sample, cnv)%>%
+    summarize(n_regions = sum(n_regions), 
+        total_size_regions = sum(total_size_regions), 
+        length = sum(length)) %>%
+    mutate(percent_coverage = (total_size_regions * 100)/length)%>%
+    ungroup()
+
+cnv_summary <- cnv_sample %>%
+    select(-sample, - length)%>%
+    group_by(lineage, cnv)%>%
+    summarize(across(everything(), list(mean = mean, sd = sd), na.rm = TRUE))%>%
+    ungroup() %>%
+    pivot_wider(
+        names_from = cnv,
+        values_from = c(n_regions_mean, n_regions_sd, total_size_regions_mean, total_size_regions_sd, percent_coverage_mean, percent_coverage_sd)
+    )
+
+length <- cnv_sample %>%
+    select(lineage, length) %>%
+    distinct()
+
+cnv_summary
+```
+
+
+## Summary 
+
+```{r, message=FALSE, warning=FALSE}
+summary <- reduce(
+    list(cnv_summary, mapq_summary, variants_summary, snp_summary, length, ref_snps),
+    left_join,
+    by = "lineage"
+)
+
+summary <- summary %>%
+    mutate(across(where(is.numeric), ~round(.x, 4))) %>%
+    select(lineage, 
+        percent_mapped_mean, 
+        percent_high_mapq_mean,
+        coverage_good_mean,
+        unique_variants = n_variants,
+        n_variants_mean = mean_surv,
+        n_snps_ref_strain = n_surv,
+        n_deletions_mean = n_regions_mean_deletion,
+        percent_coverage_deletions_mean = percent_coverage_mean_deletion,
+        n_duplications_mean = n_regions_mean_duplication,
+        percent_coverage_duplications_mean = percent_coverage_mean_duplication,
+        length)
+summary
+```
+
+Save summary table
+```{r, message=FALSE, warning=FALSE}
+write.table(summary, file = summary_out_path, sep = "\t",  quote = FALSE, row.names = FALSE)
+```
