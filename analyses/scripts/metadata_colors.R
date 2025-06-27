@@ -17,18 +17,30 @@ names(chrom_colors) <- c("chr01", "chr02", "chr03","chr04","chr05",
                          "chr11", "chr12","chr13", "chr14")
 
 # VNI sublineages
-sublineage_names <- c("VNIb", "VNIc",
+vnisublineage_names <- c("VNIb", "VNIc",
                     "VNIa-5", "VNIa-X",
                     "VNIa-32","VNIa-Y", 
                      "VNIa-93","VNIa-4")    
-sublineage_colors <- c(brewer.pal(12, "Set3")[1:length(sublineage_names)])
-names(sublineage_colors) <- sublineage_names     
-sublineage_shading <- c("gray90", "gray70", 
+sublineage_colors <- c(brewer.pal(12, "Set3")[1:length(vnisublineage_names)])
+names(sublineage_colors) <- vnisublineage_names     
+vnisublineage_shading <- c("gray90", "gray70", 
+                        "gray90", "gray70", 
+                        "gray90", "gray70", 
+                        "gray90", "gray70") 
+names(vnisublineage_shading) <- vnisublineage_names  
+#  sublineages
+sublineage_names <- c("VNII", "VNBII", "VNBI", 
+                     "VNIb", "VNIc",
+                    "VNIa-5", "VNIa-X",
+                    "VNIa-32","VNIa-Y", 
+                     "VNIa-93","VNIa-4"
+                     )    
+sublineage_shading <- c("gray70", "gray90", "gray70",
+                        "gray90", "gray70", 
                         "gray90", "gray70", 
                         "gray90", "gray70", 
                         "gray90", "gray70") 
 names(sublineage_shading) <- sublineage_names  
-
 # Lineages
 lineage_names <- c("VNBI", "VNBII", "VNI", "VNII")
 lineage_colors <- brewer.pal(8, "Dark2")[1:length(lineage_names)]
@@ -65,7 +77,7 @@ continent <- list(
     "Africa2" = c("Tanzania", "Togo", "Uganda"),
     "Asia1" = c("China", "India", "Japan"), 
     "Asia2" = c("Laos", "Thailand", "Vietnam"),
-    "Oceania" = c("Australia"),
+    "Australasia" = c("Australia"),
     "Europe" = c("France", "Italy")
 )
 
@@ -77,6 +89,16 @@ country_colors <- unlist(Map(function(region, color, dark_color) {
 }, continent, set2, set2_dark))
 
 names(country_colors) <- unlist(continent, use.names = FALSE)
+
+
+# Create a named vector for continent colors
+
+continents <- c("North America", "South America",
+                "Europe", "Africa", 
+                "Asia", "Australasia")
+continent_colors <- brewer.pal(6, "Set2")
+names(continent_colors) <- continents
+
 
 ## Display colors
 display_colors <- function(color_vector, title) {
@@ -99,3 +121,14 @@ display_colors <- function(color_vector, title) {
 # par(mfrow = c(1, 1), mar = c(5, 4, 2, 1))
 
 # display.brewer.all(colorblindFriendly = TRUE)
+
+# Get all palette names
+# palettes <- brewer.pal.info
+
+# # Function to print palette colors with hex codes
+# for (pal in rownames(palettes)) {
+#   n <- palettes[pal, "maxcolors"]
+#   colors <- brewer.pal(n, pal)
+#   cat(sprintf("\nPalette: %s\n", pal))
+#   print(setNames(colors, colors))
+# }
