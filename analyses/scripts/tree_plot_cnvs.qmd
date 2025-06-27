@@ -51,7 +51,7 @@ tree_merged_duplications_small2 <-
 tree_merged_duplications_small3 <-  
     "results/trees_dups/tree_duplications_small3.png"
 tree_merged_duplications_small4 <-  
-    "results/trees_dups/tree_duplications_small4.png"
+    "results/trees_dups/tree_duplications_small4.svg"
 tree_merged_duplications_small5 <-  
     "results/trees_dups/tree_duplications_small5.png"
 tree_merged_duplications_small6 <-  
