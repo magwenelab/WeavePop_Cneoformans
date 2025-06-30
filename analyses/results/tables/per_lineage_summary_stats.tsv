@@ -1,0 +1,5 @@
+lineage	percent_mapped_mean	percent_high_mapq_mean	coverage_good_mean	unique_variants	n_variants_mean	n_snps_ref_strain	n_deletions_mean	percent_coverage_deletions_mean	n_duplications_mean	percent_coverage_duplications_mean	length
+VNBI	92.5239	93.8654	97.1196	460491	63311.2083	96	56.9833	3.6707	15.0333	0.9233	18974047
+VNBII	91.2795	93.3974	97.3018	358677	62141.8226	92	61.0806	3.9763	7.4516	0.582	19045500
+VNI	83.989	96.2327	97.7132	337492	44149.5695	NA	51.0399	3.2041	8.5937	0.6232	18891193
+VNII	91.1569	94.1438	96.3981	89809	54322.6875	NA	73.8125	4.1913	2.25	0.9881	18957373

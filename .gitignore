@@ -4,16 +4,10 @@
 *test*
 *backup*
 *workflow*
+*quary_database*
 Crypto_*/data/
 Crypto_*/results*
 Crypto_*/logs/*/
 
 *.quarto*
-analyses_old
-analyses/notebooks/scripts/ploidy_depth/logs
-analyses/notebooks/scripts/ploidy_depth
-analyses/notebooks/scripts/cnvs_explore_NC_hybrids.html
-analyses/scripts/cnvs_explore_NC_hybrids.qmd
-analyses/notebooks/extras
-analyses/results/tables/
 analyses/.gitignore
