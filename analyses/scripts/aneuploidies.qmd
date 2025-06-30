@@ -42,9 +42,6 @@ cnv_chroms_path <-
 # Output
 chrom_metrics_path <- "results/tables/chromosome_cnv_categories.tsv"
 
-duplications_path <- "results/tables/duplications.tsv"
-duplications_partial_path <- "results/tables/duplications_partial.tsv"
-
 barplot_aneup_category_dups_path1 <- "results/figs/barplot_aneup_category_dups1.png"
 barplot_aneup_category_dups_path2 <- "results/figs/barplot_aneup_category_dups2.png"
 barplot_size_category_dups_path <- "results/figs/barplot_size_category_dups.png"
