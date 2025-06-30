@@ -17,6 +17,7 @@ library(ggrepel)
 ```
 Paths
 ```{r}
+# Input
 metadata_path <-
     "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
 desj_counts <- 
@@ -31,6 +32,8 @@ variants_path <-
     "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/snpeff/variants.tsv"
 cnv_path <- 
     "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv"
+
+# Output
 summary_out_path <- 
     "results/tables/per_lineage_summary_stats.tsv"
 ```
