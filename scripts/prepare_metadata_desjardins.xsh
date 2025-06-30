@@ -9,6 +9,8 @@ import numpy as np
 
 #Inputs
 METADATATABLE = "Crypto_Desjardins/config/Desjardins_Supplemental_Table_S1.csv"
+# The name and 1st line were modified from the original table 
+# downloaded from https://genome.cshlp.org/content/suppl/2017/06/05/gr.218727.116.DC1/Supplemental_Table_S1.xlsx
 READSTABLE = "Crypto_Desjardins/config/reads_table.csv"
 #Outputs
 OUTSAMPLESTABLE = "Crypto_Desjardins/config/metadata.csv"
