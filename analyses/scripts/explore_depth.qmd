@@ -35,7 +35,7 @@ metadata_path <-
     "../Crypto_Desjardins_Ashton/results_all/02.Dataset/metadata.csv"
 cnv_chroms_path <-
     "../Crypto_Desjardins_Ashton/results_all/02.Dataset/cnv/cnv_chromosomes.tsv"
-ploidy_path <- "results/tables/ploidy_from_plots_new.tsv"
+ploidy_out_path <- "results/tables/ploidy.tsv"
 ```
 
 ### Metadata
@@ -78,6 +78,7 @@ ggplot(cnv_chroms, aes(x = coverage_percent_duplication, y = norm_chrom_median))
 ## Explore the metrics and plots of the samples with chromosomes above thresholds
 
 ```{r}
+#| code-fold: false
 coverage_threshold <- 20
 depth_threshold <- 1.3
 ```
@@ -94,10 +95,7 @@ cnv_chroms_subset <- filter(cnv_chroms,
 image_paths_func <- function(df){
     image_paths <- df %>%
         mutate(depth_by_windows_path = 
-                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_by_windows.png", sep = ""),
-            distribution_path = 
-                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_boxplot.png", sep = ""))
-
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_by_windows.png", sep = ""))
     return(image_paths)
 }
 
@@ -112,12 +110,7 @@ print_plots <- function(df){
             filter(sample == sample_id) %>% 
             pull(depth_by_windows_path)%>%
             unique()%>%
-            as.character()
-        distribution_path <- image_paths %>%
-            filter(sample == sample_id) %>% 
-            pull(distribution_path)%>%
-            unique()%>%
-            as.character()    
+            as.character() 
         metrics <- df %>% 
             filter(sample == sample_id)%>%
             select(sample, chromosome, norm_chrom_median, coverage_percent_duplication)%>%
@@ -126,11 +119,7 @@ print_plots <- function(df){
 
         cat(paste0( "\n", "### ", sample_id), "\n")
         print(knitr::kable(metrics, row.names = FALSE), row.names = FALSE)
-        # cat("<details>")
-        # cat(paste0( "\n", "<summary>", "Plots", "</summary>"), "\n")
         cat(paste0("![](", depth_by_windows_path, ")", sep =""), "\n")
-        cat(paste0("![](", distribution_path, ")", sep =""), "\n")
-        # cat("</details>")
     }
 }
 ```
@@ -177,21 +166,35 @@ diploid <- c(
     "ERS1142807",
     "ERS1142758",
     "ERS1142710"
-
 )
-new_diploid <- c(
-    "ERS542306",
-    "ERS2541279",
-    "ERS2541183",
-    "ERS2541062",
-    "ERS2541039",
-    "ERS1142889",
-    "ERS1142866",
-    "ERS1142791"
-
-
-
-
-
-    )
 ```
+
+```{r}
+ploidy_df <- data.frame(sample = diploid, ploidy = "diploid")
+```
+
+```{r}
+cnv_chroms_ploidy <- left_join(cnv_chroms, ploidy_df, by = "sample")
+cnv_chroms_ploidy$ploidy[is.na(cnv_chroms_ploidy$ploidy)] <- "haploid"
+```
+
+```{r}
+ggplot(cnv_chroms_ploidy, aes(x = coverage_percent_duplication, y = norm_chrom_median, color = ploidy)) +
+        geom_hline(yintercept = c(1, 2), color = "black", linetype = "solid") +
+        geom_hline(yintercept = depth_threshold, color = "red", linetype = "dashed")+
+        geom_vline(xintercept = coverage_threshold, color = "red", linetype = "dashed")+
+        geom_point()+
+        scale_color_manual(name = "Ploidy", values = c("blue", "black"))+
+        scale_x_continuous(breaks = seq(0,100, by = 10))+
+        theme_minimal() +
+        theme(legend.position = "bottom", legend.direction = "vertical")+
+        labs(y = "Normalized Chromosome Median",
+            x = "Percent of Chromosome Covered by Duplications")
+```
+
+### Write table of detected ploidy
+
+```{r, message=FALSE, warning=FALSE}
+write.table(ploidy_df, file = ploidy_out_path, sep = "\t",  quote = FALSE, row.names = FALSE)
+```
+
