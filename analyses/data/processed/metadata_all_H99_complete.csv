@@ -111,7 +111,7 @@ ERS1142803,20949_2#23,ERR1756556,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK
 ERS1142804,20949_2#24,ERR1756557,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK186,Cryptococcus neoformans var. grubii H99,positive,2007.0,44.12634522,0.990322633,,,,,,,,ERR1756557,,,
 ERS1142805,20949_2#25,ERR1756558,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK187,Cryptococcus neoformans var. grubii H99,positive,2007.0,30.11530712,0.988977033,,,,,,,,ERR1756558,,,
 ERS1142806,20427_3#20,ERR1671690,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK188,Cryptococcus neoformans var. grubii H99,positive,2007.0,52.62764449,0.957184648,,,,,,,,ERR1671690,,,
-ERS1142807,20427_3#21,ERR1671691,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK190,Cryptococcus neoformans var. grubii H99,positive,2007.0,52.4563949,0.960325727,,,,,,,,ERR1671691,tetraploid,,tetraploid
+ERS1142807,20427_3#21,ERR1671691,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK190,Cryptococcus neoformans var. grubii H99,positive,2007.0,52.4563949,0.960325727,,,,,,,,ERR1671691,diploid,,diploid
 ERS1142808,20427_3#22,ERR1671692,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK193,Cryptococcus neoformans var. grubii H99,positive,2007.0,49.269796,0.957181582,,,,,,,,ERR1671692,,,
 ERS1142811,20427_3#23,ERR1671693,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK196,Cryptococcus neoformans var. grubii H99,positive,2007.0,54.12035565,0.96013536,,,,,,,,ERR1671693,,,
 ERS1142812,20427_3#24,ERR1671694,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK197,Cryptococcus neoformans var. grubii H99,positive,2007.0,62.65661427,0.960158673,,,,,,,,ERR1671694,,,
@@ -303,7 +303,7 @@ ERS2541024,04CN-65-167,ERR2624230,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa
 ERS2541025,04CN-33-045,ERR2624140,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-33-045,Cryptococcus neoformans var. grubii H99,positive,2013.0,47.72252943,0.9846204,,,,,,,,ERR2624140,,,
 ERS2541026,04CN-32-105,ERR2624132,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-32-105,Cryptococcus neoformans var. grubii H99,positive,2014.0,29.91011986,0.983568746,,,,,,,,ERR2624132,,,
 ERS2541027,04CN-32-089,ERR2624165,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-32-089,Cryptococcus neoformans var. grubii H99,positive,2014.0,50.05658605,0.986136026,,,,,,,,ERR2624165,,,
-ERS2541028,04CN-64-150,ERR2624465,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-64-150,Cryptococcus neoformans var. grubii H99,positive,2014.0,48.5317156,0.98919073,,,,,,,,ERR2624465,tetraploid,,tetraploid
+ERS2541028,04CN-64-150,ERR2624465,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-64-150,Cryptococcus neoformans var. grubii H99,positive,2014.0,48.5317156,0.98919073,,,,,,,,ERR2624465,diploid,,diploid
 ERS2541029,04CN-65-038,ERR2624358,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-65-038,Cryptococcus neoformans var. grubii H99,positive,2013.0,88.39955253,0.991354384,,,,,,,,ERR2624358,,,
 ERS2541030,04CN-64-116,ERR2624300,VNI,VNIa,VNIa-Y,Ashton,Clinical,Uganda,Africa,04CN-64-116,Cryptococcus neoformans var. grubii H99,positive,2014.0,36.24020024,0.983777785,,,,,,,,ERR2624300,,,
 ERS2541031,04CN-64-059,ERR2624148,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-64-059,Cryptococcus neoformans var. grubii H99,positive,2013.0,68.80680045,0.990681319,,,,,,,,ERR2624148,,,
@@ -395,7 +395,7 @@ ERS2541130,04CN-03-088,ERR2624180,VNII,,,Ashton,Clinical,Vietnam,Asia,04CN-03-08
 ERS2541134,BMD2773,ERR2624450,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BMD2773,Cryptococcus neoformans var. grubii H99,negative,2011.0,55.3957695,0.987546154,,,,,,,,ERR2624450,,,
 ERS2541135,04CN-11-014,ERR2624392,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,04CN-11-014,Cryptococcus neoformans var. grubii H99,positive,2014.0,36.55891505,0.985126403,,,,,,,,ERR2624392,,,
 ERS2541136,04CN-03-038,ERR2624120,VNI,VNIa,VNIa-93,Ashton,Clinical,Vietnam,Asia,04CN-03-038,Cryptococcus neoformans var. grubii H99,positive,2013.0,54.25955825,0.988905994,,,,,,,,ERR2624120,,,
-ERS2541138,04CN-03-053,ERR2624176,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-053,Cryptococcus neoformans var. grubii H99,positive,2013.0,31.98211129,0.987316153,,,,,,,,ERR2624176,tetraploid,,tetraploid
+ERS2541138,04CN-03-053,ERR2624176,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-053,Cryptococcus neoformans var. grubii H99,positive,2013.0,31.98211129,0.987316153,,,,,,,,ERR2624176,diploid,,diploid
 ERS2541140,04CN-11-013,ERR2624149,VNI,VNIa,VNIa-93,Ashton,Clinical,Vietnam,Asia,04CN-11-013,Cryptococcus neoformans var. grubii H99,positive,2014.0,44.2607406,0.987225211,,,,,,,,ERR2624149,,,
 ERS2541141,04CN-11-012,ERR2624206,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,04CN-11-012,Cryptococcus neoformans var. grubii H99,positive,2013.0,44.34455871,0.984082583,,,,,,,,ERR2624206,,,
 ERS2541142,04CN-03-089,ERR2624234,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-089,Cryptococcus neoformans var. grubii H99,positive,2014.0,39.10725003,0.989095342,,,,,,,,ERR2624234,,,
@@ -407,7 +407,7 @@ ERS2541149,BMD745,ERR2624301,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BMD745
 ERS2541150,04CN-03-058,ERR2624388,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-058,Cryptococcus neoformans var. grubii H99,positive,2013.0,70.88094796,0.992168996,,,,,,,,ERR2624388,,,
 ERS2541152,BMD1879,ERR2624158,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BMD1879,Cryptococcus neoformans var. grubii H99,positive,2009.0,42.35806479,0.985483077,,,,,,,,ERR2624158,,,
 ERS2541153,BMD394,ERR2624402,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BMD394,Cryptococcus neoformans var. grubii H99,negative,2000.0,61.34555293,0.986669397,,,,,,,,ERR2624402,,,
-ERS2541154,04CN-03-021,ERR2624502,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-021,Cryptococcus neoformans var. grubii H99,positive,2013.0,34.64787512,0.989959554,,,,,,,,ERR2624502,tetraploid,,tetraploid
+ERS2541154,04CN-03-021,ERR2624502,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,04CN-03-021,Cryptococcus neoformans var. grubii H99,positive,2013.0,34.64787512,0.989959554,,,,,,,,ERR2624502,diploid,,diploid
 ERS2541156,BMD915,ERR2624113,VNI,VNIa,VNIa-32,Ashton,Clinical,Vietnam,Asia,BMD915,Cryptococcus neoformans var. grubii H99,negative,,47.19983629,0.990832871,,,,,,,,ERR2624113,,,
 ERS2541157,04CN-03-015,ERR2624355,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,04CN-03-015,Cryptococcus neoformans var. grubii H99,positive,2013.0,80.9273805,0.987420276,,,,,,,,ERR2624355,,,
 ERS2541159,BMD2620,ERR2624314,VNI,VNIa,VNIa-93,Ashton,Clinical,Vietnam,Asia,BMD2620,Cryptococcus neoformans var. grubii H99,positive,2011.0,71.75075237,0.991059432,,,,,,,,ERR2624314,,,
@@ -519,7 +519,7 @@ ERS2541308,04CN-64-081,ERR2624191,VNI,VNIa,VNIa-Y,Ashton,Clinical,Uganda,Africa,
 ERS2541309,04CN-65-070,ERR2624212,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-65-070,Cryptococcus neoformans var. grubii H99,positive,2013.0,53.12020035,0.988337528,,,,,,,,ERR2624212,,,
 ERS2541310,04CN-65-080,ERR2624147,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-65-080,Cryptococcus neoformans var. grubii H99,negative,,42.67799176,0.987464179,,,,,,,,ERR2624147,,,
 ERS2541311,04CN-65-086,ERR2624205,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-65-086,Cryptococcus neoformans var. grubii H99,positive,2014.0,58.10252789,0.986435585,,,,,,,,ERR2624205,,,
-ERS2541312,04CN-32-011,ERR2624178,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-32-011,Cryptococcus neoformans var. grubii H99,positive,2013.0,37.21698111,0.983743007,,,,,,,,ERR2624178,tetraploid,,tetraploid
+ERS2541312,04CN-32-011,ERR2624178,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-32-011,Cryptococcus neoformans var. grubii H99,positive,2013.0,37.21698111,0.983743007,,,,,,,,ERR2624178,diploid,,diploid
 ERS2541313,04CN-64-076,ERR2624262,VNI,VNIa,VNIa-93,Ashton,Clinical,Uganda,Africa,04CN-64-076,Cryptococcus neoformans var. grubii H99,positive,2013.0,55.70925955,0.989840239,,,,,,,,ERR2624262,,,
 ERS2541314,04CN-32-025,ERR2624359,VNI,VNIa,VNIa-4,Ashton,Clinical,Thailand,Asia,04CN-32-025,Cryptococcus neoformans var. grubii H99,positive,2013.0,37.49292488,0.9826408,,,,,,,,ERR2624359,,,
 ERS2541315,BMD3002,ERR2624278,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BMD3002,Cryptococcus neoformans var. grubii H99,positive,2012.0,48.53368488,0.986517156,,,,,,,,ERR2624278,,,
@@ -641,7 +641,7 @@ ERS542391,14892_1#95,ERR842557,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK50
 ERS542392,14936_1#1,ERR842634,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK62,Cryptococcus neoformans var. grubii H99,positive,2005.0,33.62901934,0.958799779,,,,,,,,ERR842634,,,
 ERS542394,14936_1#3,ERR842635,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK87,Cryptococcus neoformans var. grubii H99,positive,2005.0,32.68795824,0.956052227,,,,,,,,ERR842635,,,
 ERS542396,14936_1#5,ERR842637,VNI,VNIa,VNIa-32,Ashton,Clinical,Vietnam,Asia,BK101,Cryptococcus neoformans var. grubii H99,positive,2005.0,36.10530566,0.959686959,,,,,,,,ERR842637,,,
-ERS542397,14936_1#6,ERR842638,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK102,Cryptococcus neoformans var. grubii H99,positive,2005.0,36.9944635,0.958829436,,,,,,,,ERR842638,triploid,,triploid
+ERS542397,14936_1#6,ERR842638,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK102,Cryptococcus neoformans var. grubii H99,positive,2005.0,36.9944635,0.958829436,,,,,,,,ERR842638,diploid,,diploid
 ERS542398,14936_1#7,ERR842639,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK105,Cryptococcus neoformans var. grubii H99,positive,2006.0,40.58919429,0.958806545,,,,,,,,ERR842639,,,
 ERS542400,14936_1#9,ERR842640,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK107,Cryptococcus neoformans var. grubii H99,positive,2006.0,32.07785669,0.957970169,,,,,,,,ERR842640,,,
 ERS542403,15277_3#1,ERR852919,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK111,Cryptococcus neoformans var. grubii H99,positive,2006.0,37.54199955,0.957236138,,,,,,,,ERR852919,,MAPQ-Low,MAPQ-Low
@@ -675,7 +675,7 @@ ERS542490,14893_1#4,ERR842560,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK211
 ERS542494,14893_1#8,ERR842563,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK215,Cryptococcus neoformans var. grubii H99,positive,2008.0,32.68501367,0.952462166,,,,,,,,ERR842563,,,
 ERS542496,14893_1#10,ERR842565,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK217,Cryptococcus neoformans var. grubii H99,positive,2008.0,35.47454208,0.958640602,,,,,,,,ERR842565,,,
 ERS542497,14893_1#11,ERR842566,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK218,Cryptococcus neoformans var. grubii H99,positive,2008.0,38.3977238,0.956321997,,,,,,,,ERR842566,,,
-ERS542498,14893_1#12,ERR842567,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK219,Cryptococcus neoformans var. grubii H99,positive,2008.0,45.84575221,0.956747296,,,,,,,,ERR842567,tetraploid,,tetraploid
+ERS542498,14893_1#12,ERR842567,VNI,VNIa,VNIa-4,Ashton,Clinical,Vietnam,Asia,BK219,Cryptococcus neoformans var. grubii H99,positive,2008.0,45.84575221,0.956747296,,,,,,,,ERR842567,diploid,,diploid
 ERS542500,14893_1#14,ERR842569,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK221,Cryptococcus neoformans var. grubii H99,positive,2008.0,54.76859389,0.959489402,,,,,,,,ERR842569,,,
 ERS542501,14893_1#15,ERR842570,VNI,VNIa,VNIa-5,Ashton,Clinical,Vietnam,Asia,BK222,Cryptococcus neoformans var. grubii H99,positive,2008.0,48.85755019,0.959511289,,,,,,,,ERR842570,,,
 ERS542502,14893_1#16,ERR842571,VNI,VNIa,VNIa-93,Ashton,Clinical,Vietnam,Asia,BK227,Cryptococcus neoformans var. grubii H99,positive,2008.0,30.49418016,0.957730479,,,,,,,,ERR842571,,MAPQ-Low,MAPQ-Low
@@ -978,7 +978,7 @@ SRS881176,PMHc1035.ENR.STOR,,VNBII,,,Desjardins,Clinical,Botswana,Africa,,,,,,,�
 SRS881177,Ftc200-1,,VNBI,,,Desjardins,Environmental,Botswana,Africa,,,,,,,α,Ftc200-1,Mopane tree,G84226,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925925, SRR1925997, SRR1943114",,,
 SRS881178,NRHc5005.ENR,,VNBI,,,Desjardins,Clinical,Botswana,Africa,,,,,,,α,NRHc5005.ENR,Clinical,G84316,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925990, SRR1926071, SRR1944719",diploid,,diploid
 SRS881179,PMHc1030.ENR.CLIN.ISO,,VNBI,,,Desjardins,Clinical,Botswana,Africa,,,,,,,α,PMHc1030.ENR.CLIN.ISO,Clinical,G84295,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925922, SRR1944738, SRR1944769",,,
-SRS881180,PMHc1029.ENR.STOR,,VNBII,,,Desjardins,Clinical,Botswana,Africa,,,,,,,α,PMHc1029.ENR.STOR,Clinical,G84294,Chen et. al 2015 Mol. Ecol.,Yes,No,"SRR1926072, SRR1943065, SRR1944730",triploid,,triploid
+SRS881180,PMHc1029.ENR.STOR,,VNBII,,,Desjardins,Clinical,Botswana,Africa,,,,,,,α,PMHc1029.ENR.STOR,Clinical,G84294,Chen et. al 2015 Mol. Ecol.,Yes,No,"SRR1926072, SRR1943065, SRR1944730",diploid,,diploid
 SRS881181,Muc458-2,,VNBI,,,Desjardins,Environmental,Botswana,Africa,,,,,,,α,Muc458-2,Mopane tree,G84260,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925924, SRR1926053, SRR1943057",,,
 SRS881183,Muc451-1,,VNBI,,,Desjardins,Environmental,Botswana,Africa,,,,,,,α,Muc451-1,Mopane tree,G84258,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925926, SRR1926016, SRR1944806",,,
 SRS881184,Ftc202-1,,VNBI,,,Desjardins,Environmental,Botswana,Africa,,,,,,,α,Ftc202-1,Mopane tree,G84227,Chen et. al 2015 Mol. Ecol.,Yes,Yes,"SRR1925933, SRR1926009, SRR1942977",,,
