@@ -21,7 +21,7 @@ library(patchwork)
 source("scripts/metadata_colors.R")
 ```
 
-Paths:  
+### Paths
 
 Metadata
 ```{r}
