@@ -76,30 +76,15 @@ They are rendered with the command: `quarto render analyses/scripts/<name>.qmd`.
 All the input files used in the analyses come from the input or results of WeavePop in `Crypto_Desjardins`, `Crypto_Ashton` or `Crypto_Desjardins_Ashton` or from the following external data.  
 
 External data:  
-* `data/raw/media-1.csv`: From the original Billmyre paper in [bioRxiv](https://www.biorxiv.org/content/biorxiv/early/2024/08/06/2024.07.28.605507/DC1/embed/media-1.csv?download=true).
 * `data/raw/CryptoDiversity_Desjardins_Tree.tre`: From [CryptoDiversity_Tree_Info](https://github.com/magwenelab/CryptoDiversity_Tree_Info/blob/main/CryptoDiversity_Desjardins_Tree.tre)
 * `data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree`: Sent by Philip Ashton (Dec 5 2024).
 
 
 | Analysis | Script <br /> `scripts/` | Files <br /> `data/processed/` or specified | Description |
 |-----------------|-----------------|-----------------| -----------------|
-| Metadata | `metadata.ipynb` | `metadata_ashton_desj_vni_weavepop.csv`<br />  `metadata_ashton_desj_all_weavepop_H99.csv`<br />   `metadata_ashton_desj_all_weavepop_complete_info.csv`  | Create new metadata tables to add the VNI subdivision information from the Ashton study to the Desjardins samples. |
+| Explore Depth Profile of all Samples | `explore_depth.qmd` | `results/tables/ploidy.tsv` | Explore the depth plots to identify putative non-haploid samples to exclude from the analyses. |
+| Metadata | `metadata.ipynb` | `metadata_all_H99_complete.csv`<br />  `metadata_ashton_desj_all_weavepop_final_H99.csv`<br />   `metadata_ashton_desj_vni_weavepop_final_H99.csv`  | Create new metadata tables to add the VNI subdivision information from the Ashton study to the Desjardins samples and remove the samples excluded by ploidy or quality. |
 | Tree building | `merge_trees.qmd` | `tree_ashton.newick`<br />  `tree_desjardins.newick`<br />  `tree_merged.newick`<br /> Plots in `results/trees/` | Merge the trees of the Ashton and Desjardins datasets. |
-| Discover aneuploidies | `aneuploidies.qmd` | `Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv` | Categorize chromosomes by coverage of CNVs |
-| Plot duplications in tree |`duplications_plot_tree.qmd`| `results/trees_dups/tree_merged_duplications.png`<br /> `results/trees_dups/tree_merged_duplications_12_13.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated2.png`<br /> `results/trees_dups/tree_merged_duplications_only_duplicated3.png`| Plot the merged tree with a heatmap of duplicated chromosomes.|
-|Count SNPs  | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv`| Compare number of raw and filtered SNPs. |
-
-## Published database versions
-
-History of workflow, configuration, and app commits when the database was created and published.
-
-| Date | Workflow(DiversityPipeline repo) | Config files (this repo) | Shiny App (ServerDatabase repo) | Notes |
-| :--- | :-------------------------------- | :----------------------- |:------------------------------- |-----: |
-|Aug 20th 2024| 2656cb0 | 57d8395 | b8ba5c2 |The pipeline failed because of RepeatMasker (weird random error) and I had to restart the run without changing anything. |
-|Oct 7th 2024 | 1076166 | 07c772a | dc20b7b | This was one complete run of the analysis workflow of the Desjardins dataset, another of the Ashton dataset, and a run of the join_datasets workflow with the results of both. It is only used in the test_user. |
-|Oct 16th 2024| 61e5e73 | 07c772a | 0d2035a | This was a run that updated the results of the runs of Oct 7th with the changes in the pipeline. It is being used in FungalPop |
-
-
-| Date | Workflow and Shiny App</br>(WeavePop repo) | Config and Log files</br>(this repo) |  Notes |
-| :--- | :-------------------------------- | :----------------------- |-----: |
-|Apr 14th 2025|c886503|084645c|Runs from scratch using data cleaned with FastP|
+| Discover aneuploidies | `aneuploidies.qmd` | `results/tables/chromosome_cnv_categories.tsv`<br /> Plots in `results/figs/`| Categorize chromosomes by coverage of CNVs |
+| Plot duplications in tree |`tree_plot_cnvs.qmd`| Plots in `results/trees_dups/`| Plot the merged tree with a heatmap of duplicated chromosomes.|
+|Metrics of quality and variants of final dataset | `snp_counts.qmd` | `snp_counts_desjardins.csv`<br /> `snp_counts_ashton.csv` <br /> `results/tables/per_lineage_summary_stats.tsv`| Create summary table of  mapping stats, number of variants, and CNVs. |
