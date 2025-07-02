@@ -41,6 +41,7 @@ sublineage_shading <- c("gray70", "gray90", "gray70",
                         "gray90", "gray70", 
                         "gray90", "gray70") 
 names(sublineage_shading) <- sublineage_names  
+
 # Lineages
 lineage_names <- c("VNBI", "VNBII", "VNI", "VNII")
 lineage_colors <- brewer.pal(8, "Dark2")[1:length(lineage_names)]
@@ -91,36 +92,67 @@ country_colors <- unlist(Map(function(region, color, dark_color) {
 names(country_colors) <- unlist(continent, use.names = FALSE)
 
 
-# Create a named vector for continent colors
+# Contienents
 
 continents <- c("North America", "South America",
                 "Europe", "Africa", 
                 "Asia", "Australasia")
-continent_colors <- brewer.pal(6, "Set2")
+continent_colors <- brewer.pal(6, "Dark2")
 names(continent_colors) <- continents
 
+# Category of duplications by size
+# category_size_colors <-c("#8E0152","#2171B5", "#DEEBF7","#F7FBFF" )
+# names(category_size_colors) <- c("Absent","Small", "Medium", "Large")
+
+# # Category of duplications by aneuploidy
+# category_aneuploidy_colors <-c("#8E0152","#2171B5", "#DEEBF7" )
+# names(category_aneuploidy_colors) <- c("Full", "Partial", "Euploid")
 
 ## Display colors
 display_colors <- function(color_vector, title) {
     barplot(rep(1, length(color_vector)), col = color_vector, border = NA, 
-                    names.arg = names(color_vector), las = 2, main = title)
+            names.arg = names(color_vector), las = 1, main = title, yaxt = "n")
 }
 
+
+# display_colors(mat_colors, "Mating Type Colors")
+
 # # Set up the plotting area
-# par(mfrow = c(3, 2), mar = c(5, 4, 2, 1))
+# par(mfrow = c(3, 1), mar = c(3, 3, 3, 3))
 # # Display colors for each metadata field
 # display_colors(dataset_colors, "Dataset Colors")
 # display_colors(lineage_colors, "Lineage Colors")
 # display_colors(sublineage_colors, "Sublineage Colors")
-# display_colors(source_colors, "Source Colors")
-# display_colors(mat_colors, "Mating Type Colors")
+# display_colors(source_colors, "Source")
+# display_colors(category_aneuploidy_colors, "Aneuploidy")
+# display_colors(continent_colors, "Continent")
 # display_colors(country_colors, "Country Colors")
 # display_colors(chrom_colors, "Country Colors")
 
-# #Reset plotting area
-# par(mfrow = c(1, 1), mar = c(5, 4, 2, 1))
+#Reset plotting area
+# par(mfrow = c(8, 2), mar = c(1, 1, 1, 1))
 
+# Display colorblind-friendly palettes from RColorBrewer
 # display.brewer.all(colorblindFriendly = TRUE)
+
+# Plot colorblind-friendly palettes for 6 categorical values
+# Plot colorblind-friendly palettes for 6 categorical values from palettes not available in RColorBrewer
+
+# Use palettes from the colorspace package that are colorblind-friendly and not in RColorBrewer
+
+# List of colorblind-friendly palettes from colorspace (not in RColorBrewer)
+# cs_palettes <- c("Okabe-Ito", "HCL_purple", "HCL_cyan", "HCL_orange", "HCL_red", "HCL_green", "HCL_blue")
+
+# par(mfrow = c(length(cs_palettes), 1), mar = c(2, 6, 2, 2))
+# for (pal in cs_palettes) {
+#     if (pal == "Okabe-Ito") {
+#         colors <- qualitative_hcl(6, palette = "Okabe-Ito")
+#     } else {
+#         colors <- qualitative_hcl(6, palette = pal)
+#     }
+#     barplot(rep(1, 6), col = colors, border = NA, names.arg = colors, las = 1, 
+#                     main = paste("colorspace Palette:", pal), yaxt = "n")
+# }
 
 # Get all palette names
 # palettes <- brewer.pal.info

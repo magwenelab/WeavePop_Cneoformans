@@ -312,7 +312,12 @@ ggsave(tree_merged_duplications_path2, m3, height = 8, width = 6.5, units = "in"
 #| fig-height: 7
 #| fig-width: 6.5
 #| fig-align: center
-m3 <- gheatmap(m2, dup_category_aneuploidy, colnames = FALSE, offset=4.7) +
+m3 <- gheatmap(m2, dup_category_aneuploidy,
+         colnames = TRUE,
+         font.size = 2,
+         colnames_angle = 270,
+         colnames_position = "top",
+         offset=4.7) +
     scale_fill_manual(name = "Category",values = category_aneuploidy_colors,
          na.value = "white", limits = levels(chrom_metrics$chrom_category_aneuploidy))+
     guides(fill = guide_legend(order = 3))+
