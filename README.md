@@ -104,4 +104,4 @@ External data:
 | Tree building | `merge_trees.qmd` | `data/processed/tree_ashton.newick`<br />  `data/processed/tree_desjardins.newick`<br />  `data/processed/tree_merged.newick`<br /> Plots in `results/trees/` | Merge the trees of the Ashton and Desjardins datasets. |
 | Discover aneuploidies | `aneuploidies.qmd` | `results/tables/chromosome_cnv_categories.tsv`<br /> Plots in `results/figs/`| Categorize chromosomes by coverage of CNVs |
 | Plot duplications in tree |`tree_plot_cnvs.qmd`| Plots in `results/trees_dups/`| Plot the merged tree with a heatmap of duplicated chromosomes.|
-|Metrics of quality and variants of final dataset | `snp_counts.qmd` | `data/processed/snp_counts_desjardins.csv`<br /> `data/processed/snp_counts_ashton.csv` <br /> `results/tables/per_lineage_summary_stats.tsv`| Create summary table of  mapping stats, number of variants, and CNVs. |
+|Metrics of quality and variants of final dataset | `summary_per_lineage.qmd` | `data/processed/snp_counts_desjardins.csv`<br /> `data/processed/snp_counts_ashton.csv` <br /> `results/tables/per_lineage_summary_stats.tsv`| Create summary table of  mapping stats, number of variants, and CNVs. |
