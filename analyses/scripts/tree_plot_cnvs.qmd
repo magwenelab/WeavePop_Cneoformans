@@ -33,7 +33,7 @@ tree_merged_duplications_path1 <-
 tree_merged_duplications_path2 <- 
     "results/trees_dups/tree_duplications_full2.png"
 tree_merged_duplications_path3 <- 
-    "results/trees_dups/tree_duplications_full3.png"
+    "results/trees_dups/tree_duplications_full3.svg"
 tree_merged_duplications_path4 <- 
     "results/trees_dups/tree_duplications_full4.png"
 tree_merged_duplications_path5 <- 
