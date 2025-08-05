@@ -28,7 +28,7 @@ fastq_suffix2: "_cleaned_2.fq.gz" # Suffix after the sample id of the reverse re
 references_directory: "data/references" # Path of directory with reference genomes. Relative to project_directory or absolute.
 
 repeats_database: "config/RepBase.fasta" # Path to the RepBase FASTA file. Relative to project_directory or absolute. 
-use_fake_database: False # True to use a fake database in absence of a real one.
+use_fake_database: False # True to use a fake database in the absence of a real one.
 
 # ------------------Annotation of reference genomes----------------------------
 
@@ -41,17 +41,16 @@ annotate_references:
     extra: "" # Extra parameters for Liftoff.
 
 # ------------------Depth and quality analyses and filter----------------------
-
 depth_quality: 
   flag_quality: 
     low_MAPQ_limit: 20 # Max MAPQ to be considered low quality.
     high_MAPQ_limit: 60 # Min MAPQ to be considered high quality.
-    min_mapq: 20 # Minimum mapping quality to be considered a good read alignement.
-    filter: False # True to exclude samples that do not meet the quality thresholds below.
-    min_percent_coverage: 50 # If percent of genome covered is below this value, the sample is excluded.
-    min_percent_MAPQ: 88 # If percent of high quality reads is below this value, the sample is excluded.
-    min_percent_genome-wide_depth: 2 # If genome-wide depth is below this value, the sample is excluded.
-    min_percent_properly_paired_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
+    min_mapq: 20 # Minimum mapping quality to be considered a good read alignment.
+    filter: False # True to exclude samples flagged by the thresholds below.
+    min_percent_coverage: 90 # If the percent of genome covered by good quality read alignments is below this value, the sample is flagged.
+    min_percent_MAPQ: 80 # If the percent of high-quality reads is below this value, the sample is flagged.
+    min_genome-wide_depth: 10 # If genome-wide depth is below this value, the sample is flagged.
+    min_percent_mapped_reads: 25 # If the percent of mapped reads is below this value, the sample is flagged.
   mosdepth: 
     threads: 12  # Number of threads for mosdepth.
     window: 500 # Window size for mosdepth.
@@ -61,7 +60,10 @@ depth_quality:
 
 annotation:
   activate: # True to activate the module. Empty or False to skip.
-  
+  liftoff:
+    threads: 12
+    extra: ""
+    
 # ------------------Depth and quality of genetic features----------------------
 
 depth_quality_features:
@@ -96,17 +98,10 @@ plotting:
 database:
   activate: True # True to activate the module. Empty or False to skip.
 
-# ------------------Parameters for individual tools----------------------------
+# ------------------Snippy parameters------------------------------------------
 
 snippy:
   threads: 12
-  extra: ""
-
-liftoff:
-  threads: 12
-  extra: ""
-
-agat:
   extra: ""
 
 # =============================================================================
@@ -116,5 +111,5 @@ agat:
 # It assumes that if the same lineage is present in the different datasets, 
 # the same reference genome was used.
 
-datasets_paths: "" # Commas separated list of paths to the directories with the results of the analysis workflow.
-datasets_names: "" # Commas separated list of names for the datasets, in the same order as the paths.
+datasets_paths: "" # Comma-separated list of paths to the directories with the results of the analysis workflow.
+datasets_names: "" # Comma-separated list of names for the datasets, in the same order as the paths.

@@ -6,14 +6,13 @@
 configfile: Crypto_Desjardins/config/config.yaml
 
 # Config you can change
-cores: 80
+cores: 60
 keep-going: False
 rerun-incomplete: True
 printshellcmds: True
 dry-run: False
-conda-frontend: mamba
 
 # Config you should not change unless you know what you are doing
 use-conda: True
-use-apptainer: True
-apptainer-args: "--bind $(pwd):$(pwd)"
+# use-apptainer: True
+# apptainer-args: "--bind $(pwd):$(pwd)"
