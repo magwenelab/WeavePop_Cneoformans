@@ -21,14 +21,5 @@ dependencies:
   - r-igraph
 
 
-# Using install.packages("package"):
-
-# httpgd
-# RRphylo
-# phytools
-# ape
-# languageserver
-# BiocManager
-# BiocManager::install("ggtree")
-# BiocManager::install("ggtreeExtra")
-# BiocManager::install("ComplexHeatmap")
+# install.packages(c("RRphylo","manipulate","phytools","ape","languageserver", "BiocManager", "ggrepel"))
+# BiocManager::install(c("ggtree","ggtreeExtra","ComplexHeatmap"))
