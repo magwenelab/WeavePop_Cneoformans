@@ -11,6 +11,11 @@ format:
     page-layout: full
 ---
 
+This notebook is to explore the samples with high percent of duplication coverage or median chromosomal depth
+and detect putative non-haploid samples.
+
+It uses the `results/02.Dataset/` directory of the combined dataset right after the very first run without applying any filtering or excluding any samples. 
+
 
 ## Setup {#setup}
 
@@ -32,10 +37,16 @@ Paths
 
 ```{r paths}
 metadata_path <-
-    "../Crypto_Desjardins_Ashton/results_all/02.Dataset/metadata.csv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/metadata.csv"
 cnv_chroms_path <-
-    "../Crypto_Desjardins_Ashton/results_all/02.Dataset/cnv/cnv_chromosomes.tsv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
+chromosomes_path <-
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/chromosomes.csv"
 ploidy_out_path <- "results/tables/ploidy.tsv"
+desjardins_non_haploids_path <- 
+    "../Crypto_Desjardins/config/non_haploids.txt"
+ashton_non_haploids_path <- 
+    "../Crypto_Ashton/config/non_haploids.txt"
 ```
 
 ### Metadata
@@ -46,6 +57,11 @@ metadata <- read.delim(
     header=TRUE,
     sep=",",
     stringsAsFactor = TRUE)
+chromosomes <- read.delim(
+    chromosomes_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE) 
 ```
 
 ### Depth and CNVs
@@ -55,6 +71,7 @@ cnv_chroms <- read.delim(
     cnv_chroms_path,
     header = TRUE,
     sep = "\t")%>%
+    left_join(chromosomes, by = "accession")%>%
     select(sample, chromosome,cnv, norm_chrom_median, coverage_percent)%>%
     pivot_wider(
         names_from = cnv,
@@ -95,7 +112,7 @@ cnv_chroms_subset <- filter(cnv_chroms,
 image_paths_func <- function(df){
     image_paths <- df %>%
         mutate(depth_by_windows_path = 
-                    paste("../../Crypto_", dataset, "/results/01.Samples/plots_0.6/", sample, "/depth_by_windows.png", sep = ""))
+                    paste("../../Crypto_", dataset, "/results/01.Samples/plots/", sample, "/depth_by_windows.png", sep = ""))
     return(image_paths)
 }
 
@@ -176,6 +193,7 @@ ploidy_df <- data.frame(sample = diploid, ploidy = "diploid")
 ```{r}
 cnv_chroms_ploidy <- left_join(cnv_chroms, ploidy_df, by = "sample")
 cnv_chroms_ploidy$ploidy[is.na(cnv_chroms_ploidy$ploidy)] <- "haploid"
+cnv_chroms_ploidy <- left_join(cnv_chroms_ploidy, metadata, by = "sample")
 ```
 
 ```{r}
@@ -192,9 +210,23 @@ ggplot(cnv_chroms_ploidy, aes(x = coverage_percent_duplication, y = norm_chrom_m
             x = "Percent of Chromosome Covered by Duplications")
 ```
 
-### Write table of detected ploidy
+### Write tables of detected ploidy
 
+```{r}
+desjardins_non_haploids <- cnv_chroms_ploidy %>%
+    filter(dataset == "Desjardins", ploidy == "diploid")%>%
+    select(sample)%>%
+    distinct()%>%
+    pull(sample)
+ashton_non_haploids <- cnv_chroms_ploidy %>%
+    filter(dataset == "Ashton", ploidy == "diploid")%>%
+    select(sample)%>%
+    distinct()%>%
+    pull(sample)
+```
 ```{r, message=FALSE, warning=FALSE}
 write.table(ploidy_df, file = ploidy_out_path, sep = "\t",  quote = FALSE, row.names = FALSE)
+write.table(desjardins_non_haploids, file = desjardins_non_haploids_path, sep = "\t",  quote = FALSE, row.names = FALSE, col.names = FALSE)
+write.table(ashton_non_haploids, file = ashton_non_haploids_path, sep = "\t",  quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
 
