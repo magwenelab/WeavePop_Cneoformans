@@ -7,7 +7,7 @@
 *quary_database*
 Crypto_*/data/
 Crypto_*/results*
-Crypto_*/logs/*/
+Crypto_*/logs*/*/
 
 *.quarto*
 analyses/.gitignore
