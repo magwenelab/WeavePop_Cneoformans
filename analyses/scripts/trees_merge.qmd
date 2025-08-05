@@ -116,18 +116,18 @@ quality <- metadata %>%
 
 ## Desjardins tree
 Import the raw Desjardins tree
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 desj_tree <- read.tree(desj_tree_path)
 ```
 
 Reroot the tree at the middle of the branch leading to VNII
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 VNII_root <- getMRCA(desj_tree, c("C2","C12"))
 edge_length <- subset(desj_tree$edge.length, desj_tree$edge[,2] == VNII_root)
 desj_tree <- reroot(desj_tree, VNII_root, edge_length/2)
 ```
 Write rooted Desjardins tree
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 write.tree(desj_tree, file = desj_tree_out_path)
 ```
 ```{r, echo=FALSE}
@@ -242,14 +242,14 @@ setdiff(ashton_tree_unrooted$tip.label, metadata$strain)
 ```
 
 Root Ashton tree at the middle of the branch leading to VNIa
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 VNIa_root <- getMRCA(ashton_tree_unrooted, c("AD3-95a","Tu259-1"))
 edge_length <- subset(ashton_tree_unrooted$edge.length, 
     ashton_tree_unrooted$edge[,2] == VNIa_root)
 ashton_tree <- reroot(ashton_tree_unrooted, VNIa_root, edge_length/2)
 ```
 Write rooted Ashton tree
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 write.tree(ashton_tree, file = ashton_tree_out_path)
 ```
 ```{r, echo=FALSE}
@@ -383,7 +383,7 @@ ggsave(ashton_tree_out_plot_pdf, m3, height = 6.5, width = 7, units = "in", dpi 
 ## Merge Desjardins and Ashton trees
 
 Specify clades in Desjardins tree
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 VNI <- c("Bt92", "Bt79")
 VNI_node <- getMRCA(desj_tree, VNI)
 VNII <- c("C2","C12")
@@ -394,7 +394,7 @@ VNB_node <- getMRCA(desj_tree, VNB)
 
 Get the ages of the nodes from the original Desjardins tree.
 This is to attempt to have a calibrated tree, but the resulting branchlengths are not accurate.
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 edge_lengths <- node.depth.edgelength(desj_tree)
 node_labels <- c(desj_tree$tip.label, desj_tree$node.label)
 edge_length_mapping <- data.frame(
@@ -416,20 +416,20 @@ names(tipages) <- tip_ages$node
 ```
 
 Remove VNI clade from Desjardins tree to use it as backtree
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 VNI_tips <- tips(desj_tree, VNI_node)
 backtree <- drop.tip(desj_tree, VNI_tips)
 ```
 
 Create the reference tables
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 reference <- data.frame(bind=c("CNS_289-20427_2#4"),
                    reference=c("Bt7-Bt34"),
                    poly=c(FALSE))
 ```
 
 Merge
-```{r, eval=FALSE}
+```{r, eval=TRUE, warning=FALSE, message=FALSE, output=FALSE}
 merged <- tree.merger(backbone = backtree,
                         data=reference,
                         source.tree = ashton_tree,
@@ -439,7 +439,7 @@ merged <- tree.merger(backbone = backtree,
 ```
 
 Write merged tree to file
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 write.tree(merged, file = merged_tree_out_path)
 ```
 
@@ -526,11 +526,14 @@ mc <- m + geom_cladelab(data = nodes_vnisublineages,
 ```
 With country , MAT, and source
 ```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
 m1 <- gheatmap(m, country, width =.05, colnames=FALSE,offset=3)+
     scale_fill_manual(values=country_colors, 
                       name="Country", na.translate=FALSE,
                       limits = levels(country$country_of_origin))+
-    guides(fill = guide_legend(order = 2))+
+    guides(fill = guide_legend(order = 2, ncol = 2))+
     new_scale_fill()
 
 m2 <- gheatmap(m1, source, width=.05, colnames=FALSE, offset=5) +
@@ -547,7 +550,8 @@ m3 <- gheatmap(m2, mating_type, width=.05, colnames=FALSE, offset=7) +
     geom_cladelab(data = nodes_vnisublineages, 
             mapping = aes(node = mrca, label = sublineage),
             align = TRUE, face = "bold",
-            angle = "auto", offset = 10)
+            angle = "auto", offset = 10)+
+    theme(legend.position = "bottom", legend.direction = "vertical")
 m3
 ```
 ```{r, message=FALSE, warning=FALSE}
@@ -625,7 +629,7 @@ nodes_sublineages <- data.frame(
             VNIb_node, VNIc_node))
 ```
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
