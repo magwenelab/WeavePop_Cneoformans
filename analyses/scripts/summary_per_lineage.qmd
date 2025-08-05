@@ -20,20 +20,23 @@ Paths
 # Input
 metadata_path <-
     "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
+chromosomes_path <-
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/chromosomes.csv"
+mapping_stats_desj <- 
+    "../Crypto_Desjardins/results/02.Dataset/depth_quality/mapping_stats.tsv"
+mapping_stats_asht <- 
+    "../Crypto_Ashton/results/02.Dataset/depth_quality/mapping_stats.tsv"
+variants_path <- 
+    "../Crypto_Desjardins_Ashton/results_exclude/02.Dataset/snpeff/variants.tsv"
+cnv_path <- 
+    "../Crypto_Desjardins_Ashton/results_exclude/02.Dataset/cnv/cnv_chromosomes.tsv"
+
+# Output
 desj_counts <- 
     "data/processed/snp_counts_desjardins.csv"
 ashton_counts <- 
     "data/processed/snp_counts_ashton.csv"
-mapping_stats_desj <- 
-    "../Crypto_Desjardins/results/02.Dataset_filtered/depth_quality/mapping_stats.tsv"
-mapping_stats_asht <- 
-    "../Crypto_Ashton/results/02.Dataset_filtered/depth_quality/mapping_stats.tsv"
-variants_path <- 
-    "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/snpeff/variants.tsv"
-cnv_path <- 
-    "../Crypto_Desjardins_Ashton/results_filtered/02.Dataset/cnv/cnv_chromosomes.tsv"
 
-# Output
 summary_out_path <- 
     "results/tables/per_lineage_summary_stats.tsv"
 ```
@@ -57,13 +60,14 @@ Snippy filters are:
 **A0/DP >= 0**  
 ```{bash, eval=FALSE}
 cd /FastData/czirion/WeavePop_Cneoformans/
-tail -n +2 Crypto_Desjardins/config/metadata.csv | cut -d',' -f2 | while read line
+
+tail -n +2 Crypto_Desjardins/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
     raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
     surv=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
     echo $line,$raw,$surv >> analyses/data/processed/snp_counts_desjardins.csv
 done 
-cd /FastData/czirion/WeavePop_Cneoformans/
+
 tail -n +2 Crypto_Ashton/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
     raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
@@ -262,15 +266,23 @@ mapq_summary
 
 ```{r, message=FALSE, warning=FALSE}
 cnv <- read_delim(cnv_path, delim = "\t", col_names = TRUE)
+
+chromosomes <- read.delim(
+    chromosomes_path,
+    header=TRUE,
+    sep=",",
+    stringsAsFactor = TRUE)
 ```
+
 
 ```{r, message=FALSE, warning=FALSE}
 cnv_sample <- cnv %>%
     filter(cnv != "single_copy")%>%
-    group_by(lineage,sample, cnv)%>%
+    left_join(chromosomes, by = "accession")%>%
+    group_by(lineage, sample, cnv)%>%
     summarize(n_regions = sum(n_regions), 
-        total_size_regions = sum(total_size_regions), 
-        length = sum(length)) %>%
+                total_size_regions = sum(total_size_regions), 
+                length = sum(length)) %>%
     mutate(percent_coverage = (total_size_regions * 100)/length)%>%
     ungroup()
 
