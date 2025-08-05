@@ -1,0 +1,955 @@
+
+    __        __                   ____             
+    \ \      / /__  __ ___   _____|  _ \ ___  _ __  
+     \ \ /\ / / _ \/ _` \ \ / / _ \ |_) / _ \| '_ \ 
+      \ V  V /  __/ (_| |\ V /  __/  __/ (_) | |_) |
+       \_/\_/ \___|\__,_| \_/ \___|_|   \___/| .__/ 
+                                             |_|    
+    
+Commmit hash of current version:
+2b4b633aedd33eb4e8be1202336e2125a13473ac
+
+Executed command:
+/home/czirion/miniforge3/envs/snakemake/bin/snakemake --profile Crypto_Desjardins/config/default/ --delete-temp-output
+
+
+.........................Execution Profile File: Crypto_Desjardins/config/default/config.yaml .........................
+
+# This is the profile configuration file for local execution.
+
+# To run the workflow with local execution use the following command:
+# snakemake --profile config/default
+
+configfile: Crypto_Desjardins/config/config.yaml
+
+# Config you can change
+cores: 60
+keep-going: False
+rerun-incomplete: True
+printshellcmds: True
+dry-run: False
+
+# Config you should not change unless you know what you are doing
+use-conda: True
+# use-apptainer: True
+# apptainer-args: "--bind $(pwd):$(pwd)"
+
+............................Configuration File: Crypto_Desjardins/config/config.yaml ............................
+
+# =============================================================================
+#   Choose which workflow to run
+# =============================================================================
+
+workflow: "analysis" # Options: "analysis", "join_datasets"
+
+# =============================================================================
+#   Output (for either workflow)
+# =============================================================================
+
+project_directory: "Crypto_Desjardins/" # Optional: Path of the project directory, relative to FungalPop/. If empty, the working directory is used.
+run_id: "" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
+
+# =============================================================================
+#   Parameters for the analysis workflow
+# =============================================================================
+
+# ------------------Input------------------------------------------------------
+
+metadata: "config/metadata.csv" # Path of metadata CSV table. Relative to project_directory or absolute.
+chromosomes: "config/chromosomes.csv" # Path of chromosomes CSV table. Relative to project_directory or absolute.
+samples_to_exclude: "config/non_haploids.txt" # Optional: Path of list of samples to exclude from analyses. Relative to project_directory or absolute.
+
+fastqs_directory: "data/samples_clean" # Path of directory with all FASTQ files. Relative to project_directory or absolute.
+fastq_suffix1: "_cleaned_1.fq.gz" # Suffix after the sample id of the forward reads file.
+fastq_suffix2: "_cleaned_2.fq.gz" # Suffix after the sample id of the reverse reads file.
+
+references_directory: "data/references" # Path of directory with reference genomes. Relative to project_directory or absolute.
+
+repeats_database: "config/RepBase.fasta" # Path to the RepBase FASTA file. Relative to project_directory or absolute. 
+use_fake_database: False # True to use a fake database in the absence of a real one.
+
+# ------------------Annotation of reference genomes----------------------------
+
+annotate_references:
+  activate: True # True to run the annotation of the reference genomes. Empty or False to skip.
+  fasta: "VNI.fasta" # Filename of the main reference genome FASTA file in references_directory.
+  gff: "VNI.gff" # Filename of the main reference genome GFF file in references_directory.
+  liftoff:
+    threads: 12 # Number of threads for Liftoff.
+    extra: "" # Extra parameters for Liftoff.
+
+# ------------------Depth and quality analyses and filter----------------------
+depth_quality: 
+  flag_quality: 
+    low_MAPQ_limit: 20 # Max MAPQ to be considered low quality.
+    high_MAPQ_limit: 60 # Min MAPQ to be considered high quality.
+    min_mapq: 20 # Minimum mapping quality to be considered a good read alignment.
+    filter: False # True to exclude samples flagged by the thresholds below.
+    min_percent_coverage: 90 # If the percent of genome covered by good quality read alignments is below this value, the sample is flagged.
+    min_percent_MAPQ: 80 # If the percent of high-quality reads is below this value, the sample is flagged.
+    min_genome-wide_depth: 10 # If genome-wide depth is below this value, the sample is flagged.
+    min_percent_mapped_reads: 25 # If the percent of mapped reads is below this value, the sample is flagged.
+  mosdepth: 
+    threads: 12  # Number of threads for mosdepth.
+    window: 500 # Window size for mosdepth.
+    extra: "" # Extra parameters for mosdepth.
+
+# ------------------Functional Annotation--------------------------------------
+
+annotation:
+  activate: # True to activate the module. Empty or False to skip.
+  liftoff:
+    threads: 12
+    extra: ""
+    
+# ------------------Depth and quality of genetic features----------------------
+
+depth_quality_features:
+  activate: # True to activate the module. Empty or False to skip.
+
+# ------------------Copy-number variant calling--------------------------------
+
+cnv:
+  activate: # True to activate the module. Empty or False to skip.
+  smoothing_size: 15 # Parameter for median filtering smoothing of the read depth.
+  depth_threshold: 0.6 # Min deviation from the global depth to be considered a CNV.
+  repeats:
+    repeats_threads: 20 # Number of threads for RepeatModeler and RepeatMasker.
+    use_container: False # True to use Apptainer containers for RepeatModeler and RepeatMasker.
+
+# ------------------Annotation of SNP effects----------------------------------
+
+snpeff:
+  activate: # True to activate the module. Empty or False to skip.
+  extra: "" # Extra parameters for SnpEff.
+
+# ------------------Plotting---------------------------------------------------
+
+plotting: 
+  activate: True # True to activate the module. Empty or False to skip.
+  loci: "config/loci.csv" # Path to table with loci to add to plots. Relative to project_directory or absolute.
+  metadata2color: "source" # Column name in the metadata table to color the samples in the plots.
+  scale : 1.3 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
+
+# ------------------Database---------------------------------------------------
+
+database:
+  activate: True # True to activate the module. Empty or False to skip.
+
+# ------------------Snippy parameters------------------------------------------
+
+snippy:
+  threads: 12
+  extra: ""
+
+# =============================================================================
+#   Parameters for the join_datasets workflow
+# =============================================================================
+# This workflow joins the results of running the analysis workflow in different datasets. 
+# It assumes that if the same lineage is present in the different datasets, 
+# the same reference genome was used.
+
+datasets_paths: "" # Comma-separated list of paths to the directories with the results of the analysis workflow.
+datasets_names: "" # Comma-separated list of names for the datasets, in the same order as the paths.
+
+.......................................Working directory.........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans
+
+........................................Output directory.........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans/Crypto_Desjardins/results
+
+.........................................Logs directory..........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans/Crypto_Desjardins/logs
+
+..............................................Input..............................................
+
+Validating metadata file Crypto_Desjardins/config/metadata.csv...
+    Number of samples in the metadata file: 387
+Excluding samples in the file Crypto_Desjardins/config/non_haploids.txt from the analysis...
+    Number of samples to analyze: 379
+
+Validating chromosome names file Crypto_Desjardins/config/chromosomes.csv...
+    All lineages are in the chromosome names file.
+Checking the chromosome names of lineage VNBI...
+    All chromosomes in provided file are present in Crypto_Desjardins/data/references/VNBI.fasta.
+    All chromosomes in Crypto_Desjardins/data/references/VNBI.fasta are present in the provided file.
+Checking the chromosome names of lineage VNI...
+    All chromosomes in provided file are present in Crypto_Desjardins/data/references/VNI.fasta.
+    All chromosomes in Crypto_Desjardins/data/references/VNI.fasta are present in the provided file.
+Checking the chromosome names of lineage VNBII...
+    All chromosomes in provided file are present in Crypto_Desjardins/data/references/VNBII.fasta.
+    All chromosomes in Crypto_Desjardins/data/references/VNBII.fasta are present in the provided file.
+Checking the chromosome names of lineage VNII...
+    All chromosomes in provided file are present in Crypto_Desjardins/data/references/VNII.fasta.
+    All chromosomes in Crypto_Desjardins/data/references/VNII.fasta are present in the provided file.
+
+Validating provided file of loci to plot...
+    Number of loci to plot: 58
+
+Database of repetitive sequences file Crypto_Desjardins/config/RepBase.fasta found.
+
+.........................................Starting Workflow.........................................
+
+Building DAG of jobs...
+Updating checkpoint dependencies.
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881194/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881194/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417585/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417585/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404784/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404784/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885172/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885172/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885853/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885853/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881229/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881229/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417614/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417614/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409075/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409075/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885842/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885842/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404481/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404481/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885916/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885916/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881238/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881238/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417655/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417655/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881140/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881140/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404803/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404803/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405114/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405114/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520180/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520180/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404460/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404460/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885875/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885875/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881215/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881215/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881143/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881143/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881197/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881197/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885874/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885874/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881244/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881244/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404456/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404456/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417605/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417605/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404518/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404518/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404511/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404511/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404782/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404782/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417581/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417581/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417658/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417658/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881207/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881207/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS523961/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS523961/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404516/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404516/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881152/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881152/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404792/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404792/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417587/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417587/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404462/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404462/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405129/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405129/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885170/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885170/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409479/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409479/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520173/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520173/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885854/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885854/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405144/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405144/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404444/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404444/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS403287/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS403287/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881165/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881165/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405136/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405136/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405145/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405145/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881245/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881245/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409059/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409059/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881239/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881239/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881226/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881226/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417577/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417577/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405113/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405113/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417612/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417612/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881184/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881184/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417656/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417656/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881210/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881210/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881242/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881242/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417609/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417609/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404775/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404775/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881169/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881169/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881225/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881225/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405102/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405102/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881174/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881174/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881227/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881227/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885882/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885882/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417647/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417647/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417619/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417619/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409060/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409060/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404461/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404461/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881217/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881217/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881185/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881185/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885880/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885880/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417639/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417639/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404467/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404467/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409063/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409063/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404475/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404475/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417597/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417597/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405111/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405111/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404773/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404773/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881202/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881202/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881232/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881232/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404485/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404485/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404743/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404743/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404443/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404443/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520184/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520184/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881228/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881228/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417586/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417586/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881222/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881222/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881246/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881246/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881200/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881200/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417678/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417678/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404505/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404505/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885833/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885833/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417669/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417669/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404810/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404810/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885173/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885173/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405147/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405147/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885865/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885865/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404469/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404469/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417650/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417650/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885892/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885892/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404797/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404797/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881168/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881168/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404480/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404480/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885174/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885174/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404495/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404495/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405128/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405128/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404492/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404492/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404772/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404772/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405133/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405133/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417652/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417652/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404463/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404463/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417588/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417588/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405119/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405119/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417644/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417644/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404493/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404493/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881233/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881233/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405124/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405124/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417618/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417618/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405137/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405137/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409067/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409067/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404805/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404805/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881150/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881150/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881183/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881183/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520179/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520179/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409061/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409061/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404746/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404746/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404488/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404488/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404813/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404813/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881216/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881216/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404741/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404741/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404739/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404739/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417636/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417636/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417573/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417573/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404780/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404780/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404449/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404449/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881196/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881196/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417603/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417603/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404781/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404781/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885857/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885857/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417601/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417601/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417578/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417578/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881237/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881237/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881172/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881172/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417667/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417667/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404503/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404503/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405141/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405141/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881148/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881148/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404477/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404477/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417642/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417642/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404756/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404756/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417611/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417611/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405142/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405142/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881199/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881199/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404466/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404466/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881179/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881179/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405130/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405130/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405127/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405127/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405110/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405110/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404735/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404735/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520174/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520174/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885167/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885167/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417615/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417615/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885188/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885188/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404809/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404809/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417599/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417599/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404795/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404795/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409176/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409176/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881201/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881201/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404761/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404761/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404442/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404442/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404491/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404491/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417595/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417595/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881219/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881219/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417635/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417635/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417600/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417600/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404750/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404750/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404807/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404807/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881149/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881149/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404514/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404514/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417637/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417637/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881173/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881173/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885177/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885177/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885879/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885879/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404494/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404494/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417661/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417661/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881161/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881161/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404452/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404452/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404794/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404794/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404778/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404778/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881213/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881213/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404458/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404458/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885852/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885852/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881205/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881205/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885855/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885855/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881220/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881220/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404788/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404788/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409065/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409065/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS429660/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS429660/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885843/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885843/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417624/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417624/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885877/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885877/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881164/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881164/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417593/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417593/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404513/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404513/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404791/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404791/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881234/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881234/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409478/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409478/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881203/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881203/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404454/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404454/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885894/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885894/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417591/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417591/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885878/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885878/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520181/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520181/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404457/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404457/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881162/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881162/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409074/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409074/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409483/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409483/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404812/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404812/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404496/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404496/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881221/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881221/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885863/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885863/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881189/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881189/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409058/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409058/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881157/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881157/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404777/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404777/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404800/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404800/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520182/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520182/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881241/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881241/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417622/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417622/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404499/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404499/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885858/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885858/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417596/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417596/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885841/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885841/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417668/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417668/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885186/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885186/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881151/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881151/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405121/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405121/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881177/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881177/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885871/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885871/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409064/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409064/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404468/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404468/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885851/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885851/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881171/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881171/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417654/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417654/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417641/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417641/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885176/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885176/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405132/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405132/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405101/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405101/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417590/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417590/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881198/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881198/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417571/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417571/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405107/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405107/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881181/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881181/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417579/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417579/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885168/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885168/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409781/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409781/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417572/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417572/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881212/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881212/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881191/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881191/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404759/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404759/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417575/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417575/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881188/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881188/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417583/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417583/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404501/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404501/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885816/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885816/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881214/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881214/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405148/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405148/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881142/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881142/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885850/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885850/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885192/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885192/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881159/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881159/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881218/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881218/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881235/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881235/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881224/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881224/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404753/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404753/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417582/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417582/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881243/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881243/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405126/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405126/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417676/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417676/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881240/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881240/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409177/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409177/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417651/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417651/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881236/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881236/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405116/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405116/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417675/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417675/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881166/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881166/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404451/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404451/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885847/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885847/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881247/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881247/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404507/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404507/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404448/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404448/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881208/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881208/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881160/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881160/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404740/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404740/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404760/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404760/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404484/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404484/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881155/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881155/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404490/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404490/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405135/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405135/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404783/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404783/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520177/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520177/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404489/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404489/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885893/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885893/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520185/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520185/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405098/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405098/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409112/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409112/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404789/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404789/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405122/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405122/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404793/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404793/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404486/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404486/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405149/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405149/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881158/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881158/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404470/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404470/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417662/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417662/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS502193/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS502193/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417576/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417576/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405120/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405120/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417594/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417594/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417604/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417604/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404498/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404498/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417643/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417643/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409482/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409482/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417616/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417616/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404755/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404755/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885169/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885169/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405123/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405123/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404766/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404766/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405134/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405134/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404808/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404808/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405146/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405146/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404765/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404765/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404779/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404779/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417625/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417625/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404786/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404786/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417620/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417620/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885887/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885887/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885915/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885915/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417665/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417665/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404473/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404473/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417680/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417680/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885191/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885191/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881170/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881170/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885884/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885884/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404472/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404472/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881176/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881176/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520178/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520178/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405118/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405118/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405099/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405099/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404506/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404506/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404785/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404785/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881156/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881156/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409062/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409062/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405151/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405151/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405139/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405139/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881204/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881204/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417606/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417606/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520130/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS520130/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881193/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881193/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881211/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881211/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417653/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417653/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881206/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881206/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404512/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404512/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404745/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404745/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405109/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS405109/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404508/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404508/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404517/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS404517/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881223/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881223/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409066/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409066/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881175/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881175/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885888/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885888/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881147/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS881147/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409076/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409076/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409175/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS409175/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885889/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS885889/snps_good.bam.bai
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417607/snps_good.bam
+Deleting Crypto_Desjardins/results/04.Intermediate_files/01.Samples/depth_quality/SRS417607/snps_good.bam.bai

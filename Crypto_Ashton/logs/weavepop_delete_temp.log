@@ -1,0 +1,1501 @@
+
+    __        __                   ____             
+    \ \      / /__  __ ___   _____|  _ \ ___  _ __  
+     \ \ /\ / / _ \/ _` \ \ / / _ \ |_) / _ \| '_ \ 
+      \ V  V /  __/ (_| |\ V /  __/  __/ (_) | |_) |
+       \_/\_/ \___|\__,_| \_/ \___|_|   \___/| .__/ 
+                                             |_|    
+    
+Commmit hash of current version:
+2b4b633aedd33eb4e8be1202336e2125a13473ac
+
+Executed command:
+/home/czirion/miniforge3/envs/snakemake/bin/snakemake --profile Crypto_Ashton/config/default/ --delete-temp-output
+
+
+.........................Execution Profile File: Crypto_Ashton/config/default/config.yaml .........................
+
+# This is the profile configuration file for local execution.
+
+# To run the workflow with local execution use the following command:
+# snakemake --profile config/default
+
+configfile: Crypto_Ashton/config/config.yaml
+
+# Config you can change
+cores: 80
+keep-going: False
+rerun-incomplete: True
+printshellcmds: True
+dry-run: False
+
+# Config you should not change unless you know what you are doing
+use-conda: True
+# use-apptainer: True
+# apptainer-args: "--bind $(pwd):$(pwd)"
+
+............................Configuration File: Crypto_Ashton/config/config.yaml ............................
+
+# =============================================================================
+#   Choose which workflow to run
+# =============================================================================
+
+workflow: "analysis" # Options: "analysis", "join_datasets"
+
+# =============================================================================
+#   Output (for either workflow)
+# =============================================================================
+
+project_directory: "Crypto_Ashton/" # Optional: Path of the project directory, relative to FungalPop/. If empty, the working directory is used.
+run_id: "" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
+
+# =============================================================================
+#   Parameters for the analysis workflow
+# =============================================================================
+
+# ------------------Input------------------------------------------------------
+
+metadata: "config/metadata.csv" # Path of metadata CSV table. Relative to project_directory or absolute.
+chromosomes: "config/chromosomes.csv" # Path of chromosomes CSV table. Relative to project_directory or absolute.
+samples_to_exclude: "config/non_haploids.txt" # Optional: Path of list of samples to exclude from analyses. Relative to project_directory or absolute.
+
+fastqs_directory: "data/samples_clean" # Path of directory with all FASTQ files. Relative to project_directory or absolute.
+fastq_suffix1: "_cleaned_1.fq.gz" # Suffix after the sample id of the forward reads file.
+fastq_suffix2: "_cleaned_2.fq.gz" # Suffix after the sample id of the reverse reads file.
+
+references_directory: "data/references" # Path of directory with reference genomes. Relative to project_directory or absolute.
+
+repeats_database: "config/RepBase.fasta" # Path to the RepBase FASTA file. Relative to project_directory or absolute. 
+use_fake_database: False # True to use a fake database in absence of a real one.
+
+# ------------------Annotation of reference genomes----------------------------
+
+annotate_references:
+  activate: True # True to run the annotation of the reference genomes. Empty or False to skip.
+  fasta: "VNI.fasta" # Filename of the main reference genome FASTA file in references_directory.
+  gff: "VNI.gff" # Filename of the main reference genome GFF file in references_directory.
+  liftoff:
+    threads: 12 # Number of threads for Liftoff.
+    extra: "" # Extra parameters for Liftoff.
+
+# ------------------Depth and quality analyses and filter----------------------
+
+depth_quality: 
+  flag_quality: 
+    low_MAPQ_limit: 20 # Max MAPQ to be considered low quality.
+    high_MAPQ_limit: 60 # Min MAPQ to be considered high quality.
+    min_mapq: 20 # Minimum mapping quality to be considered a good read alignement.
+    filter: True # True to exclude samples that do not meet the quality thresholds below.
+    min_percent_coverage: 90 # If percent of genome covered is below this value, the sample is excluded.
+    min_percent_MAPQ: 91 # If percent of high quality reads is below this value, the sample is excluded.
+    min_genome-wide_depth: 10 # If genome-wide depth is below this value, the sample is excluded.
+    min_percent_mapped_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
+  mosdepth: 
+    threads: 12  # Number of threads for mosdepth.
+    window: 500 # Window size for mosdepth.
+    extra: "" # Extra parameters for mosdepth.
+
+# ------------------Functional Annotation--------------------------------------
+
+annotation:
+  activate: # True to activate the module. Empty or False to skip.
+  liftoff:
+    threads: 12
+    extra: ""
+
+# ------------------Depth and quality of genetic features----------------------
+
+depth_quality_features:
+  activate: # True to activate the module. Empty or False to skip.
+
+# ------------------Copy-number variant calling--------------------------------
+
+cnv:
+  activate: # True to activate the module. Empty or False to skip.
+  smoothing_size: 15 # Parameter for median filtering smoothing of the read depth.
+  depth_threshold: 0.6 # Min deviation from the global depth to be considered a CNV.
+  repeats:
+    repeats_threads: 20 # Number of threads for RepeatModeler and RepeatMasker.
+    use_container: False # True to use Apptainer containers for RepeatModeler and RepeatMasker.
+
+# ------------------Annotation of SNP effects----------------------------------
+
+snpeff:
+  activate: # True to activate the module. Empty or False to skip.
+  extra: "" # Extra parameters for SnpEff.
+
+# ------------------Plotting---------------------------------------------------
+
+plotting: 
+  activate: True # True to activate the module. Empty or False to skip.
+  loci: "config/loci.csv" # Path to table with loci to add to plots. Relative to project_directory or absolute.
+  metadata2color: "source" # Column name in the metadata table to color the samples in the plots.
+  scale : 2 # Ggsave scale parameter to adjust the size of the dataset plots. Use lower values for fewer samples and bigger values for more samples.
+
+# ------------------Database---------------------------------------------------
+
+database:
+  activate: True # True to activate the module. Empty or False to skip.
+
+# ------------------Snippy parameters------------------------------------------
+
+snippy:
+  threads: 12
+  extra: ""
+
+
+
+# =============================================================================
+#   Parameters for the join_datasets workflow
+# =============================================================================
+# This workflow joins the results of running the analysis workflow in different datasets. 
+# It assumes that if the same lineage is present in the different datasets, 
+# the same reference genome was used.
+
+datasets_paths: "" # Commas separated list of paths to the directories with the results of the analysis workflow.
+datasets_names: "" # Commas separated list of names for the datasets, in the same order as the paths.
+
+.......................................Working directory.........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans
+
+........................................Output directory.........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans/Crypto_Ashton/results
+
+.........................................Logs directory..........................................
+
+/mnt/FastData/czirion/WeavePop_Cneoformans/Crypto_Ashton/logs
+
+..............................................Input..............................................
+
+Validating metadata file Crypto_Ashton/config/metadata.csv...
+    Number of samples in the metadata file: 677
+Excluding samples in the file Crypto_Ashton/config/non_haploids.txt from the analysis...
+    Number of samples to analyze: 655
+
+Validating chromosome names file Crypto_Ashton/config/chromosomes.csv...
+    All lineages are in the chromosome names file.
+Checking the chromosome names of lineage VNI...
+    All chromosomes in provided file are present in Crypto_Ashton/data/references/VNI.fasta.
+    All chromosomes in Crypto_Ashton/data/references/VNI.fasta are present in the provided file.
+
+Validating provided file of loci to plot...
+    Number of loci to plot: 58
+
+Database of repetitive sequences file Crypto_Ashton/config/RepBase.fasta found.
+
+.........................................Starting Workflow.........................................
+
+Building DAG of jobs...
+Updating checkpoint dependencies.
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542598/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542598/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142715/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142715/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142847/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142847/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542396/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542396/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142890/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142890/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142763/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142763/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542343/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542343/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542340/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542340/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541014/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541014/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541004/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541004/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142727/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142727/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541121/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541121/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542527/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542527/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541330/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541330/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542311/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542311/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142731/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142731/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542540/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542540/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541351/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541351/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541210/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541210/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541102/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541102/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142703/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142703/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540982/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540982/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142849/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142849/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541211/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541211/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541320/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541320/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541052/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541052/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541228/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541228/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542325/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542325/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142802/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142802/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142804/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142804/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540959/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540959/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541349/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541349/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541142/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541142/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541103/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541103/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540973/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540973/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541358/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541358/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142827/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142827/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541287/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541287/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142728/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142728/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541064/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541064/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541234/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541234/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540974/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540974/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142801/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142801/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142722/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142722/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541135/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541135/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541292/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541292/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541111/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541111/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142871/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142871/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541367/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541367/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541020/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541020/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142700/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142700/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540935/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540935/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142898/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142898/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541017/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541017/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542558/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542558/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142848/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142848/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542578/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542578/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541057/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541057/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542374/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542374/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142732/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142732/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541116/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541116/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541222/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541222/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542448/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542448/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541284/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541284/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142775/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142775/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142837/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142837/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541393/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541393/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541055/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541055/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142868/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142868/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542489/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542489/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541375/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541375/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542537/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542537/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542502/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542502/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542429/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542429/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541212/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541212/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541365/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541365/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541056/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541056/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541404/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541404/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541192/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541192/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142813/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142813/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142769/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142769/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541374/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541374/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541221/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541221/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542599/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542599/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542324/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542324/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541310/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541310/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142734/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142734/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142870/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142870/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142691/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142691/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540942/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540942/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142840/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142840/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541399/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541399/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142779/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142779/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541354/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541354/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541307/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541307/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142699/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142699/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540989/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540989/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540987/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540987/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142866/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142866/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541114/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541114/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541389/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541389/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541403/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541403/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541301/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541301/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541088/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541088/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541181/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541181/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541232/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541232/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541369/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541369/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540961/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540961/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541271/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541271/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142854/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142854/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142698/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142698/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142844/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142844/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541195/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541195/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540966/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540966/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541331/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541331/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142701/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142701/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142784/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142784/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541382/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541382/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142745/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142745/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142721/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142721/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541304/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541304/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541036/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541036/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541129/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541129/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542341/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542341/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541202/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541202/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540965/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540965/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142714/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142714/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541323/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541323/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542413/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542413/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541317/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541317/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541084/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541084/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541361/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541361/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541124/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541124/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541026/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541026/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541244/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541244/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541356/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541356/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541152/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541152/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142846/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142846/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541072/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541072/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142817/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142817/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142841/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142841/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540984/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540984/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142762/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142762/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142815/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142815/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541071/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541071/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142782/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142782/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542344/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542344/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541053/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541053/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540991/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540991/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541315/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541315/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541391/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541391/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541328/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541328/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142705/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142705/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142900/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142900/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541401/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541401/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541182/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541182/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541313/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541313/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542497/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542497/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541034/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541034/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541161/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541161/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540952/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540952/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542400/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542400/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541061/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541061/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541332/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541332/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142838/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142838/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541279/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541279/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142791/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142791/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540945/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540945/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541025/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541025/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142899/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142899/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541016/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541016/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541076/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541076/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542435/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542435/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142694/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142694/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142889/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142889/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142820/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142820/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541035/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541035/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541377/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541377/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142851/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142851/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142747/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142747/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540979/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540979/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541148/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541148/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541009/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541009/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142875/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142875/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142861/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142861/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142748/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142748/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542436/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542436/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541303/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541303/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142770/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142770/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142808/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142808/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540934/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540934/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541067/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541067/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542453/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542453/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541156/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541156/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542342/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542342/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142887/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142887/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541024/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541024/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541029/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541029/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540999/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540999/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541037/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541037/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541226/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541226/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541347/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541347/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541327/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541327/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542415/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542415/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541059/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541059/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541097/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541097/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541011/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541011/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540963/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540963/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541348/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541348/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541180/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541180/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541060/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541060/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541134/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541134/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541150/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541150/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540972/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540972/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541218/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541218/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541215/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541215/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142821/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142821/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540985/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540985/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540951/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540951/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541350/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541350/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540939/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540939/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541058/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541058/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541335/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541335/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540957/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540957/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142803/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142803/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541363/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541363/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142873/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142873/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142730/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142730/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541096/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541096/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541259/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541259/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540926/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540926/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142697/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142697/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142740/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142740/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540949/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540949/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142795/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142795/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142729/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142729/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142692/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142692/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541198/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541198/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541341/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541341/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541324/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541324/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540948/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540948/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541283/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541283/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541126/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541126/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541160/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541160/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142737/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142737/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541394/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541394/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540978/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540978/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542554/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542554/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541334/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541334/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541177/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541177/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541086/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541086/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541266/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541266/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541090/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541090/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542302/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542302/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142790/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142790/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541249/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541249/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540990/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540990/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542595/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542595/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142778/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142778/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542459/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542459/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541343/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541343/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541309/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541309/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541288/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541288/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142877/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142877/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541033/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541033/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542361/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542361/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142878/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142878/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540960/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540960/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541101/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541101/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541392/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541392/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541293/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541293/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142781/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142781/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542501/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542501/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142872/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142872/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541153/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541153/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541366/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541366/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541362/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541362/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542335/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542335/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541063/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541063/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142711/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142711/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142853/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142853/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542590/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542590/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541290/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541290/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541006/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541006/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541378/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541378/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142832/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142832/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142707/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142707/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142833/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142833/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142746/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142746/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142892/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142892/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541065/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541065/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541268/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541268/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540995/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540995/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541149/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541149/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541003/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541003/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541159/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541159/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541405/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541405/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142885/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142885/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541007/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541007/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541219/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541219/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540998/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540998/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541022/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541022/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142857/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142857/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540993/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540993/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541122/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541122/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541104/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541104/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142777/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142777/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142786/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142786/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142830/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142830/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142888/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142888/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541364/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541364/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541049/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541049/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541010/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541010/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142738/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142738/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142862/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142862/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542494/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542494/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142842/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142842/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142831/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142831/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541128/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541128/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542445/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542445/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541069/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541069/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541194/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541194/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540955/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540955/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541319/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541319/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542539/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542539/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142743/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142743/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542312/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542312/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142835/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142835/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542334/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542334/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541074/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541074/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142739/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142739/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541238/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541238/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541295/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541295/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142768/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142768/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142894/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142894/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542326/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542326/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541204/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541204/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540977/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540977/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142860/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142860/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542366/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542366/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142874/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142874/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541242/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541242/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540929/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540929/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541216/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541216/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541188/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541188/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540938/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540938/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541027/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541027/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142869/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142869/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142695/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142695/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541352/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541352/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142858/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142858/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142726/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142726/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142706/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142706/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541306/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541306/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142756/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142756/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542410/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542410/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142787/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142787/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541270/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541270/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142764/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142764/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541062/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541062/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142834/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142834/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541000/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541000/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541068/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541068/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541241/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541241/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541381/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541381/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541397/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541397/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142850/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142850/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541359/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541359/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542303/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542303/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541398/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541398/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542452/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542452/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142826/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142826/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541368/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541368/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541308/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541308/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542328/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542328/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541048/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541048/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541205/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541205/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542394/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542394/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542411/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542411/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540932/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540932/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540981/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540981/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540983/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540983/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541340/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541340/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541247/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541247/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541314/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541314/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541047/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541047/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541140/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541140/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541075/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541075/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542488/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542488/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540986/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540986/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541105/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541105/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542389/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542389/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142788/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142788/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541272/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541272/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142805/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142805/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142752/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142752/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142718/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142718/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142759/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142759/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142855/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142855/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541387/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541387/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542470/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542470/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142716/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142716/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541305/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541305/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541094/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541094/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540969/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540969/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542317/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542317/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540962/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540962/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541163/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541163/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541373/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541373/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541081/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541081/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142725/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142725/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142824/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142824/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541333/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541333/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142780/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142780/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142708/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142708/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142800/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142800/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541001/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541001/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542456/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542456/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541098/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541098/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540970/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540970/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541186/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541186/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540933/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540933/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541273/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541273/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542321/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542321/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541165/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541165/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142880/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142880/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541264/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541264/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142702/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142702/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541183/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541183/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541379/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541379/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541147/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541147/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541384/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541384/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142812/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142812/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142712/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142712/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142690/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142690/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142818/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142818/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541077/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541077/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540956/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540956/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541385/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541385/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541043/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541043/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142760/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142760/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542484/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542484/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142754/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142754/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142744/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142744/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142741/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142741/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541298/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541298/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542496/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542496/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541252/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541252/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541030/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541030/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540954/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540954/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542310/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542310/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542398/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542398/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541169/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541169/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541005/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541005/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542434/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542434/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142696/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142696/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142736/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142736/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542301/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542301/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541046/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541046/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142883/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142883/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541390/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541390/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541136/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541136/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541190/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541190/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142798/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142798/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540958/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540958/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541021/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541021/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142794/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142794/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540988/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540988/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540947/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540947/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542391/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542391/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142886/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142886/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541178/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541178/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541141/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541141/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542309/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542309/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142819/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142819/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142867/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142867/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541326/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541326/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540937/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540937/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541117/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541117/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540940/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540940/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541251/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541251/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142856/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142856/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540976/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540976/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542306/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542306/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542546/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542546/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541171/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541171/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541164/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541164/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541108/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541108/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142789/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142789/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541166/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541166/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542451/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542451/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142753/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142753/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541302/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541302/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542392/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542392/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541039/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541039/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541167/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541167/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541083/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541083/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541248/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541248/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541112/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541112/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142704/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142704/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541372/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541372/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542468/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542468/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142829/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142829/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541031/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541031/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142839/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142839/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541213/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541213/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542414/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542414/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142799/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142799/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541040/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541040/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542437/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542437/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541225/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541225/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542584/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542584/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540994/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540994/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541400/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541400/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541371/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541371/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541085/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541085/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541289/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541289/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541045/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541045/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541258/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541258/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541051/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541051/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142755/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142755/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541015/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541015/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142806/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142806/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142724/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142724/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542545/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542545/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540930/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540930/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541318/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541318/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541280/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541280/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142717/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142717/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142709/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142709/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142742/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142742/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142881/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142881/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541093/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541093/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540967/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540967/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540968/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540968/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142823/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142823/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541345/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541345/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541162/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541162/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142776/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142776/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142750/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142750/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142814/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142814/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541316/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541316/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541115/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541115/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540928/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540928/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142852/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142852/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142723/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142723/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542520/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542520/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540922/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540922/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142720/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142720/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540944/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540944/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541032/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541032/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541019/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541019/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541002/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541002/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142693/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142693/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541176/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541176/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142825/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142825/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541296/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541296/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142749/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142749/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541240/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541240/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541113/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541113/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541342/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541342/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540980/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540980/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542471/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542471/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142876/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142876/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541311/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541311/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540943/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540943/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541172/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541172/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142863/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142863/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542403/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542403/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541236/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541236/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541099/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541099/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541220/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541220/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541207/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541207/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142733/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142733/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541299/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541299/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142816/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142816/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541353/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541353/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142783/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142783/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542536/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542536/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541120/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541120/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541267/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541267/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542406/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542406/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142773/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142773/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541346/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541346/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540923/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540923/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542336/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542336/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541300/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541300/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142757/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142757/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142767/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142767/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541229/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541229/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541023/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541023/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540992/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540992/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541336/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541336/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541380/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541380/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541087/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541087/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142793/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142793/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142895/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142895/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142811/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142811/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541146/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541146/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540997/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540997/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142735/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142735/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142797/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142797/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541357/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541357/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142859/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142859/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142719/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142719/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142896/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142896/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541355/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541355/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540941/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540941/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541008/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541008/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541157/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541157/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541297/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541297/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541107/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541107/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541395/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541395/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540927/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540927/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142751/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142751/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142836/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142836/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541196/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541196/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142893/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142893/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541208/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541208/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541184/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541184/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142761/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142761/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142864/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142864/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542442/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542442/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540946/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540946/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540964/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2540964/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541360/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541360/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541396/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541396/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541012/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541012/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541275/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541275/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142882/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142882/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541402/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541402/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541054/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541054/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541344/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541344/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541294/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541294/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541250/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541250/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541386/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541386/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541073/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541073/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142713/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142713/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541013/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541013/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541370/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541370/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542500/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542500/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541286/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541286/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542440/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS542440/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541038/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541038/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142765/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142765/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541376/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541376/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541274/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541274/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541109/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541109/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142785/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142785/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541246/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541246/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142774/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142774/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142843/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS1142843/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541066/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541066/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541041/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541041/snps_good.bam.bai
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541230/snps_good.bam
+Deleting Crypto_Ashton/results/04.Intermediate_files/01.Samples/depth_quality/ERS2541230/snps_good.bam.bai
