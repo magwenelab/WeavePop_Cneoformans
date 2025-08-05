@@ -19,7 +19,7 @@ run_id: "" # Optional: Suffix to append to the 'results/' and 'logs/' directorie
 
 metadata: "config/metadata.csv" # Path of metadata CSV table. Relative to project_directory or absolute.
 chromosomes: "config/chromosomes.csv" # Path of chromosomes CSV table. Relative to project_directory or absolute.
-samples_to_exclude: "config/exclude.txt" # Optional: Path of list of samples to exclude from analyses. Relative to project_directory or absolute.
+samples_to_exclude: # Optional: Path of list of samples to exclude from analyses. Relative to project_directory or absolute.
 
 fastqs_directory: "data/samples_clean" # Path of directory with all FASTQ files. Relative to project_directory or absolute.
 fastq_suffix1: "_cleaned_1.fq.gz" # Suffix after the sample id of the forward reads file.
@@ -47,11 +47,11 @@ depth_quality:
     low_MAPQ_limit: 20 # Max MAPQ to be considered low quality.
     high_MAPQ_limit: 60 # Min MAPQ to be considered high quality.
     min_mapq: 20 # Minimum mapping quality to be considered a good read alignement.
-    filter: True # True to exclude samples that do not meet the quality thresholds below.
-    min_percent_coverage: 50 # If percent of genome covered is below this value, the sample is excluded.
+    filter: False # True to exclude samples that do not meet the quality thresholds below.
+    min_percent_coverage: 90 # If percent of genome covered is below this value, the sample is excluded.
     min_percent_MAPQ: 91 # If percent of high quality reads is below this value, the sample is excluded.
-    min_percent_genome-wide_depth: 2 # If genome-wide depth is below this value, the sample is excluded.
-    min_percent_properly_paired_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
+    min_genome-wide_depth: 10 # If genome-wide depth is below this value, the sample is excluded.
+    min_percent_mapped_reads: 25 # If percent of properly paired reads is below this value, the sample is excluded.
   mosdepth: 
     threads: 12  # Number of threads for mosdepth.
     window: 500 # Window size for mosdepth.
@@ -61,7 +61,10 @@ depth_quality:
 
 annotation:
   activate: # True to activate the module. Empty or False to skip.
-  
+  liftoff:
+    threads: 12
+    extra: ""
+
 # ------------------Depth and quality of genetic features----------------------
 
 depth_quality_features:
@@ -96,18 +99,13 @@ plotting:
 database:
   activate: True # True to activate the module. Empty or False to skip.
 
-# ------------------Parameters for individual tools----------------------------
+# ------------------Snippy parameters------------------------------------------
 
 snippy:
   threads: 12
   extra: ""
 
-liftoff:
-  threads: 12
-  extra: ""
 
-agat:
-  extra: ""
 
 # =============================================================================
 #   Parameters for the join_datasets workflow
