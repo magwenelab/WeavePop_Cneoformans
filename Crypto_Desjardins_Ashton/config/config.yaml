@@ -9,7 +9,7 @@ workflow: "join_datasets" # Options: "analysis", "join_datasets"
 # =============================================================================
 
 project_directory: "Crypto_Desjardins_Ashton/" # Optional: Path of the project directory, relative to FungalPop/. If empty, the working directory is used.
-run_id: "exclude" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
+run_id: "" # Optional: Suffix to append to the 'results/' and 'logs/' directories. 
 
 # =============================================================================
 #   Parameters for the join_datasets workflow
