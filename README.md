@@ -60,14 +60,7 @@ snakemake --profile Crypto_Desjardins_Ashton/config/default
 
 ## Analyses
 
-```
-analyses/
-├── data # Raw data and data processed by the scripts here
-├── misc # `quarto.yaml` environment definition
-├── notebooks # Rendered versions of Quarto documents
-├── results # Results of the analyses
-├── scripts # Scripts, Jupyter notebooks, and Quarto documents
-```
+
 
 The working directory of all the Quarto documents is `analyses/`.  
 They are rendered with the command: `quarto render analyses/scripts/<name>.qmd`.  
@@ -78,7 +71,17 @@ All the input files used in the analyses come from the input or results of Weave
 External data:  
 * `data/raw/CryptoDiversity_Desjardins_Tree.tre`: From [CryptoDiversity_Tree_Info](https://github.com/magwenelab/CryptoDiversity_Tree_Info/blob/main/CryptoDiversity_Desjardins_Tree.tre)
 * `data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree`: Received from Philip Ashton (Dec 5 2024).
+<details>
+<summary> Analyses files and description </summary> 
 
+```
+analyses/
+├── data # Raw data and data processed by the scripts here
+├── misc # `quarto.yaml` environment definition
+├── notebooks # Rendered versions of Quarto documents
+├── results # Results of the analyses
+├── scripts # Scripts, Jupyter notebooks, and Quarto documents
+```
 
 | Analysis | Script <br /> `scripts/` | Output | Description |
 |-----------------|-----------------|-----------------| -----------------|
@@ -87,3 +90,5 @@ External data:
 | Discover aneuploidies | `aneuploidies.qmd` | `results/tables/chromosome_cnv_categories.tsv`<br /> Plots in `results/figs/`| Categorize chromosomes by coverage of CNVs |
 | Plot duplications in tree |`tree_plot_cnvs.qmd`| Plots in `results/trees_dups/`| Plot the merged tree with a heatmap of duplicated chromosomes.|
 |Metrics of quality and variants of final dataset | `summary_per_lineage.qmd` | `data/processed/snp_counts_desjardins.csv`<br /> `data/processed/snp_counts_ashton.csv` <br /> `results/tables/per_lineage_summary_stats.tsv`| Create summary table of  mapping stats, number of variants, and CNVs. |
+
+</details>
