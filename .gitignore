@@ -8,6 +8,7 @@
 Crypto_*/data/
 Crypto_*/results*
 Crypto_*/logs/
-Crypto_*/config/RepBase*
+Crypto_Ashton/config/RepBase.fasta
+Crypto_Desjardins/config/RepBase.fasta
 *.quarto*
 analyses/.gitignore
