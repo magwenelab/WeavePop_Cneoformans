@@ -4,7 +4,7 @@
 *test*
 *backup*
 *workflow*
-*query_database*
+query_database
 Crypto_*/data/
 Crypto_*/results*
 Crypto_*/logs/
