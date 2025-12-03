@@ -19,7 +19,8 @@ dependencies:
   - r-ggbeeswarm
   - r-cowplot
   - r-igraph
-
-
-# install.packages(c("RRphylo","manipulate","phytools","ape","languageserver", "BiocManager", "ggrepel"))
+  - r-vcfR
+  - r-pinfsc50
+  
+# install.packages(c("RRphylo","manipulate","phytools","ape","languageserver", "BiocManager", "ggrepel", "mixtools"))
 # BiocManager::install(c("ggtree","ggtreeExtra","ComplexHeatmap"))

@@ -23,7 +23,7 @@ Paths
 
 ```{r}
 metadata_path <- 
-    "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/metadata.csv"
 chrom_metrics_path <-
     "results/tables/chromosome_cnv_categories.tsv"
 merged_tree_path <- 
@@ -81,7 +81,7 @@ metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
                             "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", 
                             "VNIc", "VNIa-outlier"))
-metadata$country_of_origin <- factor(metadata$country_of_origin,
+metadata$country <- factor(metadata$country,
                                 levels = names(country_colors))
 metadata$continent <- factor(metadata$continent,
                                 levels = names(continent_colors))            
@@ -101,7 +101,7 @@ source <- metadata %>%
             select(strain, source)%>%
             column_to_rownames("strain")
 country <- metadata %>%
-            select(strain, country_of_origin)%>%
+            select(strain, country)%>%
             column_to_rownames("strain")     
 continent <- metadata %>%
             select(strain, continent)%>%
@@ -187,7 +187,7 @@ VNBI_node <- getMRCA(tree, c("Tu229-1","Ftc267-2"))
 VNBII_node <- getMRCA(tree, c("MW-RSA3321","MW-RSA3179"))
 
 VNIa4_node <- getMRCA(tree, c("04CN-30-008","UI_31647-2"))
-VNIa5_node <- getMRCA(tree, c("BMD852","14936_1#45"))
+VNIa5_node <- getMRCA(tree, c("BMD852","BK153"))
 VNIa93_node <- getMRCA(tree, c("04CN-65-080","04CN-65-002"))
 VNIa32_node <- getMRCA(tree, c("BMD942","BMD2801"))
 VNIaX_node <- getMRCA(tree, c("Bt48","04CN-63-007"))
@@ -463,12 +463,12 @@ VNII_node <- getMRCA(tree_dups, c("8-1","C12"))
 VNBI_node <- getMRCA(tree_dups, c("PMHc1001.ENR","NRHc5045.ENR.CLIN.ISO"))
 VNBII_node <- getMRCA(tree_dups, c("Bt109","Bt34"))
 
-VNIa4_node <- getMRCA(tree_dups, c("20427_3#26","20427_4#13"))
+VNIa4_node <- getMRCA(tree_dups, c("BK200","BK286"))
 VNIa5_node <- getMRCA(tree_dups, c("Bt139","Bt141"))
 VNIa93_node <- getMRCA(tree_dups, c("04CN-64-024","04CN-64-011"))
 VNIa32_node <- getMRCA(tree_dups, c("04CN-65-072","In2632"))
 
-VNIa_node <- getMRCA(tree_dups, c("20427_3#26", "Bt139"))
+VNIa_node <- getMRCA(tree_dups, c("BK200", "Bt139"))
 VNIb_node <- getMRCA(tree_dups, c("AD4-92a","MW-RSA6134"))
 VNIc_node <- getMRCA(tree_dups, c("LP-RSA3042","PMHc1031A.ENR.INI.LP"))
 ```

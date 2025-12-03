@@ -19,7 +19,7 @@ Paths
 ```{r}
 # Input
 metadata_path <-
-    "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/metadata.csv"
 chromosomes_path <-
     "../Crypto_Desjardins_Ashton/results/02.Dataset/chromosomes.csv"
 mapping_stats_desj <- 
@@ -27,15 +27,15 @@ mapping_stats_desj <-
 mapping_stats_asht <- 
     "../Crypto_Ashton/results/02.Dataset/depth_quality/mapping_stats.tsv"
 variants_path <- 
-    "../Crypto_Desjardins_Ashton/results_exclude/02.Dataset/snpeff/variants.tsv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/snpeff/variants.tsv"
 cnv_path <- 
-    "../Crypto_Desjardins_Ashton/results_exclude/02.Dataset/cnv/cnv_chromosomes.tsv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset/cnv/cnv_chromosomes.tsv"
 
 # Output
 desj_counts <- 
-    "data/processed/snp_counts_desjardins.csv"
+    "results/tables/snp_counts_desjardins.csv"
 ashton_counts <- 
-    "data/processed/snp_counts_ashton.csv"
+    "results/tables/snp_counts_ashton.csv"
 
 summary_out_path <- 
     "results/tables/per_lineage_summary_stats.tsv"
@@ -45,15 +45,14 @@ summary_out_path <-
 ```{r, output=FALSE}
 metadata <- read_csv(metadata_path)
 metadata <- metadata %>%
-    select(sample, strain, lineage, vni_subdivision)%>%
-    filter(strain != "H99")
+    select(sample, strain, lineage, vni_subdivision)
 ```
 
 ## Count SNPs of each sample
 <details><summary> **Plots and tables**</summary>
 
 Using bash, count the number of variants called by Freebayes and filtered by Snippy.  
-Snippy filters are:   
+mapping_and_variants filters are:   
 **GT == 1/1**  
 **QUAL >= 100**   
 **DP >= 10**  
@@ -63,16 +62,16 @@ cd /FastData/czirion/WeavePop_Cneoformans/
 
 tail -n +2 Crypto_Desjardins/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
-    raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
-    surv=$(grep -v "#" Crypto_Desjardins/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
-    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_desjardins.csv
+    raw=$(grep -v "#" Crypto_Desjardins/results/01.Samples/mapping_and_variants/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Desjardins/results/01.Samples/mapping_and_variants/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/results/tables/snp_counts_desjardins.csv
 done 
 
 tail -n +2 Crypto_Ashton/results/02.Dataset/metadata.csv | cut -d',' -f1 | while read line
 do 
-    raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.raw.vcf | wc -l)
-    surv=$(grep -v "#" Crypto_Ashton/results/01.Samples/snippy/$line/snps.filt.vcf | wc -l)
-    echo $line,$raw,$surv >> analyses/data/processed/snp_counts_ashton.csv
+    raw=$(grep -v "#" Crypto_Ashton/results/01.Samples/mapping_and_variants/$line/snps.raw.vcf | wc -l)
+    surv=$(grep -v "#" Crypto_Ashton/results/01.Samples/mapping_and_variants/$line/snps.filt.vcf | wc -l)
+    echo $line,$raw,$surv >> analyses/results/tables/snp_counts_ashton.csv
 done 
 ```
 
@@ -172,7 +171,7 @@ ggplot(snp_counts_vni, aes(y = n_removed, x = vni_subdivision)) +
 
 
 ### Identify samples with high heterozigosity
-Since Snippy removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
+Since mapping_and_variants removes all the heterozygous variants, the samples with a big number of removed variants might have high heterozygosity.  
 
 Here are the 20 samples with highest number of likely heterozygous variants.
 ```{r, message=FALSE, warning=FALSE}
@@ -280,10 +279,10 @@ cnv_sample <- cnv %>%
     filter(cnv != "single_copy")%>%
     left_join(chromosomes, by = "accession")%>%
     group_by(lineage, sample, cnv)%>%
-    summarize(n_regions = sum(n_regions), 
-                total_size_regions = sum(total_size_regions), 
+    summarize(n_cnvs = sum(n_cnvs), 
+                total_size = sum(total_size), 
                 length = sum(length)) %>%
-    mutate(percent_coverage = (total_size_regions * 100)/length)%>%
+    mutate(percent_coverage = (total_size * 100)/length)%>%
     ungroup()
 
 cnv_summary <- cnv_sample %>%
@@ -293,7 +292,7 @@ cnv_summary <- cnv_sample %>%
     ungroup() %>%
     pivot_wider(
         names_from = cnv,
-        values_from = c(n_regions_mean, n_regions_sd, total_size_regions_mean, total_size_regions_sd, percent_coverage_mean, percent_coverage_sd)
+        values_from = c(n_cnvs_mean, n_cnvs_sd, total_size_mean, total_size_sd, percent_coverage_mean, percent_coverage_sd)
     )
 
 length <- cnv_sample %>%
@@ -322,9 +321,9 @@ summary <- summary %>%
         unique_variants = n_variants,
         n_variants_mean = mean_surv,
         n_snps_ref_strain = n_surv,
-        n_deletions_mean = n_regions_mean_deletion,
+        n_deletions_mean = n_cnvs_mean_deletion,
         percent_coverage_deletions_mean = percent_coverage_mean_deletion,
-        n_duplications_mean = n_regions_mean_duplication,
+        n_duplications_mean = n_cnvs_mean_duplication,
         percent_coverage_duplications_mean = percent_coverage_mean_duplication,
         length)
 summary

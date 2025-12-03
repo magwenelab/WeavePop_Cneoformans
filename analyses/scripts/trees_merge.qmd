@@ -26,16 +26,25 @@ source("scripts/metadata_colors.R")
 Metadata
 ```{r}
 metadata_all_path <- 
-    "data/processed/metadata_all_H99_complete.csv"
+    "../Crypto_Desjardins_Ashton/results/02.Dataset_all/metadata.csv"
 ```
 Trees
 ```{r}
+# Input
 desj_tree_path <- 
     "data/raw/CryptoDiversity_Desjardins_Tree.tre"
-desj_tree_out_path <- 
-    "data/processed/tree_desjardins.newick"
 ashton_tree_path <- 
     "data/raw/2017.06.09.all_ours_and_desj.snp_sites.mod.fa.cln.tree"
+ploidy_path <- 
+    "results/tables/ploidy.tsv"
+ashton_mapping_stats_path <-
+    "../Crypto_Ashton/results/02.Dataset_all/depth_quality/mapping_stats.tsv"
+desjadins_runs <-
+    "../Crypto_Desjardins/config/runs_table.tsv"
+
+# Output
+desj_tree_out_path <- 
+    "data/processed/tree_desjardins.newick"
 ashton_tree_out_path <- 
     "data/processed/tree_ashton.newick"
 merged_tree_out_path <- 
@@ -45,6 +54,8 @@ Plots
 ```{r}
 desj_tree_out_plot <- 
     "results/trees/tree_desjardins.png"
+desj_tree_out_plot2 <- 
+    "results/trees/tree_desjardins_2.svg"   
 desj_tree_out_plot_pdf <- 
     "results/trees/tree_desjardins.pdf"
 ashton_tree_out_plot <- 
@@ -59,18 +70,39 @@ merged_tree_removed_plot_png <-
     "results/trees/tree_merged_removed.png"
 merged_tree_small_plot <- 
     "results/trees/tree_merged_small.png"
+merged_tree_continent_plot_png<- 
+    "results/trees/tree_merged_continent.png"
 ```
 
+## Ploidy and quality
+
+```{r}
+ploidy <- read.delim(ploidy_path,header = TRUE)
+quality <- read.delim(ashton_mapping_stats_path, header = TRUE)%>%
+    select(sample, quality_warning)
+H99 <- data.frame('sample'= 'GCF_000149245',
+                'strain'= 'H99', 
+                'lineage'= 'VNI', 
+                'vni_subdivision'= 'VNIb',
+                'dataset'= 'Reference',
+                'source'= 'Clinical',
+                'mating_type'= 'α',
+                'country'= 'USA',
+                'continent'= 'North America')
+```
 ## Metadata
 Use the metadata table that has all (even the ones that will be excluded) 
-the samples of Ashton and Desjardins and H99 (n = 1064).  
+the samples of Ashton and Desjardins(n = 1064).  
 
 ```{r, message=FALSE, warning=FALSE}
 metadata <- read.delim(
     metadata_all_path,
     header=TRUE,
     sep=",") %>%
-    select(strain, everything())
+    select(strain, everything())%>%
+    left_join(ploidy, by="sample")%>%
+    left_join(quality, by="sample")%>%
+    bind_rows(H99)
 
 metadata$mating_type <-ifelse(metadata$mating_type == "", NA, metadata$mating_type)
 summary <- metadata %>% 
@@ -82,7 +114,7 @@ Make separate dataframes for each metadata field.
 ```{r}
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
                             levels = c(names(sublineage_colors), "VNIa-outlier"))
-metadata$country_of_origin <- factor(metadata$country_of_origin,
+metadata$country <- factor(metadata$country,
                                 levels = names(country_colors))
 
 sublineage <- metadata %>%
@@ -100,7 +132,10 @@ source <- metadata %>%
             select(strain, source)%>%
             column_to_rownames("strain")
 country <- metadata %>%
-            select(strain, country_of_origin)%>%
+            select(strain, country)%>%
+            column_to_rownames("strain")
+continent<- metadata %>%
+            select(strain, continent)%>%
             column_to_rownames("strain")
 mating_type <- metadata %>%
             select(strain, mating_type)%>%
@@ -219,22 +254,73 @@ Save Desjardins tree plot to file.
 ggsave(desj_tree_out_plot, dc, height = 6.5, width = 7, units = "in", dpi = 600)
 ggsave(desj_tree_out_plot_pdf, dc, height = 6.5, width = 7, units = "in", dpi = 600)
 ```
+Contient and source, without tiplabels
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+d <- ggtree(desj_tree, 
+        ladderize = TRUE,
+        layout = "circular", 
+        size = 0.09) %<+%  metadata +
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 0.3, vjust = -0.5)+
+    geom_tree(size = 0.1)+
+    geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=30)
+
+
+dc <- gheatmap(d, continent, width =.08, colnames=FALSE, offset=0.01)+
+        scale_fill_manual(values=continent_colors, 
+                      name="Continent", na.translate=TRUE,)+ 
+        guides(fill = guide_legend(order = 1, ncol = 1))+
+        new_scale_fill()
+
+ds <- gheatmap(dc, source, width = 0.08, colnames = FALSE, offset = 0.04)+
+        scale_fill_manual(name = "Source", values = source_colors, na.value = "gray90")+
+        guides(color = guide_legend(override.aes = list(size = 5), order = 2))+  
+        geom_cladelab(data = nodes_lineages, 
+            mapping = aes(node = mrca, label = lineage),
+            fontsize = 3,
+            align = TRUE, face = "bold",
+            angle = "auto", offset = 0.08)+
+        theme(legend.position = "right",
+                legend.direction = "vertical")
+
+ds
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(desj_tree_out_plot2, ds, height = 6.5, width = 7, units = "in", dpi = 600)
+```
 
 ## Ashton tree
 Import the raw Ashton tree
 ```{r}
 ashton_tree_unrooted <- read.tree(ashton_tree_path)
+labels <- ashton_tree_unrooted$tip.label
 ```
 
 Rename tips of the Desjardins samples because they have SRA run accessions in this tree but strain names in the other one
+
 ```{r}
-ashton_tree_unrooted$tip.label <- sapply(ashton_tree_unrooted$tip.label, function(x) {
-    if (x %in% metadata$run) {
-        metadata$strain[metadata$run == x]
+metadata_runs <- read.delim(desjadins_runs, header=TRUE, sep="\t")%>%
+    filter(run %in% labels) %>%
+    right_join(metadata, by="sample")%>%
+    mutate(run = ifelse(strain == "H99", sample, ifelse(is.na(run), alias, run)))%>%
+    filter(run %in% labels)
+```
+```{r}
+new_labels <- sapply(labels, function(x) {
+    if (x %in% metadata_runs$run) {
+        metadata_runs$strain[metadata_runs$run == x]
     } else {
         x
     }
 })
+```
+
+```{r}
+ashton_tree_unrooted$tip.label <- new_labels
 ```
 Get the samples that are present in the tree but absent from the metadata of the full dataset
 ```{r}
@@ -257,10 +343,10 @@ ashton_tree <- read.tree(ashton_tree_out_path)
 ```
 ```{r}
 VNIa4_node <- getMRCA(ashton_tree, c("CNS_289","04CN-30-008"))
-VNIa5_node <- getMRCA(ashton_tree, c("14936_1#45","20427_2#16"))
+VNIa5_node <- getMRCA(ashton_tree, c("BK153","BK37"))
 VNIa93_node <- getMRCA(ashton_tree, c("04CN-65-080","04CN-65-002"))
-VNIa32_node <- getMRCA(ashton_tree, c("20427_2#33","20427_2#5"))
-VNIaX_node <- getMRCA(ashton_tree, c("04CN-63-007","20427_3#40"))
+VNIa32_node <- getMRCA(ashton_tree, c("BK68","BK11"))
+VNIaX_node <- getMRCA(ashton_tree, c("04CN-63-007","BK230"))
 VNIaY_node <- getMRCA(ashton_tree, c("04CN-65-073","04CN-64-081"))
 
 VNIb_node <- getMRCA(ashton_tree, c("AD3-41a","H99"))
@@ -279,10 +365,10 @@ nodes_vnisublineages <- data.frame(
 
 ```{r}
 VNIa4_node <- getMRCA(ashton_tree_unrooted, c("CNS_289","04CN-30-008"))
-VNIa5_node <- getMRCA(ashton_tree_unrooted, c("14936_1#45","20427_2#16"))
+VNIa5_node <- getMRCA(ashton_tree_unrooted, c("BK153","BK37"))
 VNIa93_node <- getMRCA(ashton_tree_unrooted, c("04CN-65-080","04CN-65-002"))
-VNIa32_node <- getMRCA(ashton_tree_unrooted, c("20427_2#33","20427_2#5"))
-VNIaX_node <- getMRCA(ashton_tree_unrooted, c("04CN-63-007","20427_3#40"))
+VNIa32_node <- getMRCA(ashton_tree_unrooted, c("BK68","BK11"))
+VNIaX_node <- getMRCA(ashton_tree_unrooted, c("04CN-63-007","BK230"))
 VNIaY_node <- getMRCA(ashton_tree_unrooted,  c("04CN-65-073","04CN-64-081"))
 VNIb_node <- getMRCA(ashton_tree_unrooted, c("AD3-41a","H99"))
 VNIc_node <- getMRCA(ashton_tree_unrooted,  c("Bt20","Bt11"))
@@ -359,7 +445,7 @@ m2 <- gheatmap(m1, source, width=.05, colnames=FALSE, offset=0.035) +
 m3 <- gheatmap(m2, country, width =.05, colnames=FALSE,offset=0.045)+
     scale_fill_manual(values=country_colors, 
                       name="Country", na.translate=FALSE,
-                      limits = levels(country$country_of_origin))+
+                      limits = levels(country$country))+
     guides(fill = guide_legend(order =4))+
         theme(legend.position = "right",
                 legend.direction = "vertical",
@@ -423,7 +509,7 @@ backtree <- drop.tip(desj_tree, VNI_tips)
 
 Create the reference tables
 ```{r, eval=TRUE}
-reference <- data.frame(bind=c("CNS_289-20427_2#4"),
+reference <- data.frame(bind=c("CNS_289-BK8"),
                    reference=c("Bt7-Bt34"),
                    poly=c(FALSE))
 ```
@@ -462,7 +548,7 @@ nodes_lineages <- data.frame(
 
 ```{r}
 VNIa4_node <- getMRCA(merged, c("04CN-30-008","UI_31647-2"))
-VNIa5_node <- getMRCA(merged, c("BMD852","14936_1#45"))
+VNIa5_node <- getMRCA(merged, c("BMD852","BK153"))
 VNIa93_node <- getMRCA(merged, c("04CN-65-080","04CN-65-002"))
 VNIa32_node <- getMRCA(merged, c("BMD942","BMD2801"))
 VNIaX_node <- getMRCA(merged, c("Bt48","04CN-63-007"))
@@ -532,7 +618,7 @@ With country , MAT, and source
 m1 <- gheatmap(m, country, width =.05, colnames=FALSE,offset=3)+
     scale_fill_manual(values=country_colors, 
                       name="Country", na.translate=FALSE,
-                      limits = levels(country$country_of_origin))+
+                      limits = levels(country$country))+
     guides(fill = guide_legend(order = 2, ncol = 2))+
     new_scale_fill()
 
@@ -580,7 +666,47 @@ mq
 ```{r, message=FALSE, warning=FALSE}
 ggsave(merged_tree_removed_plot_png, mq, height = 10, width = 10, units = "in", dpi = 600)
 ```
+## Plot complete merged tree without labels
 
+Base
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+m <- ggtree(merged, 
+        ladderize = TRUE,
+        layout = "circular", 
+        branch.length = "none",
+        size = 0.1) %<+%  metadata +
+    geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
+                        size = 2, , fontface = "bold",
+                        hjust = 1.25, vjust = -0.5)+
+    geom_hilight(data=nodes_vnisublineages, 
+        aes(node=mrca, fill=sublineage), alpha = 0.8)+
+        scale_fill_manual(name = "Sublineage", values = sublineage_shading)+
+    guides(fill = FALSE)+
+    new_scale_fill()+
+    geom_tree(size = 0.1)
+```
+With continent
+```{r, message=FALSE, warning=FALSE}
+#| fig-height: 7
+#| fig-width: 7
+#| fig-align: center
+
+mc <- gheatmap(m, continent, width=.05, colnames=FALSE, offset=0.1) +
+        scale_fill_manual(values = continent_colors, 
+            name="Continent", na.translate = FALSE)+
+    geom_cladelab(data = nodes_vnisublineages, 
+            mapping = aes(node = mrca, label = sublineage),
+            align = TRUE, face = "bold",
+            angle = "auto", offset = 3)+
+    theme(legend.position = "right", legend.direction = "vertical")
+mc
+```
+```{r, message=FALSE, warning=FALSE}
+ggsave(merged_tree_continent_plot_png, mc, height = 10, width = 10, units = "in", dpi = 600)
+```
 ## Plot minimal version of the tree
 
 Get two samples of each non-VNI lineage, VNI sublineage, and all VNIa-outlier
@@ -591,7 +717,7 @@ VNIa_outlier <- metadata %>%
 
 representatives <- c("Tu241-1","UI_31647-2","C2","C12","Tu229-1",
                     "Ftc267-2","MW-RSA3321","MW-RSA3179","04CN-30-008",
-                    "UI_31647-2","BMD852","14936_1#45","04CN-65-080",
+                    "UI_31647-2","BMD852","BK153","04CN-65-080",
                     "04CN-65-002","BMD942","BMD2801","Bt48",
                     "04CN-63-007","04CN-65-073","Bt138",
                     "04CN-65-096","MW-RSA722","Bt20","Bt11")
@@ -610,7 +736,7 @@ VNII_node <- getMRCA(small_tree, c("C2","C12"))
 VNBI_node <- getMRCA(small_tree, c("Tu229-1","Ftc267-2"))
 VNBII_node <- getMRCA(small_tree, c("MW-RSA3321","MW-RSA3179"))
 VNIa4_node <- getMRCA(small_tree, c("04CN-30-008","UI_31647-2"))
-VNIa5_node <- getMRCA(small_tree, c("BMD852","14936_1#45"))
+VNIa5_node <- getMRCA(small_tree, c("BMD852","BK153"))
 VNIa93_node <- getMRCA(small_tree, c("04CN-65-080","04CN-65-002"))
 VNIa32_node <- getMRCA(small_tree, c("BMD942","BMD2801"))
 VNIaX_node <- getMRCA(small_tree, c("Bt48","04CN-63-007"))
