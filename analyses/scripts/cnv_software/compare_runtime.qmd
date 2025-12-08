@@ -1,0 +1,36 @@
+---
+title: "Compare runtime of CNV software"
+author: "Claudia Zirión-Martínez"
+date: "2025-12-03"
+---
+
+```{r, message=FALSE, warning=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+library(tidyverse)
+```
+
+```{r, message=FALSE, warning=FALSE}
+time_path <- "results/tables/software_time.csv"
+mosdepth_path <- "results/tables/mosdepth_time.csv"
+cnv_path <- "results/tables/cnv_time.csv"
+```
+```{r, message=FALSE, warning=FALSE}
+
+time <- read_csv(time_path, col_names = c("software", "sample", "seconds") )
+mosdepth <- read_csv(mosdepth_path, col_names = "seconds")
+cnv <- read_csv(cnv_path, col_names = "seconds")
+mean_mosdepth <- mean(mosdepth$seconds)
+median_mosdepth <- median(mosdepth$seconds)
+mean_cnv <- mean(cnv$seconds)
+median_cnv <- median(cnv$seconds)
+
+cnv_module <- data.frame(mean_minutes = (mean_mosdepth + mean_cnv) / 60,
+                        median_minutes = (median_mosdepth + median_cnv) / 60,
+                        software = "WeavePop")
+
+time %>%
+    group_by(software)%>%
+    summarize(mean_minutes = mean(seconds) / 60,
+                median_minutes = median(seconds) / 60)%>%
+                bind_rows(cnv_module)
+```

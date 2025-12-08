@@ -1,0 +1,246 @@
+# Comparison of WeavePop CNVs with PerSVade and CNVpytor
+
+## Setup {#setup}
+
+```{r, eval=FALSE, echo=FALSE}
+setwd("/FastData/czirion/WeavePop_Cneoformans/analyses")
+```
+
+Libraries
+
+```{r libraries, output=FALSE}
+library(tidyverse)
+library(ggbeeswarm)
+library(patchwork)
+library(ggnewscale)
+library(RColorBrewer)
+library(svglite)
+library(scales)
+```
+Paths
+```{r, warning = FALSE, message = FALSE}
+samples_path = "results/tables/haploid_samples_with_cnv.tsv"
+name_c = "cnvpytor"
+name_p = "HMMcopy_AneuFinder"
+```
+
+Read table of metrics and CNV calls per window of all samples and all softwares and create
+one dataframe with the agreement of all pairs of softwares.
+
+`w` = WeavePop
+`c` = CNVpytor
+`p` = PerSVade
+
+The `type` columns have the call of the software in the left of the name to the left of `_2_` and the call of the software in the right of the name to the rigth of `_2_`.
+
+```{r, warning = FALSE, message = FALSE}
+s <- read_delim(samples_path, delim= '\t', col_names = c("sample", "dataset", "lineage"))
+samples = pull(s, sample)
+types = c("single_copy_2_single_copy", "duplication_2_duplication", "deletion_2_deletion",
+        "single_copy_2_duplication" ,"duplication_2_single_copy" ,
+        "single_copy_2_deletion", "deletion_2_single_copy",
+        "deletion_2_duplication","duplication_2_deletion")
+
+df_all <- data.frame()
+for (sample in samples){
+    weavepop_path = paste("data/cnv_software/depth_by_windows/", sample ,".tsv", sep = "")
+    c_path = paste("results/cnv_software/results_", name_c, "/", sample ,"_500_windows.bed", sep = "")
+    p_path = paste("results/cnv_software/results_", name_p, "/", sample ,"_500_windows.bed", sep = "")
+
+    weavepop <- read_delim(weavepop_path, delim= '\t', col_names = TRUE)%>%
+        mutate(start_1 = start + 1)%>%
+        select(accession, start = start_1, end, smooth_depth, cnv, repeat_overlap_bp)
+
+    c <- read_delim(c_path, delim= '\t', col_names = c("accession", "start", "end", "norm_depth_c", "cnv_c"))%>%
+        mutate(cnv_c = ifelse(cnv_c == ".", "single_copy", cnv_c),
+            norm_depth_c = as.numeric(ifelse(norm_depth_c == ".", "1", norm_depth_c)))
+
+    p <- read_delim(p_path, delim= '\t', col_names = c("accession", "start", "end", "norm_depth_p", "cnv_p"))%>%
+        mutate(cnv_p = ifelse(cnv_p == ".", "single_copy", cnv_p),
+            norm_depth_p = as.numeric(ifelse(norm_depth_p == ".", "1", norm_depth_p)))
+
+    df <- left_join(weavepop, c, by = c("accession", "start", "end"))%>%
+        left_join(., p, by = c("accession", "start", "end"))%>%
+        mutate(sample = sample,
+                agreement_wc = ifelse(cnv == cnv_c, "agree", "disagree"),
+                agreement_wp = ifelse(cnv == cnv_p, "agree", "disagree"),
+                agreement_cp = ifelse(cnv_c == cnv_p, "agree", "disagree"),
+                type_wc = paste(cnv, cnv_c, sep = "_2_"),
+                type_wp = paste(cnv, cnv_p, sep = "_2_"),
+                type_cp = paste(cnv_c, cnv_p, sep = "_2_"),
+                total = n())%>%
+        mutate(across(where(is.character), as.factor))
+    
+    df$type_wc <- factor(df$type_wc, levels = types)
+    df$type_wp <- factor(df$type_wp, levels = types)
+    df$type_cp <- factor(df$type_cp, levels = types)
+
+    df_all <- bind_rows(df_all, df)
+}
+```
+
+## WeavePop vs PerSVade
+
+```{r, warning = FALSE, message = FALSE}
+s_wp <-df_all %>%
+        group_by(sample, agreement_wp, cnv, cnv_p, type_wp, total)%>%
+        summarize(
+            repeat_fraction = mean(repeat_overlap_bp / 500),
+                    n = n())%>%
+        mutate(n_pct = n / total * 100)%>%
+        select(-total)
+```
+```{r, warning = FALSE, message = FALSE}
+s_wp %>%
+    group_by(agreement_wp, type_wp)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+a_wp <- df_all %>%
+    group_by(sample,agreement_wp, total)%>%
+    summarize(repeat_fraction = mean(repeat_overlap_bp / 500),
+              n = n())%>%
+        mutate(n_pct = n / total * 100)
+```
+
+```{r, warning = FALSE, message = FALSE}
+a_wp %>%
+    group_by(agreement_wp)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(s_wp)+
+    geom_quasirandom(aes(x = type_wp, y = repeat_fraction))+
+    geom_boxplot(aes(x = type_wp, y = repeat_fraction), alpha = 0.2)+
+    facet_grid(~agreement_wp, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "WeavePop vs PerSVade",
+        x = "",
+        y = "Repeat fraction")
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(filter(s_wp, type_wp != "single_copy_2_single_copy"))+
+    geom_quasirandom(aes(x = type_wp, y = n))+
+    geom_boxplot(aes(x = type_wp, y = n), alpha = 0.2)+
+    facet_grid(~agreement_wp, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "WeavePop vs PerSVade",
+        x = "",
+        y = "Number of windows")
+```
+
+## WeavePop vs CNVpytor
+```{r, warning = FALSE, message = FALSE}
+s_wc <-df_all %>%
+        group_by(sample, agreement_wc, cnv, cnv_c, type_wc, total)%>%
+        summarize(
+            repeat_fraction = mean(repeat_overlap_bp / 500),
+                    n = n())%>%
+        mutate(n_pct = n / total * 100)%>%
+        select(-total)
+```
+```{r, warning = FALSE, message = FALSE}
+s_wc %>%
+    group_by(agreement_wc, type_wc)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+a_wc <- df_all %>%
+    group_by(sample,agreement_wc, total)%>%
+    summarize(repeat_fraction = mean(repeat_overlap_bp / 500),
+              n = n())%>%
+        mutate(n_pct = n / total * 100)
+```
+
+```{r, warning = FALSE, message = FALSE}
+a_wc %>%
+    group_by(agreement_wc)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(s_wc)+
+    geom_quasirandom(aes(x = type_wc, y = repeat_fraction))+
+    geom_boxplot(aes(x = type_wc, y = repeat_fraction), alpha = 0.2)+
+    facet_grid(~agreement_wc, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "WeavePop vs CNVPytor",
+        x = "",
+        y = "Repeat fraction")
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(filter(s_wc, type_wc != "single_copy_2_single_copy"))+
+    geom_quasirandom(aes(x = type_wc, y = n))+
+    geom_boxplot(aes(x = type_wc, y = n), alpha = 0.2)+
+    facet_grid(~agreement_wc, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "WeavePop vs CNVpytor",
+        x = "",
+        y = "Number of windows")
+```
+
+## CNVpytor vs PerSVade
+```{r, warning = FALSE, message = FALSE}
+s_cp <-df_all %>%
+        group_by(sample, agreement_cp, cnv_c, cnv_p, type_cp, total)%>%
+        summarize(
+            repeat_fraction = mean(repeat_overlap_bp / 500),
+                    n = n())%>%
+        mutate(n_pct = n / total * 100)%>%
+        select(-total)
+```
+```{r, warning = FALSE, message = FALSE}
+s_cp %>%
+    group_by(agreement_cp, type_cp)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+a_cp <- df_all %>%
+    group_by(sample,agreement_cp, total)%>%
+    summarize(repeat_fraction = mean(repeat_overlap_bp / 500),
+              n = n())%>%
+        mutate(n_pct = n / total * 100)
+```
+
+```{r, warning = FALSE, message = FALSE}
+a_cp %>%
+    group_by(agreement_cp)%>%
+    summarize(mean_repeat_fraction = mean(repeat_fraction),
+                mean_n = mean(n),
+                mean_n_pct = mean(n_pct))
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(s_cp)+
+    geom_quasirandom(aes(x = type_cp, y = repeat_fraction))+
+    geom_boxplot(aes(x = type_cp, y = repeat_fraction), alpha = 0.2)+
+    facet_grid(~agreement_cp, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "CNVpytor vs PerSVade",
+        x = "",
+        y = "Repeat fraction")
+```
+```{r, warning = FALSE, message = FALSE}
+ggplot(filter(s_cp, type_cp != "single_copy_2_single_copy"))+
+    geom_quasirandom(aes(x = type_cp, y = n))+
+    geom_boxplot(aes(x = type_cp, y = n), alpha = 0.2)+
+    facet_grid(~agreement_cp, scale = "free")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title = "CNVpytor vs PerSVade",
+        x = "",
+        y = "Number of windows")
+```

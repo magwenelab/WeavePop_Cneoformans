@@ -12,3 +12,5 @@ Crypto_Ashton/config/RepBase.fasta
 Crypto_Desjardins/config/RepBase.fasta
 *.quarto*
 analyses/.gitignore
+analyses/data/cnv_software
+analyses/results/cnv_software
