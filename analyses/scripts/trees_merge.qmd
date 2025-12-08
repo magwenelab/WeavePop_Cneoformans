@@ -49,6 +49,7 @@ ashton_tree_out_path <-
     "data/processed/tree_ashton.newick"
 merged_tree_out_path <- 
     "data/processed/tree_merged.newick"
+metadata_output <- "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
 ```
 Plots
 ```{r}
@@ -79,7 +80,9 @@ merged_tree_continent_plot_png<-
 ```{r}
 ploidy <- read.delim(ploidy_path,header = TRUE)
 quality <- read.delim(ashton_mapping_stats_path, header = TRUE)%>%
-    select(sample, quality_warning)
+    select(sample, quality_warning)%>%
+    filter(quality_warning == "MAPQ-Low")
+
 H99 <- data.frame('sample'= 'GCF_000149245',
                 'strain'= 'H99', 
                 'lineage'= 'VNI', 
@@ -102,7 +105,10 @@ metadata <- read.delim(
     select(strain, everything())%>%
     left_join(ploidy, by="sample")%>%
     left_join(quality, by="sample")%>%
-    bind_rows(H99)
+    bind_rows(H99)%>%
+    mutate(excluded = ifelse(ploidy == "diploid" | quality_warning == "MAPQ-Low", "yes", "no"))
+
+metadata$excluded <- as.factor(metadata$excluded)
 
 metadata$mating_type <-ifelse(metadata$mating_type == "", NA, metadata$mating_type)
 summary <- metadata %>% 
@@ -110,6 +116,12 @@ summary <- metadata %>%
     summarize(count = n())
 summary
 ```
+
+Write metadata file
+```{r}
+write.table(metadata, metadata_output, sep =",", quote = FALSE, row.names = FALSE )
+```
+
 Make separate dataframes for each metadata field.
 ```{r}
 metadata$vni_subdivision <- factor(metadata$vni_subdivision,
