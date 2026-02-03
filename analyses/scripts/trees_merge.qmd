@@ -49,7 +49,7 @@ ashton_tree_out_path <-
     "data/processed/tree_ashton.newick"
 merged_tree_out_path <- 
     "data/processed/tree_merged.newick"
-metadata_output <- "data/processed/metadata_ashton_desj_all_weavepop_final_H99.csv"
+metadata_output <- "data/processed/metadata_all.csv"
 ```
 Plots
 ```{r}
@@ -227,7 +227,7 @@ d <- ggtree(desj_tree,
         ladderize = TRUE,
         layout = "circular", 
         size = 0.09) %<+%  metadata +
-    geom_tiplab(color = "black", size = 0.6, align = TRUE, linesize = 0.05)+
+    geom_tiplab(color = "black", size = 0.6, linesize = 0.05)+
     geom_text(aes(label = nodes_lineages$lineage[match(node, nodes_lineages$mrca)]), 
                         size = 2, , fontface = "bold",
                         hjust = 0.3, vjust = -0.5)+
@@ -245,6 +245,8 @@ d <- ggtree(desj_tree,
             color = guide_legend(override.aes = list(size = 5), order = 2))+
     geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=30)
 
+```
+```{r, message=FALSE, warning=FALSE}
 
 dc <- gheatmap(d, country, width =.08, colnames=FALSE, offset=0.07)+
         scale_fill_manual(values=country_colors, 
@@ -280,7 +282,8 @@ d <- ggtree(desj_tree,
                         hjust = 0.3, vjust = -0.5)+
     geom_tree(size = 0.1)+
     geom_treescale(x=-0.03, y=0, width=0.01, fontsize =2, offset=30)
-
+```
+```{r, message=FALSE, warning=FALSE}
 
 dc <- gheatmap(d, continent, width =.08, colnames=FALSE, offset=0.01)+
         scale_fill_manual(values=continent_colors, 

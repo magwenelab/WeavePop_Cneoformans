@@ -86,7 +86,7 @@ analyses/
 | Analysis | Script <br /> `scripts/` | Output | Description |
 |-----------------|-----------------|-----------------| -----------------|
 | Explore Depth Profile of all Samples | `explore_depth.qmd` | `results/tables/ploidy.tsv`<br />`Crypto_Ashton/config/non_haploids.txt`<br />`Crypto_Desjardins/config/non_haploids.txt`  | Explore the depth plots to identify putative non-haploid samples to exclude from the analyses. |
-| Tree building | `merge_trees.qmd` | `data/processed/tree_ashton.newick`<br />  `data/processed/tree_desjardins.newick`<br />  `data/processed/tree_merged.newick`<br /> Plots in `results/trees/` | Merge the trees of the Ashton and Desjardins datasets. |
+| Tree building | `merge_trees.qmd` | `data/processed/tree_ashton.newick`<br />  `data/processed/tree_desjardins.newick`<br />  `data/processed/tree_merged.newick`<br /> Plots in `results/trees/`<br /> `data/processed/metadata_all.csv` | Merge the trees of the Ashton and Desjardins datasets. |
 | Discover aneuploidies | `aneuploidies.qmd` | `results/tables/chromosome_cnv_categories.tsv`<br /> Plots in `results/figs/`| Categorize chromosomes by coverage of CNVs |
 | Plot duplications in tree |`tree_plot_cnvs.qmd`| Plots in `results/trees_dups/`| Plot the merged tree with a heatmap of duplicated chromosomes.|
 |Metrics of quality and variants of final dataset | `summary_per_lineage.qmd` | `data/processed/snp_counts_desjardins.csv`<br /> `data/processed/snp_counts_ashton.csv` <br /> `results/tables/per_lineage_summary_stats.tsv`| Create summary table of  mapping stats, number of variants, and CNVs. |
