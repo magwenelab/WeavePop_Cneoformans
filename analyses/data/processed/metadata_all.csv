@@ -75,13 +75,13 @@ Ftc225-1,SRS885816,Ftc225-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
 Muc416-4,SRS881214,Muc416-4,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 Muc466-3,SRS881203,Muc466-3,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 NRHc5013.ENR,SRS885875,NRHc5013.ENR,VNBI,,,a,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
-NRHc5005.ENR,SRS881178,NRHc5005.ENR,VNBI,,,α,Clinical,Botswana,Africa,,,Desjardins,,,diploid,NA,yes
+NRHc5005.ENR,SRS881178,NRHc5005.ENR,VNBI,,,α,Clinical,Botswana,Africa,,,Desjardins,,,non_haploid,NA,yes
 NRHc5022.ENR,SRS885188,NRHc5022.ENR,VNBI,,,α,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
 Muc458-2,SRS881181,Muc458-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 NRHc5004.ENR,SRS885173,NRHc5004.ENR,VNBI,,,a,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
 Muc364-1,SRS881213,Muc364-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 Muc489-1,SRS881193,Muc489-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
-PMHc1029.ENR.STOR,SRS881180,PMHc1029.ENR.STOR,VNBII,,,α,Clinical,Botswana,Africa,,,Desjardins,,,diploid,NA,yes
+PMHc1029.ENR.STOR,SRS881180,PMHc1029.ENR.STOR,VNBII,,,α,Clinical,Botswana,Africa,,,Desjardins,,,non_haploid,NA,yes
 Ftc207-1,SRS881215,Ftc207-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 NRHc5010.ENR,SRS885174,NRHc5010.ENR,VNI,VNIa,VNIa-outlier,α,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
 PMHc1009.ENR,SRS881226,PMHc1009.ENR,VNBII,,,α,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
@@ -112,7 +112,7 @@ Muc387-1,SRS885833,Muc387-1,VNBII,,,α,Environmental,Botswana,Africa,,Mopane tre
 NRHc5035.ENR.CLIN.ISO,SRS881157,NRHc5035.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
 Ftc153-1,SRS881198,Ftc153-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 Ftc321-2,SRS881229,Ftc321-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
-NRHc5008.ENR,SRS885171,NRHc5008.ENR,VNBII,,,a,Clinical,Botswana,Africa,,,Desjardins,,,diploid,NA,yes
+NRHc5008.ENR,SRS885171,NRHc5008.ENR,VNBII,,,a,Clinical,Botswana,Africa,,,Desjardins,,,non_haploid,NA,yes
 PMHc1047.ENR.CLIN1,SRS885847,PMHc1047.ENR.CLIN1,VNBII,,,α,Clinical,Botswana,Africa,,,Desjardins,,,NA,NA,NA
 Ftc222-2,SRS885863,Ftc222-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 Ftc137-1,SRS885855,Ftc137-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
@@ -173,10 +173,10 @@ Tu401-1,SRS409483,Cryptococcus neoformans var. grubii Tu401-1,VNBI,,,α,Environm
 Bt157,SRS417625,Cryptococcus_neoformans var. grubii_Bt157,VNBII,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 Bt33,SRS404746,Cryptococcus_neoformans var. grubii_Bt33,VNBII,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 Bt52,SRS404781,Cryptococcus_neoformans var. grubii_Bt52,VNBII,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
-Br795,SRS409113,Cryptococcus_neoformans_Br795,VNI,VNIa,VNIa-93,α,Clinical,Brazil,South America,,,Desjardins,,,diploid,NA,yes
+Br795,SRS409113,Cryptococcus_neoformans_Br795,VNI,VNIa,VNIa-93,α,Clinical,Brazil,South America,,,Desjardins,,,non_haploid,NA,yes
 C27,SRS405110,Cryptococcus_neoformans var. grubii_C27,VNI,VNIa,VNIa-32,α,Clinical,USA,North America,,,Desjardins,,,NA,NA,NA
 Bt142,SRS502193,Cryptococcus_neoformans var. grubii_Bt142,VNBI,,,a,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
-WM148,SRS404479,Cryptococcus_neoformans var. grubii_WM148,VNI,VNIb,,α,Clinical,Australia,Australasia,,,Desjardins,,,diploid,NA,yes
+WM148,SRS404479,Cryptococcus_neoformans var. grubii_WM148,VNI,VNIb,,α,Clinical,Australia,Australasia,,,Desjardins,,,non_haploid,NA,yes
 MW-RSA3179,SRS417653,Cryptococcus_neoformans var. grubii_MW-RSA3179,VNBII,,,α,Clinical,S. Africa,Africa,,,Desjardins,,,NA,NA,NA
 PLR10,SRS417655,Cryptococcus_neoformans var. grubii_PLR10,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
 MW-RSA913,SRS520181,Cryptococcus neoformans var. grubii MW-RSA913,VNBII,,,α,Clinical,S. Africa,Africa,,,Desjardins,,,NA,NA,NA
@@ -238,7 +238,7 @@ AD1-95a,SRS417575,Cryptococcus_neoformans var. grubii_AD1-95a,VNI,VNIb,,α,Clini
 Bt138,SRS417614,Cryptococcus_neoformans var. grubii_Bt138,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 AD3-83a,SRS417587,Cryptococcus_neoformans var. grubii_AD3-83a,VNI,VNIb,,α,Clinical,France,Europe,,,Desjardins,,,NA,NA,NA
 Bt85,SRS409066,Cryptococcus_neoformans_Bt85,VNBI,,,a,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
-RTC1,SRS417657,Cryptococcus_neoformans var. grubii_RTC1,VNI,VNIa,VNIa-93,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,diploid,NA,yes
+RTC1,SRS417657,Cryptococcus_neoformans var. grubii_RTC1,VNI,VNIa,VNIa-93,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,non_haploid,NA,yes
 Bt108,SRS405129,Cryptococcus_neoformans var. grubii_Bt108,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 Bt58,SRS405148,Cryptococcus_neoformans var. grubii_Bt58,VNI,VNIa,VNIa-X,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 AD1-68a,SRS417572,Cryptococcus_neoformans var. grubii_AD1-68a,VNI,VNIa,VNIa-93,α,Clinical,France,Europe,,,Desjardins,,,NA,NA,NA
@@ -362,11 +362,11 @@ Jo278-1,SRS404466,Cryptococcus_neoformans var. grubii_Jo278-1,VNI,VNIa,VNIa-5,α
 Bt141,SRS404772,Cryptococcus_neoformans var. grubii_Bt141,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 MW-RSA2967,SRS417652,Cryptococcus_neoformans var. grubii_MW-RSA2967,VNBII,,,α,Clinical,S. Africa,Africa,,,Desjardins,,,NA,NA,NA
 Pr68,SRS405133,Cryptococcus_neoformans_Pr68,VNI,VNIb,,α,Environmental,S. Africa,Africa,,Pigeon guano,Desjardins,,,NA,NA,NA
-Bt99,SRS404447,Cryptococcus_neoformans_Bt99,VNI,VNIa,VNIa-4,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,diploid,NA,yes
+Bt99,SRS404447,Cryptococcus_neoformans_Bt99,VNI,VNIa,VNIa-4,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,non_haploid,NA,yes
 Bt88,SRS404778,Cryptococcus_neoformans var. grubii_Bt88,VNBII,,,a,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 AD5-45a,SRS417595,Cryptococcus_neoformans var. grubii_AD5-45a,VNI,VNIb,,α,Clinical,France,Europe,,,Desjardins,,,NA,NA,NA
 Bt214,SRS404783,Cryptococcus_neoformans var. grubii_Bt214,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
-RTC3,SRS417659,Cryptococcus_neoformans var. grubii_RTC3,VNBI,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,diploid,NA,yes
+RTC3,SRS417659,Cryptococcus_neoformans var. grubii_RTC3,VNBI,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,non_haploid,NA,yes
 125.91,SRS409479,Cryptococcus_neoformans_125.91,VNI,VNIa,VNIa-outlier,a,Clinical,Tanzania,Africa,,,Desjardins,,,NA,NA,NA
 Bt45,SRS404741,Cryptococcus_neoformans_Bt45,VNBI,,,α,Clinical,Botswana,Africa,Positive,,Desjardins,,,NA,NA,NA
 Tu422-1,SRS417675,Cryptococcus_neoformans var. grubii_Tu422-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree,Desjardins,,,NA,NA,NA
@@ -405,7 +405,7 @@ BMD761,ERS2541274,BMD761,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Asht
 BMD852,ERS2541188,BMD852,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD854,ERS1142893,20949_2#53,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD865,ERS2541097,BMD865,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BMD494,ERS2541183,BMD494,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,diploid,NA,yes
+BMD494,ERS2541183,BMD494,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,non_haploid,NA,yes
 BMD2655,ERS2541330,BMD2655,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD2617,ERS2541162,BMD2617,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD2495,ERS2541327,BMD2495,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -424,7 +424,7 @@ BMD1713,ERS2541096,BMD1713,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,As
 BMD1716,ERS2541101,BMD1716,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD1828,ERS2541112,BMD1828,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD1903,ERS2541228,BMD1903,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BMD2031,ERS2541279,BMD2031,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BMD2031,ERS2541279,BMD2031,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BMD2106,ERS2541122,BMD2106,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,NA,NA,NA
 BMD2298,ERS2541161,BMD2298,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD2407,ERS2541230,BMD2407,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -449,10 +449,10 @@ BMD903,ERS1142894,20949_2#54,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,
 04CN-64-059,ERS2541031,04CN-64-059,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-061,ERS2541063,04CN-64-061,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-064,ERS2540987,04CN-64-064,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-64-067,ERS2541039,04CN-64-067,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-64-067,ERS2541039,04CN-64-067,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-64-068,ERS2540941,04CN-64-068,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-007,ERS2541067,04CN-64-007,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BMD1198,ERS542587,14893_3#53,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,diploid,NA,yes
+BMD1198,ERS542587,14893_3#53,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,non_haploid,NA,yes
 04CN-64-001,ERS2541075,04CN-64-001,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-63-023,ERS2540952,04CN-63-023,VNI,VNIa,VNIa-93,NA,Clinical,Malawi,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BMD910,ERS2541246,BMD910,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,NA,NA,NA
@@ -485,8 +485,8 @@ BK201,ERS1142816,20427_3#27,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,A
 BK207,ERS1142821,20427_3#31,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK21,ERS1142701,20427_2#10,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK210,ERS542489,14893_1#3,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK211,ERS542490,14893_1#4,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
-BK190,ERS1142807,20427_3#21,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK211,ERS542490,14893_1#4,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
+BK190,ERS1142807,20427_3#21,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK214,ERS1142825,20427_3#33,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK22,ERS1142702,20427_2#11,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK221,ERS542500,14893_1#14,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -495,7 +495,7 @@ BK229,ERS1142832,20427_3#39,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,A
 BK233,ERS1142836,20427_3#42,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK236,ERS1142839,20427_3#45,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK241,ERS1142844,20427_3#50,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK242,ERS1142845,20427_3#51,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK242,ERS1142845,20427_3#51,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK217,ERS542496,14893_1#10,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK187,ERS1142805,20949_2#25,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK186,ERS1142804,20949_2#24,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -510,7 +510,7 @@ BK142,ERS1142778,20949_2#15,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,A
 BK146,ERS1142781,20949_2#17,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK147,ERS542578,14893_1#90,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK15,ERS542301,14892_1#6,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK159,ERS542440,14936_1#49,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK159,ERS542440,14936_1#49,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK160,ERS1142787,20427_3#8,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK161,ERS542442,14936_1#51,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK169,ERS1142793,20427_3#13,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -543,13 +543,13 @@ BK91,ERS1142748,20427_2#51,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,As
 BK94,ERS1142751,20427_2#54,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK97,ERS1142754,20427_2#57,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK42,ERS1142712,20427_2#18,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BMD0367,ERS542586,14893_3#52,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,diploid,NA,yes
+BMD0367,ERS542586,14893_3#52,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Negative,,Ashton,Ashton,,non_haploid,NA,yes
 BK41,ERS1142711,20427_2#17,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK38,ERS1142710,20949_2#5,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK38,ERS1142710,20949_2#5,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK257,ERS1142858,20949_2#37,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK26,ERS542389,14892_1#93,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK262,ERS542537,14893_1#49,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK269,ERS1142866,20427_4#5,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK269,ERS1142866,20427_4#5,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK272,ERS1142867,20949_2#41,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK275,ERS1142870,20427_4#7,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK28,ERS542310,14892_1#15,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -558,7 +558,7 @@ BK290,ERS1142882,20949_2#46,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,A
 BK293,ERS1142885,20427_4#17,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK294,ERS1142886,20949_2#48,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK296,ERS1142888,20427_4#18,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK297,ERS1142889,20427_4#19,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK297,ERS1142889,20427_4#19,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK298,ERS1142890,20949_2#50,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK3,ERS1142692,20427_2#1,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK301,ERS1142892,20949_2#52,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,,NA,NA,NA
@@ -567,7 +567,7 @@ BK34,ERS1142708,20949_2#4,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ash
 BK37,ERS1142709,20427_2#16,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK4,ERS542324,14892_1#29,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK117,ERS1142765,20427_2#68,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-64-074,ERS2541044,04CN-64-074,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-64-074,ERS2541044,04CN-64-074,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-64-076,ERS2541313,04CN-64-076,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-093,ERS2541017,04CN-64-093,VNI,VNIa,VNIa-Y,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-116,ERS2541030,04CN-64-116,VNI,VNIa,VNIa-Y,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -576,7 +576,7 @@ BK117,ERS1142765,20427_2#68,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,A
 04CN-65-073,ERS2540943,04CN-65-073,VNI,VNIa,VNIa-Y,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-081,ERS2541308,04CN-64-081,VNI,VNIa,VNIa-Y,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-053,ERS2540922,04CN-64-053,VNI,VNIa,VNIa-Y,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-63-012,ERS2540971,04CN-63-012,VNI,VNIa,VNIa-Y,NA,Clinical,Malawi,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-63-012,ERS2540971,04CN-63-012,VNI,VNIa,VNIa-Y,NA,Clinical,Malawi,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK230,ERS1142833,20427_3#40,VNI,VNIa,VNIa-X,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK33,ERS1142707,20427_2#15,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK55,ERS542336,14892_1#40,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -589,7 +589,7 @@ CNS_811,ERS2541363,CNS_811,VNI,VNIa,VNIa-93,NA,Clinical,Laos,Asia,Positive,,Asht
 04CN-64-097,ERS2541052,04CN-64-097,VNI,VNIa,VNIa-outlier,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-127,ERS2541009,04CN-64-127,VNI,VNIa,VNIa-outlier,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-023,ERS2541057,04CN-65-023,VNI,VNIa,VNIa-outlier,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-65-046,ERS2541062,04CN-65-046,VNI,VNIa,VNIa-outlier,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-65-046,ERS2541062,04CN-65-046,VNI,VNIa,VNIa-outlier,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK158,ERS1142786,20427_3#7,VNI,VNIa,VNIa-outlier,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-63-007,ERS2540944,04CN-63-007,VNI,VNIa,VNIa-X,NA,Clinical,Malawi,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-63-037,ERS2540965,04CN-63-037,VNI,VNIa,VNIa-X,NA,Clinical,Malawi,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -605,10 +605,10 @@ BK277,ERS1142872,20949_2#43,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,
 04CN-65-030,ERS2541046,04CN-65-030,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-035,ERS2541001,04CN-65-035,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-038,ERS2541029,04CN-65-038,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-65-040,ERS2540924,04CN-65-040,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-65-040,ERS2540924,04CN-65-040,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-65-043,ERS2541058,04CN-65-043,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-044,ERS2541071,04CN-65-044,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-65-016,ERS2541329,04CN-65-016,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-65-016,ERS2541329,04CN-65-016,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-65-049,ERS2541047,04CN-65-049,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-059,ERS2541023,04CN-65-059,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-064,ERS2541053,04CN-65-064,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -632,11 +632,11 @@ BK277,ERS1142872,20949_2#43,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,
 04CN-64-101,ERS2540969,04CN-64-101,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-105,ERS2540984,04CN-64-105,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-117,ERS2540932,04CN-64-117,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-64-128,ERS2541018,04CN-64-128,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-64-128,ERS2541018,04CN-64-128,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-64-129,ERS2541000,04CN-64-129,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-134,ERS2540958,04CN-64-134,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-64-138,ERS2541068,04CN-64-138,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-64-150,ERS2541028,04CN-64-150,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-64-150,ERS2541028,04CN-64-150,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-65-001,ERS2540986,04CN-65-001,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-002,ERS2541065,04CN-65-002,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-003,ERS2540995,04CN-65-003,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -648,7 +648,7 @@ BK277,ERS1142872,20949_2#43,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,
 BK153,ERS542436,14936_1#45,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK157,ERS1142785,20427_3#6,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK162,ERS1142788,20427_3#9,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK166,ERS1142791,20427_3#12,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK166,ERS1142791,20427_3#12,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK174,ERS542453,14936_1#62,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK179,ERS1142798,20949_2#21,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK206,ERS1142820,20949_2#28,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -681,7 +681,7 @@ BK132,ERS1142769,20427_2#70,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,
 04CN-65-163,ERS2540928,04CN-65-163,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-164,ERS2541320,04CN-65-164,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-165,ERS2540923,04CN-65-165,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,,NA,NA,NA
-04CN-65-166,ERS2540996,04CN-65-166,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-65-166,ERS2540996,04CN-65-166,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-65-167,ERS2541024,04CN-65-167,VNI,VNIa,VNIa-93,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK108,ERS1142759,20427_2#62,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK112,ERS1142761,20427_2#64,VNI,VNIa,VNIa-93,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -711,7 +711,7 @@ BK163,ERS1142789,20427_3#10,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,A
 BK164,ERS542445,14936_1#54,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK143,ERS1142779,20427_3#3,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK115,ERS1142763,20427_2#66,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK106,ERS1142758,20427_2#61,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK106,ERS1142758,20427_2#61,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK100,ERS1142757,20427_2#60,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-090,ERS2541074,04CN-32-090,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-093,ERS2540930,04CN-32-093,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -757,7 +757,7 @@ BK254,ERS1142855,20949_2#34,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,A
 BK260,ERS1142861,20427_4#1,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK220,ERS1142827,20427_3#35,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-089,ERS2541027,04CN-32-089,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK219,ERS542498,14893_1#12,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK219,ERS542498,14893_1#12,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK216,ERS1142826,20427_3#34,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK18,ERS542325,14892_1#1,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK180,ERS542459,14936_1#68,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -781,7 +781,7 @@ BK215,ERS542494,14893_1#8,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ash
 BK218,ERS542497,14893_1#11,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-086,ERS2541296,04CN-32-086,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-084,ERS2541295,04CN-32-084,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-32-083,ERS2541291,04CN-32-083,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-32-083,ERS2541291,04CN-32-083,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-03-002,ERS2541302,04CN-03-002,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-003,ERS2541293,04CN-03-003,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-004,ERS2541301,04CN-03-004,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -835,7 +835,7 @@ BK261,ERS542536,14893_1#48,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,As
 04CN-32-001,ERS2541060,04CN-32-001,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-004,ERS2541016,04CN-32-004,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-005,ERS2541307,04CN-32-005,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-32-011,ERS2541312,04CN-32-011,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-32-011,ERS2541312,04CN-32-011,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-32-019,ERS2540948,04CN-32-019,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-020,ERS2540967,04CN-32-020,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-32-025,ERS2541314,04CN-32-025,VNI,VNIa,VNIa-4,NA,Clinical,Thailand,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -916,7 +916,7 @@ CNS_929,ERS2541359,CNS_929,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashto
 CNS_955,ERS2541357,CNS_955,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_978,ERS2541356,CNS_978,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-020,ERS2541164,04CN-03-020,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-03-021,ERS2541154,04CN-03-021,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-03-021,ERS2541154,04CN-03-021,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-03-022,ERS2541334,04CN-03-022,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-024,ERS2541115,04CN-03-024,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-30-016,ERS2541167,04CN-30-016,VNI,VNIa,VNIa-5,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -936,7 +936,7 @@ CNS_978,ERS2541356,CNS_978,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashto
 04CN-65-013,ERS2540963,04CN-65-013,VNI,VNIa,VNIa-5,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-018,ERS2541069,04CN-65-018,VNI,VNIa,VNIa-5,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-65-056,ERS2541304,04CN-65-056,VNI,VNIa,VNIa-5,NA,Clinical,Uganda,Africa,Positive,,Ashton,Ashton,,NA,NA,NA
-BK102,ERS542397,14936_1#6,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK102,ERS542397,14936_1#6,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK105,ERS542398,14936_1#7,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-20-006,ERS2541182,04CN-20-006,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_198,ERS2541379,CNS_198,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -945,7 +945,7 @@ CNS_198,ERS2541379,CNS_198,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashto
 04CN-03-039,ERS2541212,04CN-03-039,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-047,ERS2541331,04CN-03-047,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-051,ERS2541178,04CN-03-051,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-04CN-03-053,ERS2541138,04CN-03-053,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+04CN-03-053,ERS2541138,04CN-03-053,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 04CN-03-058,ERS2541150,04CN-03-058,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-063,ERS2541234,04CN-03-063,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 04CN-03-069,ERS2541229,04CN-03-069,VNI,VNIa,VNIa-5,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -978,7 +978,7 @@ BK70,ERS542361,14892_1#65,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ash
 BK71,ERS1142730,20427_2#35,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK73,ERS1142732,20427_2#37,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK74,ERS1142733,20427_2#38,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK75,ERS542306,14892_1#11,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK75,ERS542306,14892_1#11,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK79,ERS1142737,20427_2#40,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK80,ERS1142738,20427_2#41,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK83,ERS1142741,20427_2#44,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -992,7 +992,7 @@ BK52,ERS542312,14892_1#17,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ash
 BK48,ERS1142716,20427_2#21,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK266,ERS1142863,20427_4#3,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK267,ERS1142864,20427_4#4,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-BK268,ERS1142865,20949_2#40,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+BK268,ERS1142865,20949_2#40,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 BK270,ERS542545,14893_1#57,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK271,ERS542546,14893_1#58,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 BK274,ERS1142869,20949_2#42,VNI,VNIa,VNIa-4,NA,Clinical,Vietnam,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
@@ -1032,7 +1032,7 @@ CNS_133-2,ERS2541340,CNS_133-2,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,A
 CNS_1379,ERS2541391,CNS_1379,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_1385,ERS2541390,CNS_1385,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_1394,ERS2541389,CNS_1394,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
-CNS_1403,ERS2541388,CNS_1403,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,diploid,NA,yes
+CNS_1403,ERS2541388,CNS_1403,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,non_haploid,NA,yes
 CNS_1413,ERS2541387,CNS_1413,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_1419,ERS2541386,CNS_1419,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA
 CNS_1420,ERS2541385,CNS_1420,VNI,VNIa,VNIa-4,NA,Clinical,Laos,Asia,Positive,,Ashton,Ashton,1970-01-01,NA,NA,NA

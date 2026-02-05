@@ -14,3 +14,4 @@ Crypto_Desjardins/config/RepBase.fasta
 analyses/.gitignore
 analyses/data/cnv_software
 analyses/results/cnv_software
+analyses/cneoformans_plots

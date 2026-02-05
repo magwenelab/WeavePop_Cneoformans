@@ -45,28 +45,27 @@ snakemake --profile Crypto_Ashton/config/default
 ```
 snakemake --profile Crypto_Desjardins_Ashton/config/default
 ``` 
+3) Install the Conda environment for the analyses below with `mamba env create -f misc/r_env.yaml`, then open R and run `install.packages("RRphylo")` (version tested is 3.0.2).  
 
-3) Run the analysis in  `explore_depth.qmd` (described below).
+4) Run the analysis in  `explore_depth.qmd` (described below).
 
-4) Fore each dataset rename the directories `02.Dataset` to `02.Dataset_all` and rerun the workflow excluding non-haploid (`samples_to_exclude: "config/non_haploids.txt"` in the `config.yaml` files) and low quality samples (`depth_quality: filter:True`). 
+5) Fore each dataset rename the directories `02.Dataset` to `02.Dataset_all` and rerun the workflow excluding non-haploid (`samples_to_exclude: "config/non_haploids.txt"` in the `config.yaml` files) and low quality samples (`depth_quality: filter:True`). 
 
-5) For the joined datset rename the directory `02.Dataset` to `02.Dataset_all` and rerun the join datasets workflow.  
+6) For the joined dataset rename the directory `02.Dataset` to `02.Dataset_all` and rerun the join datasets workflow.  
 
-6) Run the analysis (described below)
-* `analyses/aneuploides.qmd` 
+7) Run the analysis (described below)
+* `aneuploides.qmd` 
 * `tree_merge.qmd`
 * `tree_plot_cnvs.qmd`
 * `summary_per_lineage.qmd`
 
 ## Analyses
 
-
-
 The working directory of all the Quarto documents is `analyses/`.  
 They are rendered with the command: `quarto render analyses/scripts/<name>.qmd`.  
 
-All the input files used in the analyses come from the input or results of WeavePop in `Crypto_Desjardins`, 
-`Crypto_Ashton` or `Crypto_Desjardins_Ashton` or from the following external data.  
+All the input files used in the analyses come from the input or results of WeavePop in `Crypto_Desjardins/`, 
+`Crypto_Ashton/` or `Crypto_Desjardins_Ashton/` or from the following external data.  
 
 External data:  
 * `data/raw/CryptoDiversity_Desjardins_Tree.tre`: From [CryptoDiversity_Tree_Info](https://github.com/magwenelab/CryptoDiversity_Tree_Info/blob/main/CryptoDiversity_Desjardins_Tree.tre)
@@ -77,7 +76,7 @@ External data:
 ```
 analyses/
 ├── data # Raw data and data processed by the scripts here
-├── misc # `quarto.yaml` environment definition
+├── envs # `r_env.yaml` environment definition
 ├── notebooks # Rendered versions of Quarto documents
 ├── results # Results of the analyses
 ├── scripts # Scripts, Jupyter notebooks, and Quarto documents

@@ -27,10 +27,6 @@ Libraries
 
 ```{r libraries, output=FALSE}
 library(tidyverse)
-library(patchwork)
-library(ggbeeswarm)
-library(ggnewscale)
-library(RColorBrewer)
 ```
 
 Paths
@@ -158,7 +154,7 @@ print_plots(cnv_chroms_subset)
 ### Define ploidy
 
 ```{r}
-diploid <- c(
+non_haploid <- c(
     "SRS885171",
     "SRS881180",
     "SRS881178",
@@ -202,7 +198,7 @@ diploid <- c(
 ```
 
 ```{r}
-ploidy_df <- data.frame(sample = diploid, ploidy = "diploid")
+ploidy_df <- data.frame(sample = non_haploid, ploidy = "non_haploid")
 ```
 
 ```{r}
@@ -229,12 +225,12 @@ ggplot(cnv_chroms_ploidy, aes(x = coverage_percent_duplication, y = chrom_norm_d
 
 ```{r}
 desjardins_non_haploids <- cnv_chroms_ploidy %>%
-    filter(dataset == "Desjardins", ploidy == "diploid")%>%
+    filter(dataset == "Desjardins", ploidy == "non_haploid")%>%
     select(sample)%>%
     distinct()%>%
     pull(sample)
 ashton_non_haploids <- cnv_chroms_ploidy %>%
-    filter(dataset == "Ashton", ploidy == "diploid")%>%
+    filter(dataset == "Ashton", ploidy == "non_haploid")%>%
     select(sample)%>%
     distinct()%>%
     pull(sample)
@@ -255,7 +251,7 @@ low_mapq <- c("ERS542595",
 
 ```{r}
 cnv_haploids <- cnv_chroms_subset %>%
-    filter(!sample %in% diploid, !sample %in% low_mapq)%>%
+    filter(!sample %in% non_haploid, !sample %in% low_mapq)%>%
     select(sample, dataset, lineage)%>%
     arrange(desc(dataset),lineage)%>%
     distinct()

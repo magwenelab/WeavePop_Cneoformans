@@ -1,0 +1,26 @@
+name : r_weavepop
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.*
+  - r-essentials
+  - r-quarto
+  - r-irkernel
+  - ipykernel
+  - r-httpgd
+  - r-svglite
+  - r-tidyverse
+  - r-rcolorbrewer
+  - r-scales
+  - r-ggnewscale
+  - r-patchwork
+  - r-ggbeeswarm
+  - r-cowplot
+  - r-igraph
+  - r-vcfR
+  - r-pinfsc50
+  
+# install.packages(c("RRphylo","manipulate","phytools","ape","languageserver", "BiocManager", "ggrepel", "mixtools"))
+# BiocManager::install(c("ggtree","ggtreeExtra","ComplexHeatmap"))
