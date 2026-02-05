@@ -17,9 +17,10 @@ The reference genome assemblies for each lineage are:
  * VNBI: Strain Bt22 from [PRJNA1081442](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1081442).  
  * VNBII: Strain Bt89 from [GCA_023650575.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_023650575.1/).
 
+Located in [here](https://github.com/magwenelab/WeavePop_Cneoformans/tree/main/Crypto_Desjardins/data/references).  
 The reference genomes were aligned to the VNI reference genome to obtain assemblies that have the same orientation
 and to know the homology between chromosomes as described in 
-[cryptococcus_reference_genomes](https://github.com/magwenelab/cryptococcus_reference_genomes). 
+[cryptococcus_reference_genomes](https://github.com/magwenelab/cryptococcus_reference_genomes/tree/gff). 
 
 ### FASTQs
 
