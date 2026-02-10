@@ -54,25 +54,25 @@ metadata_output <- "data/processed/metadata_all.csv"
 Plots
 ```{r}
 desj_tree_out_plot <- 
-    "results/trees/tree_desjardins.png"
+    "results/figures_extra/tree_desjardins.png"
 desj_tree_out_plot2 <- 
-    "results/trees/tree_desjardins_2.svg"   
+    "results/figures_extra/tree_desjardins_2.svg"   
 desj_tree_out_plot_pdf <- 
-    "results/trees/tree_desjardins.pdf"
+    "results/figures_extra/tree_desjardins.pdf"
 ashton_tree_out_plot <- 
-    "results/trees/tree_ashton.png"
+    "results/figures_extra/tree_ashton.png"
 ashton_tree_out_plot_pdf <- 
-    "results/trees/tree_ashton.pdf"
+    "results/figures_extra/tree_ashton.pdf"
 merged_tree_plot <- 
-    "results/trees/tree_merged.png"
+    "results/figures_extra/tree_merged.png"
 merged_tree_plot_pdf <- 
-    "results/trees/tree_merged.pdf"
+    "results/figures_extra/tree_merged.pdf"
 merged_tree_removed_plot_png <- 
-    "results/trees/tree_merged_removed.png"
+    "results/figures_extra/tree_merged_removed.png"
 merged_tree_small_plot <- 
-    "results/trees/tree_merged_small.png"
+    "results/figures_extra/tree_merged_small.png"
 merged_tree_continent_plot_png<- 
-    "results/trees/tree_merged_continent.png"
+    "results/figures_extra/tree_merged_continent.png"
 ```
 
 ## Ploidy and quality

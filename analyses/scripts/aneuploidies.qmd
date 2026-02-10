@@ -42,8 +42,8 @@ cnv_chroms_path <-
 # Output
 chrom_metrics_path <- "results/tables/chromosome_cnv_categories.tsv"
 
-barplot_aneup_category_dups_path1 <- "results/figs/barplot_aneuploidy_category.svg"
-barplot_size_category_dups_path <- "results/figs/barplot_size_category.svg"
+barplot_aneup_category_dups_path1 <- "results/figures/barplot_aneuploidy_category.svg"
+barplot_size_category_dups_path <- "results/figures_extra/barplot_size_category.svg"
 
 ```
 
