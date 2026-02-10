@@ -46,7 +46,7 @@ snakemake --profile Crypto_Ashton/config/default
 ```
 snakemake --profile Crypto_Desjardins_Ashton/config/default
 ``` 
-3) Install the Conda environment for the analyses below with `mamba env create -f misc/r_env.yaml`, then open R and run `install.packages("RRphylo")` (version tested is 3.0.2).  
+3) Install the Conda environment for the analyses below with `mamba env create -f analyses/envs/r_env.yaml`, then open R and run `install.packages("RRphylo")` (version tested is 3.0.2).  
 
 4) Run the analysis in  `explore_depth.qmd` (described below).
 

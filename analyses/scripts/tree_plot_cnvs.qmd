@@ -77,7 +77,7 @@ metadata <- read.csv(
 
 Get one dataframe for each variable to be plotted as a separate metadata column in the tree
 ```{r}
-metadata$vni_subdivision <- factor(metadata$vni_subdivision,
+metadata$sublineage <- factor(metadata$sublineage,
                             levels = c("VNIa-4", "VNIa-5", "VNIa-32", 
                             "VNIa-93", "VNIa-X", "VNIa-Y", "VNIb", 
                             "VNIc", "VNIa-outlier"))
@@ -88,7 +88,7 @@ metadata$continent <- factor(metadata$continent,
 
 sublineage <- metadata %>%
                 filter(lineage == "VNI")%>%
-                select(strain, vni_subdivision)%>%
+                select(strain, sublineage)%>%
                 column_to_rownames("strain")%>%
                 droplevels()
 lineage <- metadata %>%

@@ -1,388 +1,388 @@
-sample,strain,alias,lineage,vni_subdivision,vnia_subdivision,mating_type,source,country,continent,hiv_status,substrate
-SRS881221,Ftc555-2,Ftc555-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881219,Ftc151-1,Ftc151-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881161,PMHc1052.ENR.STOR,PMHc1052.ENR.STOR,VNBII,,,a,Clinical,Botswana,Africa,,
-SRS881245,Ftc134-3,Ftc134-3,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881171,Ftc173-1,Ftc173-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881140,NRHc5030.ENR.CLIN.ISO,NRHc5030.ENR.CLIN.ISO,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885842,Ftc217-1,Ftc217-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881217,Ftc241-1,Ftc241-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885850,Muc516-1,Muc516-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881142,NRHc5017.ENR,NRHc5017.ENR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881168,Ftc239-2,Ftc239-2,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881147,Ftc209-1,Ftc209-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881206,Ftc327-1,Ftc327-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881159,PMHc1033.ENR,PMHc1033.ENR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS881207,NRHc5011.ENR,NRHc5011.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881237,NRHc5025.ENR.CLIN.1,NRHc5025.ENR.CLIN.1,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,,
-SRS881184,Ftc202-1,Ftc202-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881189,NRHc5014.ENR,NRHc5014.ENR,VNBII,,,a,Clinical,Botswana,Africa,,
-SRS881234,Ftc109-1,Ftc109-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881183,Muc451-1,Muc451-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881202,Gbc39-1,Gbc39-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Acacia tree
-SRS881236,NRHc5041.ENR.STOR,NRHc5041.ENR.STOR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885889,PMHc1039.ENR.STOR,PMHc1039.ENR.STOR,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,,
-SRS881218,Ftc195-1,Ftc195-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881179,PMHc1030.ENR.CLIN.ISO,PMHc1030.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885915,Ftc211-1,Ftc211-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881173,Muc463-2,Muc463-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881211,PMHc1050.ENR.CLIN1,PMHc1050.ENR.CLIN1,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881227,Muc437-1,Muc437-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881205,Muc387-2,Muc387-2,VNBII,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881235,Ftc209-3,Ftc209-3,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885880,NRHc5042.ENR.STOR,NRHc5042.ENR.STOR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885916,PMHc1031A.ENR.INI.LP,PMHc1031A.ENR.INI.LP,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881223,Ftc267-2,Ftc267-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885878,Ftc168-1,Ftc168-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885865,Ftc158-2,Ftc158-2,VNBI,,,a,Environmental,Botswana,Africa,,Avian droppings
-SRS885892,PMHc1001.ENR,PMHc1001.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885169,Gbc573-1,Gbc573-1,VNBI,,,α,Environmental,Botswana,Africa,,Unknown tree
-SRS881149,Muc503-1,Muc503-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881191,Ftc111-1,Ftc111-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881172,NRHc5026.ENR.CLIN.ISO,NRHc5026.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881201,NRHc5027.ENR.CLIN1,NRHc5027.ENR.CLIN1,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885852,NRHc5024A.ENR.CLIN.ISO,NRHc5024A.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881188,Muc504-1,Muc504-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881228,NRHc5024.ENR.CLIN.1,NRHc5024.ENR.CLIN.1,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881164,PMHc1038.ENR.CLIN1,PMHc1038.ENR.CLIN1,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881225,NRHc5031.ENR.CLIN.ISO,NRHc5031.ENR.CLIN.ISO,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS881196,PMHc1020.CLIN.1,PMHc1020.CLIN.1,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881166,NRHc5032.ENR.CLIN.ISO,NRHc5032.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885176,NRHc5037.ENR.CLIN1,NRHc5037.ENR.CLIN1,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885877,NRHc5023.ENR,NRHc5023.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881158,PMHc1011.ENR,PMHc1011.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885853,Muc418-1,Muc418-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881170,NRHc5036.ENR,NRHc5036.ENR,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,,
-SRS881243,Muc479-1,Muc479-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885857,Ftc192-1,Ftc192-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881200,Gbc98-1,Gbc98-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Unknown tree
-SRS885170,Gbc16-1,Gbc16-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Decayed tree
-SRS881151,NRHc5029.ENR.CLIN.ISO,NRHc5029.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881177,Ftc200-1,Ftc200-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881162,NRHc5039.ENR.STOR,NRHc5039.ENR.STOR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885884,PMHc1040.ENR.STOR,PMHc1040.ENR.STOR,VNI,VNIa,VNIa-outlier,α,Clinical,Botswana,Africa,,
-SRS885879,NRHc5015.REL.CLIN.ISO,NRHc5015.REL.CLIN.ISO,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881241,PMHc1022.ENR,PMHc1022.ENR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS885871,Muc367-1,Muc367-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881247,Ftc257-1,Ftc257-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881148,NRHc5013.REL.INI,NRHc5013.REL.INI,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS881150,Ftc132-1,Ftc132-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881233,Muc402-1,Muc402-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881194,Muc457-1,Muc457-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881197,Gbc44-1,Gbc44-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Acacia tree
-SRS881208,PMHc1018.ENR,PMHc1018.ENR,VNI,VNIa,VNIa-32,α,Clinical,Botswana,Africa,,
-SRS885816,Ftc225-1,Ftc225-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881214,Muc416-4,Muc416-4,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881203,Muc466-3,Muc466-3,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885875,NRHc5013.ENR,NRHc5013.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS881178,NRHc5005.ENR,NRHc5005.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885188,NRHc5022.ENR,NRHc5022.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881181,Muc458-2,Muc458-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885173,NRHc5004.ENR,NRHc5004.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS881213,Muc364-1,Muc364-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881193,Muc489-1,Muc489-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881180,PMHc1029.ENR.STOR,PMHc1029.ENR.STOR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS881215,Ftc207-1,Ftc207-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885174,NRHc5010.ENR,NRHc5010.ENR,VNI,VNIa,VNIa-outlier,α,Clinical,Botswana,Africa,,
-SRS881226,PMHc1009.ENR,PMHc1009.ENR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS885186,NRHc5020.ENR,NRHc5020.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885172,NRHc5028.ENR.STOR,NRHc5028.ENR.STOR,VNI,VNIa,VNIa-outlier,α,Clinical,Botswana,Africa,,
-SRS881244,NRHc5015.ENR,NRHc5015.ENR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881199,Ftc102-1,Ftc102-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881222,Ftc146-1,Ftc146-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881212,PMHc1023.ENR,PMHc1023.ENR,VNII,,,α,Clinical,Botswana,Africa,,
-SRS881204,Gbc42-1,Gbc42-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Acacia tree
-SRS881216,PMHc1024.ENR,PMHc1024.ENR,VNBII,,,a,Clinical,Botswana,Africa,,
-SRS881156,NRHc5044.REL.INI.CLIN.ISO,NRHc5044.REL.INI.CLIN.ISO,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,,
-SRS885893,NRHc5045.ENR.CLIN.ISO,NRHc5045.ENR.CLIN.ISO,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885841,NRHc5009.REL.INI,NRHc5009.REL.INI,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881152,PMHc1034.ENR.STOR,PMHc1034.ENR.STOR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS885851,NRHc5009.ENR,NRHc5009.ENR,VNBI,,,,Clinical,Botswana,Africa,,
-SRS881169,PMHc1043.ENR.STOR,PMHc1043.ENR.STOR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881175,Ftc103-1,Ftc103-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885843,PMHc1032.ENR,PMHc1032.ENR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881155,Ftc267-1,Ftc267-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881220,Gbc51-2,Gbc51-2,VNI,VNIc,,α,Environmental,Botswana,Africa,,Acacia tree
-SRS885874,Gbc39-2,Gbc39-2,VNI,VNIc,,α,Environmental,Botswana,Africa,,Acacia tree
-SRS885888,NRHc5040.ENR.CLIN.ISO,NRHc5040.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS885854,Ftc167-1,Ftc167-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885167,Ftc321-3,Ftc321-3,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885192,Ftc225-3,Ftc225-3,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885833,Muc387-1,Muc387-1,VNBII,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881157,NRHc5035.ENR.CLIN.ISO,NRHc5035.ENR.CLIN.ISO,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881198,Ftc153-1,Ftc153-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881229,Ftc321-2,Ftc321-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885171,NRHc5008.ENR,NRHc5008.ENR,VNBII,,,a,Clinical,Botswana,Africa,,
-SRS885847,PMHc1047.ENR.CLIN1,PMHc1047.ENR.CLIN1,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS885863,Ftc222-2,Ftc222-2,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885855,Ftc137-1,Ftc137-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881176,PMHc1035.ENR.STOR,PMHc1035.ENR.STOR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS881238,PMHc1026.ENR,PMHc1026.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881174,Ftc321-1,Ftc321-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885858,Ftc214-1,Ftc214-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881210,PMHc1002.ENR,PMHc1002.ENR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS885894,Muc498-2,Muc498-2,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS881160,NRHc5001.ENR,NRHc5001.ENR,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881165,Muc466-1,Muc466-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885168,Ftc170-1,Ftc170-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS885177,NRHc5019.ENR,NRHc5019.ENR,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS881246,Gbc95-1,Gbc95-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Unknown tree
-SRS881240,NRHc5021.ENR,NRHc5021.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS881239,NRHc5048.ENR.ISO,NRHc5048.ENR.ISO,VNI,VNIc,,α,Clinical,Botswana,Africa,,
-SRS881185,PMHc1049.THER1.STOR,PMHc1049.THER1.STOR,VNBII,,,α,Clinical,Botswana,Africa,,
-SRS881232,Ftc239-1,Ftc239-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS885191,Muc460-3,Muc460-3,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881224,Ftc236-1,Ftc236-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881242,PMHc1014.ENR,PMHc1014.ENR,VNBI,,,a,Clinical,Botswana,Africa,,
-SRS885887,Muc525-1,Muc525-1,VNBI,,,α,Environmental,Botswana,Africa,,Soil
-SRS885882,Muc449-1,Muc449-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS881143,Ftc555-1,Ftc555-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS520182,WM626,Cryptococcus neoformans var. grubii WM626 (MMRL 3150),VNII,,,α,Clinical,Australia,Australasia,,
-SRS409781,D17-1,Cryptococcus neoformans var. grubii D17-1,VNI,VNIa,VNIa-outlier,α,Environmental,S. Africa,Africa,,Pigeon guano
-SRS417573,AD1-86a,Cryptococcus_neoformans var. grubii_AD1-86a,VNI,VNIa,VNIa-5,α,Clinical,France,Europe,,
-SRS404506,Bt102,Cryptococcus_neoformans var. grubii_Bt102,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS404739,Bt40,Cryptococcus_neoformans var. grubii_Bt40,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404514,Bt7,Cryptococcus_neoformans_Bt7,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS417583,AD1-90a,Cryptococcus_neoformans var. grubii_AD1-90a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS417616,Bt146,Cryptococcus_neoformans var. grubii_Bt146,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404755,Bt84,Cryptococcus_neoformans var. grubii_Bt84,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404753,Bt6,Cryptococcus_neoformans var. grubii_Bt6,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,Positive,
-SRS404467,Bt41,Cryptococcus_neoformans var. grubii_Bt41,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404488,Bt23,Cryptococcus_neoformans var. grubii_Bt23,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404460,Bt43,Cryptococcus_neoformans_Bt43,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417676,Ug2459,Cryptococcus_neoformans var. grubii_Ug2459,VNI,VNIb,,α,Clinical,Uganda,Africa,,
-SRS404766,Bt126,Cryptococcus_neoformans var. grubii_Bt126,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404761,MW-RSA606,Cryptococcus_neoformans var. grubii_MW-RSA606,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS404499,Bt25,Cryptococcus_neoformans var. grubii_Bt25,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417642,In2632,Cryptococcus_neoformans var. grubii_In2632,VNI,VNIa,VNIa-32,α,Clinical,India,Asia,,
-SRS404491,Bt155,Cryptococcus_neoformans var. grubii_Bt155,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417597,AD3-9a,Cryptococcus_neoformans var. grubii_AD3-9a,VNII,,,α,Clinical,France,Europe,,
-SRS409058,AD2-60a,Cryptococcus neoformans var. grubii AD2-60a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404490,Bt3,Cryptococcus_neoformans var. grubii_Bt3,VNI,VNIa,VNIa-93,α,Clinical,Botswana,Africa,Positive,
-SRS417578,AD2-82a,Cryptococcus_neoformans var. grubii_AD2-82a,VNI,VNIa,VNIa-5,α,Clinical,France,Europe,,
-SRS417678,Ug2462,Cryptococcus_neoformans var. grubii_Ug2462,VNII,,,α,Clinical,Uganda,Africa,,
-SRS520173,A1-84-14,Cryptococcus neoformans var. grubii A1-84-14,VNI,VNIb,,α,Environmental,USA,North America,,Pigeon guano
-SRS404793,MW-RSA6134,Cryptococcus_neoformans var. grubii_MW-RSA6134,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS417591,AD4-63a,Cryptococcus_neoformans var. grubii_AD4-63a,VNI,VNIa,VNIa-93,α,Clinical,France,Europe,,
-SRS417611,Bt133,Cryptococcus_neoformans var. grubii_Bt133,VNBII,,,a,Clinical,Botswana,Africa,Positive,
-SRS405118,Bt30,Cryptococcus_neoformans var. grubii_Bt30,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS409060,A2-102-5,Cryptococcus neoformans var. grubii A2-102-5,VNI,VNIa,VNIa-outlier,α,Environmental,USA,North America,,Pigeon guano
-SRS404477,Bt27,Cryptococcus_neoformans var. grubii_Bt27,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417656,Pr284-1,Cryptococcus_neoformans var. grubii_Pr284-1,VNI,VNIb,,α,Environmental,Botswana,Africa,,Avian guano
-SRS409483,Tu401-1,Cryptococcus neoformans var. grubii Tu401-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS417625,Bt157,Cryptococcus_neoformans var. grubii_Bt157,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404746,Bt33,Cryptococcus_neoformans var. grubii_Bt33,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404781,Bt52,Cryptococcus_neoformans var. grubii_Bt52,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS409113,Br795,Cryptococcus_neoformans_Br795,VNI,VNIa,VNIa-93,α,Clinical,Brazil,South America,,
-SRS405110,C27,Cryptococcus_neoformans var. grubii_C27,VNI,VNIa,VNIa-32,α,Clinical,USA,North America,,
-SRS502193,Bt142,Cryptococcus_neoformans var. grubii_Bt142,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS404479,WM148,Cryptococcus_neoformans var. grubii_WM148,VNI,VNIb,,α,Clinical,Australia,Australasia,,
-SRS417653,MW-RSA3179,Cryptococcus_neoformans var. grubii_MW-RSA3179,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS417655,PLR10,Cryptococcus_neoformans var. grubii_PLR10,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS520181,MW-RSA913,Cryptococcus neoformans var. grubii MW-RSA913,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS405121,Bt47,Cryptococcus_neoformans_Bt47,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405132,Bt121,Cryptococcus_neoformans var. grubii_Bt121,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404808,Bt81,Cryptococcus_neoformans var. grubii_Bt81,VNBII,,,a,Clinical,Botswana,Africa,Positive,
-SRS405098,Bt17,Cryptococcus_neoformans_Bt17,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404496,A3-1-1,Cryptococcus_neoformans var. grubii_29593,VNI,VNIb,,α,Environmental,USA,North America,,Pigeon guano
-SRS417606,Bt109,Cryptococcus_neoformans var. grubii_Bt109,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS405151,Bt57,Cryptococcus_neoformans var. grubii_Bt57,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS409112,Bt63,Cryptococcus_neoformans_Bt63,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS404475,LP-RSA3042,Cryptococcus_neoformans var. grubii_LP-RSA3042,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS404773,Bt119,Cryptococcus_neoformans var. grubii_Bt119,VNI,VNIa,VNIa-93,α,Clinical,Botswana,Africa,Positive,
-SRS409074,Th84,Cryptococcus_neoformans_Th84,VNI,VNIa,VNIa-4,α,Clinical,Thailand,Asia,Positive,
-SRS405136,Bt62,Cryptococcus_neoformans_Bt62,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417603,AD5-39a,Cryptococcus_neoformans var. grubii_AD5-39a,VNI,VNIa,VNIa-93,α,Clinical,France,Europe,,
-SRS404442,Bt211,Cryptococcus_neoformans var. grubii_Bt211,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404485,Bt130,Cryptococcus_neoformans var. grubii_Bt130,VNI,VNIc,,a,Clinical,Botswana,Africa,Positive,
-SRS405137,Bt97,Cryptococcus_neoformans_Bt97,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417593,AD4-76a,Cryptococcus_neoformans var. grubii_AD4-76a,VNI,VNIa,VNIa-4,α,Clinical,France,Europe,,
-SRS404448,Bt76,Cryptococcus_neoformans var. grubii_Bt76,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS403287,Gb118,Cryptococcus_neoformans_Gb118,VNI,VNIa,VNIa-X,α,Environmental,Botswana,Africa,,Pigeon guano
-SRS405111,Bt83,Cryptococcus_neoformans var. grubii_Bt83,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS429660,Bt210,Cryptococcus_neoformans var. grubii_Bt210,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417651,MW-RSA1607,Cryptococcus_neoformans var. grubii_MW-RSA1607,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS404795,MW-RSA82,Cryptococcus_neoformans_MW-RSA82,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS404805,Bt39,Cryptococcus_neoformans var. grubii_Bt39,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417607,Bt115,Cryptococcus_neoformans var. grubii_Bt115,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404473,Bt10,Cryptococcus_neoformans var. grubii_Bt10,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS405135,Bt110,Cryptococcus_neoformans var. grubii_Bt110,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417647,LP-RSA6618,Cryptococcus_neoformans var. grubii_LP-RSA6618,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS409176,C45,Cryptococcus_neoformans_C45,VNII,,,α,Clinical,USA,North America,Negative,
-SRS417680,Ug2463,Cryptococcus_neoformans var. grubii_Ug2463,VNI,VNIa,VNIa-4,α,Clinical,Uganda,Africa,,
-SRS404451,Bt42,Cryptococcus_neoformans var. grubii_Bt42,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405102,MW-RSA5387,Cryptococcus_neoformans var. grubii_MW-RSA5387,VNI,VNIa,VNIa-X,α,Clinical,S. Africa,Africa,,
-SRS404792,Bt87,Cryptococcus_neoformans var. grubii_Bt87,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404512,Bt160,Cryptococcus_neoformans var. grubii_Bt160,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405147,Bt116,Cryptococcus_neoformans var. grubii_Bt116,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417636,Bt208,Cryptococcus_neoformans var. grubii_Bt208,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417619,Bt148,Cryptococcus_neoformans var. grubii_Bt148,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS404779,Bt46,Cryptococcus_neoformans_Bt46,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404809,Bt209,Cryptococcus_neoformans var. grubii_Bt209,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405126,A4-34-6,Cryptococcus_neoformans var. grubii_31427,VNI,VNIa,VNIa-32,α,Environmental,USA,North America,,Pigeon guano
-SRS404813,LP-RSA848,Cryptococcus_neoformans var. grubii_LP-RSA848,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS520184,TCl-11,Cryptococcus sp. TCl-11,VNI,VNIb,,α,Clinical,Togo,Africa,,
-SRS405122,Bt11,Cryptococcus_neoformans var. grubii_Bt11,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417658,LP-RSA756,Cryptococcus_neoformans var. grubii_LP-RSA756,VNBI,,,α,Clinical,Botswana,Africa,,
-SRS404461,Bt54,Cryptococcus_neoformans var. grubii_Bt54,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404454,Bt37,Cryptococcus_neoformans var. grubii_Bt37,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS409064,MW-RSA1955,Cryptococcus neoformans var. grubii MW-RSA1955,VNI,VNIa,VNIa-5,α,Clinical,S. Africa,Africa,,
-SRS417601,AD6-55a,Cryptococcus_neoformans var. grubii_AD6-55a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS417604,Arg1366,Cryptococcus_neoformans var. grubii_Arg1366,VNI,VNIb,,α,Clinical,Argentina,South America,,
-SRS417643,Jp1088,Cryptococcus_neoformans var. grubii_Jp1088,VNI,VNIa,VNIa-5,α,Clinical,Japan,Asia,,
-SRS404786,Bt72,Cryptococcus_neoformans var. grubii_Bt72,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404456,IUM-96-28-28,Cryptococcus_neoformans var. grubii_IUM 96-28-28,VNI,VNIb,,a,Environmental,Italy,Europe,,Soil
-SRS417585,AD3-58,Cryptococcus_neoformans var. grubii_AD3-58,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404777,Bt78,Cryptococcus_neoformans var. grubii_Bt78,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417575,AD1-95a,Cryptococcus_neoformans var. grubii_AD1-95a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS417614,Bt138,Cryptococcus_neoformans var. grubii_Bt138,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,Positive,
-SRS417587,AD3-83a,Cryptococcus_neoformans var. grubii_AD3-83a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS409066,Bt85,Cryptococcus_neoformans_Bt85,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS417657,RTC1,Cryptococcus_neoformans var. grubii_RTC1,VNI,VNIa,VNIa-93,α,Clinical,Botswana,Africa,Positive,
-SRS405129,Bt108,Cryptococcus_neoformans var. grubii_Bt108,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405148,Bt58,Cryptococcus_neoformans var. grubii_Bt58,VNI,VNIa,VNIa-X,α,Clinical,Botswana,Africa,Positive,
-SRS417572,AD1-68a,Cryptococcus_neoformans var. grubii_AD1-68a,VNI,VNIa,VNIa-93,α,Clinical,France,Europe,,
-SRS409177,MW-RSA36,Cryptococcus neoformans var. grubii MW-RSA36,VNI,VNIa,VNIa-X,α,Clinical,S. Africa,Africa,,
-SRS417577,AD2-6a,Cryptococcus_neoformans var. grubii_AD2-6a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS409076,Tu259-1,Cryptococcus neoformans var. grubii Tu259-1,VNI,VNIa,VNIa-outlier,α,Environmental,Botswana,Africa,,Mopane tree
-SRS404443,A5-35-17,Cryptococcus neoformans var. grubii A5-35-17,VNI,VNIa,VNIa-5,α,Environmental,USA,North America,,Pigeon guano
-SRS404486,Bt101,Cryptococcus_neoformans var. grubii_Bt101,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404513,MW-RSA722,Cryptococcus_neoformans_MW-RSA722,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS405142,Bt104,Cryptococcus_neoformans var. grubii_Bt104,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404494,Tu241-1,Cryptococcus_neoformans var. grubii_Tu241-1,VNI,VNIa,VNIa-outlier,α,Environmental,Botswana,Africa,,Mopane tree
-SRS417596,AD5-53a,Cryptococcus_neoformans var. grubii_AD5-53a,VNI,VNIa,VNIa-5,α,Clinical,France,Europe,,
-SRS404508,Bt123,Cryptococcus_neoformans var. grubii_Bt123,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404810,Bt5,Cryptococcus_neoformans var. grubii_Bt5,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404480,Gb159-1,Cryptococcus_neoformans var. grubii_Gb159-1,VNI,VNIc,,α,Environmental,Botswana,Africa,,Unknown tree
-SRS404498,LP-RSA116,Cryptococcus_neoformans var. grubii_LP-RSA116,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS520178,MW-RSA3834,Cryptococcus neoformans var. grubii MW-RSA3834,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS417571,8-1,Cryptococcus_neoformans var. grubii_41487,VNII,,,α,Clinical,USA,North America,,
-SRS404797,C2,Cryptococcus_neoformans_C2,VNII,,,α,Clinical,USA,North America,,
-SRS409482,C23,Cryptococcus_neoformans_C23,VNI,VNIb,,α,Clinical,USA,North America,Negative,
-SRS417639,Bt65,Cryptococcus_neoformans var. grubii_Bt65,VNBII,,,a,Clinical,Botswana,Africa,Positive,
-SRS404470,Bt118,Cryptococcus_neoformans var. grubii_Bt118,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404458,Bt89,Cryptococcus_neoformans var. grubii_Bt89,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404495,Bt75,Cryptococcus_neoformans var. grubii_Bt75,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS520174,LP-RSA2297,Cryptococcus neoformans var. grubii LP-RSA2297,VNI,VNIa,VNIa-4,α,Clinical,S. Africa,Africa,,
-SRS404457,Bt212,Cryptococcus_neoformans var. grubii_Bt212,VNI,VNIa,VNIa-X,α,Clinical,Botswana,Africa,Positive,
-SRS409063,AD1-83a,Cryptococcus neoformans var. grubii AD1-83a,VNI,VNIa,VNIa-5,α,Clinical,France,Europe,,
-SRS520185,TCl-14,Cryptococcus sp. TCl-14,VNI,VNIb,,α,Clinical,Togo,Africa,,
-SRS417588,AD3-95a,Cryptococcus_neoformans var. grubii_AD3-95a,VNI,VNIa,VNIa-4,α,Clinical,France,Europe,,
-SRS417576,AD2-04a,Cryptococcus_neoformans var. grubii_AD2-04a,VNI,VNIa,VNIa-93,α,Clinical,France,Europe,,
-SRS417582,AD3-55a,Cryptococcus_neoformans var. grubii_AD3-55a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS417612,Bt136,Cryptococcus_neoformans var. grubii_Bt136,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404449,Bt213,Cryptococcus_neoformans var. grubii_Bt213,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404812,Bt161,Cryptococcus_neoformans var. grubii_Bt161,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417650,MW-RSA1186,Cryptococcus_neoformans var. grubii_MW-RSA1186,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS404469,Bt60,Cryptococcus_neoformans_Bt60,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS409478,AD1-7a,Cryptococcus neoformans var. grubii AD1-7a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS405149,LP-RSA1684,Cryptococcus_neoformans var. grubii_LP-RSA1684,VNII,,,α,Clinical,S. Africa,Africa,,
-SRS405145,Bt117,Cryptococcus_neoformans var. grubii_Bt117,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417586,AD2-99a,Cryptococcus_neoformans var. grubii_AD2-99a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404484,Bt98,Cryptococcus_neoformans_Bt98,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS520180,MW-RSA524,Cryptococcus neoformans var. grubii MW-RSA524,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS417609,Bt128,Cryptococcus_neoformans var. grubii_Bt128,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417590,AD4-47a,Cryptococcus_neoformans var. grubii_AD4-47a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404788,Bt129,Cryptococcus_neoformans var. grubii_Bt129,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404800,Bt24,Cryptococcus_neoformans var. grubii_Bt24,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS405113,Bt137,Cryptococcus_neoformans var. grubii_Bt137,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405127,Th206,Cryptococcus_neoformans var. grubii_Th206,VNI,VNIa,VNIa-4,α,Clinical,Thailand,Asia,Positive,
-SRS404743,Bt34,Cryptococcus_neoformans var. grubii_Bt34,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404501,Bt68,Cryptococcus_neoformans_Bt68,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405114,Bt164,Cryptococcus_neoformans_Bt164,VNI,VNIa,VNIa-4,α,Clinical,Botswana,Africa,Positive,
-SRS409059,C8,Cryptococcus_neoformans_C8,VNI,VNIa,VNIa-5,α,Clinical,USA,North America,Positive,
-SRS404750,Bt31,Cryptococcus_neoformans var. grubii_Bt31,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404472,Bt103,Cryptococcus_neoformans var. grubii_Bt103,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404463,Bt55,Cryptococcus_neoformans var. grubii_Bt55,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417618,Bt147,Cryptococcus_neoformans var. grubii_Bt147,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS404765,Bt56,Cryptococcus_neoformans var. grubii_Bt56,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS405134,Bt151,Cryptococcus_neoformans var. grubii_Bt151,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404516,Bt49,Cryptococcus_neoformans var. grubii_Bt49,VNI,VNIb,,α,Clinical,Botswana,Africa,Positive,
-SRS409175,CHC193,Cryptococcus_neoformans_CHC193,VNI,VNIa,VNIa-5,α,Clinical,China,Asia,,
-SRS405130,Bt59,Cryptococcus_neoformans var. grubii_Bt59,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS520177,MW-RSA1327,Cryptococcus neoformans var. grubii MW-RSA1327,VNII,,,α,Clinical,S. Africa,Africa,,
-SRS405123,Bt96,Cryptococcus_neoformans_Bt96,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS405144,Bt48,Cryptococcus_neoformans var. grubii_Bt48,VNI,VNIa,VNIa-X,α,Clinical,Botswana,Africa,Positive,
-SRS404517,Bt100,Cryptococcus_neoformans var. grubii_Bt100,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404462,A1-35-8,Cryptococcus neoformans var. grubii A1-35-8,VNI,VNIb,,α,Environmental,USA,North America,,Pigeon guano
-SRS405109,Bt92,Cryptococcus_neoformans var. grubii_Bt92,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,Positive,
-SRS405120,Bt70,Cryptococcus_neoformans_Bt70,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS404452,MW-RSA2628,Cryptococcus_neoformans var. grubii_MW-RSA2628,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS417654,MW-RSA3321,Cryptococcus_neoformans var. grubii_MW-RSA3321,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS404740,LP-RSA2296,Cryptococcus_neoformans var. grubii_LP-RSA2296,VNI,VNIa,VNIa-outlier,α,Clinical,S. Africa,Africa,,
-SRS409065,Bt1,Cryptococcus_neoformans_Bt1,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404780,Bt114,Cryptococcus_neoformans var. grubii_Bt114,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS409075,Bt206,Cryptococcus_neoformans_Bt206,VNBII,,,a,Clinical,Botswana,Africa,Positive,
-SRS405128,Bt205,Cryptococcus_neoformans var. grubii_Bt205,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405099,A3-38-20,Cryptococcus_neoformans var. grubii_36362,VNI,VNIb,,α,Environmental,USA,North America,,Pigeon guano
-SRS404507,Bt150,Cryptococcus_neoformans var. grubii_Bt150,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417665,Tu360-1,Cryptococcus_neoformans var. grubii_Tu360-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS417624,Bt154,Cryptococcus_neoformans var. grubii_Bt154,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS417605,Bt105,Cryptococcus_neoformans var. grubii_Bt105,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417599,AD5-67a,Cryptococcus_neoformans var. grubii_AD5-67a,VNII,,,α,Clinical,France,Europe,,
-SRS417662,RTC5,Cryptococcus_neoformans var. grubii_RTC5,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS520179,MW-RSA3956,Cryptococcus neoformans var. grubii MW-RSA3956,VNII,,,α,Clinical,S. Africa,Africa,,
-SRS404803,MW-RSA1869,Cryptococcus_neoformans var. grubii_MW-RSA1869,VNI,VNIb,,α,Clinical,S. Africa,Africa,,
-SRS404807,Bt28,Cryptococcus_neoformans var. grubii_Bt28,VNI,VNIa,VNIa-32,α,Clinical,Botswana,Africa,Positive,
-SRS417667,Tu369-1,Cryptococcus_neoformans var. grubii_Tu369-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS417600,AD6-54a,Cryptococcus_neoformans var. grubii_AD6-54a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404745,Bt18,Cryptococcus_neoformans_Bt18,VNI,VNIa,VNIa-Y,α,Clinical,Botswana,Africa,Positive,
-SRS405107,Bt153,Cryptococcus_neoformans var. grubii_Bt153,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404492,MW-RSA4119,Cryptococcus_neoformans var. grubii_MW-RSA4119,VNII,,,α,Clinical,S. Africa,Africa,,
-SRS404791,Bt79,Cryptococcus_neoformans var. grubii_Bt79,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404794,Bt202,Cryptococcus_neoformans_Bt202,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417594,AD4-92a,Cryptococcus_neoformans var. grubii_AD4-92a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS417641,C12,Cryptococcus_neoformans var. grubii_C12,VNII,,,α,Clinical,USA,North America,Negative,
-SRS417661,Tu229-1,Cryptococcus_neoformans var. grubii_Tu229-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS417622,Bt152,Cryptococcus_neoformans var. grubii_Bt152,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS405141,Bt111,Cryptococcus_neoformans var. grubii_Bt111,VNI,VNIb,,α,Clinical,Botswana,Africa,Positive,
-SRS417668,Tu406-1,Cryptococcus_neoformans var. grubii_Tu406-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS404489,Bt203,Cryptococcus_neoformans var. grubii_Bt203,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS520130,Bt35,Cryptococcus neoformans Bt35,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404759,Bt93,Cryptococcus_neoformans var. grubii_Bt93,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405116,A4-1-12,Cryptococcus_neoformans var. grubii_33519,VNI,VNIb,,α,Environmental,USA,North America,,Pigeon guano
-SRS417579,AD3-11a,Cryptococcus_neoformans var. grubii_AD3-11a,VNII,,,α,Clinical,France,Europe,,
-SRS523961,Bt120,Cryptococcus neoformans var. grubii Bt120,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417637,Bt4,Cryptococcus_neoformans var. grubii_Bt4,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404785,Bt207,Cryptococcus_neoformans var. grubii_Bt207,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405101,T4,Cryptococcus_neoformans var. grubii_T4,VNII,,,α,Environmental,USA,North America,,Oak tree
-SRS417635,Bt204,Cryptococcus_neoformans var. grubii_Bt204,VNBI,,,a,Clinical,Botswana,Africa,Positive,
-SRS404775,Bt156,Cryptococcus_neoformans var. grubii_Bt156,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404782,Bt44,Cryptococcus_neoformans_Bt44,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404735,Bt22,Cryptococcus_neoformans var. grubii_Bt22,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS409067,MW-RSA852,Cryptococcus neoformans var. grubii MW-RSA852,VNII,,,α,Clinical,S. Africa,Africa,,
-SRS404444,Bt106,Cryptococcus_neoformans var. grubii_Bt106,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405119,Bt90,Cryptococcus_neoformans var. grubii_Bt90,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417615,Bt143,Cryptococcus_neoformans var. grubii_Bt143,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS404493,Bt2,Cryptococcus_neoformans_Bt2,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417581,AD3-41a,Cryptococcus_neoformans var. grubii_AD3-41a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404505,LP-RSA1343,Cryptococcus_neoformans var. grubii_LP-RSA1343,VNI,VNIc,,α,Clinical,S. Africa,Africa,,
-SRS417644,LP-RSA3144,Cryptococcus_neoformans var. grubii_LP-RSA3144,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS404466,Jo278-1,Cryptococcus_neoformans var. grubii_Jo278-1,VNI,VNIa,VNIa-5,α,Environmental,S. Africa,Africa,,Soil
-SRS404772,Bt141,Cryptococcus_neoformans var. grubii_Bt141,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,Positive,
-SRS417652,MW-RSA2967,Cryptococcus_neoformans var. grubii_MW-RSA2967,VNBII,,,α,Clinical,S. Africa,Africa,,
-SRS405133,Pr68,Cryptococcus_neoformans_Pr68,VNI,VNIb,,α,Environmental,S. Africa,Africa,,Pigeon guano
-SRS404447,Bt99,Cryptococcus_neoformans_Bt99,VNI,VNIa,VNIa-4,α,Clinical,Botswana,Africa,Positive,
-SRS404778,Bt88,Cryptococcus_neoformans var. grubii_Bt88,VNBII,,,a,Clinical,Botswana,Africa,Positive,
-SRS417595,AD5-45a,Cryptococcus_neoformans var. grubii_AD5-45a,VNI,VNIb,,α,Clinical,France,Europe,,
-SRS404783,Bt214,Cryptococcus_neoformans var. grubii_Bt214,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS417659,RTC3,Cryptococcus_neoformans var. grubii_RTC3,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS409479,125.91,Cryptococcus_neoformans_125.91,VNI,VNIa,VNIa-outlier,a,Clinical,Tanzania,Africa,,
-SRS404741,Bt45,Cryptococcus_neoformans_Bt45,VNBI,,,α,Clinical,Botswana,Africa,Positive,
-SRS417675,Tu422-1,Cryptococcus_neoformans var. grubii_Tu422-1,VNBI,,,a,Environmental,Botswana,Africa,,Mopane tree
-SRS404784,Bt38,Cryptococcus_neoformans var. grubii_Bt38,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS405124,Bt77,Cryptococcus_neoformans var. grubii_Bt77,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404789,Bt53,Cryptococcus_neoformans var. grubii_Bt53,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS409061,Ze90-1,Cryptococcus neoformans var. grubii Ze90-1,VNBII,,,α,Environmental,S. Africa,Africa,,Eucalyptus tree
-SRS404511,Bt19,Cryptococcus_neoformans_Bt19,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404518,Bt134,Cryptococcus_neoformans var. grubii_Bt134,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,Positive,
-SRS405139,Bt95,Cryptococcus_neoformans var. grubii_Bt95,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS405146,Bt8,Cryptococcus_neoformans var. grubii_Bt8,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404468,Bt32,Cryptococcus_neoformans var. grubii_Bt32,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS417669,Tu416-1,Cryptococcus_neoformans var. grubii_Tu416-1,VNBI,,,α,Environmental,Botswana,Africa,,Mopane tree
-SRS404481,Bt139,Cryptococcus_neoformans var. grubii_Bt139,VNI,VNIa,VNIa-5,α,Clinical,Botswana,Africa,Positive,
-SRS404503,Bt107,Cryptococcus_neoformans var. grubii_Bt107,VNI,VNIa,VNIa-32,α,Clinical,Botswana,Africa,Positive,
-SRS417620,Bt149,Cryptococcus_neoformans var. grubii_Bt149,VNBII,,,α,Clinical,Botswana,Africa,Positive,
-SRS409062,Bt15,Cryptococcus_neoformans_Bt15,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404756,Bt20,Cryptococcus_neoformans_Bt20,VNI,VNIc,,α,Clinical,Botswana,Africa,Positive,
-SRS404760,Bt132,Cryptococcus_neoformans_Bt132,VNI,VNIa,VNIa-4,α,Clinical,Botswana,Africa,Positive,
+sample,strain,alias,lineage,sublineage,clade,mating_type,source,source_type,source_name,country,continent,hiv_status,ref_genome
+SRS881221,Ftc555-2,Ftc555-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881219,Ftc151-1,Ftc151-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881161,PMHc1052.ENR.STOR,PMHc1052.ENR.STOR,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881245,Ftc134-3,Ftc134-3,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881171,Ftc173-1,Ftc173-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881140,NRHc5030.ENR.CLIN.ISO,NRHc5030.ENR.CLIN.ISO,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885842,Ftc217-1,Ftc217-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881217,Ftc241-1,Ftc241-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885850,Muc516-1,Muc516-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881142,NRHc5017.ENR,NRHc5017.ENR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881168,Ftc239-2,Ftc239-2,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881147,Ftc209-1,Ftc209-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881206,Ftc327-1,Ftc327-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881159,PMHc1033.ENR,PMHc1033.ENR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881207,NRHc5011.ENR,NRHc5011.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881237,NRHc5025.ENR.CLIN.1,NRHc5025.ENR.CLIN.1,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881184,Ftc202-1,Ftc202-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881189,NRHc5014.ENR,NRHc5014.ENR,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881234,Ftc109-1,Ftc109-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881183,Muc451-1,Muc451-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881202,Gbc39-1,Gbc39-1,VNI,VNIc,,α,Environmental,Tree,Acacia,Botswana,Africa,,VNI
+SRS881236,NRHc5041.ENR.STOR,NRHc5041.ENR.STOR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885889,PMHc1039.ENR.STOR,PMHc1039.ENR.STOR,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881218,Ftc195-1,Ftc195-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881179,PMHc1030.ENR.CLIN.ISO,PMHc1030.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885915,Ftc211-1,Ftc211-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881173,Muc463-2,Muc463-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881211,PMHc1050.ENR.CLIN1,PMHc1050.ENR.CLIN1,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881227,Muc437-1,Muc437-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881205,Muc387-2,Muc387-2,VNBII,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBII
+SRS881235,Ftc209-3,Ftc209-3,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885880,NRHc5042.ENR.STOR,NRHc5042.ENR.STOR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885916,PMHc1031A.ENR.INI.LP,PMHc1031A.ENR.INI.LP,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881223,Ftc267-2,Ftc267-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885878,Ftc168-1,Ftc168-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885865,Ftc158-2,Ftc158-2,VNBI,,,a,Environmental,Guano,Bird,Botswana,Africa,,VNBI
+SRS885892,PMHc1001.ENR,PMHc1001.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885169,Gbc573-1,Gbc573-1,VNBI,,,α,Environmental,Tree,,Botswana,Africa,,VNBI
+SRS881149,Muc503-1,Muc503-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881191,Ftc111-1,Ftc111-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881172,NRHc5026.ENR.CLIN.ISO,NRHc5026.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881201,NRHc5027.ENR.CLIN1,NRHc5027.ENR.CLIN1,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885852,NRHc5024A.ENR.CLIN.ISO,NRHc5024A.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881188,Muc504-1,Muc504-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881228,NRHc5024.ENR.CLIN.1,NRHc5024.ENR.CLIN.1,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881164,PMHc1038.ENR.CLIN1,PMHc1038.ENR.CLIN1,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881225,NRHc5031.ENR.CLIN.ISO,NRHc5031.ENR.CLIN.ISO,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881196,PMHc1020.CLIN.1,PMHc1020.CLIN.1,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881166,NRHc5032.ENR.CLIN.ISO,NRHc5032.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885176,NRHc5037.ENR.CLIN1,NRHc5037.ENR.CLIN1,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885877,NRHc5023.ENR,NRHc5023.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881158,PMHc1011.ENR,PMHc1011.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885853,Muc418-1,Muc418-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881170,NRHc5036.ENR,NRHc5036.ENR,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881243,Muc479-1,Muc479-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885857,Ftc192-1,Ftc192-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881200,Gbc98-1,Gbc98-1,VNI,VNIc,,α,Environmental,Tree,,Botswana,Africa,,VNI
+SRS885170,Gbc16-1,Gbc16-1,VNI,VNIc,,α,Environmental,Tree,,Botswana,Africa,,VNI
+SRS881151,NRHc5029.ENR.CLIN.ISO,NRHc5029.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881177,Ftc200-1,Ftc200-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881162,NRHc5039.ENR.STOR,NRHc5039.ENR.STOR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885884,PMHc1040.ENR.STOR,PMHc1040.ENR.STOR,VNI,VNIa,VNIa-outlier,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS885879,NRHc5015.REL.CLIN.ISO,NRHc5015.REL.CLIN.ISO,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881241,PMHc1022.ENR,PMHc1022.ENR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS885871,Muc367-1,Muc367-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881247,Ftc257-1,Ftc257-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881148,NRHc5013.REL.INI,NRHc5013.REL.INI,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881150,Ftc132-1,Ftc132-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881233,Muc402-1,Muc402-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881194,Muc457-1,Muc457-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881197,Gbc44-1,Gbc44-1,VNI,VNIc,,α,Environmental,Tree,Acacia,Botswana,Africa,,VNI
+SRS881208,PMHc1018.ENR,PMHc1018.ENR,VNI,VNIa,VNIa-32,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS885816,Ftc225-1,Ftc225-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881214,Muc416-4,Muc416-4,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881203,Muc466-3,Muc466-3,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885875,NRHc5013.ENR,NRHc5013.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881178,NRHc5005.ENR,NRHc5005.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885188,NRHc5022.ENR,NRHc5022.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881181,Muc458-2,Muc458-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885173,NRHc5004.ENR,NRHc5004.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881213,Muc364-1,Muc364-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881193,Muc489-1,Muc489-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881180,PMHc1029.ENR.STOR,PMHc1029.ENR.STOR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881215,Ftc207-1,Ftc207-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885174,NRHc5010.ENR,NRHc5010.ENR,VNI,VNIa,VNIa-outlier,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881226,PMHc1009.ENR,PMHc1009.ENR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS885186,NRHc5020.ENR,NRHc5020.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885172,NRHc5028.ENR.STOR,NRHc5028.ENR.STOR,VNI,VNIa,VNIa-outlier,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881244,NRHc5015.ENR,NRHc5015.ENR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881199,Ftc102-1,Ftc102-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881222,Ftc146-1,Ftc146-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881212,PMHc1023.ENR,PMHc1023.ENR,VNII,,,α,Clinical,Human,Human,Botswana,Africa,,VNII
+SRS881204,Gbc42-1,Gbc42-1,VNI,VNIc,,α,Environmental,Tree,Acacia,Botswana,Africa,,VNI
+SRS881216,PMHc1024.ENR,PMHc1024.ENR,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881156,NRHc5044.REL.INI.CLIN.ISO,NRHc5044.REL.INI.CLIN.ISO,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS885893,NRHc5045.ENR.CLIN.ISO,NRHc5045.ENR.CLIN.ISO,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885841,NRHc5009.REL.INI,NRHc5009.REL.INI,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881152,PMHc1034.ENR.STOR,PMHc1034.ENR.STOR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS885851,NRHc5009.ENR,NRHc5009.ENR,VNBI,,,,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881169,PMHc1043.ENR.STOR,PMHc1043.ENR.STOR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881175,Ftc103-1,Ftc103-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885843,PMHc1032.ENR,PMHc1032.ENR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881155,Ftc267-1,Ftc267-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881220,Gbc51-2,Gbc51-2,VNI,VNIc,,α,Environmental,Tree,Acacia,Botswana,Africa,,VNI
+SRS885874,Gbc39-2,Gbc39-2,VNI,VNIc,,α,Environmental,Tree,Acacia,Botswana,Africa,,VNI
+SRS885888,NRHc5040.ENR.CLIN.ISO,NRHc5040.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885854,Ftc167-1,Ftc167-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885167,Ftc321-3,Ftc321-3,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885192,Ftc225-3,Ftc225-3,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885833,Muc387-1,Muc387-1,VNBII,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBII
+SRS881157,NRHc5035.ENR.CLIN.ISO,NRHc5035.ENR.CLIN.ISO,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881198,Ftc153-1,Ftc153-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881229,Ftc321-2,Ftc321-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885171,NRHc5008.ENR,NRHc5008.ENR,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS885847,PMHc1047.ENR.CLIN1,PMHc1047.ENR.CLIN1,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS885863,Ftc222-2,Ftc222-2,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885855,Ftc137-1,Ftc137-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881176,PMHc1035.ENR.STOR,PMHc1035.ENR.STOR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881238,PMHc1026.ENR,PMHc1026.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881174,Ftc321-1,Ftc321-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885858,Ftc214-1,Ftc214-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881210,PMHc1002.ENR,PMHc1002.ENR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS885894,Muc498-2,Muc498-2,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881160,NRHc5001.ENR,NRHc5001.ENR,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881165,Muc466-1,Muc466-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885168,Ftc170-1,Ftc170-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885177,NRHc5019.ENR,NRHc5019.ENR,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881246,Gbc95-1,Gbc95-1,VNI,VNIc,,α,Environmental,Tree,,Botswana,Africa,,VNI
+SRS881240,NRHc5021.ENR,NRHc5021.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS881239,NRHc5048.ENR.ISO,NRHc5048.ENR.ISO,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,,VNI
+SRS881185,PMHc1049.THER1.STOR,PMHc1049.THER1.STOR,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,,VNBII
+SRS881232,Ftc239-1,Ftc239-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS885191,Muc460-3,Muc460-3,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881224,Ftc236-1,Ftc236-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881242,PMHc1014.ENR,PMHc1014.ENR,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS885887,Muc525-1,Muc525-1,VNBI,,,α,Environmental,Soil,,Botswana,Africa,,VNBI
+SRS885882,Muc449-1,Muc449-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS881143,Ftc555-1,Ftc555-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS520182,WM626,Cryptococcus neoformans var. grubii WM626 (MMRL 3150),VNII,,,α,Clinical,Human,Human,Australia,Australasia,,VNII
+SRS409781,D17-1,Cryptococcus neoformans var. grubii D17-1,VNI,VNIa,VNIa-outlier,α,Environmental,Guano,Pigeon,S. Africa,Africa,,VNI
+SRS417573,AD1-86a,Cryptococcus_neoformans var. grubii_AD1-86a,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404506,Bt102,Cryptococcus_neoformans var. grubii_Bt102,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404739,Bt40,Cryptococcus_neoformans var. grubii_Bt40,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404514,Bt7,Cryptococcus_neoformans_Bt7,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS417583,AD1-90a,Cryptococcus_neoformans var. grubii_AD1-90a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417616,Bt146,Cryptococcus_neoformans var. grubii_Bt146,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404755,Bt84,Cryptococcus_neoformans var. grubii_Bt84,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404753,Bt6,Cryptococcus_neoformans var. grubii_Bt6,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404467,Bt41,Cryptococcus_neoformans var. grubii_Bt41,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404488,Bt23,Cryptococcus_neoformans var. grubii_Bt23,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404460,Bt43,Cryptococcus_neoformans_Bt43,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417676,Ug2459,Cryptococcus_neoformans var. grubii_Ug2459,VNI,VNIb,,α,Clinical,Human,Human,Uganda,Africa,,VNI
+SRS404766,Bt126,Cryptococcus_neoformans var. grubii_Bt126,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404761,MW-RSA606,Cryptococcus_neoformans var. grubii_MW-RSA606,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404499,Bt25,Cryptococcus_neoformans var. grubii_Bt25,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417642,In2632,Cryptococcus_neoformans var. grubii_In2632,VNI,VNIa,VNIa-32,α,Clinical,Human,Human,India,Asia,,VNI
+SRS404491,Bt155,Cryptococcus_neoformans var. grubii_Bt155,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417597,AD3-9a,Cryptococcus_neoformans var. grubii_AD3-9a,VNII,,,α,Clinical,Human,Human,France,Europe,,VNII
+SRS409058,AD2-60a,Cryptococcus neoformans var. grubii AD2-60a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404490,Bt3,Cryptococcus_neoformans var. grubii_Bt3,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417578,AD2-82a,Cryptococcus_neoformans var. grubii_AD2-82a,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417678,Ug2462,Cryptococcus_neoformans var. grubii_Ug2462,VNII,,,α,Clinical,Human,Human,Uganda,Africa,,VNII
+SRS520173,A1-84-14,Cryptococcus neoformans var. grubii A1-84-14,VNI,VNIb,,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS404793,MW-RSA6134,Cryptococcus_neoformans var. grubii_MW-RSA6134,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417591,AD4-63a,Cryptococcus_neoformans var. grubii_AD4-63a,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417611,Bt133,Cryptococcus_neoformans var. grubii_Bt133,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405118,Bt30,Cryptococcus_neoformans var. grubii_Bt30,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409060,A2-102-5,Cryptococcus neoformans var. grubii A2-102-5,VNI,VNIa,VNIa-outlier,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS404477,Bt27,Cryptococcus_neoformans var. grubii_Bt27,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417656,Pr284-1,Cryptococcus_neoformans var. grubii_Pr284-1,VNI,VNIb,,α,Environmental,Guano,Bird,Botswana,Africa,,VNI
+SRS409483,Tu401-1,Cryptococcus neoformans var. grubii Tu401-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS417625,Bt157,Cryptococcus_neoformans var. grubii_Bt157,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404746,Bt33,Cryptococcus_neoformans var. grubii_Bt33,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404781,Bt52,Cryptococcus_neoformans var. grubii_Bt52,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS409113,Br795,Cryptococcus_neoformans_Br795,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,Brazil,South America,,VNI
+SRS405110,C27,Cryptococcus_neoformans var. grubii_C27,VNI,VNIa,VNIa-32,α,Clinical,Human,Human,USA,North America,,VNI
+SRS502193,Bt142,Cryptococcus_neoformans var. grubii_Bt142,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404479,WM148,Cryptococcus_neoformans var. grubii_WM148,VNI,VNIb,,α,Clinical,Human,Human,Australia,Australasia,,VNI
+SRS417653,MW-RSA3179,Cryptococcus_neoformans var. grubii_MW-RSA3179,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS417655,PLR10,Cryptococcus_neoformans var. grubii_PLR10,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS520181,MW-RSA913,Cryptococcus neoformans var. grubii MW-RSA913,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS405121,Bt47,Cryptococcus_neoformans_Bt47,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405132,Bt121,Cryptococcus_neoformans var. grubii_Bt121,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404808,Bt81,Cryptococcus_neoformans var. grubii_Bt81,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405098,Bt17,Cryptococcus_neoformans_Bt17,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404496,A3-1-1,Cryptococcus_neoformans var. grubii_29593,VNI,VNIb,,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS417606,Bt109,Cryptococcus_neoformans var. grubii_Bt109,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405151,Bt57,Cryptococcus_neoformans var. grubii_Bt57,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409112,Bt63,Cryptococcus_neoformans_Bt63,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404475,LP-RSA3042,Cryptococcus_neoformans var. grubii_LP-RSA3042,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404773,Bt119,Cryptococcus_neoformans var. grubii_Bt119,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409074,Th84,Cryptococcus_neoformans_Th84,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Thailand,Asia,Positive,VNI
+SRS405136,Bt62,Cryptococcus_neoformans_Bt62,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417603,AD5-39a,Cryptococcus_neoformans var. grubii_AD5-39a,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404442,Bt211,Cryptococcus_neoformans var. grubii_Bt211,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404485,Bt130,Cryptococcus_neoformans var. grubii_Bt130,VNI,VNIc,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405137,Bt97,Cryptococcus_neoformans_Bt97,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417593,AD4-76a,Cryptococcus_neoformans var. grubii_AD4-76a,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404448,Bt76,Cryptococcus_neoformans var. grubii_Bt76,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS403287,Gb118,Cryptococcus_neoformans_Gb118,VNI,VNIa,VNIa-X,α,Environmental,Guano,Pigeon,Botswana,Africa,,VNI
+SRS405111,Bt83,Cryptococcus_neoformans var. grubii_Bt83,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS429660,Bt210,Cryptococcus_neoformans var. grubii_Bt210,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417651,MW-RSA1607,Cryptococcus_neoformans var. grubii_MW-RSA1607,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS404795,MW-RSA82,Cryptococcus_neoformans_MW-RSA82,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404805,Bt39,Cryptococcus_neoformans var. grubii_Bt39,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417607,Bt115,Cryptococcus_neoformans var. grubii_Bt115,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404473,Bt10,Cryptococcus_neoformans var. grubii_Bt10,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405135,Bt110,Cryptococcus_neoformans var. grubii_Bt110,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417647,LP-RSA6618,Cryptococcus_neoformans var. grubii_LP-RSA6618,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS409176,C45,Cryptococcus_neoformans_C45,VNII,,,α,Clinical,Human,Human,USA,North America,Negative,VNII
+SRS417680,Ug2463,Cryptococcus_neoformans var. grubii_Ug2463,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Uganda,Africa,,VNI
+SRS404451,Bt42,Cryptococcus_neoformans var. grubii_Bt42,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405102,MW-RSA5387,Cryptococcus_neoformans var. grubii_MW-RSA5387,VNI,VNIa,VNIa-X,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404792,Bt87,Cryptococcus_neoformans var. grubii_Bt87,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404512,Bt160,Cryptococcus_neoformans var. grubii_Bt160,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405147,Bt116,Cryptococcus_neoformans var. grubii_Bt116,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417636,Bt208,Cryptococcus_neoformans var. grubii_Bt208,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417619,Bt148,Cryptococcus_neoformans var. grubii_Bt148,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404779,Bt46,Cryptococcus_neoformans_Bt46,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404809,Bt209,Cryptococcus_neoformans var. grubii_Bt209,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405126,A4-34-6,Cryptococcus_neoformans var. grubii_31427,VNI,VNIa,VNIa-32,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS404813,LP-RSA848,Cryptococcus_neoformans var. grubii_LP-RSA848,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS520184,TCl-11,Cryptococcus sp. TCl-11,VNI,VNIb,,α,Clinical,Human,Human,Togo,Africa,,VNI
+SRS405122,Bt11,Cryptococcus_neoformans var. grubii_Bt11,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417658,LP-RSA756,Cryptococcus_neoformans var. grubii_LP-RSA756,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,,VNBI
+SRS404461,Bt54,Cryptococcus_neoformans var. grubii_Bt54,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404454,Bt37,Cryptococcus_neoformans var. grubii_Bt37,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409064,MW-RSA1955,Cryptococcus neoformans var. grubii MW-RSA1955,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417601,AD6-55a,Cryptococcus_neoformans var. grubii_AD6-55a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417604,Arg1366,Cryptococcus_neoformans var. grubii_Arg1366,VNI,VNIb,,α,Clinical,Human,Human,Argentina,South America,,VNI
+SRS417643,Jp1088,Cryptococcus_neoformans var. grubii_Jp1088,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Japan,Asia,,VNI
+SRS404786,Bt72,Cryptococcus_neoformans var. grubii_Bt72,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404456,IUM-96-28-28,Cryptococcus_neoformans var. grubii_IUM 96-28-28,VNI,VNIb,,a,Environmental,Soil,,Italy,Europe,,VNI
+SRS417585,AD3-58,Cryptococcus_neoformans var. grubii_AD3-58,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404777,Bt78,Cryptococcus_neoformans var. grubii_Bt78,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417575,AD1-95a,Cryptococcus_neoformans var. grubii_AD1-95a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417614,Bt138,Cryptococcus_neoformans var. grubii_Bt138,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417587,AD3-83a,Cryptococcus_neoformans var. grubii_AD3-83a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS409066,Bt85,Cryptococcus_neoformans_Bt85,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS417657,RTC1,Cryptococcus_neoformans var. grubii_RTC1,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405129,Bt108,Cryptococcus_neoformans var. grubii_Bt108,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405148,Bt58,Cryptococcus_neoformans var. grubii_Bt58,VNI,VNIa,VNIa-X,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417572,AD1-68a,Cryptococcus_neoformans var. grubii_AD1-68a,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,France,Europe,,VNI
+SRS409177,MW-RSA36,Cryptococcus neoformans var. grubii MW-RSA36,VNI,VNIa,VNIa-X,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417577,AD2-6a,Cryptococcus_neoformans var. grubii_AD2-6a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS409076,Tu259-1,Cryptococcus neoformans var. grubii Tu259-1,VNI,VNIa,VNIa-outlier,α,Environmental,Tree,Mopane,Botswana,Africa,,VNI
+SRS404443,A5-35-17,Cryptococcus neoformans var. grubii A5-35-17,VNI,VNIa,VNIa-5,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS404486,Bt101,Cryptococcus_neoformans var. grubii_Bt101,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404513,MW-RSA722,Cryptococcus_neoformans_MW-RSA722,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS405142,Bt104,Cryptococcus_neoformans var. grubii_Bt104,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404494,Tu241-1,Cryptococcus_neoformans var. grubii_Tu241-1,VNI,VNIa,VNIa-outlier,α,Environmental,Tree,Mopane,Botswana,Africa,,VNI
+SRS417596,AD5-53a,Cryptococcus_neoformans var. grubii_AD5-53a,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404508,Bt123,Cryptococcus_neoformans var. grubii_Bt123,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404810,Bt5,Cryptococcus_neoformans var. grubii_Bt5,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404480,Gb159-1,Cryptococcus_neoformans var. grubii_Gb159-1,VNI,VNIc,,α,Environmental,Tree,,Botswana,Africa,,VNI
+SRS404498,LP-RSA116,Cryptococcus_neoformans var. grubii_LP-RSA116,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS520178,MW-RSA3834,Cryptococcus neoformans var. grubii MW-RSA3834,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417571,8-1,Cryptococcus_neoformans var. grubii_41487,VNII,,,α,Clinical,Human,Human,USA,North America,,VNII
+SRS404797,C2,Cryptococcus_neoformans_C2,VNII,,,α,Clinical,Human,Human,USA,North America,,VNII
+SRS409482,C23,Cryptococcus_neoformans_C23,VNI,VNIb,,α,Clinical,Human,Human,USA,North America,Negative,VNI
+SRS417639,Bt65,Cryptococcus_neoformans var. grubii_Bt65,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404470,Bt118,Cryptococcus_neoformans var. grubii_Bt118,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404458,Bt89,Cryptococcus_neoformans var. grubii_Bt89,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404495,Bt75,Cryptococcus_neoformans var. grubii_Bt75,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS520174,LP-RSA2297,Cryptococcus neoformans var. grubii LP-RSA2297,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404457,Bt212,Cryptococcus_neoformans var. grubii_Bt212,VNI,VNIa,VNIa-X,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409063,AD1-83a,Cryptococcus neoformans var. grubii AD1-83a,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,France,Europe,,VNI
+SRS520185,TCl-14,Cryptococcus sp. TCl-14,VNI,VNIb,,α,Clinical,Human,Human,Togo,Africa,,VNI
+SRS417588,AD3-95a,Cryptococcus_neoformans var. grubii_AD3-95a,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417576,AD2-04a,Cryptococcus_neoformans var. grubii_AD2-04a,VNI,VNIa,VNIa-93,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417582,AD3-55a,Cryptococcus_neoformans var. grubii_AD3-55a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417612,Bt136,Cryptococcus_neoformans var. grubii_Bt136,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404449,Bt213,Cryptococcus_neoformans var. grubii_Bt213,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404812,Bt161,Cryptococcus_neoformans var. grubii_Bt161,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417650,MW-RSA1186,Cryptococcus_neoformans var. grubii_MW-RSA1186,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS404469,Bt60,Cryptococcus_neoformans_Bt60,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS409478,AD1-7a,Cryptococcus neoformans var. grubii AD1-7a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS405149,LP-RSA1684,Cryptococcus_neoformans var. grubii_LP-RSA1684,VNII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNII
+SRS405145,Bt117,Cryptococcus_neoformans var. grubii_Bt117,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417586,AD2-99a,Cryptococcus_neoformans var. grubii_AD2-99a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404484,Bt98,Cryptococcus_neoformans_Bt98,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS520180,MW-RSA524,Cryptococcus neoformans var. grubii MW-RSA524,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417609,Bt128,Cryptococcus_neoformans var. grubii_Bt128,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417590,AD4-47a,Cryptococcus_neoformans var. grubii_AD4-47a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404788,Bt129,Cryptococcus_neoformans var. grubii_Bt129,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404800,Bt24,Cryptococcus_neoformans var. grubii_Bt24,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS405113,Bt137,Cryptococcus_neoformans var. grubii_Bt137,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405127,Th206,Cryptococcus_neoformans var. grubii_Th206,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Thailand,Asia,Positive,VNI
+SRS404743,Bt34,Cryptococcus_neoformans var. grubii_Bt34,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404501,Bt68,Cryptococcus_neoformans_Bt68,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405114,Bt164,Cryptococcus_neoformans_Bt164,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409059,C8,Cryptococcus_neoformans_C8,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,USA,North America,Positive,VNI
+SRS404750,Bt31,Cryptococcus_neoformans var. grubii_Bt31,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404472,Bt103,Cryptococcus_neoformans var. grubii_Bt103,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404463,Bt55,Cryptococcus_neoformans var. grubii_Bt55,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417618,Bt147,Cryptococcus_neoformans var. grubii_Bt147,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404765,Bt56,Cryptococcus_neoformans var. grubii_Bt56,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405134,Bt151,Cryptococcus_neoformans var. grubii_Bt151,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404516,Bt49,Cryptococcus_neoformans var. grubii_Bt49,VNI,VNIb,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409175,CHC193,Cryptococcus_neoformans_CHC193,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,China,Asia,,VNI
+SRS405130,Bt59,Cryptococcus_neoformans var. grubii_Bt59,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS520177,MW-RSA1327,Cryptococcus neoformans var. grubii MW-RSA1327,VNII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNII
+SRS405123,Bt96,Cryptococcus_neoformans_Bt96,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS405144,Bt48,Cryptococcus_neoformans var. grubii_Bt48,VNI,VNIa,VNIa-X,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404517,Bt100,Cryptococcus_neoformans var. grubii_Bt100,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404462,A1-35-8,Cryptococcus neoformans var. grubii A1-35-8,VNI,VNIb,,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS405109,Bt92,Cryptococcus_neoformans var. grubii_Bt92,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405120,Bt70,Cryptococcus_neoformans_Bt70,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404452,MW-RSA2628,Cryptococcus_neoformans var. grubii_MW-RSA2628,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417654,MW-RSA3321,Cryptococcus_neoformans var. grubii_MW-RSA3321,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS404740,LP-RSA2296,Cryptococcus_neoformans var. grubii_LP-RSA2296,VNI,VNIa,VNIa-outlier,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS409065,Bt1,Cryptococcus_neoformans_Bt1,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404780,Bt114,Cryptococcus_neoformans var. grubii_Bt114,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS409075,Bt206,Cryptococcus_neoformans_Bt206,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405128,Bt205,Cryptococcus_neoformans var. grubii_Bt205,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405099,A3-38-20,Cryptococcus_neoformans var. grubii_36362,VNI,VNIb,,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS404507,Bt150,Cryptococcus_neoformans var. grubii_Bt150,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417665,Tu360-1,Cryptococcus_neoformans var. grubii_Tu360-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS417624,Bt154,Cryptococcus_neoformans var. grubii_Bt154,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS417605,Bt105,Cryptococcus_neoformans var. grubii_Bt105,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417599,AD5-67a,Cryptococcus_neoformans var. grubii_AD5-67a,VNII,,,α,Clinical,Human,Human,France,Europe,,VNII
+SRS417662,RTC5,Cryptococcus_neoformans var. grubii_RTC5,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS520179,MW-RSA3956,Cryptococcus neoformans var. grubii MW-RSA3956,VNII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNII
+SRS404803,MW-RSA1869,Cryptococcus_neoformans var. grubii_MW-RSA1869,VNI,VNIb,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS404807,Bt28,Cryptococcus_neoformans var. grubii_Bt28,VNI,VNIa,VNIa-32,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417667,Tu369-1,Cryptococcus_neoformans var. grubii_Tu369-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS417600,AD6-54a,Cryptococcus_neoformans var. grubii_AD6-54a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404745,Bt18,Cryptococcus_neoformans_Bt18,VNI,VNIa,VNIa-Y,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405107,Bt153,Cryptococcus_neoformans var. grubii_Bt153,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404492,MW-RSA4119,Cryptococcus_neoformans var. grubii_MW-RSA4119,VNII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNII
+SRS404791,Bt79,Cryptococcus_neoformans var. grubii_Bt79,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404794,Bt202,Cryptococcus_neoformans_Bt202,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417594,AD4-92a,Cryptococcus_neoformans var. grubii_AD4-92a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS417641,C12,Cryptococcus_neoformans var. grubii_C12,VNII,,,α,Clinical,Human,Human,USA,North America,Negative,VNII
+SRS417661,Tu229-1,Cryptococcus_neoformans var. grubii_Tu229-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS417622,Bt152,Cryptococcus_neoformans var. grubii_Bt152,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405141,Bt111,Cryptococcus_neoformans var. grubii_Bt111,VNI,VNIb,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417668,Tu406-1,Cryptococcus_neoformans var. grubii_Tu406-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS404489,Bt203,Cryptococcus_neoformans var. grubii_Bt203,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS520130,Bt35,Cryptococcus neoformans Bt35,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404759,Bt93,Cryptococcus_neoformans var. grubii_Bt93,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405116,A4-1-12,Cryptococcus_neoformans var. grubii_33519,VNI,VNIb,,α,Environmental,Guano,Pigeon,USA,North America,,VNI
+SRS417579,AD3-11a,Cryptococcus_neoformans var. grubii_AD3-11a,VNII,,,α,Clinical,Human,Human,France,Europe,,VNII
+SRS523961,Bt120,Cryptococcus neoformans var. grubii Bt120,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417637,Bt4,Cryptococcus_neoformans var. grubii_Bt4,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404785,Bt207,Cryptococcus_neoformans var. grubii_Bt207,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405101,T4,Cryptococcus_neoformans var. grubii_T4,VNII,,,α,Environmental,Tree,Oak,USA,North America,,VNII
+SRS417635,Bt204,Cryptococcus_neoformans var. grubii_Bt204,VNBI,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS404775,Bt156,Cryptococcus_neoformans var. grubii_Bt156,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404782,Bt44,Cryptococcus_neoformans_Bt44,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404735,Bt22,Cryptococcus_neoformans var. grubii_Bt22,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS409067,MW-RSA852,Cryptococcus neoformans var. grubii MW-RSA852,VNII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNII
+SRS404444,Bt106,Cryptococcus_neoformans var. grubii_Bt106,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405119,Bt90,Cryptococcus_neoformans var. grubii_Bt90,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417615,Bt143,Cryptococcus_neoformans var. grubii_Bt143,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS404493,Bt2,Cryptococcus_neoformans_Bt2,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417581,AD3-41a,Cryptococcus_neoformans var. grubii_AD3-41a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404505,LP-RSA1343,Cryptococcus_neoformans var. grubii_LP-RSA1343,VNI,VNIc,,α,Clinical,Human,Human,S. Africa,Africa,,VNI
+SRS417644,LP-RSA3144,Cryptococcus_neoformans var. grubii_LP-RSA3144,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS404466,Jo278-1,Cryptococcus_neoformans var. grubii_Jo278-1,VNI,VNIa,VNIa-5,α,Environmental,Soil,,S. Africa,Africa,,VNI
+SRS404772,Bt141,Cryptococcus_neoformans var. grubii_Bt141,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417652,MW-RSA2967,Cryptococcus_neoformans var. grubii_MW-RSA2967,VNBII,,,α,Clinical,Human,Human,S. Africa,Africa,,VNBII
+SRS405133,Pr68,Cryptococcus_neoformans_Pr68,VNI,VNIb,,α,Environmental,Guano,Pigeon,S. Africa,Africa,,VNI
+SRS404447,Bt99,Cryptococcus_neoformans_Bt99,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404778,Bt88,Cryptococcus_neoformans var. grubii_Bt88,VNBII,,,a,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417595,AD5-45a,Cryptococcus_neoformans var. grubii_AD5-45a,VNI,VNIb,,α,Clinical,Human,Human,France,Europe,,VNI
+SRS404783,Bt214,Cryptococcus_neoformans var. grubii_Bt214,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417659,RTC3,Cryptococcus_neoformans var. grubii_RTC3,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS409479,125.91,Cryptococcus_neoformans_125.91,VNI,VNIa,VNIa-outlier,a,Clinical,Human,Human,Tanzania,Africa,,VNI
+SRS404741,Bt45,Cryptococcus_neoformans_Bt45,VNBI,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBI
+SRS417675,Tu422-1,Cryptococcus_neoformans var. grubii_Tu422-1,VNBI,,,a,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS404784,Bt38,Cryptococcus_neoformans var. grubii_Bt38,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS405124,Bt77,Cryptococcus_neoformans var. grubii_Bt77,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404789,Bt53,Cryptococcus_neoformans var. grubii_Bt53,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS409061,Ze90-1,Cryptococcus neoformans var. grubii Ze90-1,VNBII,,,α,Environmental,Tree,Eucalyptus,S. Africa,Africa,,VNBII
+SRS404511,Bt19,Cryptococcus_neoformans_Bt19,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404518,Bt134,Cryptococcus_neoformans var. grubii_Bt134,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405139,Bt95,Cryptococcus_neoformans var. grubii_Bt95,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS405146,Bt8,Cryptococcus_neoformans var. grubii_Bt8,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404468,Bt32,Cryptococcus_neoformans var. grubii_Bt32,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS417669,Tu416-1,Cryptococcus_neoformans var. grubii_Tu416-1,VNBI,,,α,Environmental,Tree,Mopane,Botswana,Africa,,VNBI
+SRS404481,Bt139,Cryptococcus_neoformans var. grubii_Bt139,VNI,VNIa,VNIa-5,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404503,Bt107,Cryptococcus_neoformans var. grubii_Bt107,VNI,VNIa,VNIa-32,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS417620,Bt149,Cryptococcus_neoformans var. grubii_Bt149,VNBII,,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNBII
+SRS409062,Bt15,Cryptococcus_neoformans_Bt15,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404756,Bt20,Cryptococcus_neoformans_Bt20,VNI,VNIc,,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI
+SRS404760,Bt132,Cryptococcus_neoformans_Bt132,VNI,VNIa,VNIa-4,α,Clinical,Human,Human,Botswana,Africa,Positive,VNI

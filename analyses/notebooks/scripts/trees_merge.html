@@ -2333,7 +2333,7 @@ vertical-align: -.125em;
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>H99 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;sample&#39;</span><span class="ot">=</span> <span class="st">&#39;GCF_000149245&#39;</span>,</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;strain&#39;</span><span class="ot">=</span> <span class="st">&#39;H99&#39;</span>, </span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;lineage&#39;</span><span class="ot">=</span> <span class="st">&#39;VNI&#39;</span>, </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;vni_subdivision&#39;</span><span class="ot">=</span> <span class="st">&#39;VNIb&#39;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;sublineage&#39;</span><span class="ot">=</span> <span class="st">&#39;VNIb&#39;</span>,</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;dataset&#39;</span><span class="ot">=</span> <span class="st">&#39;Reference&#39;</span>,</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;source&#39;</span><span class="ot">=</span> <span class="st">&#39;Clinical&#39;</span>,</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;mating_type&#39;</span><span class="ot">=</span> <span class="st">&#39;α&#39;</span>,</span>
@@ -2416,21 +2416,21 @@ vertical-align: -.125em;
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(metadata, metadata_output, <span class="at">sep =</span><span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(metadata, metadata_output, <span class="at">sep =</span><span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">&quot;&quot;</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Make separate dataframes for each metadata field.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>vni_subdivision <span class="ot">&lt;-</span> <span class="fu">factor</span>(metadata<span class="sc">$</span>vni_subdivision,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>sublineage <span class="ot">&lt;-</span> <span class="fu">factor</span>(metadata<span class="sc">$</span>sublineage,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">names</span>(sublineage_colors), <span class="st">&quot;VNIa-outlier&quot;</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>country <span class="ot">&lt;-</span> <span class="fu">factor</span>(metadata<span class="sc">$</span>country,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">levels =</span> <span class="fu">names</span>(country_colors))</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>sublineage <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(lineage <span class="sc">==</span> <span class="st">&quot;VNI&quot;</span>)<span class="sc">%&gt;%</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                <span class="fu">select</span>(strain, vni_subdivision)<span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                <span class="fu">select</span>(strain, sublineage)<span class="sc">%&gt;%</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                <span class="fu">column_to_rownames</span>(<span class="st">&quot;strain&quot;</span>)<span class="sc">%&gt;%</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                <span class="fu">droplevels</span>()</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>lineage <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>
@@ -3148,7 +3148,7 @@ vertical-align: -.125em;
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>VNIa_outlier <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(vni_subdivision <span class="sc">==</span> <span class="st">&quot;VNIa-outlier&quot;</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(sublineage <span class="sc">==</span> <span class="st">&quot;VNIa-outlier&quot;</span>)</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>representatives <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Tu241-1&quot;</span>,<span class="st">&quot;UI_31647-2&quot;</span>,<span class="st">&quot;C2&quot;</span>,<span class="st">&quot;C12&quot;</span>,<span class="st">&quot;Tu229-1&quot;</span>,</span>
 <span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;Ftc267-2&quot;</span>,<span class="st">&quot;MW-RSA3321&quot;</span>,<span class="st">&quot;MW-RSA3179&quot;</span>,<span class="st">&quot;04CN-30-008&quot;</span>,</span>

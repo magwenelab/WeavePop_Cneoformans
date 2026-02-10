@@ -2286,14 +2286,14 @@ Select needed columns, get the number of samples per dataset and lineage, per li
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep=</span><span class="st">&quot;,&quot;</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactor =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(sample, strain, source, lineage, dataset, vni_subdivision)<span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(sample, strain, source, lineage, dataset, sublineage)<span class="sc">%&gt;%</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(dataset, lineage)<span class="sc">%&gt;%</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">samples_in_dataset_lineage =</span> <span class="fu">n_distinct</span>(sample))<span class="sc">%&gt;%</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(lineage)<span class="sc">%&gt;%</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">samples_in_lineage =</span> <span class="fu">n_distinct</span>(sample))<span class="sc">%&gt;%</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(vni_subdivision)<span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(sublineage)<span class="sc">%&gt;%</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">samples_in_sublineage =</span> <span class="fu">n_distinct</span>(sample))<span class="sc">%&gt;%</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(lineage,source,samples_in_lineage) <span class="sc">%&gt;%</span></span>
@@ -2328,18 +2328,19 @@ Remove single-copy rows.</p>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    chromosomes_path,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">header=</span><span class="cn">TRUE</span>,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep=</span><span class="st">&quot;,&quot;</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactor =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>cnv_chroms <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    cnv_chroms_path,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)<span class="sc">%&gt;%</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(chromosomes, <span class="at">by =</span> <span class="st">&quot;accession&quot;</span>)<span class="sc">%&gt;%</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cnv <span class="sc">!=</span> <span class="st">&quot;single_copy&quot;</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>cnv_chroms<span class="sc">$</span>chromosome <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(cnv_chroms<span class="sc">$</span>chromosome)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>cnv_chroms<span class="sc">$</span>lineage <span class="ot">&lt;-</span> <span class="fu">factor</span>(cnv_chroms<span class="sc">$</span>lineage, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;VNI&quot;</span>, <span class="st">&quot;VNBI&quot;</span>, <span class="st">&quot;VNBII&quot;</span>, <span class="st">&quot;VNII&quot;</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactor =</span> <span class="cn">TRUE</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">lineage =</span> <span class="st">&quot;ref_genome&quot;</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>cnv_chroms <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    cnv_chroms_path,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(chromosomes, <span class="at">by =</span> <span class="st">&quot;accession&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(cnv <span class="sc">!=</span> <span class="st">&quot;single_copy&quot;</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>cnv_chroms<span class="sc">$</span>chromosome <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(cnv_chroms<span class="sc">$</span>chromosome)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>cnv_chroms<span class="sc">$</span>lineage <span class="ot">&lt;-</span> <span class="fu">factor</span>(cnv_chroms<span class="sc">$</span>lineage, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;VNI&quot;</span>, <span class="st">&quot;VNBI&quot;</span>, <span class="st">&quot;VNBII&quot;</span>, <span class="st">&quot;VNII&quot;</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -3086,7 +3087,7 @@ Remove single-copy rows.</p>
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_summary</span>(<span class="at">df =</span>  <span class="fu">filter</span>(sample_metrics, lineage <span class="sc">==</span> <span class="st">&quot;VNI&quot;</span>),</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable1=</span> <span class="st">&quot;category_aneuploidy&quot;</span>, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable2=</span> <span class="st">&quot;vni_subdivision&quot;</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable2=</span> <span class="st">&quot;sublineage&quot;</span>, </span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">cnv_type=</span> <span class="st">&quot;duplication&quot;</span>, </span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_n =</span> <span class="st">&quot;samples_in_sublineage&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -3094,16 +3095,16 @@ Remove single-copy rows.</p>
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 27%">
-<col style="width: 22%">
-<col style="width: 30%">
+<col style="width: 29%">
+<col style="width: 16%">
+<col style="width: 32%">
 <col style="width: 5%">
-<col style="width: 13%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">category_aneuploidy</th>
-<th style="text-align: left;">vni_subdivision</th>
+<th style="text-align: left;">sublineage</th>
 <th style="text-align: right;">samples_in_sublineage</th>
 <th style="text-align: right;">n</th>
 <th style="text-align: right;">percent</th>
@@ -4871,7 +4872,7 @@ Remove single-copy rows.</p>
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_summary</span>(<span class="at">df =</span>  <span class="fu">filter</span>(sample_metrics, lineage <span class="sc">==</span> <span class="st">&quot;VNI&quot;</span>),</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable1=</span> <span class="st">&quot;category_size&quot;</span>,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable2=</span> <span class="st">&quot;vni_subdivision&quot;</span>, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">variable2=</span> <span class="st">&quot;sublineage&quot;</span>, </span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">cnv_type=</span> <span class="st">&quot;duplication&quot;</span>, </span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_n =</span> <span class="st">&quot;samples_in_sublineage&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -4881,7 +4882,7 @@ Remove single-copy rows.</p>
 <thead>
 <tr class="header">
 <th style="text-align: left;">category_size</th>
-<th style="text-align: left;">vni_subdivision</th>
+<th style="text-align: left;">sublineage</th>
 <th style="text-align: right;">samples_in_sublineage</th>
 <th style="text-align: right;">n</th>
 <th style="text-align: right;">percent</th>

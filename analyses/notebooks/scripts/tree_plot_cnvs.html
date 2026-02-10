@@ -2319,7 +2319,7 @@ vertical-align: -.125em;
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>vni_subdivision <span class="ot">&lt;-</span> <span class="fu">factor</span>(metadata<span class="sc">$</span>vni_subdivision,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">$</span>sublineage <span class="ot">&lt;-</span> <span class="fu">factor</span>(metadata<span class="sc">$</span>sublineage,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;VNIa-4&quot;</span>, <span class="st">&quot;VNIa-5&quot;</span>, <span class="st">&quot;VNIa-32&quot;</span>, </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;VNIa-93&quot;</span>, <span class="st">&quot;VNIa-X&quot;</span>, <span class="st">&quot;VNIa-Y&quot;</span>, <span class="st">&quot;VNIb&quot;</span>, </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;VNIc&quot;</span>, <span class="st">&quot;VNIa-outlier&quot;</span>))</span>
@@ -2330,7 +2330,7 @@ vertical-align: -.125em;
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>sublineage <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(lineage <span class="sc">==</span> <span class="st">&quot;VNI&quot;</span>)<span class="sc">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                <span class="fu">select</span>(strain, vni_subdivision)<span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                <span class="fu">select</span>(strain, sublineage)<span class="sc">%&gt;%</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                <span class="fu">column_to_rownames</span>(<span class="st">&quot;strain&quot;</span>)<span class="sc">%&gt;%</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                <span class="fu">droplevels</span>()</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lineage <span class="ot">&lt;-</span> metadata <span class="sc">%&gt;%</span></span>

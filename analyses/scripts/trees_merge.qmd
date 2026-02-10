@@ -86,7 +86,7 @@ quality <- read.delim(ashton_mapping_stats_path, header = TRUE)%>%
 H99 <- data.frame('sample'= 'GCF_000149245',
                 'strain'= 'H99', 
                 'lineage'= 'VNI', 
-                'vni_subdivision'= 'VNIb',
+                'sublineage'= 'VNIb',
                 'dataset'= 'Reference',
                 'source'= 'Clinical',
                 'mating_type'= 'α',
@@ -119,19 +119,19 @@ summary
 
 Write metadata file
 ```{r}
-write.table(metadata, metadata_output, sep =",", quote = FALSE, row.names = FALSE )
+write.table(metadata, metadata_output, sep =",", quote = FALSE, row.names = FALSE, na = "" )
 ```
 
 Make separate dataframes for each metadata field.
 ```{r}
-metadata$vni_subdivision <- factor(metadata$vni_subdivision,
+metadata$sublineage <- factor(metadata$sublineage,
                             levels = c(names(sublineage_colors), "VNIa-outlier"))
 metadata$country <- factor(metadata$country,
                                 levels = names(country_colors))
 
 sublineage <- metadata %>%
                 filter(lineage == "VNI")%>%
-                select(strain, vni_subdivision)%>%
+                select(strain, sublineage)%>%
                 column_to_rownames("strain")%>%
                 droplevels()
 lineage <- metadata %>%
@@ -728,7 +728,7 @@ Get two samples of each non-VNI lineage, VNI sublineage, and all VNIa-outlier
 
 ```{r}
 VNIa_outlier <- metadata %>%
-    filter(vni_subdivision == "VNIa-outlier")
+    filter(sublineage == "VNIa-outlier")
 
 representatives <- c("Tu241-1","UI_31647-2","C2","C12","Tu229-1",
                     "Ftc267-2","MW-RSA3321","MW-RSA3179","04CN-30-008",

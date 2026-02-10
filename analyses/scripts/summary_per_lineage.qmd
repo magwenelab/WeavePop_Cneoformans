@@ -45,7 +45,7 @@ summary_out_path <-
 ```{r, output=FALSE}
 metadata <- read_csv(metadata_path)
 metadata <- metadata %>%
-    select(sample, strain, lineage, vni_subdivision)
+    select(sample, strain, lineage, sublineage)
 ```
 
 ## Count SNPs of each sample
@@ -140,7 +140,7 @@ snp_counts_vni <- filter(snp_counts, lineage == "VNI")
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-ggplot(snp_counts_vni, aes(y = n_raw, x = vni_subdivision)) +
+ggplot(snp_counts_vni, aes(y = n_raw, x = sublineage)) +
     geom_quasirandom() +
     theme_minimal() +
     scale_y_continuous(labels = scales::comma) +
@@ -150,7 +150,7 @@ ggplot(snp_counts_vni, aes(y = n_raw, x = vni_subdivision)) +
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-ggplot(snp_counts_vni, aes(y = n_surv, x = vni_subdivision)) +
+ggplot(snp_counts_vni, aes(y = n_surv, x = sublineage)) +
     geom_quasirandom() +
     theme_minimal() +
     scale_y_continuous(labels = scales::comma) +
@@ -161,7 +161,7 @@ ggplot(snp_counts_vni, aes(y = n_surv, x = vni_subdivision)) +
 #| fig-height: 5
 #| fig-width: 7
 #| fig-align: center
-ggplot(snp_counts_vni, aes(y = n_removed, x = vni_subdivision)) +
+ggplot(snp_counts_vni, aes(y = n_removed, x = sublineage)) +
     geom_quasirandom() +
     theme_minimal() +
     scale_y_continuous(labels = scales::comma) +
@@ -193,7 +193,7 @@ snp_counts %>%
 ```{r, message=FALSE, warning=FALSE}
 ref_snps <- snp_counts %>%
     filter(strain %in% c("Bt89", "Bt22"))%>%
-    select(-vni_subdivision)
+    select(-sublineage)
 ref_snps
 ```
 
@@ -201,7 +201,7 @@ ref_snps
 
 ```{r, message=FALSE, warning=FALSE}
 snp_counts %>%
-    group_by(lineage, vni_subdivision)%>%
+    group_by(lineage, sublineage)%>%
     summarize(mean_raw = mean(n_raw),
                 mean_surv = mean(n_surv),
                 mean_removed = mean(n_removed),
@@ -223,7 +223,8 @@ snp_summary
 ## Number of variants per lineage
 
 ```{r, message=FALSE, warning=FALSE}
-variants <- read_delim(variants_path, delim = "\t", col_names = TRUE)
+variants <- read_delim(variants_path, delim = "\t", col_names = TRUE)%>%
+    rename(lineage = "ref_genome")
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -270,7 +271,8 @@ chromosomes <- read.delim(
     chromosomes_path,
     header=TRUE,
     sep=",",
-    stringsAsFactor = TRUE)
+    stringsAsFactor = TRUE)%>%
+    rename(lineage = "ref_genome")
 ```
 
 

@@ -61,14 +61,14 @@ metadata <- read.delim(
     sep=",",
     stringsAsFactor = TRUE)
 metadata <- metadata %>%
-    select(sample, strain, source, lineage, dataset, vni_subdivision)%>%
+    select(sample, strain, source, lineage, dataset, sublineage)%>%
     group_by(dataset, lineage)%>%
     mutate(samples_in_dataset_lineage = n_distinct(sample))%>%
     ungroup() %>%
     group_by(lineage)%>%
     mutate(samples_in_lineage = n_distinct(sample))%>%
     ungroup() %>%
-    group_by(vni_subdivision)%>%
+    group_by(sublineage)%>%
     mutate(samples_in_sublineage = n_distinct(sample))%>%
     ungroup() %>%
     group_by(lineage,source,samples_in_lineage) %>%
@@ -97,7 +97,8 @@ chromosomes <- read.delim(
     chromosomes_path,
     header=TRUE,
     sep=",",
-    stringsAsFactor = TRUE)
+    stringsAsFactor = TRUE)%>%
+    rename(lineage = "ref_genome")
 
 cnv_chroms <- read.delim(
     cnv_chroms_path,
@@ -394,7 +395,7 @@ get_summary(df = sample_metrics,
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df =  filter(sample_metrics, lineage == "VNI"),
             variable1= "category_aneuploidy", 
-            variable2= "vni_subdivision", 
+            variable2= "sublineage", 
             cnv_type= "duplication", 
             total_n = "samples_in_sublineage")
 ```
@@ -556,7 +557,7 @@ get_summary(df = sample_metrics,
 ```{r, message=FALSE, warning=FALSE}
 get_summary(df =  filter(sample_metrics, lineage == "VNI"),
             variable1= "category_size",
-            variable2= "vni_subdivision", 
+            variable2= "sublineage", 
             cnv_type= "duplication", 
             total_n = "samples_in_sublineage")
 ```
