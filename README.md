@@ -1,5 +1,7 @@
 # WeavePop_Cneoformans
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18600877.svg)](https://doi.org/10.5281/zenodo.18600877)
+
 Description of running the [WeavePop](https://github.com/magwenelab/WeavePop) in the Desjardins et al. 2017 
 and Ashton et al. 2019 datasets and the analyses of the results.
 
